@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class MainController {
-	
+
 	@RequestMapping(value="/")
 	public String getDemo() {
 		return "index";
@@ -46,7 +46,6 @@ public class MainController {
 		model.addAttribute("state", state);		
 		
 		return "login";
-
 	}
 	
 	@RequestMapping(value="/dashboard")

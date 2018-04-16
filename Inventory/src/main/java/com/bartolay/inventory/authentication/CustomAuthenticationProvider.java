@@ -51,8 +51,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 					System.out.println("auth details " + auth);
 
 					System.out.println("username " + username);
-					
-					
 				}
 			}
 
