@@ -53,6 +53,11 @@ public class MainController {
 		return "index";
 	}
 	
+	@RequestMapping(value="/tables")
+	public String tables() {
+		return "tables";
+	}
+	
 	@RequestMapping(value = "/403", method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView accesssDenied() {
 
