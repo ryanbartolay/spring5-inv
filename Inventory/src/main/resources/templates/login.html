@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<form name="f" th:action="@{/login}" method="POST">
+		<div th:if="${param.error}" class="alert alert-error">Invalid
+			username and password.</div>
+		<div th:if="${param.logout}" class="alert alert-success">You
+			have been logged out.</div>
+
+		<input type="text" id="username" name="username" placeholder="Email" class="form-control" /> 
+			<br> 
+		<input type="password" id="password" name="password" placeholder="Password" class="form-control" />
+			
+		 <button type="submit" class="btn btn-lg btn-default pull-right">Sign in</button>
+	</form>
+</body>
+</html>

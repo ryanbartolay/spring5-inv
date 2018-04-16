@@ -1,16 +1,21 @@
 package com.bartolay.inventory.entity;
 
 import java.io.Serializable;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @Table(name = "employees")
-public class Employee implements Serializable {
+public class Employee implements Serializable, GrantedAuthority {
  
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +34,11 @@ public class Employee implements Serializable {
     private String address;
     @Column(name = "type", nullable=false, insertable = true)
     private String type;
+    @Column(name = "enabled", nullable=false)
+    private boolean enabled;
     
+    private String authority;
+  
     public Employee(){
     
     }
@@ -129,10 +138,30 @@ public class Employee implements Serializable {
     public void setType(String type) {
         this.type = type;
     }
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	
 
 	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName
-				+ ", password=" + password + ", phone=" + phone + ", address=" + address + ", type=" + type + "]";
+				+ ", password=" + password + ", phone=" + phone + ", address=" + address + ", type=" + type
+				+ ", enabled=" + enabled + ", authority=" + authority + "]";
 	}
+
+	@Override
+	public String getAuthority() {
+		return authority;
+	}
+
+	public void setAuthority(String authority) {
+		this.authority = authority;
+	}
+
 }

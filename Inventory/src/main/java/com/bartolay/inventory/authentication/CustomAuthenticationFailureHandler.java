@@ -18,6 +18,8 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
+		
+		System.out.println("====================Custom Authentication Failure START =========================");
 
 		String client_id = null;
 		String redirect_uri = null;
@@ -29,44 +31,44 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
 		Map<String, String> parameters = new HashMap<>();
 
-		try {
-			client_id = request.getParameter("client_id");
-
-			if(client_id.trim().length() > 0) {
-				parameters.put("client_id", client_id);
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			redirect_uri = request.getParameter("redirect_uri");
-			if(redirect_uri.trim().length() > 0) {
-				parameters.put("redirect_uri", redirect_uri);
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			response_type = request.getParameter("response_type");
-			if(response_type.trim().length() > 0) {
-				parameters.put("response_type", response_type);
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			state = request.getParameter("state");
-			if(state.trim().length() > 0) {
-				parameters.put("state", state);
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-
-
+//		try {
+//			client_id = request.getParameter("client_id");
+//
+//			if(client_id.trim().length() > 0) {
+//				parameters.put("client_id", client_id);
+//			}
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		try {
+//			redirect_uri = request.getParameter("redirect_uri");
+//			if(redirect_uri.trim().length() > 0) {
+//				parameters.put("redirect_uri", redirect_uri);
+//			}
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		try {
+//			response_type = request.getParameter("response_type");
+//			if(response_type.trim().length() > 0) {
+//				parameters.put("response_type", response_type);
+//			}
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		try {
+//			state = request.getParameter("state");
+//			if(state.trim().length() > 0) {
+//				parameters.put("state", state);
+//			}
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//
 		if(parameters.size() > 0) {
 			url.append("?");
 
@@ -79,7 +81,11 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 			url.append("?error");
 		}
 		
+		
 		response.sendRedirect(url.toString());
+		
+		System.out.println(url.toString());
+		System.out.println("====================Custom Authentication Failure END =========================");
 	}
 
 }

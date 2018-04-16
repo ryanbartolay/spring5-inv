@@ -45,10 +45,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.loginPage("/login")
 		.successHandler(authenticationSuccessHandler)
 		.failureHandler(authenticationFailureHandler)
-		.usernameParameter("username").passwordParameter("password")
 		
 		.and()
-//		.authenticationProvider(authenticationProvider)
+		.authenticationProvider(authenticationProvider)
 		.logout()
 		.invalidateHttpSession(true)
 		.permitAll()
@@ -58,12 +57,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.jdbcAuthentication().dataSource(dataSource)
-        .usersByUsernameQuery("select username, password, enabled"
-            + " from users where username=?")
-        .authoritiesByUsernameQuery("select username, authority "
-            + "from authorities where username=?")
-        .passwordEncoder(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder());
+//		auth.jdbcAuthentication().dataSource(dataSource)
+//        .usersByUsernameQuery("select username, password, enabled"
+//            + " from employees where username=?")
+//        .authoritiesByUsernameQuery("select username, authority "
+//            + "from employees where username=?")
+//        .passwordEncoder(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder());
+		
+		auth.authenticationProvider(authenticationProvider);
 	}
 
 }

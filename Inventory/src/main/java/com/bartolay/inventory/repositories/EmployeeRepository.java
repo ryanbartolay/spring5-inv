@@ -8,6 +8,8 @@ import com.bartolay.inventory.entity.Employee;
 @Repository
 public interface EmployeeRepository extends CrudRepository<Employee, Long> {
     
+	public Employee findByUserName(String userName);
+	
 //    public ObservableList<Employee> getEmployees();
 //    public Employee getEmployee(long id);
 //    public String getEmployeeType(String username);

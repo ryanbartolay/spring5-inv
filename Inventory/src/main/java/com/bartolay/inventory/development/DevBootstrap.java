@@ -1,14 +1,18 @@
 package com.bartolay.inventory.development;
 
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.bartolay.enums.AccountType;
 import com.bartolay.inventory.entity.Category;
 import com.bartolay.inventory.entity.Employee;
 import com.bartolay.inventory.entity.Product;
 import com.bartolay.inventory.entity.Supplier;
+import com.bartolay.inventory.repositories.EmployeeRepository;
 import com.bartolay.inventory.utils.StringUtils;
 
 @Component
@@ -19,25 +23,32 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	
 	private Supplier supplier;
 	private Category category;
+	
+	@Autowired
+	private EmployeeRepository employeeRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
 //		session.beginTransaction();
-//		createEmployees();
+		createEmployees();
 //		createSuppliers();
 //		createCategories();
 //		createProducts();
-//        session.getTransaction().commit();
+//      session.getTransaction().commit();
 	}
 	
 	private void createEmployees() {
 		Employee employee = new Employee();
 		employee.setUserName("admin");
-		employee.setPassword(StringUtils.cryptWithMD5(password));
+		employee.setPassword(passwordEncoder.encode(password));
 		employee.setFirstName("Admin");
 		employee.setLastName("Admin");
 		employee.setType("admin");
-		session.save(employee);
+		employee.setAuthority(AccountType.SUPERADMIN.toString());
+		employeeRepository.save(employee);
 	}
 	
 	private void createSuppliers() {

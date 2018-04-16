@@ -36,8 +36,6 @@ public class MainController {
 		String response_type = request.getParameter("response_type");
 		String state = request.getParameter("state");
 		
-		
-		
 		if(!(auth instanceof AnonymousAuthenticationToken)) {
 			return "redirect:/dashboard";
 		}
@@ -53,7 +51,7 @@ public class MainController {
 	
 	@RequestMapping(value="/dashboard")
 	public String dashboard() {
-		return "dashboard";
+		return "index";
 	}
 	
 	@RequestMapping(value = "/403", method = {RequestMethod.GET, RequestMethod.POST})
