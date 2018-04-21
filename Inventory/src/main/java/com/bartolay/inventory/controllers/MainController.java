@@ -45,6 +45,11 @@ public class MainController {
 		return "blank";
 	}
 	
+	@RequestMapping(value="/buttons")
+	public String buttons() {
+		return "buttons";
+	}
+	
 	@RequestMapping(value="/dashboard")
 	public String dashboard() {
 		return "index";
