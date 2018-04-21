@@ -40,6 +40,11 @@ public class MainController {
 		return "login";
 	}
 	
+	@RequestMapping(value="/blank")
+	public String blank() {
+		return "blank";
+	}
+	
 	@RequestMapping(value="/dashboard")
 	public String dashboard() {
 		return "index";
@@ -48,6 +53,11 @@ public class MainController {
 	@RequestMapping(value="/tables")
 	public String tables() {
 		return "tables";
+	}
+	
+	@RequestMapping(value="/flot")
+	public String flot() {
+		return "flot";
 	}
 	
 	@RequestMapping(value="/grid")
@@ -68,6 +78,16 @@ public class MainController {
 	@RequestMapping(value="/forms")
 	public String forms() {
 		return "forms";
+	}
+	
+	@RequestMapping(value="/notifications")
+	public String notifications() {
+		return "notifications";
+	}
+	
+	@RequestMapping(value="/panels-wells")
+	public String panels_wells() {
+		return "panels-wells";
 	}
 	
 	@RequestMapping(value = "/403", method = {RequestMethod.GET, RequestMethod.POST})
