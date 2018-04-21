@@ -1,5 +1,8 @@
 package com.bartolay.inventory.authentication;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.bartolay.inventory.entity.Employee;
+import com.bartolay.inventory.model.Authority;
 import com.bartolay.inventory.repositories.EmployeeRepository;
 
 @Component
@@ -29,11 +33,13 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			String password = (String) auth.getCredentials();
 			
 			Employee employee = employeeRepository.findByUserName(userName);
+			System.err.println("EMPLOYYESS  " + employee);
 			
+			List<Authority> authorities = new ArrayList<>();
+			authorities.add(new Authority(employee.getAuthority()));
 			
-			System.out.println(employee);
 			if(passwordEncoder.matches(password, employee.getPassword())) {
-				return new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), null);
+				return new UsernamePasswordAuthenticationToken(employee, employee.getPassword(), authorities);
 			}
 			
 			throw new BadCredentialsException("Invalid Username and Password");

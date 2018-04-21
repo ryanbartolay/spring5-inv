@@ -13,11 +13,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.bartolay.inventory.entity.Employee;
+
 @Controller
 public class MainController {
 
 	@RequestMapping(value="/")
 	public String getDemo() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		System.err.println(((Employee) auth.getPrincipal()).getLastName());
+		System.err.println(auth.getAuthorities());
 		return "index";
 	}
 
@@ -25,25 +30,12 @@ public class MainController {
 	public String login(@RequestParam(value = "error", required = false) String error, ModelMap model,
 			@RequestParam(value = "logout", required = false) String logout, HttpServletRequest request) {
 		
-//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//		
-//		System.out.println("Authentication " + auth);
-//		System.out.println(auth.isAuthenticated());
-//		System.out.println("isAnonymous " + (auth instanceof AnonymousAuthenticationToken));
-//		
-//		String client_id = request.getParameter("client_id");
-//		String redirect_uri = request.getParameter("redirect_uri");
-//		String response_type = request.getParameter("response_type");
-//		String state = request.getParameter("state");
-//		
-//		if(!(auth instanceof AnonymousAuthenticationToken)) {
-//			return "redirect:/dashboard";
-//		}
-//		
-//		model.addAttribute("client_id", client_id);
-//		model.addAttribute("redirect_uri", redirect_uri);
-//		model.addAttribute("response_type", response_type);
-//		model.addAttribute("state", state);		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
+		// Redirect if already logged in
+		if(!(auth instanceof AnonymousAuthenticationToken)) {
+			return "redirect:/dashboard";
+		}
 		
 		return "login";
 	}
