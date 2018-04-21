@@ -55,11 +55,6 @@ public class MainController {
 		return "index";
 	}
 	
-	@RequestMapping(value="/tables")
-	public String tables() {
-		return "tables";
-	}
-	
 	@RequestMapping(value="/flot")
 	public String flot() {
 		return "flot";
@@ -68,6 +63,16 @@ public class MainController {
 	@RequestMapping(value="/grid")
 	public String grid() {
 		return "grid";
+	}
+	
+	@RequestMapping(value="/morris")
+	public String morris() {
+		return "morris";
+	}
+	
+	@RequestMapping(value="/tables")
+	public String tables() {
+		return "tables";
 	}
 	
 	@RequestMapping(value="/typography")
