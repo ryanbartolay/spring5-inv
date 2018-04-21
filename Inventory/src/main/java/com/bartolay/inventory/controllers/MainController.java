@@ -55,6 +55,21 @@ public class MainController {
 		return "grid";
 	}
 	
+	@RequestMapping(value="/typography")
+	public String typography() {
+		return "typography";
+	}
+	
+	@RequestMapping(value="/icons")
+	public String icons() {
+		return "icons";
+	}
+	
+	@RequestMapping(value="/forms")
+	public String forms() {
+		return "forms";
+	}
+	
 	@RequestMapping(value = "/403", method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView accesssDenied() {
 
