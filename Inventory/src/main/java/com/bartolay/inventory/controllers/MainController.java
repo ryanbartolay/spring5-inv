@@ -50,6 +50,11 @@ public class MainController {
 		return "tables";
 	}
 	
+	@RequestMapping(value="/grid")
+	public String grid() {
+		return "grid";
+	}
+	
 	@RequestMapping(value = "/403", method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView accesssDenied() {
 
