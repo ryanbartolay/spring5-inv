@@ -14,6 +14,14 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
+//	@Override
+//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//		  auth.jdbcAuthentication().dataSource(dataSource)
+//	        .usersByUsernameQuery("select username, password, enabled from users where username=?")
+//	        .authoritiesByUsernameQuery("select username, authority from authorities where username=?")
+//	        .passwordEncoder(new BCryptPasswordEncoder());
+//	}
+
 	@Autowired
 	private DataSource dataSource;
 	
@@ -43,8 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.and()
 		.formLogin()
 		.loginPage("/login")
-		.successHandler(authenticationSuccessHandler)
-		.failureHandler(authenticationFailureHandler)
+//		.successHandler(authenticationSuccessHandler)
+//		.failureHandler(authenticationFailureHandler)
 		
 		.and()
 		.authenticationProvider(authenticationProvider)

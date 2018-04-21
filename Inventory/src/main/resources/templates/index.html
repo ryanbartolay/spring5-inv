@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org">
 
 <head>
 
@@ -36,7 +36,10 @@
 </head>
 
 <body>
-
+Authenticated username:
+        <div sec:authentication="name"></div>
+        Authenticated user roles:
+        <div sec:authentication="principal.authorities"></div>
     <div id="wrapper">
 
         <!-- Navigation -->

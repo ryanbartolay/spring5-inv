@@ -25,25 +25,25 @@ public class MainController {
 	public String login(@RequestParam(value = "error", required = false) String error, ModelMap model,
 			@RequestParam(value = "logout", required = false) String logout, HttpServletRequest request) {
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		
-		System.out.println("Authentication " + auth);
-		System.out.println(auth.isAuthenticated());
-		System.out.println("isAnonymous " + (auth instanceof AnonymousAuthenticationToken));
-		
-		String client_id = request.getParameter("client_id");
-		String redirect_uri = request.getParameter("redirect_uri");
-		String response_type = request.getParameter("response_type");
-		String state = request.getParameter("state");
-		
-		if(!(auth instanceof AnonymousAuthenticationToken)) {
-			return "redirect:/dashboard";
-		}
-		
-		model.addAttribute("client_id", client_id);
-		model.addAttribute("redirect_uri", redirect_uri);
-		model.addAttribute("response_type", response_type);
-		model.addAttribute("state", state);		
+//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//		
+//		System.out.println("Authentication " + auth);
+//		System.out.println(auth.isAuthenticated());
+//		System.out.println("isAnonymous " + (auth instanceof AnonymousAuthenticationToken));
+//		
+//		String client_id = request.getParameter("client_id");
+//		String redirect_uri = request.getParameter("redirect_uri");
+//		String response_type = request.getParameter("response_type");
+//		String state = request.getParameter("state");
+//		
+//		if(!(auth instanceof AnonymousAuthenticationToken)) {
+//			return "redirect:/dashboard";
+//		}
+//		
+//		model.addAttribute("client_id", client_id);
+//		model.addAttribute("redirect_uri", redirect_uri);
+//		model.addAttribute("response_type", response_type);
+//		model.addAttribute("state", state);		
 		
 		return "login";
 	}
