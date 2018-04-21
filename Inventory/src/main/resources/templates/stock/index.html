@@ -3,7 +3,7 @@
 	xmlns:sec="http://www.thymeleaf.org">
 
 <head th:include="includes/header">
-
+	<!-- jQuery -->
 </head>
 <body>
 
@@ -22,20 +22,9 @@
 			</div>
 
 			<div th:include="@{'/stock/' + ${html}}"></div>
-			
+
 		</div>
 	</div>
-
-	<!-- jQuery -->
-	<script th:src="@{/static/vendor/jquery/jquery.min.js}"></script>
-
-	<!-- Bootstrap Core JavaScript -->
-	<script th:src="@{/static/vendor/bootstrap/js/bootstrap.min.js}"></script>
-
-	<!-- Metis Menu Plugin JavaScript -->
-	<script th:src="@{/static/vendor/metisMenu/metisMenu.min.js}"></script>
-
-	<!-- Custom Theme JavaScript -->
-	<script th:src="@{/static/dist/js/sb-admin-2.js}"></script>
+	
 </body>
 </html>

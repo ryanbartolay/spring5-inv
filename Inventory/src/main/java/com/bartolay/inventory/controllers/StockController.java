@@ -9,8 +9,7 @@ public class StockController {
 
 	@RequestMapping(value="/brands")
 	public ModelAndView brandsList() {
-//		ModelAndView model = new ModelAndView("stock/index");
-		ModelAndView model = new ModelAndView("construction");
+		ModelAndView model = new ModelAndView("stock/index");
 		model.addObject("page", "Brands");
 		model.addObject("html", "brands/list");
 		return model;
