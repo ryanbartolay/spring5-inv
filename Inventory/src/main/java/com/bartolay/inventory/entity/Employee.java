@@ -1,23 +1,25 @@
 package com.bartolay.inventory.entity;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.security.Principal;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import org.springframework.security.core.GrantedAuthority;
+import com.bartolay.inventory.model.Authority;
 
 @Entity
 @Table(name = "employees")
-public class Employee implements Serializable, GrantedAuthority {
+public class Employee implements Serializable, Principal {
  
-    @Id
+	private static final long serialVersionUID = 1L;
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "firstname", nullable=false)
@@ -36,6 +38,9 @@ public class Employee implements Serializable, GrantedAuthority {
     private String type;
     @Column(name = "enabled", nullable=false)
     private boolean enabled;
+    
+    @Transient
+    private List<Authority> authorities;
     
     private String authority;
   
@@ -144,9 +149,14 @@ public class Employee implements Serializable, GrantedAuthority {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-	}
+	}	
 
-	
+	public List<Authority> getAuthorities() {
+		return authorities;
+	}
+	public void setAuthorities(List<Authority> authorities) {
+		this.authorities = authorities;
+	}
 
 	@Override
 	public String toString() {
@@ -154,14 +164,18 @@ public class Employee implements Serializable, GrantedAuthority {
 				+ ", password=" + password + ", phone=" + phone + ", address=" + address + ", type=" + type
 				+ ", enabled=" + enabled + ", authority=" + authority + "]";
 	}
-
-	@Override
+	
 	public String getAuthority() {
 		return authority;
 	}
 
 	public void setAuthority(String authority) {
 		this.authority = authority;
+	}
+
+	@Override
+	public String getName() {
+		return this.userName;
 	}
 
 }

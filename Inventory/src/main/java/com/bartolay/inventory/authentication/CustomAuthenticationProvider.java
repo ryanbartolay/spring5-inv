@@ -37,6 +37,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			
 			List<Authority> authorities = new ArrayList<>();
 			authorities.add(new Authority(employee.getAuthority()));
+			employee.setAuthorities(authorities);
 			
 			if(passwordEncoder.matches(password, employee.getPassword())) {
 				return new UsernamePasswordAuthenticationToken(employee, employee.getPassword(), authorities);
