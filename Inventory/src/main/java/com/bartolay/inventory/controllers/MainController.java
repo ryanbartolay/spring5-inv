@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.bartolay.inventory.entity.Employee;
+import com.bartolay.inventory.entity.User;
 
 @Controller
 public class MainController {
@@ -21,7 +21,7 @@ public class MainController {
 	@RequestMapping(value="/")
 	public String getDemo() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		System.err.println(((Employee) auth.getPrincipal()).getLastName());
+		System.err.println(((User) auth.getPrincipal()).getLastName());
 		System.err.println(auth.getAuthorities());
 		return "index";
 	}

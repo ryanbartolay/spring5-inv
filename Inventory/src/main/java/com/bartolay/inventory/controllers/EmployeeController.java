@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.bartolay.inventory.entity.Employee;
+import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.services.EmployeeService;
 
 @Controller
@@ -20,7 +20,7 @@ import com.bartolay.inventory.services.EmployeeService;
 public class EmployeeController {
 
 	@Autowired
-	private EmployeeService<Employee> employeeService;
+	private EmployeeService<User> employeeService;
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView viewUsers(Model model) {
@@ -37,7 +37,7 @@ public class EmployeeController {
 	}
 	
 	@RequestMapping(value="/create", method=RequestMethod.POST)
-	public ModelAndView createUser(@Valid Employee user, BindingResult bindingResult, Model model) {
+	public ModelAndView createUser(@Valid User user, BindingResult bindingResult, Model model) {
 		System.out.println("create user : " + user);
 		
 		ModelAndView mav = new ModelAndView();

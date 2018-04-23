@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 
 import com.bartolay.enums.AccountType;
 import com.bartolay.inventory.entity.Category;
-import com.bartolay.inventory.entity.Employee;
+import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.entity.Product;
 import com.bartolay.inventory.entity.Supplier;
-import com.bartolay.inventory.repositories.EmployeeRepository;
+import com.bartolay.inventory.repositories.UserRepository;
 import com.bartolay.inventory.utils.StringUtils;
 
 @Component
@@ -25,7 +25,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	private Category category;
 	
 	@Autowired
-	private EmployeeRepository employeeRepository;
+	private UserRepository employeeRepository;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -41,7 +41,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	}
 	
 	private void createEmployees() {
-		Employee employee = new Employee();
+		User employee = new User();
 		employee.setUserName("admin");
 		employee.setPassword(passwordEncoder.encode(password));
 		employee.setFirstName("Admin");

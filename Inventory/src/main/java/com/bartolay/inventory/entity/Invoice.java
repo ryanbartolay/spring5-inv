@@ -20,7 +20,7 @@ public class Invoice implements Serializable {
     
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "employeeId")
-    private Employee employee;
+    private User employee;
     
     @Column(name = "total")
     private double total;
@@ -41,7 +41,7 @@ public class Invoice implements Serializable {
         
     }
 
-    public Invoice(String id, Employee employee, double total, double vat, 
+    public Invoice(String id, User employee, double total, double vat, 
             double discount, double payable, double paid, double returned, String date) {
         this.id = id;
         this.employee = employee;
@@ -54,7 +54,7 @@ public class Invoice implements Serializable {
         this.date = date;
     }
 
-    public Invoice(String id, Employee employee, double total, double vat, 
+    public Invoice(String id, User employee, double total, double vat, 
             double discount, double payable, double paid, double returned) {
         this.id = id;
         this.employee = employee;
@@ -74,11 +74,11 @@ public class Invoice implements Serializable {
         this.id = id;
     }
 
-    public Employee getEmployee() {
+    public User getEmployee() {
         return employee;
     }
 
-    public void setEmployee(Employee employee) {
+    public void setEmployee(User employee) {
         this.employee = employee;
     }
 

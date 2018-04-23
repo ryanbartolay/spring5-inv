@@ -3,12 +3,12 @@ package com.bartolay.inventory.repositories;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.bartolay.inventory.entity.Employee;
+import com.bartolay.inventory.entity.User;
 
 @Repository
-public interface EmployeeRepository extends CrudRepository<Employee, Long> {
+public interface UserRepository extends CrudRepository<User, Long> {
     
-	public Employee findByUserName(String userName);
+	public User findByUserName(String userName);
 	
 //    public ObservableList<Employee> getEmployees();
 //    public Employee getEmployee(long id);

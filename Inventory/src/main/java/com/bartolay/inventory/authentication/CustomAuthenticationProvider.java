@@ -12,15 +12,15 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.bartolay.inventory.entity.Employee;
+import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.model.Authority;
-import com.bartolay.inventory.repositories.EmployeeRepository;
+import com.bartolay.inventory.repositories.UserRepository;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	@Autowired
-	private EmployeeRepository employeeRepository;
+	private UserRepository userRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -32,15 +32,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			String userName = auth.getName();
 			String password = (String) auth.getCredentials();
 			
-			Employee employee = employeeRepository.findByUserName(userName);
-			System.err.println("EMPLOYYESS  " + employee);
+			User user = userRepository.findByUserName(userName);
+			System.err.println("user  " + user);
 			
 			List<Authority> authorities = new ArrayList<>();
-			authorities.add(new Authority(employee.getAuthority()));
-			employee.setAuthorities(authorities);
+			authorities.add(new Authority(user.getAuthority()));
+			user.setAuthorities(authorities);
 			
-			if(passwordEncoder.matches(password, employee.getPassword())) {
-				return new UsernamePasswordAuthenticationToken(employee, employee.getPassword(), authorities);
+			if(passwordEncoder.matches(password, user.getPassword())) {
+				return new UsernamePasswordAuthenticationToken(user, user.getPassword(), authorities);
 			}
 			
 			throw new BadCredentialsException("Invalid Username and Password");

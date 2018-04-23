@@ -15,8 +15,8 @@ import javax.persistence.Transient;
 import com.bartolay.inventory.model.Authority;
 
 @Entity
-@Table(name = "employees")
-public class Employee implements Serializable, Principal {
+@Table(name = "users")
+public class User implements Serializable, Principal {
  
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -44,11 +44,11 @@ public class Employee implements Serializable, Principal {
     
     private String authority;
   
-    public Employee(){
+    public User(){
     
     }
 
-    public Employee(String firstName, String lastName, String userName, String password, String phone, String address) {
+    public User(String firstName, String lastName, String userName, String password, String phone, String address) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
@@ -57,7 +57,7 @@ public class Employee implements Serializable, Principal {
         this.address = address;
     }
 
-    public Employee(long id, String firstName, String lastName, 
+    public User(long id, String firstName, String lastName, 
             String userName, String password, String phone, String address) {
         this.id = id;
         this.firstName = firstName;
@@ -68,7 +68,7 @@ public class Employee implements Serializable, Principal {
         this.address = address;
     }
 
-    public Employee(long id, String firstName, String lastName, 
+    public User(long id, String firstName, String lastName, 
             String userName, String password, String phone, String address, String type) {
         this.id = id;
         this.firstName = firstName;
