@@ -27,7 +27,7 @@ public class User implements Serializable, Principal {
     @Column(name = "lastname", nullable=false)
     private String lastName;
     @Column(name = "username", nullable=false, unique=true)
-    private String userName;
+    private String username;
     @Column(name = "password", nullable=false)
     private String password;
     @Column(name = "phone")
@@ -51,7 +51,7 @@ public class User implements Serializable, Principal {
     public User(String firstName, String lastName, String userName, String password, String phone, String address) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userName = userName;
+        this.username = userName;
         this.password = password;
         this.phone = phone;
         this.address = address;
@@ -62,7 +62,7 @@ public class User implements Serializable, Principal {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userName = userName;
+        this.username = userName;
         this.password = password;
         this.phone = phone;
         this.address = address;
@@ -73,7 +73,7 @@ public class User implements Serializable, Principal {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userName = userName;
+        this.username = userName;
         this.password = password;
         this.phone = phone;
         this.address = address;
@@ -103,16 +103,16 @@ public class User implements Serializable, Principal {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+    
+    public String getUsername() {
+		return username;
+	}
 
-    public String getUserName() {
-        return userName;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
+	public String getPassword() {
         return password;
     }
 
@@ -160,7 +160,7 @@ public class User implements Serializable, Principal {
 
 	@Override
 	public String toString() {
-		return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName
+		return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + username
 				+ ", password=" + password + ", phone=" + phone + ", address=" + address + ", type=" + type
 				+ ", enabled=" + enabled + ", authority=" + authority + "]";
 	}
@@ -175,7 +175,7 @@ public class User implements Serializable, Principal {
 
 	@Override
 	public String getName() {
-		return this.userName;
+		return this.username;
 	}
 
 }

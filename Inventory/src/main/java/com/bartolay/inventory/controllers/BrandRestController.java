@@ -1,39 +1,42 @@
 package com.bartolay.inventory.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bartolay.inventory.entity.Brand;
-import com.bartolay.inventory.interfaces.CRUDRestController;
 import com.bartolay.inventory.repositories.BrandRepository;
 
 @RestController
-public class BrandRestController implements CRUDRestController<Brand> {
+public class BrandRestController {
 
 	@Autowired
 	private BrandRepository brandRepository;
 
-	@Override
-	@RequestMapping(value="/ws/brands", method=RequestMethod.GET)
-	public Iterable<Brand> getList() {
-		return brandRepository.findAll();
+	@RequestMapping(value="/api/brands", method=RequestMethod.GET)
+	public ResponseEntity<List<Brand>> getList() {
+		List<Brand> brands = new ArrayList<>();
+		for(Brand brand : brandRepository.findAll()) {
+			brands.add(brand);
+		}
+		return ResponseEntity.ok(brands);
 	}
 
-	@Override
 	public Brand getRecordById(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public Brand create(Brand k) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public Brand update(Brand k) {
 		// TODO Auto-generated method stub
 		return null;

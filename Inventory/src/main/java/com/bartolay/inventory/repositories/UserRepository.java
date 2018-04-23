@@ -8,7 +8,7 @@ import com.bartolay.inventory.entity.User;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
     
-	public User findByUserName(String userName);
+	public User findByUsername(String username);
 	
 //    public ObservableList<Employee> getEmployees();
 //    public Employee getEmployee(long id);

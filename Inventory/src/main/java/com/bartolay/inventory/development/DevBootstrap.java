@@ -8,10 +8,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.bartolay.enums.AccountType;
+import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Category;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.entity.Product;
 import com.bartolay.inventory.entity.Supplier;
+import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 import com.bartolay.inventory.utils.StringUtils;
 
@@ -28,6 +30,9 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	private UserRepository employeeRepository;
 	
 	@Autowired
+	private BrandRepository brandRepository;
+	
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	@Override
@@ -38,11 +43,18 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 //		createCategories();
 //		createProducts();
 //      session.getTransaction().commit();
+		createBrand();
 	}
 	
+	private void createBrand() {
+		Brand brand = new Brand();
+		brand.setCreatedBy(employeeRepository.findByUsername("admin"));
+		brandRepository.save(brand);
+	}
+
 	private void createEmployees() {
 		User employee = new User();
-		employee.setUserName("admin");
+		employee.setUsername("admin");
 		employee.setPassword(passwordEncoder.encode(password));
 		employee.setFirstName("Admin");
 		employee.setLastName("Admin");
