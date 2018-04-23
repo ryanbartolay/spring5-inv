@@ -26,7 +26,7 @@ public class Brand {
 	private List<Model> models = new ArrayList<>();
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable=false, updatable=false)
 	private User createdBy;
 
 	public Long getId() {
