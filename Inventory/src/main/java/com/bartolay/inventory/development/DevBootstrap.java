@@ -10,12 +10,11 @@ import org.springframework.stereotype.Component;
 import com.bartolay.enums.AccountType;
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Category;
-import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.entity.Product;
 import com.bartolay.inventory.entity.Supplier;
+import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.UserRepository;
-import com.bartolay.inventory.utils.StringUtils;
 
 @Component
 public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> {
