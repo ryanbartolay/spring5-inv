@@ -26,7 +26,7 @@ public class EmployeeController {
 	public ModelAndView viewUsers(Model model) {
 		//model.addAttribute("users", userService.getAll());
 		ModelAndView mav = new ModelAndView("user/list");
-		mav.addObject("users", employeeService.getAll());
+		mav.addObject("users", employeeService.findAll());
 		return mav;
 	}
 	

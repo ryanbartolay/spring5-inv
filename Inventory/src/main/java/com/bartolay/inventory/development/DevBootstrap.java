@@ -49,12 +49,12 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		// creating companies
 		Company c = new Company();
 		c.setName("Big Trading");
-		c.setNameArabic("شركة بج للتجارة");
+		c.setEmail("rbartolay.gotechsolutions@gmail.com");
 		companyRepository.save(c);
 		
 		Company company = new Company();
 		company.setName("GoTech Solutions");
-		
+		company.setEmail("bartolay.ryan@gmail.com");
 		companyRepository.save(company);
 		
 		// creating brands

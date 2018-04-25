@@ -1,17 +1,25 @@
 package com.bartolay.inventory.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.bartolay.inventory.repositories.CompanyRepository;
+
 @Controller
 public class StockController {
 
+	@Autowired
+	private CompanyRepository companyRepository;
+	
 	@RequestMapping(value="/brands")
 	public ModelAndView brandsList() {
 		ModelAndView model = new ModelAndView("stock/index");
 		model.addObject("page", "Brands");
 		model.addObject("html", "brands/list");
+		
+		model.addObject("companies", companyRepository.findAll());
 		return model;
 	}
 	

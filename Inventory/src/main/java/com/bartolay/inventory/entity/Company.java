@@ -15,7 +15,7 @@ public class Company {
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 	
-	@Column(unique=true, nullable=false, length=100)
+	@Column(unique=true, length=100)
 	private String nameArabic;
 	
 	@Column(unique=true, nullable=false, length=100)

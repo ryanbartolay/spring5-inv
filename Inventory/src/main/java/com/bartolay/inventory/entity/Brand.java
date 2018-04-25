@@ -17,12 +17,15 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Brand {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "brand_generator")
 	@SequenceGenerator(name="brand_generator", sequenceName = "BRAND_SER_SEQ")
 	@Column(name = "id", updatable = false, nullable = false)
+	@JsonIgnore
 	private Long id;
 
 	@OneToMany(mappedBy = "brand")
@@ -47,7 +50,7 @@ public class Brand {
 
 	@Column(name="created_date", nullable=false, updatable=false)
 	private Date createdDate;
-	
+
 	@Column(name="updated_date")
 	private Date updatedDated;
 

@@ -10,12 +10,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Model {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "model_generator")
 	@SequenceGenerator(name="model_generator", sequenceName = "MOD_SER_SEQ")
 	@Column(name = "id", updatable = false, nullable = false)
+	@JsonIgnore
 	private Integer serial;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

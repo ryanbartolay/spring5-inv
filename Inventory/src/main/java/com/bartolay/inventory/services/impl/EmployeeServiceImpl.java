@@ -19,7 +19,7 @@ public class EmployeeServiceImpl implements EmployeeService<User> {
 	private UserRepository employeeRepository;
 	
 	@Override
-	public List<User> getAll() {
+	public List<User> findAll() {
 		List<User> employees = new ArrayList<>();
 		for(User employee : employeeRepository.findAll()) {
 			employees.add(employee);
