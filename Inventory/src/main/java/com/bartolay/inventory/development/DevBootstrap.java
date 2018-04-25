@@ -57,8 +57,11 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		companyRepository.save(company);
 		
 		Brand brand = new Brand();
+		brand.setName("Brand");
+		brand.setNameArabic("تفصيل بدون قماش");
 		brand.setCreatedBy(employeeRepository.findByUsername("admin"));
 		brand.setCompany(company);
+		brand.setFlag("S");
 		brandRepository.save(brand);
 	}
 

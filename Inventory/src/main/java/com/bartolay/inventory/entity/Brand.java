@@ -31,8 +31,8 @@ public class Brand {
 	@Column(nullable=false, length=50)
 	private String name;
 	
-	@Column(nullable=false)
-	private char flag;
+	@Column(nullable=false, length=3)
+	private String flag;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable=false)
@@ -72,10 +72,10 @@ public class Brand {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public char getFlag() {
+	public String getFlag() {
 		return flag;
 	}
-	public void setFlag(char flag) {
+	public void setFlag(String flag) {
 		this.flag = flag;
 	}
 	public Company getCompany() {
