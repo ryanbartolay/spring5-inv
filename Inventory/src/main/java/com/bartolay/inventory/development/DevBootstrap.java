@@ -41,21 +41,23 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
-//		session.beginTransaction();
 		createEmployees();
-//		createSuppliers();
-//		createCategories();
-//		createProducts();
-//      session.getTransaction().commit();
-		createBrand();
+		createCompaniesAndBrand();
 	}
 	
-	private void createBrand() {
+	private void createCompaniesAndBrand() {
+		// creating companies
+		Company c = new Company();
+		c.setName("Big Trading");
+		c.setNameArabic("شركة بج للتجارة");
+		companyRepository.save(c);
+		
 		Company company = new Company();
 		company.setName("GoTech Solutions");
 		
 		companyRepository.save(company);
 		
+		// creating brands
 		Brand brand = new Brand();
 		brand.setName("Brand");
 		brand.setNameArabic("تفصيل بدون قماش");
