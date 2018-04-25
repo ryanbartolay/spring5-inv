@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.bartolay.inventory.entity.Company;
 import com.bartolay.inventory.repositories.CompanyRepository;
 import com.bartolay.inventory.services.CompanyService;
+import com.bartolay.inventory.utils.ServiceUtility;
 
 @Service
 @Transactional
@@ -17,10 +18,12 @@ public class CompanyServiceImpl implements CompanyService<Company> {
 
 	@Autowired
 	private CompanyRepository companyRepository;
-	
+
 	@Override
 	public List<Company> findAll() {
-		return toList(companyRepository.findAll());
+		return ServiceUtility.toList(companyRepository.findAll());
 	}
+	
+	
 
 }

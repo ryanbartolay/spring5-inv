@@ -5,13 +5,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.bartolay.inventory.repositories.CompanyRepository;
+import com.bartolay.inventory.entity.Company;
+import com.bartolay.inventory.services.CompanyService;
 
 @Controller
 public class StockController {
 
 	@Autowired
-	private CompanyRepository companyRepository;
+	private CompanyService<Company> companyService;
 	
 	@RequestMapping(value="/brands")
 	public ModelAndView brandsList() {
@@ -19,7 +20,7 @@ public class StockController {
 		model.addObject("page", "Brands");
 		model.addObject("html", "brands/list");
 		
-		model.addObject("companies", companyRepository.findAll());
+		model.addObject("companies", companyService.findAll());
 		return model;
 	}
 	
