@@ -24,6 +24,4 @@ public class CompanyServiceImpl implements CompanyService<Company> {
 		return ServiceUtility.toList(companyRepository.findAll());
 	}
 	
-	
-
 }
