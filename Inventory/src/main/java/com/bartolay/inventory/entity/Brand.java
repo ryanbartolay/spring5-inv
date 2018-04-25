@@ -60,4 +60,28 @@ public class Brand {
 	public void setCreatedBy(User createdBy) {
 		this.createdBy = createdBy;
 	}
+	public String getNameArabic() {
+		return nameArabic;
+	}
+	public void setNameArabic(String nameArabic) {
+		this.nameArabic = nameArabic;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public char getFlag() {
+		return flag;
+	}
+	public void setFlag(char flag) {
+		this.flag = flag;
+	}
+	public Company getCompany() {
+		return company;
+	}
+	public void setCompany(Company company) {
+		this.company = company;
+	}
 }
