@@ -17,13 +17,26 @@ import javax.persistence.SequenceGenerator;
 @Entity
 public class Brand {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "model_generator")
-	@SequenceGenerator(name="model_generator", sequenceName = "MOD_SER_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "brand_generator")
+	@SequenceGenerator(name="brand_generator", sequenceName = "BRAND_SER_SEQ")
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
 
 	@OneToMany(mappedBy = "brand")
 	private List<Model> models = new ArrayList<>();
+	
+	@Column(nullable=true, length=50)
+	private String nameArabic;
+	
+	@Column(nullable=false, length=50)
+	private String name;
+	
+	@Column(nullable=false)
+	private char flag;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", nullable=false)
+	private Company company;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable=false, updatable=false)
