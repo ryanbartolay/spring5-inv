@@ -1,7 +1,51 @@
 <div class="col-lg-12">
 	<div class="row h6">
-		<button type="button" class="btn btn-success pull-right">Add Brand</button>
+		<button type="button" class="btn btn-success pull-right"
+			data-toggle="modal" data-target="#myModal" data-backdrop="static"
+			data-keyboard="false">Add Brand</button>
 	</div>
+
+
+	<!-- Modal Edit Brand -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form data-async data-target="#rating-modal"
+					action="/some-endpoint" method="POST">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">Brand Create</h4>
+					</div>
+
+					<div class="panel-body">
+						<p>
+						asdada adsadadadadlkjkla; ;kjn al;skad ;lknasdlksa naklnasdklasd
+						<div class="form-group">
+							<label>Text Input</label> <input class="form-control">
+							<p class="help-block">Example block-level help text here.</p>
+						</div>
+						<div class="form-group">
+							<label>Text Input with Placeholder</label> <input
+								class="form-control" placeholder="Enter text">
+						</div>
+						</p>
+					</div>
+					
+					<div class="modal-footer">
+						<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Save
+							changes</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
 	<div class="panel panel-default">
 		<!-- /.panel-heading -->
 		<div class="panel-body">
@@ -435,6 +479,7 @@
 <script
 	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
 <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+<script th:src="@{/static/js/ajax-form.js}"></script>
 <script>
 	$(document).ready(function() {
 		$('#dataTables-example').DataTable({
