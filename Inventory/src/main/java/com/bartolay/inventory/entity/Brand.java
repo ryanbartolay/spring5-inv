@@ -18,8 +18,10 @@ import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Brand {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "brand_generator")

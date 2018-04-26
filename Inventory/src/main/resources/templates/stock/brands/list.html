@@ -10,7 +10,7 @@
 		aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form data-async data-target="#rating-modal" th:object="${brand}" action="/some-endpoint"
+				<form data-async data-target="#rating-modal" th:object="${brand}" th:action="@{/api/brands}"
 					method="POST">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"
