@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Company;
+import com.bartolay.inventory.form.BrandForm;
 import com.bartolay.inventory.services.CompanyService;
 
 @Controller
@@ -17,11 +18,11 @@ public class StockController {
 	private CompanyService<Company> companyService;
 	
 	@RequestMapping(value="/brands")
-	public ModelAndView brandsList(@ModelAttribute("brand") Brand brand) {
+	public ModelAndView brandsList() {
 		ModelAndView model = new ModelAndView("stock/index");
 		model.addObject("page", "Brands");
 		model.addObject("html", "brands/list");
-		
+		model.addObject("brandForm", new BrandForm());
 		model.addObject("companies", companyService.findAll());
 		return model;
 	}
