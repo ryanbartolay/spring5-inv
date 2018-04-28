@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -35,5 +37,15 @@ public class InventoryApplication extends SpringBootServletInitializer {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+	public StringHttpMessageConverter stringHttpMessageConverter() {
+		return new StringHttpMessageConverter();
+	}
+	
+	@Bean
+	public MappingJackson2HttpMessageConverter httpMessageConverter() {
+		return new MappingJackson2HttpMessageConverter();
 	}
 }

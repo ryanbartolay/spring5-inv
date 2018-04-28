@@ -6,9 +6,11 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,15 +49,18 @@ public class BrandRestController {
 	}
 
 	@RequestMapping(value="/api/brands", method=RequestMethod.POST)
-	public BodyBuilder create(@Valid BrandForm brandForm, BindingResult bindingResult) {
+	public ResponseEntity<Object> create(@Valid BrandForm brandForm, BindingResult bindingResult) throws MethodArgumentNotValidException {
 
+		
+//		ErrorDetails errorDetails = null;
 		if (bindingResult.hasErrors()) {
 			System.err.println("HEY eror");
 			System.err.println(bindingResult);
+//			errorDetails = new ErrorDetails(new Date(), "Validation Failed", bindingResult.toString());
+			throw new MethodArgumentNotValidException(null, bindingResult);
 		}
 
-
-		return ResponseEntity.ok();
+		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value="/api/brands", method=RequestMethod.PUT)
