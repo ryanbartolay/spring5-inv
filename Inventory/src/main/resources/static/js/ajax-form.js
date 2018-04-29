@@ -19,11 +19,15 @@ function formModal(modal, successCallback = null) {
                 modal.modal("toggle");
                 
                 toast("success", data.localizedMessage);
-                
+            	
                 // calling success callback
                 if(successCallback != null) {
                 	successCallback();
                 }
+                
+                $form[0].reset();
+                $btnSubmit.removeAttr("disabled");
+            	$btnSubmit.html($btnSubmitText);
             },
             error: function(xhr, ajaxOptions, thrownError) {
             	var index;

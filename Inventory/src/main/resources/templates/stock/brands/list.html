@@ -8,7 +8,7 @@
 		<div class="panel-body">
 			<table width="100%"
 				class="table table-striped table-bordered table-hover"
-				id="dataTables-example">
+				id="brand-datatable">
 				<thead>
 					<tr>
 						<th>Name</th>
@@ -36,17 +36,15 @@
 <script>
 /*<![CDATA[*/
 	$(document).ready(function() {
-		$('#dataTables-example').DataTable({
+		var brand_table = $('#brand-datatable').DataTable({
 			responsive : true,
 			ajax: {
-				url: '/api/dt/brands',
-				data: function(data) {
-					console.log(data)
-					
-					data.name = "John",
-            		data.company = "aaaa"
-				}
+				url: '/api/dt/brands'
 			}
+		});
+		
+		formModal($("#createBrandModal"), function() {
+			brand_table.ajax.reload( null, false ); // user paging is not reset on reload
 		});
 	});
 /*]]>*/

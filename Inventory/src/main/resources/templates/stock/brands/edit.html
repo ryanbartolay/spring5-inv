@@ -7,7 +7,7 @@
 	aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form data-async data-target="#rating-modal" th:object="${brandForm}"
+			<form data-async data-target="#rating-modal" id="createBrandForm" th:object="${brandForm}"
 				th:action="@{/api/brands}" method="POST">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
@@ -48,6 +48,12 @@
 
 <script>
 jQuery(function($) {
-	formModal($("#createBrandModal"));
+	/*formModal($("#createBrandModal"), function() {
+		var brand_datatable = $('#brand-datatable');
+		console.log(brand_datatable);
+		if(brand_datatable.length > 0) {
+			brand_datatable.ajax.reload( null, false ); // user paging is not reset on reload
+		}
+	}); */
 });
 </script>

@@ -54,21 +54,14 @@ public class BrandRestController {
 	public ResponseEntity<String> getDTList() {
 		
 		List<Brand> brands = new ArrayList<>();
-
 		
 		JSONArray mainArr = new JSONArray();
 		for(Brand brand : brandRepository.apiFindAll()) {
 			JSONArray array = new JSONArray();
-			array.put("one");
-			array.put("two");
-//			array.put("three");
-//			array.put("four");
-//			array.put("five");
-			
+			array.put(brand.getName());
+			array.put(brand.getCompany().getName());
 			
 			mainArr.put(array);
-//			jsonArray.put(obj);	
-//			jsonObject.put("")
 			brands.add(brand);
 		}
 		
