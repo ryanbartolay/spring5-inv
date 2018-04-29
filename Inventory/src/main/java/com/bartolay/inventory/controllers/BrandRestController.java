@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,12 @@ public class BrandRestController {
 	
 	@Autowired
 	private BrandRepository brandRepository;
+	
+	@Autowired
+	private JSONObject jsonObject;
+	
+	@Autowired
+	private JSONArray jsonArray;
 
 	@RequestMapping(value="/api/brands", method=RequestMethod.GET)
 	public ResponseEntity<List<Brand>> getList() {
@@ -40,6 +48,32 @@ public class BrandRestController {
 			brands.add(brand);
 		}
 		return ResponseEntity.ok(brands);
+	}
+	
+	@RequestMapping(value="/api/dt/brands", method=RequestMethod.GET, produces="application/json")
+	public ResponseEntity<String> getDTList() {
+		
+		List<Brand> brands = new ArrayList<>();
+
+		
+		JSONArray mainArr = new JSONArray();
+		for(Brand brand : brandRepository.apiFindAll()) {
+			JSONArray array = new JSONArray();
+			array.put("one");
+			array.put("two");
+//			array.put("three");
+//			array.put("four");
+//			array.put("five");
+			
+			
+			mainArr.put(array);
+//			jsonArray.put(obj);	
+//			jsonObject.put("")
+			brands.add(brand);
+		}
+		
+		jsonObject.put("data", mainArr);
+		return ResponseEntity.ok(jsonObject.toString());
 	}
 
 	@RequestMapping(value="/api/brands/{id}", method=RequestMethod.GET)
