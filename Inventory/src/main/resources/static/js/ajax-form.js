@@ -1,8 +1,8 @@
-jQuery(function($) {
-    $('form[data-async]').on('submit', function(event) {
+function formModal(modal) {
+	$('form[data-async]').on('submit', function(event) {
         var $form = $(this);
         var $target = $($form.attr('data-target'));
-        var $error = $($form.find("#errors"));
+        var $divError = $($form.find("#errors"));
         var $btnSubmit = $($form.find("#submit"));
         var $btnSubmitText = $btnSubmit.text();
         
@@ -16,18 +16,21 @@ jQuery(function($) {
 
             success: function(data, status) {
                 $target.html(data);
+                modal.modal("toggle");
+                $.toaster({ priority : 'success', title : 'Notice', message : data.localizedMessage});
             },
             error: function(xhr, ajaxOptions, thrownError) {
             	var index;
             	var errors = xhr.responseJSON.errors;
             	
-            	var html = "<ul>";
+            	var html = "<div class=\"alert alert-danger\">" +
+            			"<ul>";
             	for (index = 0; index < errors.length; ++index) {
             	    html += "<li>" +errors[index]+ "</li>";
             	}
-            	html += "</ul>"
+            	html += "</ul></div>";
             	
-            	$error.html(html);
+            	$divError.html(html);
             	$btnSubmit.removeAttr("disabled");
             	$btnSubmit.html($btnSubmitText);
             }
@@ -35,4 +38,4 @@ jQuery(function($) {
 
         event.preventDefault();
     });
-});
+}
