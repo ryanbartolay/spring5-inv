@@ -5,11 +5,11 @@ import javax.validation.constraints.Size;
 
 public class BrandForm {
 	@NotNull
-    @Size(min=2, max=30)
+    @Size(min=2, max=30, message="Name length minimum 2 and 30" )
     private String name;
 
     @NotNull
-    private Integer company_id;
+    private Long company_id;
 
     public String getName() {
         return this.name;
@@ -19,11 +19,11 @@ public class BrandForm {
         this.name = name;
     }
 
-	public Integer getCompany_id() {
+	public Long getCompany_id() {
 		return company_id;
 	}
 
-	public void setCompany_id(Integer company_id) {
+	public void setCompany_id(Long company_id) {
 		this.company_id = company_id;
 	}
 }

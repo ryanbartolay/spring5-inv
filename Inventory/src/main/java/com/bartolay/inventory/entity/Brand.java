@@ -13,9 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -39,9 +40,6 @@ public class Brand {
 	@Column(nullable=false, length=50)
 	private String name;
 
-	@Column(nullable=false, length=3)
-	private String flag;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_id", nullable=false)
 	private Company company;
@@ -51,20 +49,22 @@ public class Brand {
 	private User createdBy;
 
 	@Column(name="created_date", nullable=false, updatable=false)
+	@CreationTimestamp
 	private Date createdDate;
 
 	@Column(name="updated_date")
+	@UpdateTimestamp
 	private Date updatedDated;
 
-	@PrePersist
-	protected void onCreate() {
-		createdDate = new Date();
-	}
-
-	@PreUpdate
-	protected void onUpdate() {
-		updatedDated = new Date();
-	}
+//	@PrePersist
+//	protected void onCreate() {
+//		createdDate = new Date();
+//	}
+//
+//	@PreUpdate
+//	protected void onUpdate() {
+//		updatedDated = new Date();
+//	}
 
 	public Long getId() {
 		return id;
@@ -96,12 +96,6 @@ public class Brand {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getFlag() {
-		return flag;
-	}
-	public void setFlag(String flag) {
-		this.flag = flag;
-	}
 	public Company getCompany() {
 		return company;
 	}
@@ -116,7 +110,7 @@ public class Brand {
 	}
 	@Override
 	public String toString() {
-		return "Brand [id=" + id + ", models=" + models + ", nameArabic=" + nameArabic + ", name=" + name + ", flag="
-				+ flag + ", company=" + company + ", createdBy=" + createdBy + ", createdDate=" + createdDate + "]";
+		return "Brand [id=" + id + ", models=" + models + ", nameArabic=" + nameArabic + ", name=" + name 
+				+ ", company=" + company + ", createdBy=" + createdBy + ", createdDate=" + createdDate + "]";
 	}
 }

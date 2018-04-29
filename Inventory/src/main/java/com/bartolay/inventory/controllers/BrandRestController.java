@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.form.BrandForm;
+import com.bartolay.inventory.model.ApiResponse;
+import com.bartolay.inventory.model.RestApiException;
 import com.bartolay.inventory.repositories.BrandRepository;
+import com.bartolay.inventory.services.BrandService;
 
 @RestController
 public class BrandRestController {
 
+	@Autowired
+	private BrandService brandService;
+	
 	@Autowired
 	private BrandRepository brandRepository;
 
@@ -49,18 +54,20 @@ public class BrandRestController {
 	}
 
 	@RequestMapping(value="/api/brands", method=RequestMethod.POST)
-	public ResponseEntity<Object> create(@Valid BrandForm brandForm, BindingResult bindingResult) throws MethodArgumentNotValidException {
+	public ResponseEntity<ApiResponse> create(@Valid BrandForm brandForm, BindingResult bindingResult) throws RestApiException {
 
-		
-//		ErrorDetails errorDetails = null;
 		if (bindingResult.hasErrors()) {
-			System.err.println("HEY eror");
-			System.err.println(bindingResult);
-//			errorDetails = new ErrorDetails(new Date(), "Validation Failed", bindingResult.toString());
-			throw new MethodArgumentNotValidException(null, bindingResult);
+			throw new RestApiException(bindingResult);
 		}
 
-		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		try {
+			brandService.create(brandForm);
+		} catch(Exception e) {
+			throw new RestApiException(e);
+		}
+		
+		ApiResponse apiError = new ApiResponse(HttpStatus.OK, "Succesfully created brand");
+		return new ResponseEntity<ApiResponse>(apiError, HttpStatus.OK);
 	}
 
 	@RequestMapping(value="/api/brands", method=RequestMethod.PUT)

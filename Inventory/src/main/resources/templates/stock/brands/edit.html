@@ -1,0 +1,44 @@
+
+<button type="button" class="btn btn-success pull-right"
+	data-toggle="modal" data-target="#myModal" data-backdrop="static"
+	data-keyboard="false">Add Brand</button>
+<!-- Modal Edit Brand -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form data-async data-target="#rating-modal" th:object="${brandForm}"
+				th:action="@{/api/brands}" method="POST">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">Brand Create</h4>
+				</div>
+
+				<div class="panel-body">
+					<div class="form-group">
+						<label>Company</label> <select
+							class="form-control" th:field="*{company_id}" id="ddCompany">
+							<option th:each="company : ${companies}" th:value="${company.id}"
+								th:text="${company.name}"></option>
+						</select>
+					</div>
+				
+					<div class="form-group">
+						<label>Name</label> <input class="form-control" th:field="*{name}" maxlength="30">
+						<p class="help-block">This is the brand name.</p>
+					</div>
+					
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-success btn-primary">Create</button>
+				</div>
+			</form>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
