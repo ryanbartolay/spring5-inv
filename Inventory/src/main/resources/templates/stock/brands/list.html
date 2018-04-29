@@ -40,7 +40,11 @@
 			responsive : true,
 			ajax: {
 				url: '/api/dt/brands'
-			}
+			},
+			processing: true,
+	        serverSide: true,
+			length: 5,
+			start: 0,
 		});
 		
 		formModal($("#createBrandModal"), function() {
