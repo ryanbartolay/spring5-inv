@@ -1,4 +1,4 @@
-function formModal(modal) {
+function formModal(modal, successCallback = null) {
 	$('form[data-async]').on('submit', function(event) {
         var $form = $(this);
         var $target = $($form.attr('data-target'));
@@ -17,7 +17,13 @@ function formModal(modal) {
             success: function(data, status) {
                 $target.html(data);
                 modal.modal("toggle");
-                $.toaster({ priority : 'success', title : 'Notice', message : data.localizedMessage});
+                
+                toast("success", data.localizedMessage);
+                
+                // calling success callback
+                if(successCallback != null) {
+                	successCallback();
+                }
             },
             error: function(xhr, ajaxOptions, thrownError) {
             	var index;
@@ -38,4 +44,18 @@ function formModal(modal) {
 
         event.preventDefault();
     });
+}
+
+function toast(icon, message) {
+	
+	var heading = { success: "Success", error: "Error", info: "Information", warn: "Warning"};
+	
+	$.toast({
+        heading: heading[icon],
+        text: message,
+        icon: icon, // success, info, warn, error
+        position: 'top-right',
+        hideAfter: false, // auto hides after some seconds
+    });
+	
 }

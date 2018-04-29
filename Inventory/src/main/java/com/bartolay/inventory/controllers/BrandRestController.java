@@ -61,13 +61,13 @@ public class BrandRestController {
 		}
 
 		try {
-			brandService.create(brandForm);
+			Brand brand = brandService.create(brandForm);
+			
+			ApiResponse apiError = new ApiResponse(HttpStatus.OK, "Succesfully Created brand "+ brand.getName());
+			return new ResponseEntity<ApiResponse>(apiError, HttpStatus.OK);
 		} catch(Exception e) {
 			throw new RestApiException(e);
 		}
-		
-		ApiResponse apiError = new ApiResponse(HttpStatus.OK, "Succesfully created brand");
-		return new ResponseEntity<ApiResponse>(apiError, HttpStatus.OK);
 	}
 
 	@RequestMapping(value="/api/brands", method=RequestMethod.PUT)
