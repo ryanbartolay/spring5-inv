@@ -54,19 +54,9 @@ public class BrandServiceImpl implements BrandService {
 	public DataTableResults<BrandDatatable> retrieveList(HttpServletRequest request) {
 		
 		DataTableRequest<Brand> dataTableInRQ = new DataTableRequest<>(request);
-		PaginationCriteria pagination = dataTableInRQ.getPaginationRequest();
+
 		
-		String sql = "select b.id, b.name, c.name as company_name from brand b inner join company c on b.company_id = c.id";
-				
-		String paginatedQuery = AppUtil.buildPaginatedQuery(sql, pagination);
-		
-		List<BrandDatatable> brandList = brandJdbcRepository.paginatedFindAll(paginatedQuery);
-		
-		DataTableResults<BrandDatatable> dataTableResult = new DataTableResults<BrandDatatable>();
-		dataTableResult.setDraw(dataTableInRQ.getDraw());
-		dataTableResult.setListOfDataObjects(brandList);
-		
-		return dataTableResult;
+		return brandJdbcRepository.paginatedFindAll(dataTableInRQ);
 	}
 
 }
