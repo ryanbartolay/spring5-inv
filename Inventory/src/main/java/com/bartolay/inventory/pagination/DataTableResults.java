@@ -5,6 +5,8 @@ package com.bartolay.inventory.pagination;
 
 import java.util.List;
 
+import org.json.JSONArray;
+
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
@@ -105,6 +107,11 @@ public class DataTableResults<T> {
 	public void setListOfDataObjects(List<T> listOfDataObjects) {
 		this.listOfDataObjects = listOfDataObjects;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "DataTableResults [draw=" + draw + ", recordsFiltered=" + recordsFiltered + ", recordsTotal="
+				+ recordsTotal + ", listOfDataObjects=" + listOfDataObjects + "]";
+	}
 }
 

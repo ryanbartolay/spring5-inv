@@ -39,12 +39,16 @@
 		var brand_table = $('#brand-datatable').DataTable({
 			responsive : true,
 			ajax: {
-				url: '/api/dt/brands'
+				url: '/api/page/brands'
 			},
 			processing: true,
 	        serverSide: true,
 			length: 5,
 			start: 0,
+	        columns: [
+                { "data": "name", "name" : "Name", "title" : "Namezzzz"  },
+                { "data": "company_name", "name" : "Company" , "title" : "Company Inc."}
+            ]  
 		});
 		
 		formModal($("#createBrandModal"), function() {

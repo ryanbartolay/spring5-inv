@@ -1,21 +1,35 @@
 package com.bartolay.inventory.services.impl;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bartolay.inventory.datatable.BrandDatatable;
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.form.BrandForm;
+import com.bartolay.inventory.pagination.DataTableRequest;
+import com.bartolay.inventory.pagination.DataTableResults;
+import com.bartolay.inventory.pagination.PaginationCriteria;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
+import com.bartolay.inventory.repositories.impl.BrandJdbcRepository;
 import com.bartolay.inventory.services.BrandService;
+import com.bartolay.inventory.utils.AppUtil;
 import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
 @Transactional
 public class BrandServiceImpl implements BrandService {
 
+	@Autowired
+	private BrandJdbcRepository brandJdbcRepository;
+	
 	@Autowired
 	private BrandRepository brandRepository;
 	
@@ -34,6 +48,25 @@ public class BrandServiceImpl implements BrandService {
 		brand.setCreatedBy(userCredentials.getLoggedInUser());
 		
 		return brandRepository.save(brand);
+	}
+
+	@Override
+	public DataTableResults<BrandDatatable> retrieveList(HttpServletRequest request) {
+		
+		DataTableRequest<Brand> dataTableInRQ = new DataTableRequest<>(request);
+		PaginationCriteria pagination = dataTableInRQ.getPaginationRequest();
+		
+		String sql = "select b.id, b.name, c.name as company_name from brand b inner join company c on b.company_id = c.id";
+				
+		String paginatedQuery = AppUtil.buildPaginatedQuery(sql, pagination);
+		
+		List<BrandDatatable> brandList = brandJdbcRepository.paginatedFindAll(paginatedQuery);
+		
+		DataTableResults<BrandDatatable> dataTableResult = new DataTableResults<BrandDatatable>();
+		dataTableResult.setDraw(dataTableInRQ.getDraw());
+		dataTableResult.setListOfDataObjects(brandList);
+		
+		return dataTableResult;
 	}
 
 }

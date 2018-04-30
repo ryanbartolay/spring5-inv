@@ -3,6 +3,10 @@ package com.bartolay.inventory.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.json.JSONArray;
@@ -11,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +27,15 @@ import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.form.BrandForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
+import com.bartolay.inventory.pagination.DataTableRequest;
+import com.bartolay.inventory.pagination.DataTableResults;
+import com.bartolay.inventory.pagination.PaginationCriteria;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.services.BrandService;
+import com.bartolay.inventory.utils.AppUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 @RestController
 public class BrandRestController {
@@ -39,6 +51,10 @@ public class BrandRestController {
 	
 	@Autowired
 	private JSONArray jsonArray;
+	
+	/** The entity manager. */
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@RequestMapping(value="/api/brands", method=RequestMethod.GET)
 	public ResponseEntity<List<Brand>> getList() {
@@ -65,9 +81,60 @@ public class BrandRestController {
 			brands.add(brand);
 		}
 		
-		jsonObject.put("data", mainArr);
+		//jsonObject.put("data", mainArr);
 		return ResponseEntity.ok(jsonObject.toString());
 	}
+	
+	@RequestMapping(value="/api/page/brands", method=RequestMethod.GET, produces="application/json")
+	public String getDTListPaginated(HttpServletRequest request) throws JsonProcessingException {
+		System.err.println("################################################");
+//		return brandService.retrieveList(request).getJson();
+		
+//		JSONObject arr = new JSONObject();
+//		arr.put("id", 1);
+//		arr.put("name", "ryan");
+//		arr.put("company", "Gotech");
+//		return arr;
+		
+//		return new Gson().toJson(arr);
+		return new Gson().toJson(brandService.retrieveList(request));
+//		return "{\"draw\":\"1\",\"data\":[{\"name\":\"Brand\",\"company\":\"GoTech Solutions\"}, {\"name\":\"banras\",\"company\":\"GoTech Solutions\"}]}";
+	}
+	
+	@Deprecated
+	@RequestMapping(value="/api/page/xbrands", method=RequestMethod.GET, produces="application/json")
+	public String getDTListPaginatedDeprectated(HttpServletRequest request) throws JsonProcessingException {
+		
+		DataTableRequest<Brand> dataTableInRQ = new DataTableRequest<>(request);
+		PaginationCriteria pagination = dataTableInRQ.getPaginationRequest();
+		
+		String baseQuery = "SELECT * FROM BRAND";
+		String paginatedQuery = AppUtil.buildPaginatedQuery(baseQuery, pagination);
+		
+		System.err.println(paginatedQuery);
+		
+		Query query = entityManager.createNativeQuery(paginatedQuery, Brand.class);
+		
+		@SuppressWarnings("unchecked")
+		List<Brand> brandList = query.getResultList();
+		
+		System.err.println(brandList);
+//		System.err.println("-------------------------");
+//		System.err.println(brandList);
+		
+		DataTableResults<Brand> dataTableResult = new DataTableResults<Brand>();
+		dataTableResult.setDraw(dataTableInRQ.getDraw());
+//		dataTableResult.setListOfDataObjects(brandList);
+		
+		System.err.println(dataTableResult);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		
+		return objectMapper.writeValueAsString(dataTableResult);
+//		return new Gson().toJson(dataTableResult);
+	}
+	
 
 	@RequestMapping(value="/api/brands/{id}", method=RequestMethod.GET)
 	public ResponseEntity<Brand> getById(@PathVariable Long id) {
