@@ -1,4 +1,4 @@
-package com.bartolay.inventory.model;
+package com.bartolay.inventory.datatable.model;
 
 import javax.servlet.http.HttpServletRequest;
 

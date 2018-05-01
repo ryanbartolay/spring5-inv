@@ -4,6 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +21,9 @@ import com.bartolay.inventory.utils.AppUtil;
 
 @Repository
 public class BrandJdbcRepository extends JdbcRepository  {
+	
+	@Autowired
+	private EntityManager entityManager;
 	
 	public DataTableResults<BrandDatatable> paginatedFindAll(DataTableRequest<Brand> dataTableInRQ) {
 		
@@ -34,21 +41,39 @@ public class BrandJdbcRepository extends JdbcRepository  {
 		
 //		dataTableResult.setRecordsTotal(recordsTotal);
 		
+Query query = entityManager.createNativeQuery(paginatedQuery, BrandDatatable.class);
 		
-		List<BrandDatatable> brandList = jdbcTemplate.query(paginatedQuery, new Object[] {}, new RowMapper<BrandDatatable>() {
-
-			@Override
-			public BrandDatatable mapRow(ResultSet rs, int arg1) throws SQLException {
-				BrandDatatable brand = new BrandDatatable();
-				brand.setName(rs.getString("name"));
-				brand.setCompany_name(rs.getString("company_name"));
-				return brand;
-			}
-		});
+		@SuppressWarnings("unchecked")
+		List<BrandDatatable> brandList = query.getResultList();
+		
+		
+//		List<BrandDatatable> brandList = jdbcTemplate.query(paginatedQuery, new Object[] {}, new RowMapper<BrandDatatable>() {
+//
+//			@Override
+//			public BrandDatatable mapRow(ResultSet rs, int arg1) throws SQLException {
+//				BrandDatatable brand = new BrandDatatable();
+//				brand.setName(rs.getString("name"));
+//				brand.setCompany_name(rs.getString("company_name"));
+//				return brand;
+//			}
+//		});
 		
 		dataTableResult.setListOfDataObjects(brandList);
 		
 		Long count = this.getSQLCount(sql_count);
+		
+		
+//		if (!AppUtil.isObjectEmpty(brandList)) {
+//			dataTableResult.setRecordsTotal(brandList.get(0).getTotalRecords()
+//					.toString());
+//			if (dataTableInRQ.getPaginationRequest().isFilterByEmpty()) {
+//				dataTableResult.setRecordsFiltered(brandList.get(0).getTotalRecords()
+//						.toString());
+//			} else {
+//				dataTableResult.setRecordsFiltered(Integer.toString(userList.size()));
+//			}
+//		}
+		
 		dataTableResult.setRecordsTotal(count.toString());
 		dataTableResult.setRecordsFiltered(count.toString());
 		
