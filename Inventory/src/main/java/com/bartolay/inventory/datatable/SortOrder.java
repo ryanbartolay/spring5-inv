@@ -1,10 +1,6 @@
-package com.bartolay.inventory.pagination;
+package com.bartolay.inventory.datatable;
 
-/**
- * The Enum SortOrder.
- */
 public enum SortOrder {
-
 	/** The asc. */
 	ASC("ASC"), 
 	/** The desc. */
@@ -47,5 +43,4 @@ public enum SortOrder {
 	public String value() {
 		return value;
 	}
-
 }

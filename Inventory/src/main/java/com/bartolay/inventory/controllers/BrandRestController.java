@@ -2,10 +2,10 @@ package com.bartolay.inventory.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -15,27 +15,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.form.BrandForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
-import com.bartolay.inventory.pagination.DataTableRequest;
-import com.bartolay.inventory.pagination.DataTableResults;
-import com.bartolay.inventory.pagination.PaginationCriteria;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.services.BrandService;
-import com.bartolay.inventory.utils.AppUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 
 @RestController
 public class BrandRestController {
@@ -85,6 +79,16 @@ public class BrandRestController {
 		return ResponseEntity.ok(jsonObject.toString());
 	}
 	
+	@RequestMapping(value="/api/datatable/brands", method=RequestMethod.GET, produces="application/json")
+	public String datatableBrand(@RequestParam Map<String, String> requestMap) {
+		System.out.println(requestMap);
+		
+		brandService.retrieveList(requestMap);
+		return "";
+	}
+	
+	
+	
 	@RequestMapping(value="/api/page/brands", method=RequestMethod.GET, produces="application/json")
 	public String getDTListPaginated(HttpServletRequest request) throws JsonProcessingException {
 		System.err.println("################################################");
@@ -95,45 +99,45 @@ public class BrandRestController {
 //		arr.put("name", "ryan");
 //		arr.put("company", "Gotech");
 //		return arr;
-		
+		return null;
 //		return new Gson().toJson(arr);
-		return new Gson().toJson(brandService.retrieveList(request));
+//		return new Gson().toJson(brandService.retrieveList(request));
 //		return "{\"draw\":\"1\",\"data\":[{\"name\":\"Brand\",\"company\":\"GoTech Solutions\"}, {\"name\":\"banras\",\"company\":\"GoTech Solutions\"}]}";
 	}
 	
-	@Deprecated
-	@RequestMapping(value="/api/page/xbrands", method=RequestMethod.GET, produces="application/json")
-	public String getDTListPaginatedDeprectated(HttpServletRequest request) throws JsonProcessingException {
-		
-		DataTableRequest<Brand> dataTableInRQ = new DataTableRequest<>(request);
-		PaginationCriteria pagination = dataTableInRQ.getPaginationRequest();
-		
-		String baseQuery = "SELECT * FROM BRAND";
-		String paginatedQuery = AppUtil.buildPaginatedQuery(baseQuery, pagination);
-		
-		System.err.println(paginatedQuery);
-		
-		Query query = entityManager.createNativeQuery(paginatedQuery, Brand.class);
-		
-		@SuppressWarnings("unchecked")
-		List<Brand> brandList = query.getResultList();
-		
-		System.err.println(brandList);
-//		System.err.println("-------------------------");
+//	@Deprecated
+//	@RequestMapping(value="/api/page/xbrands", method=RequestMethod.GET, produces="application/json")
+//	public String getDTListPaginatedDeprectated(HttpServletRequest request) throws JsonProcessingException {
+//		
+//		DatatableRequest dataTableInRQ = new DatatableRequest(request);
+//		PaginationCriteria pagination = dataTableInRQ.getPaginationRequest();
+//		
+//		String baseQuery = "SELECT * FROM BRAND";
+//		String paginatedQuery = PaginationUtils.buildPaginatedQuery(baseQuery, pagination);
+//		
+//		System.err.println(paginatedQuery);
+//		
+//		Query query = entityManager.createNativeQuery(paginatedQuery, Brand.class);
+//		
+//		@SuppressWarnings("unchecked")
+//		List<Brand> brandList = query.getResultList();
+//		
 //		System.err.println(brandList);
-		
-		DataTableResults<Brand> dataTableResult = new DataTableResults<Brand>();
-		dataTableResult.setDraw(dataTableInRQ.getDraw());
-//		dataTableResult.setListOfDataObjects(brandList);
-		
-		System.err.println(dataTableResult);
-		
-		ObjectMapper objectMapper = new ObjectMapper();
-		
-		
-		return objectMapper.writeValueAsString(dataTableResult);
-//		return new Gson().toJson(dataTableResult);
-	}
+////		System.err.println("-------------------------");
+////		System.err.println(brandList);
+//		
+//		DataTableResults<Brand> dataTableResult = new DataTableResults<Brand>();
+//		dataTableResult.setDraw(dataTableInRQ.getDraw());
+////		dataTableResult.setListOfDataObjects(brandList);
+//		
+//		System.err.println(dataTableResult);
+//		
+//		ObjectMapper objectMapper = new ObjectMapper();
+//		
+//		
+//		return objectMapper.writeValueAsString(dataTableResult);
+////		return new Gson().toJson(dataTableResult);
+//	}
 	
 
 	@RequestMapping(value="/api/brands/{id}", method=RequestMethod.GET)
@@ -144,23 +148,6 @@ public class BrandRestController {
 		} catch(Exception e) {
 			e.printStackTrace();
 			return null;
-		}
-	}
-
-	@RequestMapping(value="/api/brands", method=RequestMethod.POST)
-	public ResponseEntity<ApiResponse> create(@Valid BrandForm brandForm, BindingResult bindingResult) throws RestApiException {
-
-		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
-		}
-
-		try {
-			Brand brand = brandService.create(brandForm);
-			
-			ApiResponse apiError = new ApiResponse(HttpStatus.OK, "Succesfully Created brand "+ brand.getName());
-			return new ResponseEntity<ApiResponse>(apiError, HttpStatus.OK);
-		} catch(Exception e) {
-			throw new RestApiException(e);
 		}
 	}
 

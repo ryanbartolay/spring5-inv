@@ -1,21 +1,29 @@
 package com.bartolay.inventory.datatable.model;
 
-import java.util.Arrays;
+import com.bartolay.inventory.datatable.SortOrder;
 
 public class DatatableParameter {
 	private int draw;
 	private int start;
 	private int length;
-	private String []data;
-	private String []searchable;
-	private String []orderable;
-	private String []name;
-	private String []search;
-	private String []orderColumns;
-	private String []orderDir;
+	
+	private String search;
+	private boolean regex;
 	private String order;
 	private String type;
-	private DatatableFilterForm filterForm;
+	private String uniqueId;
+	
+	private int sortColumn;
+	private SortOrder sortOrder;
+	
+//	private String []data;
+//	private String []searchable;
+//	private String []orderable;
+//	private String []name;
+//	private String []orderColumns;
+//	private String []orderDir;
+//	
+//	private DatatableFilterForm filterForm;
 	
 	public int getDraw() {
 		return draw;
@@ -35,47 +43,17 @@ public class DatatableParameter {
 	public void setLength(int length) {
 		this.length = length;
 	}
-	public String[] getData() {
-		return data;
-	}
-	public void setData(String[] data) {
-		this.data = data;
-	}
-	public String[] getSearchable() {
-		return searchable;
-	}
-	public void setSearchable(String[] searchable) {
-		this.searchable = searchable;
-	}
-	public String[] getOrderable() {
-		return orderable;
-	}
-	public void setOrderable(String[] orderable) {
-		this.orderable = orderable;
-	}
-	public String[] getName() {
-		return name;
-	}
-	public void setName(String[] name) {
-		this.name = name;
-	}
-	public String[] getSearch() {
+	public String getSearch() {
 		return search;
 	}
-	public void setSearch(String[] search) {
+	public void setSearch(String search) {
 		this.search = search;
 	}
-	public String[] getOrderColumns() {
-		return orderColumns;
+	public boolean getRegex() {
+		return regex;
 	}
-	public void setOrderColumns(String[] orderColumns) {
-		this.orderColumns = orderColumns;
-	}
-	public String[] getOrderDir() {
-		return orderDir;
-	}
-	public void setOrderDir(String[] orderDir) {
-		this.orderDir = orderDir;
+	public void setRegex(boolean regex) {
+		this.regex = regex;
 	}
 	public String getOrder() {
 		return order;
@@ -89,18 +67,28 @@ public class DatatableParameter {
 	public void setType(String type) {
 		this.type = type;
 	}
+	public String getUniqueId() {
+		return uniqueId;
+	}
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
+	}
+	public int getSortColumn() {
+		return sortColumn;
+	}
+	public void setSortColumn(int sortColumn) {
+		this.sortColumn = sortColumn;
+	}
+	public SortOrder getSortOrder() {
+		return sortOrder;
+	}
+	public void setSortOrder(SortOrder sortOrder) {
+		this.sortOrder = sortOrder;
+	}
 	@Override
 	public String toString() {
-		return "Parameter [draw=" + draw + ", start=" + start + ", length=" + length + ", data=" + Arrays.toString(data)
-				+ ", searchable=" + Arrays.toString(searchable) + ", orderable=" + Arrays.toString(orderable)
-				+ ", name=" + Arrays.toString(name) + ", search=" + Arrays.toString(search) + ", orderColumns="
-				+ Arrays.toString(orderColumns) + ", orderDir=" + Arrays.toString(orderDir) + ", order=" + order
-				+ ", type=" + type + ", filterForm=" + filterForm + "]";
-	}
-	public DatatableFilterForm getFilterForm() {
-		return filterForm;
-	}
-	public void setFilterForm(DatatableFilterForm filterForm) {
-		this.filterForm = filterForm;
+		return "DatatableParameter [draw=" + draw + ", start=" + start + ", length=" + length + ", search=" + search
+				+ ", regex=" + regex + ", order=" + order + ", type=" + type + ", uniqueId=" + uniqueId
+				+ ", sortColumn=" + sortColumn + ", sortOrder=" + sortOrder + "]";
 	}
 }

@@ -13,10 +13,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 
 @Component
 public class BeansConfig {
+	
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
 	
 	@Bean
 	public JdbcTemplate jdbcTemplate(DataSource dataSource) {

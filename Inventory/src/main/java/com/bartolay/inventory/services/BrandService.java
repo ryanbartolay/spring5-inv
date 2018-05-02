@@ -1,17 +1,12 @@
 package com.bartolay.inventory.services;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import com.bartolay.inventory.datatable.BrandDatatable;
-import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.form.BrandForm;
 import com.bartolay.inventory.pagination.DataTableResults;
 
-public interface BrandService {
-	public Brand create(BrandForm brandForm);
+public interface BrandService<E> {
+	public E create(BrandForm brandForm);
 
-	public DataTableResults<BrandDatatable> retrieveList(HttpServletRequest request);
+	public DataTableResults<E> retrieveList(Map<String, String> requestMap);
 }

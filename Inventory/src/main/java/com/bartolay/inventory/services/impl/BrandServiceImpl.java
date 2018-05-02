@@ -1,34 +1,27 @@
 package com.bartolay.inventory.services.impl;
 
-import java.util.List;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bartolay.inventory.datatable.BrandDatatable;
+import com.bartolay.inventory.datatable.model.DatatableForm;
+import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.form.BrandForm;
-import com.bartolay.inventory.pagination.DataTableRequest;
 import com.bartolay.inventory.pagination.DataTableResults;
-import com.bartolay.inventory.pagination.PaginationCriteria;
+import com.bartolay.inventory.repositories.BrandDataTableRepository;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
-import com.bartolay.inventory.repositories.impl.BrandJdbcRepository;
 import com.bartolay.inventory.services.BrandService;
-import com.bartolay.inventory.utils.AppUtil;
 import com.bartolay.inventory.utils.UserCredentials;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 @Transactional
-public class BrandServiceImpl implements BrandService {
-
-	@Autowired
-	private BrandJdbcRepository brandJdbcRepository;
+public class BrandServiceImpl implements BrandService<Brand> {
 	
 	@Autowired
 	private BrandRepository brandRepository;
@@ -37,7 +30,16 @@ public class BrandServiceImpl implements BrandService {
 	private CompanyRepository companyRepository;
 	
 	@Autowired
+	private DatatableForm datatableForm;
+	
+	@Autowired
 	private UserCredentials userCredentials;
+	
+	@Autowired
+	private BrandDataTableRepository<Brand> brandDataTableRepository;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 	
 	@Override
 	public Brand create(BrandForm brandForm) {
@@ -51,12 +53,14 @@ public class BrandServiceImpl implements BrandService {
 	}
 
 	@Override
-	public DataTableResults<BrandDatatable> retrieveList(HttpServletRequest request) {
+	public DataTableResults<Brand> retrieveList(Map<String, String> requestMap) {
+		DatatableParameter datatableParameter = datatableForm.getFormData(requestMap);
 		
-		DataTableRequest<Brand> dataTableInRQ = new DataTableRequest<>(request);
-
+		System.err.println(">>>>>>>>" + datatableParameter);
 		
-		return brandJdbcRepository.paginatedFindAll(dataTableInRQ);
+		DataTableResults<Brand> brandresult = brandDataTableRepository.findAll(datatableParameter);
+		
+		return brandresult;
 	}
 
 }
