@@ -14,11 +14,20 @@ import com.bartolay.inventory.repositories.BrandDataTableRepository;
 
 @Repository
 public class BrandDataTableRepositoryImpl extends RepositoryComponent implements BrandDataTableRepository<Brand> {
-
+	
 	@Override
 	public long findAllCount(DatatableParameter datatableParameter) {
-		final String SQL = "SELECT COUNT(b.id) FROM Brand b";
+		String SQL = "SELECT COUNT(b.id) FROM Brand b";
+		
+		if(datatableParameter.getSearch() != null) {
+			SQL += " WHERE b.name like :search";
+		}
+			
 		Query query = em.createQuery( SQL);
+		if(datatableParameter.getSearch() != null) {
+			query.setParameter("search", "%" + datatableParameter.getSearch() + "%");
+		}
+		
 		return (long) query.getSingleResult();
 	}
 
@@ -26,8 +35,12 @@ public class BrandDataTableRepositoryImpl extends RepositoryComponent implements
 	public List<Brand> findAllData(DatatableParameter datatableParameter) {
 
 		DatatableColumn sortColumn = datatableParameter.getSortColumn();
-		String SQL = "SELECT S FROM Brand S";
+		String SQL = "SELECT b FROM Brand b";
 
+		if(datatableParameter.getSearch() != null) {
+			SQL += " WHERE b.name like :search";
+		}
+		
 		// sort order by column
 		if(sortColumn != null && datatableParameter.getSortOrder() != null) {
 			System.err.println("sortColumn " + sortColumn);
@@ -40,7 +53,11 @@ public class BrandDataTableRepositoryImpl extends RepositoryComponent implements
 		Query query = em.createQuery(SQL, Brand.class);
 		query.setFirstResult(datatableParameter.getStart());
 		query.setMaxResults(datatableParameter.getLength());
-
+		
+		if(datatableParameter.getSearch() != null) {
+			query.setParameter("search", "%" + datatableParameter.getSearch() + "%");
+		}
+		
 		return query.getResultList();
 	}
 }

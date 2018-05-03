@@ -51,7 +51,11 @@ public class DatatableParameter {
 		this.setLength(Integer.parseInt(requestMap.get(LENGTH).toString()));
 
 		this.setUniqueId(requestMap.get(UNIQUE_ID).toString());
-		this.setSearch(requestMap.get(SEARCH));
+		
+		String search = requestMap.get(SEARCH);
+		
+		this.setSearch(search.trim().length() > 0 ? search.trim() : null);
+		
 		this.setRegex(Boolean.valueOf(requestMap.get(REGEX).toString()));
 
 		this.setSortColumnId(Integer.parseInt(requestMap.get(SORT_COLUMN).toString()));
