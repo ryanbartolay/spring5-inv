@@ -13,6 +13,7 @@
 					<tr>
 						<th>Name</th>
 						<th>Company</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				
@@ -47,9 +48,25 @@
 			start: 0,
 	        columns: [
                 { "data": "name", "name" : "Name", "title" : "Namezzzz"  },
-                { "data": "company_name", "name" : "Company" , "title" : "Company Inc."}
+                { "data": "company_name", "name" : "Company" , "title" : "Company Inc."},
+                {
+                    data: null,
+                    className: "center",
+                    defaultContent: '<a href="" class="editor_edit">Edit</a> / <a href="" class="editor_remove">Delete</a>'
+                }
             ]  
 		});
+		
+		 // Edit record
+	    $("#brand-datatable").on('click', 'a.editor_edit', function (e) {
+	        e.preventDefault();
+	 
+	        editor.edit( $(this).closest('tr'), {
+	            title: 'Edit record',
+	            buttons: 'Update'
+	        } );
+	    } );
+
 		
 		formModal($("#createBrandModal"), function() {
 			brand_table.ajax.reload( null, false ); // user paging is not reset on reload

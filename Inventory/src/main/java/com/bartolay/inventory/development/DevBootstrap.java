@@ -23,19 +23,19 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 
 	private static Session session;
 	private String password = "123456a";
-	
+
 	private Supplier supplier;
 	private Category category;
-	
+
 	@Autowired
 	private UserRepository employeeRepository;
-	
+
 	@Autowired
 	private BrandRepository brandRepository;
-	
+
 	@Autowired
 	private CompanyRepository companyRepository;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -44,27 +44,45 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		createEmployees();
 		createCompaniesAndBrand();
 	}
-	
+
 	private void createCompaniesAndBrand() {
 		// creating companies
 		Company c = new Company();
 		c.setName("Big Trading");
 		c.setEmail("rbartolay.gotechsolutions@gmail.com");
 		companyRepository.save(c);
-		
+
 		Company company = new Company();
 		company.setName("GoTech Solutions");
 		company.setEmail("bartolay.ryan@gmail.com");
 		companyRepository.save(company);
-		
+
 		// creating brands
 		Brand brand = new Brand();
 		brand.setName("Brand");
 		brand.setNameArabic("تفصيل بدون قماش");
 		brand.setCreatedBy(employeeRepository.findByUsername("admin"));
 		brand.setCompany(company);
-//		brand.setFlag("S");
+
 		brandRepository.save(brand);
+
+		// creating brands
+		Brand brand2 = new Brand();
+		brand2.setName("Hello World");
+		brand2.setNameArabic("تفصيل بدون قماش");
+		brand2.setCreatedBy(employeeRepository.findByUsername("admin"));
+		brand2.setCompany(c);
+
+		brandRepository.save(brand2);
+
+		// creating brands
+		Brand brand3 = new Brand();
+		brand3.setName("Imbue 360");
+		brand3.setNameArabic("تفصيل بدون قماش");
+		brand3.setCreatedBy(employeeRepository.findByUsername("admin"));
+		brand3.setCompany(c);
+
+		brandRepository.save(brand3);
 	}
 
 	private void createEmployees() {
@@ -77,7 +95,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		employee.setAuthority(AccountType.SUPERADMIN.toString());
 		employeeRepository.save(employee);
 	}
-	
+
 	private void createSuppliers() {
 		supplier = new Supplier();
 		supplier.setName("JFC Corporation");
@@ -85,14 +103,14 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		supplier.setAddress("Las Pinas");
 		session.save(supplier);
 	}
-	
+
 	private void createCategories() {
 		category = new Category();
 		category.setType("Computers - Hardware");
 		category.setDescription("IT supplies for hardware");
 		session.save(category);
 	}
-	
+
 	private void createProducts() {
 		Product product = new Product();
 		product.setProductName("Kingston DDR3 Mega RAM");
