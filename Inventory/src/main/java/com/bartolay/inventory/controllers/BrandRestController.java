@@ -83,8 +83,20 @@ public class BrandRestController {
 	}
 
 	@RequestMapping(value="/api/brands", method=RequestMethod.POST)
-	public ResponseEntity<Brand> create(@RequestBody Brand brand) {
-		return ResponseEntity.ok(brandRepository.save(brand));
+	public ResponseEntity<ApiResponse> create(@Valid BrandForm brandForm, BindingResult bindingResult) throws RestApiException {
+
+		if (bindingResult.hasErrors()) {
+			throw new RestApiException(bindingResult);
+		}
+
+		try {
+			brandService.create(brandForm);
+		} catch(Exception e) {
+			throw new RestApiException(e);
+		}
+		
+		ApiResponse apiError = new ApiResponse(HttpStatus.OK, "Succesfully created brand");
+		return new ResponseEntity<ApiResponse>(apiError, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/api/brands", method=RequestMethod.PUT)
