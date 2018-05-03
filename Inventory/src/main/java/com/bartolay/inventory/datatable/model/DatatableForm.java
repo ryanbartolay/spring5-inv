@@ -38,11 +38,13 @@ public class DatatableForm {
 	private static final String COMMA = " , ";
 
 	public DatatableParameter getFormData(Map<String, String> request) {
-		DatatableParameter parameter = new DatatableParameter();
-		System.err.println(request);
 
+		DatatableParameter parameter = null;
+		
 		if(!request.isEmpty()) {
 
+			parameter = new DatatableParameter();
+			
 			parameter.setDraw(Integer.parseInt(request.get(DRAW).toString()));
 			parameter.setStart(Integer.parseInt(request.get(START).toString()));
 			parameter.setLength(Integer.parseInt(request.get(LENGTH).toString()));
@@ -76,82 +78,11 @@ public class DatatableForm {
 					columns.add(column);
 				} 
 			}
+			
+			parameter.setColumns(columns);
 
-			//    		List<DataTableColumnSpecs> columns = new ArrayList<DataTableColumnSpecs>();
-			//    		
-			//    		if(!AppUtil.isObjectEmpty(this.getSearch())) {
-			//    			this.setGlobalSearch(true);
-			//    		}
-			//    		
-			//    		maxParamsToCheck = getNumberOfColumns(request);
-			//    		
-			//    		for(int i=0; i < maxParamsToCheck; i++) {
-			//    			if(null != request.getParameter("columns["+ i +"][data]") 
-			//    					&& !"null".equalsIgnoreCase(request.getParameter("columns["+ i +"][data]"))  
-			//    					&& !AppUtil.isObjectEmpty(request.getParameter("columns["+ i +"][data]"))) {
-			//    				DataTableColumnSpecs colSpec = new DataTableColumnSpecs(request, i);
-			//    				if(i == sortableCol) {
-			//    					this.setOrder(colSpec);
-			//    				}
-			//    				columns.add(colSpec);
-			//    				
-			//    				if(!AppUtil.isObjectEmpty(colSpec.getSearch())) {
-			//    					this.setGlobalSearch(false);
-			//    				}
-			//    			} 
-			//    		}
-			//    		
-			//    		if(!AppUtil.isObjectEmpty(columns)) {
-			//    			this.setColumns(columns);
-			//    		}
 		}
-
-
-
-		//		int sortIndex = 0;
-		//		for (Entry<String, String> entry : request.entrySet()) {
-		//			if(entry.getKey().startsWith("iSortCol")) {
-		//				sortIndex = Integer.parseInt(entry.getValue());
-		//			}
-		//		}
-		//		System.err.println(sortIndex);
-		//		for (Entry<String, String> entry : request.entrySet()) {
-		//			System.err.println("key=" + entry.getKey() + ",value=" + entry.getValue());
-		//			if(entry.getKey().equals("iDisplayStart")) {
-		//				parameter.setStart(Integer.parseInt(entry.getValue()));
-		//			}else if(entry.getKey().equals("iDisplayLength")) {
-		//				parameter.setLength(Integer.parseInt(entry.getValue())); 
-		//			}else if(entry.getKey().equals("mDataProp_"+sortIndex)) {
-		//				parameter.setOrder(entry.getValue());
-		//			}else if(entry.getKey().equals("sSortDir_0")) {
-		//				parameter.setType(entry.getValue());
-		//			}else if(entry.getKey().equals("form")) {
-		//				DatatableFilterForm filterForm = null;
-		//				try {
-		//					filterForm = objectMapper.readValue(entry.getValue(), DatatableFilterForm.class);
-		//				} catch (IOException e) {
-		//					e.printStackTrace();
-		//				}
-		//				if(filterForm != null && filterForm.getDateRange() != null && !filterForm.getDateRange().trim().isEmpty()) {
-		//					
-		//					System.err.println("date range exist");
-		//					
-		//					String[] dates = filterForm.getDateRange().split(" - ");
-		//					try {
-		//						filterForm.setStart(CalendarUtils.toDate(dates[0]));
-		//					} catch (ParseException e) {
-		//						e.printStackTrace();
-		//					}
-		//					try {
-		//						filterForm.setEnd(CalendarUtils.toDate(dates[1]));
-		//					} catch (ParseException e) {
-		//						e.printStackTrace();
-		//					}
-		//				}
-		//				parameter.setFilterForm(filterForm);
-		//			}
-		//		}
-
+		
 		return parameter;
 	}
 

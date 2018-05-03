@@ -1,5 +1,7 @@
 package com.bartolay.inventory.datatable.model;
 
+import java.util.Set;
+
 import com.bartolay.inventory.datatable.SortOrder;
 
 public class DatatableParameter {
@@ -15,6 +17,8 @@ public class DatatableParameter {
 	
 	private int sortColumn;
 	private SortOrder sortOrder;
+	
+	private Set<DatatableColumn> columns;
 	
 //	private String []data;
 //	private String []searchable;
@@ -85,10 +89,16 @@ public class DatatableParameter {
 	public void setSortOrder(SortOrder sortOrder) {
 		this.sortOrder = sortOrder;
 	}
+	public Set<DatatableColumn> getColumns() {
+		return columns;
+	}
+	public void setColumns(Set<DatatableColumn> columns) {
+		this.columns = columns;
+	}
 	@Override
 	public String toString() {
 		return "DatatableParameter [draw=" + draw + ", start=" + start + ", length=" + length + ", search=" + search
 				+ ", regex=" + regex + ", order=" + order + ", type=" + type + ", uniqueId=" + uniqueId
-				+ ", sortColumn=" + sortColumn + ", sortOrder=" + sortOrder + "]";
+				+ ", sortColumn=" + sortColumn + ", sortOrder=" + sortOrder + ", columns=" + columns + "]";
 	}
 }
