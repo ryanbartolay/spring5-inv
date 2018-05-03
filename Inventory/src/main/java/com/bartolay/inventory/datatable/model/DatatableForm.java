@@ -1,7 +1,10 @@
 package com.bartolay.inventory.datatable.model;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,6 +56,27 @@ public class DatatableForm {
 
 			int numberOfColumns = getNumberOfColumns(request);
 			System.err.println("numberOfColumns " + numberOfColumns);
+
+
+			Set<DatatableColumn> columns = new TreeSet<>();
+			
+			for(int i=0; i < numberOfColumns; i++) {
+				if(null != request.get("columns["+ i +"][data]") 
+						&& !"null".equalsIgnoreCase(request.get("columns["+ i +"][data]"))  
+						&& !isObjectEmpty(request.get("columns["+ i +"][data]"))) {
+					
+					DatatableColumn column = new DatatableColumn();
+					column.setData(request.get("columns["+ i +"][data]"));
+					column.setName(request.get("columns["+ i +"][name]"));
+					column.setOrderable(Boolean.valueOf(request.get("columns["+ i +"][orderable]")));
+					column.setRegex(Boolean.valueOf(request.get("columns["+ i +"][search][regex]")));
+					column.setSearch(request.get("columns["+ i +"][search][value]"));
+					column.setSearchable(Boolean.valueOf(request.get("columns["+ i +"][searchable]")));
+					
+					columns.add(column);
+				} 
+			}
+
 			//    		List<DataTableColumnSpecs> columns = new ArrayList<DataTableColumnSpecs>();
 			//    		
 			//    		if(!AppUtil.isObjectEmpty(this.getSearch())) {
@@ -133,9 +157,9 @@ public class DatatableForm {
 
 	private int getNumberOfColumns(Map<String, String> request) {
 		Pattern p = Pattern.compile("columns\\[[0-9]+\\]\\[data\\]");  
-	 
+
 		int i = 0;
-	
+
 		for(Entry<String, String> entry : request.entrySet()) {
 			Matcher m = p.matcher(entry.getKey());
 			if(m.matches())	{
@@ -143,5 +167,36 @@ public class DatatableForm {
 			}
 		}
 		return i;
+	}
+
+	/**
+	 * Checks if is collection empty.
+	 *
+	 * @param collection the collection
+	 * @return true, if is collection empty
+	 */
+	private static boolean isCollectionEmpty(Collection<?> collection) {
+		if (collection == null || collection.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if is object empty.
+	 *
+	 * @param object the object
+	 * @return true, if is object empty
+	 */
+	public static boolean isObjectEmpty(Object object) {
+		if(object == null) return true;
+		else if(object instanceof String) {
+			if (((String)object).trim().length() == 0) {
+				return true;
+			}
+		} else if(object instanceof Collection) {
+			return isCollectionEmpty((Collection<?>)object);
+		}
+		return false;
 	}
 }
