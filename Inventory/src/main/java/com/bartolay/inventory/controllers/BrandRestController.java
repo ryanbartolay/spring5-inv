@@ -65,84 +65,12 @@ public class BrandRestController {
 		return ResponseEntity.ok(brands);
 	}
 	
-	@RequestMapping(value="/api/dt/brands", method=RequestMethod.GET, produces="application/json")
-	public ResponseEntity<String> getDTList() {
-		
-		List<Brand> brands = new ArrayList<>();
-		
-		JSONArray mainArr = new JSONArray();
-		for(Brand brand : brandRepository.apiFindAll()) {
-			JSONArray array = new JSONArray();
-			array.put(brand.getName());
-			array.put(brand.getCompany().getName());
-			
-			mainArr.put(array);
-			brands.add(brand);
-		}
-		
-		//jsonObject.put("data", mainArr);
-		return ResponseEntity.ok(jsonObject.toString());
-	}
-	
 	@RequestMapping(value="/api/datatable/brands", method=RequestMethod.GET, produces="application/json")
 	public String datatableBrand(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
 		System.err.println("raw request >>>>> " + requestMap);
 		return objectMapper.writeValueAsString(brandService.retrieveList(requestMap));
 	}
 	
-	
-	
-	@RequestMapping(value="/api/page/brands", method=RequestMethod.GET, produces="application/json")
-	public String getDTListPaginated(HttpServletRequest request) throws JsonProcessingException {
-		System.err.println("################################################");
-//		return brandService.retrieveList(request).getJson();
-		
-//		JSONObject arr = new JSONObject();
-//		arr.put("id", 1);
-//		arr.put("name", "ryan");
-//		arr.put("company", "Gotech");
-//		return arr;
-		return null;
-//		return new Gson().toJson(arr);
-//		return new Gson().toJson(brandService.retrieveList(request));
-//		return "{\"draw\":\"1\",\"data\":[{\"name\":\"Brand\",\"company\":\"GoTech Solutions\"}, {\"name\":\"banras\",\"company\":\"GoTech Solutions\"}]}";
-	}
-	
-//	@Deprecated
-//	@RequestMapping(value="/api/page/xbrands", method=RequestMethod.GET, produces="application/json")
-//	public String getDTListPaginatedDeprectated(HttpServletRequest request) throws JsonProcessingException {
-//		
-//		DatatableRequest dataTableInRQ = new DatatableRequest(request);
-//		PaginationCriteria pagination = dataTableInRQ.getPaginationRequest();
-//		
-//		String baseQuery = "SELECT * FROM BRAND";
-//		String paginatedQuery = PaginationUtils.buildPaginatedQuery(baseQuery, pagination);
-//		
-//		System.err.println(paginatedQuery);
-//		
-//		Query query = entityManager.createNativeQuery(paginatedQuery, Brand.class);
-//		
-//		@SuppressWarnings("unchecked")
-//		List<Brand> brandList = query.getResultList();
-//		
-//		System.err.println(brandList);
-////		System.err.println("-------------------------");
-////		System.err.println(brandList);
-//		
-//		DataTableResults<Brand> dataTableResult = new DataTableResults<Brand>();
-//		dataTableResult.setDraw(dataTableInRQ.getDraw());
-////		dataTableResult.setListOfDataObjects(brandList);
-//		
-//		System.err.println(dataTableResult);
-//		
-//		ObjectMapper objectMapper = new ObjectMapper();
-//		
-//		
-//		return objectMapper.writeValueAsString(dataTableResult);
-////		return new Gson().toJson(dataTableResult);
-//	}
-	
-
 	@RequestMapping(value="/api/brands/{id}", method=RequestMethod.GET)
 	public ResponseEntity<Brand> getById(@PathVariable Long id) {
 		try {
@@ -154,6 +82,11 @@ public class BrandRestController {
 		}
 	}
 
+	@RequestMapping(value="/api/brands", method=RequestMethod.POST)
+	public ResponseEntity<Brand> create(@RequestBody Brand brand) {
+		return ResponseEntity.ok(brandRepository.save(brand));
+	}
+	
 	@RequestMapping(value="/api/brands", method=RequestMethod.PUT)
 	public ResponseEntity<Brand> update(@RequestBody Brand brand) {
 		return ResponseEntity.ok(brandRepository.save(brand));

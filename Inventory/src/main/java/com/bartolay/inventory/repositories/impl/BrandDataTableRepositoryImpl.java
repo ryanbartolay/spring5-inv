@@ -44,7 +44,7 @@ public class BrandDataTableRepositoryImpl extends RepositoryComponent implements
 		// sort order by column
 		if(sortColumn != null && datatableParameter.getSortOrder() != null) {
 			System.err.println("sortColumn " + sortColumn);
-			SQL += " ORDER BY "+sortColumn.getData()+ " " + datatableParameter.getSortOrder().name();	
+			SQL += " ORDER BY b."+sortColumn.getData()+ " " + datatableParameter.getSortOrder().name();	
 		}
 
 		System.err.println(datatableParameter);
@@ -55,7 +55,7 @@ public class BrandDataTableRepositoryImpl extends RepositoryComponent implements
 		query.setMaxResults(datatableParameter.getLength());
 		
 		if(datatableParameter.getSearch() != null) {
-			query.setParameter("search", "%" + datatableParameter.getSearch() + "%");
+			query.setParameter("search", datatableParameter.getSearch() + "%");
 		}
 		
 		return query.getResultList();
