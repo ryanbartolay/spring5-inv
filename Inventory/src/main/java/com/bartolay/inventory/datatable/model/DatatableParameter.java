@@ -73,6 +73,7 @@ public class DatatableParameter {
 					&& !isObjectEmpty(requestMap.get("columns["+ i +"][data]"))) {
 
 				DatatableColumn column = new DatatableColumn();
+				column.setIndex(i);
 				column.setData(requestMap.get("columns["+ i +"][data]"));
 				column.setName(requestMap.get("columns["+ i +"][name]"));
 				column.setOrderable(Boolean.valueOf(requestMap.get("columns["+ i +"][orderable]")));

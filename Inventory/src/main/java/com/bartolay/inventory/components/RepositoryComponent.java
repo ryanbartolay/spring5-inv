@@ -7,6 +7,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,16 +20,11 @@ public abstract class RepositoryComponent {
 	protected ObjectMapper objectMapper;
 	@PersistenceContext
 	protected EntityManager em;
-	//	@Autowired
-	//	protected Message message;
-	//	@Autowired
-	//	protected DatatableForm datatableForm;
-	//	@Autowired
-	//	protected DateTimeFormatUtil dateTimeFormatUtil;
 	@Autowired
 	protected RestTemplate restTemplate;
-	//	@Autowired
-	//	protected AuthorizationCodeResourceDetails client;
+	
+	@Autowired
+	protected JdbcTemplate jdbcTemplate;
 
 	public Timestamp getTimeStamp() {
 		return new Timestamp(System.currentTimeMillis());

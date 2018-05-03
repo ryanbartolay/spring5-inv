@@ -68,7 +68,7 @@ public class BrandRestController {
 	@RequestMapping(value="/api/datatable/brands", method=RequestMethod.GET, produces="application/json")
 	public String datatableBrand(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
 		System.err.println("raw request >>>>> " + requestMap);
-		return objectMapper.writeValueAsString(brandService.retrieveList(requestMap));
+		return brandService.retrieveList(requestMap).toString();
 	}
 	
 	@RequestMapping(value="/api/brands/{id}", method=RequestMethod.GET)

@@ -1,10 +1,11 @@
 package com.bartolay.inventory.services.impl;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,6 @@ import com.bartolay.inventory.repositories.CompanyRepository;
 import com.bartolay.inventory.services.BrandService;
 import com.bartolay.inventory.utils.UserCredentials;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Service
 @Transactional
@@ -34,7 +33,7 @@ public class BrandServiceImpl implements BrandService<Brand> {
 	private UserCredentials userCredentials;
 
 	@Autowired
-	private BrandDataTableRepository<Brand> brandDataTableRepository;
+	private BrandDataTableRepository brandDataTableRepository;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -51,29 +50,27 @@ public class BrandServiceImpl implements BrandService<Brand> {
 	}
 
 	@Override
-	public ObjectNode retrieveList(Map<String, String> requestMap) {
+	public JSONObject retrieveList(Map<String, String> requestMap) {
 
 		DatatableParameter parameter = new DatatableParameter(requestMap);
-		List<Brand> brands = brandDataTableRepository.findAllData(parameter);
+		JSONArray array = brandDataTableRepository.findAllData(parameter);
 		long recordsTotal = brandDataTableRepository.findAllCount(parameter);
-		
-		ObjectNode data = objectMapper.createObjectNode();
-		ArrayNode nodes = objectMapper.createArrayNode();
 
-		for (Brand brand : brands) {				
-			ObjectNode node = objectMapper.createObjectNode();
-			node.put("name", brand.getName());
-			node.put("company_name", brand.getCompany().getName());
-			
-			nodes.add(node);
-		}
-		
-		data.set("data", nodes);
-		data.put("recordsTotal", recordsTotal);
-		data.put("recordsFiltered", recordsTotal);
-		data.put("draw", parameter.getDraw());
 
-		return data;
+		
+		JSONObject object = new JSONObject();
+		object.put("data", array);
+		object.put("recordsTotal", recordsTotal);
+		object.put("recordsFiltered", recordsTotal);
+		object.put("draw", parameter.getDraw());
+		
+//
+//		data.put("data", nodes);
+//		data.put("recordsTotal", recordsTotal);
+//		data.put("recordsFiltered", recordsTotal);
+//		data.put("draw", parameter.getDraw());
+
+		return object;
 	}
 
 }
