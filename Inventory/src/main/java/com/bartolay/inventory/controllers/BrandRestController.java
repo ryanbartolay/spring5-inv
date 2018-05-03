@@ -30,6 +30,8 @@ import com.bartolay.inventory.model.RestApiException;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.services.BrandService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 @RestController
 public class BrandRestController {
@@ -49,6 +51,9 @@ public class BrandRestController {
 	/** The entity manager. */
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@RequestMapping(value="/api/brands", method=RequestMethod.GET)
 	public ResponseEntity<List<Brand>> getList() {
@@ -80,11 +85,9 @@ public class BrandRestController {
 	}
 	
 	@RequestMapping(value="/api/datatable/brands", method=RequestMethod.GET, produces="application/json")
-	public String datatableBrand(@RequestParam Map<String, String> requestMap) {
-		System.out.println(requestMap);
-		
-		brandService.retrieveList(requestMap);
-		return "";
+	public String datatableBrand(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
+		System.err.println("raw request >>>>> " + requestMap);
+		return objectMapper.writeValueAsString(brandService.retrieveList(requestMap));
 	}
 	
 	

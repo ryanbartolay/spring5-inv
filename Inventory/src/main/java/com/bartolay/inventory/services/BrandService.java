@@ -3,10 +3,10 @@ package com.bartolay.inventory.services;
 import java.util.Map;
 
 import com.bartolay.inventory.form.BrandForm;
-import com.bartolay.inventory.pagination.DataTableResults;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public interface BrandService<E> {
 	public E create(BrandForm brandForm);
 
-	public DataTableResults<E> retrieveList(Map<String, String> requestMap);
+	public ObjectNode retrieveList(Map<String, String> requestMap);
 }

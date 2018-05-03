@@ -22,13 +22,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Brand {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "brand_generator")
 	@SequenceGenerator(name="brand_generator", sequenceName = "BRAND_SER_SEQ")
 	@Column(name = "id", updatable = false, nullable = false)
-	@JsonIgnore
 	private Long id;
 
 	@OneToMany(mappedBy = "brand")

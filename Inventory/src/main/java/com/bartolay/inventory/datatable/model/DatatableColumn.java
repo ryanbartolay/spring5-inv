@@ -1,8 +1,7 @@
 package com.bartolay.inventory.datatable.model;
 
 public class DatatableColumn {
-
-	private int id;
+	
 	private int index;
 	private String data;
 	private String name;
@@ -11,11 +10,11 @@ public class DatatableColumn {
 	private String search;
 	private boolean regex;
 	
-	public int getId() {
-		return id;
+	public DatatableColumn() {
+		
 	}
-	public void setId(int id) {
-		this.id = id;
+	public DatatableColumn(int index) {
+		this.index = index;
 	}
 	public int getIndex() {
 		return index;
@@ -59,11 +58,12 @@ public class DatatableColumn {
 	public void setRegex(boolean regex) {
 		this.regex = regex;
 	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
+		result = prime * result + index;
 		return result;
 	}
 	@Override
@@ -75,8 +75,13 @@ public class DatatableColumn {
 		if (getClass() != obj.getClass())
 			return false;
 		DatatableColumn other = (DatatableColumn) obj;
-		if (id != other.id)
+		if (index != other.index)
 			return false;
 		return true;
+	}
+	@Override
+	public String toString() {
+		return "DatatableColumn [index=" + index + ", data=" + data + ", name=" + name + ", searchable="
+				+ searchable + ", orderable=" + orderable + ", search=" + search + ", regex=" + regex + "]";
 	}
 }

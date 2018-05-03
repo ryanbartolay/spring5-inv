@@ -1,8 +1,10 @@
 package com.bartolay.inventory.repositories;
 
+import java.util.List;
+
 import com.bartolay.inventory.datatable.model.DatatableParameter;
-import com.bartolay.inventory.pagination.DataTableResults;
 
 public interface BrandDataTableRepository<E> {
-	public DataTableResults<E> findAll(DatatableParameter datatableParameter);
+	public long findAllCount(DatatableParameter datatableParameter);
+	public List<E> findAllData(DatatableParameter datatableParameter);
 }
