@@ -29,7 +29,11 @@ public class StockController {
 	
 	@RequestMapping(value="/categories")
 	public ModelAndView categories() {
-		ModelAndView model = new ModelAndView("construction");
+		ModelAndView model = new ModelAndView("stock/index");
+		model.addObject("page", "Categories");
+		model.addObject("html", "categories/list");
+		model.addObject("brandForm", new BrandForm());
+		model.addObject("companies", companyService.findAll());
 		return model;
 	}
 	

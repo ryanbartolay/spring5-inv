@@ -1,12 +1,12 @@
 package com.bartolay.inventory.controllers;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.json.JSONArray;
@@ -31,7 +31,6 @@ import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.services.BrandService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 
 @RestController
 public class BrandRestController {
@@ -68,14 +67,16 @@ public class BrandRestController {
 	@RequestMapping(value="/api/datatable/brands", method=RequestMethod.GET, produces="application/json")
 	public String datatableBrand(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
 		System.err.println("raw request >>>>> " + requestMap);
-		return brandService.retrieveList(requestMap).toString();
+		return brandService.retrieveDatatableList(requestMap).toString();
 	}
 	
 	@RequestMapping(value="/api/brands/{id}", method=RequestMethod.GET)
-	public ResponseEntity<Brand> getById(@PathVariable Long id) {
+	public String getById(@PathVariable Long id) {
 		try {
 			Brand brand = brandRepository.apiFindById(id);
-			return ResponseEntity.ok(brand);
+			
+			String msg = objectMapper.writeValueAsString(brand);
+			return URLEncoder.encode( msg == null ? "" : msg.replace(" ", "%20"), "UTF-8");
 		} catch(Exception e) {
 			e.printStackTrace();
 			return null;

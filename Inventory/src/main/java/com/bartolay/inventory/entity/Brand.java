@@ -1,5 +1,6 @@
 package com.bartolay.inventory.entity;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,9 +18,6 @@ import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Brand {
@@ -87,7 +85,12 @@ public class Brand {
 		return nameArabic;
 	}
 	public void setNameArabic(String nameArabic) {
-		this.nameArabic = nameArabic;
+		
+		for(Byte b : nameArabic.getBytes(StandardCharsets.UTF_8)) {
+			System.err.println(b);
+		}
+		
+		this.nameArabic = new String(nameArabic.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
 	}
 	public String getName() {
 		return name;

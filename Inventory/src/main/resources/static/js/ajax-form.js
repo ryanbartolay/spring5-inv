@@ -1,5 +1,6 @@
 function formModal(modal, successCallback = null) {
 	$('form[data-async]').on('submit', function(event) {
+		event.preventDefault();
         var $form = $(this);
         var $target = $($form.attr('data-target'));
         var $divError = $($form.find("#errors"));

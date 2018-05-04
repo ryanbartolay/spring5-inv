@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
 
 public class DatatableParameter {
 	
+	private Map<String, String> requestMap;
+	
 	private int draw;
 	private int start;
 	private int length;
@@ -44,22 +46,22 @@ public class DatatableParameter {
 	public static final String SORT_COLUMN = "order[0][column]";
 	public static final String SORT_ORDER = "order[0][dir]";
 
+
 	public DatatableParameter(Map<String, String> requestMap) {
 
-		this.setDraw(Integer.parseInt(requestMap.get(DRAW).toString()));
-		this.setStart(Integer.parseInt(requestMap.get(START).toString()));
-		this.setLength(Integer.parseInt(requestMap.get(LENGTH).toString()));
+		this.requestMap = requestMap;
+		
+		this.setDraw(getIntegerValue(DRAW));
+		this.setStart(getIntegerValue(START));
+		this.setLength(getIntegerValue(LENGTH));
 
-		this.setUniqueId(requestMap.get(UNIQUE_ID).toString());
+		this.setUniqueId(getStringValue(UNIQUE_ID));
+		this.setSearch(getStringValue(SEARCH));
 		
-		String search = requestMap.get(SEARCH);
-		
-		this.setSearch(search.trim().length() > 0 ? search.trim() : null);
-		
-		this.setRegex(Boolean.valueOf(requestMap.get(REGEX).toString()));
+		this.setRegex(getBooleanValue(REGEX));
 
-		this.setSortColumnId(Integer.parseInt(requestMap.get(SORT_COLUMN).toString()));
-		this.setSortOrder(SortOrder.valueOf(requestMap.get(SORT_ORDER).toUpperCase().trim()));
+		this.setSortColumnId(getIntegerValue(SORT_COLUMN));
+		this.setSortOrder(SortOrder.valueOf(getStringValue(SORT_ORDER).toUpperCase().trim()));
 
 		int numberOfColumns = getNumberOfColumns(requestMap);
 		System.err.println("numberOfColumns " + numberOfColumns);
@@ -88,6 +90,61 @@ public class DatatableParameter {
 		this.setColumns(columns);
 	}
 	
+	/**
+	 * Returns string value from request parameter
+	 * @param index
+	 * @return
+	 */
+	private String getStringValue(String index) {
+		try {
+			String str = this.requestMap.get(index).trim().toString();
+			if(str.length() > 0) {
+				return str;
+			}
+		} catch(Exception e) {
+//			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns integer from request parameter
+	 * @param index
+	 * @return
+	 */
+	private int getIntegerValue(String index) {
+		String strValue = getStringValue(index);
+		
+		if(strValue != null) {
+			try {
+				return Integer.parseInt(strValue);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+		}		
+		return 0;
+	}
+
+	/**
+	 * Returns boolean from request parameter
+	 * @param index
+	 * @return
+	 */
+	private boolean getBooleanValue(String index) {
+		String strValue = getStringValue(index);
+		
+		if(strValue != null) {
+			try {
+				return Boolean.parseBoolean(strValue);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+		}		
+		return false;
+	}
+		
 	/**
 	 * Return the sort column
 	 * @return

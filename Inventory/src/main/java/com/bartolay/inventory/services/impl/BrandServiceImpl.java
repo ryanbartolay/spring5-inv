@@ -50,7 +50,7 @@ public class BrandServiceImpl implements BrandService<Brand> {
 	}
 
 	@Override
-	public JSONObject retrieveList(Map<String, String> requestMap) {
+	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
 
 		DatatableParameter parameter = new DatatableParameter(requestMap);
 		JSONArray array = brandDataTableRepository.findAllData(parameter);

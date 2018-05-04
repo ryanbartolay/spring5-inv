@@ -41,7 +41,7 @@ public class BrandDataTableRepositoryImpl extends RepositoryComponent implements
 
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT b.*, c.id as company_id, c.name as company_name FROM Brand b inner join Company c on b.company_id = c.id";
+			String SQL = "SELECT b.*, c.name as company_name FROM Brand b inner join Company c on b.company_id = c.id";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
@@ -62,16 +62,6 @@ public class BrandDataTableRepositoryImpl extends RepositoryComponent implements
 
 			System.err.println(datatableParameter);
 			System.err.println(SQL);
-
-			//		Query query = em.createNativeQuery(SQL, Brand.class);
-			//		query.setFirstResult(datatableParameter.getStart());
-			//		query.setMaxResults(datatableParameter.getLength());
-
-			//		if(datatableParameter.getSearch() != null) {
-			//			query.setParameter("search", datatableParameter.getSearch() + "%");
-			//		}
-
-			System.err.println(SQL);
 			System.err.println(SQL_PARAMS);
 			
 			List<JSONObject> domains = new ArrayList<>();
@@ -82,11 +72,11 @@ public class BrandDataTableRepositoryImpl extends RepositoryComponent implements
 				@Override
 				public JSONObject mapRow(ResultSet rs, int arg1) throws SQLException {
 					JSONObject obj = new JSONObject();
+					obj.put("id", rs.getLong("id"));
 					obj.put("name", rs.getString("name"));
 					obj.put("company_name", rs.getString("company_name"));
 					return obj;
 				}
-
 			});
 			
 			JSONArray array = new JSONArray();
