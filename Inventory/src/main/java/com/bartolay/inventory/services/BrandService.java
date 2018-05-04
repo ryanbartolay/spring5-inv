@@ -8,6 +8,9 @@ import com.bartolay.inventory.form.BrandForm;
 
 public interface BrandService<E> {
 	public E create(BrandForm brandForm);
-
+	public E update(BrandForm brandForm);
+	
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
+
+	
 }

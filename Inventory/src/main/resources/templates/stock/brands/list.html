@@ -13,6 +13,7 @@
 		<div class="modal-content">
 			<form data-async data-target="#rating-modal" id="createBrandForm" th:object="${brandForm}"
 				th:action="@{/api/brands}" method="POST">
+				<input type="hidden" th:field="*{hiddenId}"/>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -85,6 +86,7 @@
 	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
 <!-- Page-Level Demo Scripts - Tables - Use for reference -->
 <script th:src="@{/static/js/ajax-form.js}"></script>
+
 <script>
 /*<![CDATA[*/
 	
@@ -116,6 +118,7 @@
 		
 		$("#createButton").on('click', function (e) {
 			form.attr("method", "POST"); // change to POST when editing
+			form.find('#hiddenId').val("");
 			modalLabel.text("Create new Brand");
 			submitButtonLabel.text("Create");
 		});
@@ -126,19 +129,19 @@
 	 		
 	        var data = brand_table.row( $(this).parent('td') ).data();
 	        
+	        form.attr("method", "PUT"); // change to put when editing
+	        form.find('#hiddenId').val(data['id']);
 	        modalLabel.text("Update " + data['name']);
 	        submitButtonLabel.text("Update");
-	        form.attr("method", "PUT"); // change to put when editing
-
+	        
 	        GETJSON("/api/brands/" + data['id'], function(data) {
 	        	console.log(data);
 	        	form.find('#txtName').val(data.name);
 	        	form.find('#ddCompany').val(data.company.id);
 	        });
 	    } );
-
 		
-		formModal($("#createBrandForm"), function() {
+		formModalAsync($("#formModal"), function() {
 			brand_table.ajax.reload( null, false ); // user paging is not reset on reload
 		});
 	});

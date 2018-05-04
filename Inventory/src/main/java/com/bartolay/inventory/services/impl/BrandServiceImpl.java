@@ -17,7 +17,6 @@ import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
 import com.bartolay.inventory.services.BrandService;
 import com.bartolay.inventory.utils.UserCredentials;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 @Transactional
@@ -35,9 +34,6 @@ public class BrandServiceImpl implements BrandService<Brand> {
 	@Autowired
 	private BrandDataTableRepository brandDataTableRepository;
 
-	@Autowired
-	private ObjectMapper objectMapper;
-
 	@Override
 	public Brand create(BrandForm brandForm) {
 
@@ -48,6 +44,19 @@ public class BrandServiceImpl implements BrandService<Brand> {
 
 		return brandRepository.save(brand);
 	}
+	
+	@Override
+	public Brand update(BrandForm brandForm) {
+		
+		Brand brand = brandRepository.apiFindById(brandForm.getHiddenId());
+		
+		brand.setCompany(companyRepository.findById(brandForm.getCompany_id()).orElse(null));
+		brand.setName(brandForm.getName());
+		brand.setCreatedBy(userCredentials.getLoggedInUser());
+
+		return brandRepository.save(brand);
+	}
+
 
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
@@ -55,8 +64,6 @@ public class BrandServiceImpl implements BrandService<Brand> {
 		DatatableParameter parameter = new DatatableParameter(requestMap);
 		JSONArray array = brandDataTableRepository.findAllData(parameter);
 		long recordsTotal = brandDataTableRepository.findAllCount(parameter);
-
-
 		
 		JSONObject object = new JSONObject();
 		object.put("data", array);
@@ -64,13 +71,6 @@ public class BrandServiceImpl implements BrandService<Brand> {
 		object.put("recordsFiltered", recordsTotal);
 		object.put("draw", parameter.getDraw());
 		
-//
-//		data.put("data", nodes);
-//		data.put("recordsTotal", recordsTotal);
-//		data.put("recordsFiltered", recordsTotal);
-//		data.put("draw", parameter.getDraw());
-
 		return object;
 	}
-
 }

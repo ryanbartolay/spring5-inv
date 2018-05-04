@@ -1,4 +1,4 @@
-function formModal(modal, successCallback = null) {
+function formModalAsync(modal, successCallback = null) {
 	$('form[data-async]').on('submit', function(event) {
 		event.preventDefault();
         var $form = $(this);
@@ -9,7 +9,7 @@ function formModal(modal, successCallback = null) {
         
         $btnSubmit.attr("disabled", "disabled");
         $btnSubmit.html("Processing...");
-        
+
         $.ajax({
             type: $form.attr('method'),
             url: $form.attr('action'),
@@ -46,8 +46,6 @@ function formModal(modal, successCallback = null) {
             	$btnSubmit.html($btnSubmitText);
             }
         });
-
-        event.preventDefault();
     });
 }
 
