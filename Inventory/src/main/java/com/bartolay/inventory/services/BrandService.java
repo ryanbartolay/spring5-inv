@@ -11,6 +11,7 @@ public interface BrandService<E> {
 	public E update(BrandForm brandForm);
 	
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
+	public E delete(Long id);
 
 	
 }

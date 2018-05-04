@@ -1,19 +1,26 @@
+$(document).on("submit", "form", function(e){
+	e.preventDefault();
+});
+
 function GET(url, callback){
-	return ajax("GET", url, "", callback)
-}
-function GETJSON(url, callback){
-	return ajax("GET", url, "", function(data){
-		callback(JSON.parse(getDecode(data)));
+	return ajax("GET", url, "", function(data) {
+		callback(decodeAPIResponse(data));
 	});
 }
-function DELETE(url, data, callback){
-	return ajax("DELETE", url, data, callback)
+function DELETE(url, callback){
+	return ajax("DELETE", url, "", function(data) {
+		callback(decodeAPIResponse(data));
+	})
 }
 function POST(url, data, callback){
 	return ajax("POST", url, data, callback)
 }
 function PUT(url, data, callback){
 	return ajax("PUT", url, data, callback)
+}
+function decodeAPIResponse(data) {
+	console.log(data);
+	return JSON.parse(getDecode(data));
 }
 function ajax(type, url, data, callback){
 	var strReturn;

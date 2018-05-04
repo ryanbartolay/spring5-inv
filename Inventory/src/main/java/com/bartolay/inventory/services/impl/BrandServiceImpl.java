@@ -1,6 +1,7 @@
 package com.bartolay.inventory.services.impl;
 
 import java.util.Map;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -72,5 +73,12 @@ public class BrandServiceImpl implements BrandService<Brand> {
 		object.put("draw", parameter.getDraw());
 		
 		return object;
+	}
+
+	@Override
+	public Brand delete(Long id) {
+		Optional<Brand> brand = brandRepository.findById(id);
+		brandRepository.deleteById(id);
+		return brand.get();
 	}
 }

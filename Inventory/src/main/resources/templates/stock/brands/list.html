@@ -50,11 +50,33 @@
 	<!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+<!-- Delete Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-2" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+        
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+        
+            <div class="modal-body">
+                <p>You are about to delete <b id="recordName"></b>, this procedure is irreversible.</p>
+                <p>Do you want to proceed?</p>
+                <p class="debug-url"></p>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger" id="btnOk">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Delete Modal -->
 
 
-	</div>
-
-	
 	<div class="panel panel-default">
 		<!-- /.panel-heading -->
 		<div class="panel-body">
@@ -112,8 +134,8 @@
             "columnDefs": [ {
                 "targets": 2,
                 "data": null,
-                "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="edit_record">Edit</button>' 
-                	+ '<button id="btnDelete" class="btn btn-success pull-right">Delete</button>'
+                "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Edit</button>' 
+                	+ '<button id="btnDelete" class="btn btn-default pull-right" data-toggle="modal" data-target="#confirmDeleteModal" data-backdrop="static" data-keyboard="false">Delete</button>'
             } ]
 		});
 		
@@ -125,7 +147,7 @@
 		});
 		
 		// Edit button
-	    $("#brand-datatable tbody").on('click', 'button', function (e) {
+	    $("#brand-datatable tbody").on('click', '#btnEdit', function (e) {
 	        e.preventDefault();
 	 		
 	        var data = brand_table.row( $(this).parent('td') ).data();
@@ -135,30 +157,39 @@
 	        modalLabel.text("Update " + data['name']);
 	        submitButtonLabel.text("Update");
 	        
-	        GETJSON("/api/brands/" + data['id'], function(data) {
+	        GET("/api/brands/" + data['id'], function(data) {
 	        	console.log(data);
 	        	form.find('#txtName').val(data.name);
 	        	form.find('#ddCompany').val(data.company.id);
 	        });
 	    } );
 		
-	 // Edit button
+	 // Delete button
 	    $("#brand-datatable tbody").on('click', '#btnDelete', function (e) {
 	        e.preventDefault();
 	 		
 	        var data = brand_table.row( $(this).parent('td') ).data();
+	        var confirmDeleteModal = $("#confirmDeleteModal");
+	        var btnConfirm = confirmDeleteModal.find('#btnOk');
 	        
-	        form.attr("method", "PUT"); // change to put when editing
-	        form.find('#hiddenId').val(data['id']);
-	        modalLabel.text("Update " + data['name']);
-	        submitButtonLabel.text("Update");
+	        confirmDeleteModal.find("#recordName").text(data['name']);
 	        
-	        GETJSON("/api/brands/" + data['id'], function(data) {
-	        	console.log(data);
-	        	form.find('#txtName').val(data.name);
-	        	form.find('#ddCompany').val(data.company.id);
+	        confirmDeleteModal.on('show.bs.modal', function(e) {
+	        	
+	        	btnConfirm.removeAttr("disabled");
+	        	
+	            $(this).find('#btnOk').on('click', function(e) {
+	            	$(this).attr("disabled", "disabled");
+	            
+	            	DELETE("/api/brands/" + data['id'], function(data) {
+	            		toast("warn", data.localizedMessage);
+	            		confirmDeleteModal.toggle();
+	            		brand_table.ajax.reload( null, false ); // user paging is not reset on reload
+	            	});
+	            });
 	        });
-	    } );
+	        
+	    });
 		
 		formModalAsync($("#formModal"), function() {
 			brand_table.ajax.reload( null, false ); // user paging is not reset on reload
