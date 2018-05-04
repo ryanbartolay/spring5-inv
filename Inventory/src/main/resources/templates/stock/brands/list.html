@@ -112,7 +112,8 @@
             "columnDefs": [ {
                 "targets": 2,
                 "data": null,
-                "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="edit_record">Edit</button> / <a href="" class="editor_remove">Delete</a>'
+                "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="edit_record">Edit</button>' 
+                	+ '<button id="btnDelete" class="btn btn-success pull-right">Delete</button>'
             } ]
 		});
 		
@@ -125,6 +126,24 @@
 		
 		// Edit button
 	    $("#brand-datatable tbody").on('click', 'button', function (e) {
+	        e.preventDefault();
+	 		
+	        var data = brand_table.row( $(this).parent('td') ).data();
+	        
+	        form.attr("method", "PUT"); // change to put when editing
+	        form.find('#hiddenId').val(data['id']);
+	        modalLabel.text("Update " + data['name']);
+	        submitButtonLabel.text("Update");
+	        
+	        GETJSON("/api/brands/" + data['id'], function(data) {
+	        	console.log(data);
+	        	form.find('#txtName').val(data.name);
+	        	form.find('#ddCompany').val(data.company.id);
+	        });
+	    } );
+		
+	 // Edit button
+	    $("#brand-datatable tbody").on('click', '#btnDelete', function (e) {
 	        e.preventDefault();
 	 		
 	        var data = brand_table.row( $(this).parent('td') ).data();

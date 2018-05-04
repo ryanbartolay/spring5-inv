@@ -52,17 +52,12 @@ public class BrandDataTableRepositoryImpl extends RepositoryComponent implements
 
 			// sort order by column
 			if(sortColumn != null && datatableParameter.getSortOrder() != null) {
-				System.err.println("sortColumn " + sortColumn);
 				SQL += " ORDER BY "+sortColumn.getData()+ " " + datatableParameter.getSortOrder().name();	
 			}
 
 			if(datatableParameter.getLength() > 0) {
 				SQL += " LIMIT " + datatableParameter.getLength() + " OFFSET " + datatableParameter.getStart();
 			}
-
-			System.err.println(datatableParameter);
-			System.err.println(SQL);
-			System.err.println(SQL_PARAMS);
 			
 			List<JSONObject> domains = new ArrayList<>();
 
