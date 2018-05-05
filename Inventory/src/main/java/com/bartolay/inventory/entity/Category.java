@@ -18,6 +18,7 @@ public class Category implements Serializable {
     @Column(name = "id")
     private long id;
     @Column(name = "type")
+
     private String type;
     @Column(name = "description")
     private String description;

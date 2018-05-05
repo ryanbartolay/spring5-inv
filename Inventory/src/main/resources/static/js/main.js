@@ -83,11 +83,10 @@ function formModalAsync(modal, successCallback = null) {
                 modal.modal("toggle");
                 var obj = decodeAPIResponse(data);
                 
-                if(obj.status == 'OK') {
-        			toast("info", obj.localizedMessage);
-        		} else {
-        			toast("error", obj.localizedMessage);
-        		}
+                console.log(obj.status);
+                console.log(obj.status == 'ACCEPTED');
+                
+                showToast(obj);
             	
                 // calling success callback
                 if(successCallback != null) {
@@ -116,6 +115,16 @@ function formModalAsync(modal, successCallback = null) {
             }
         });
     });
+}
+
+function showToast(data) {
+	if(data.status == 'OK') {
+		toast("success", data.localizedMessage);
+	} else if(data.status == 'ACCEPTED') { 
+		toast("info", data.localizedMessage);
+	} else {
+		toast("error", data.localizedMessage);
+	}
 }
 
 function toast(icon, message) {

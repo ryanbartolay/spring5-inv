@@ -1,6 +1,5 @@
 package com.bartolay.inventory.development;
 
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -15,13 +14,14 @@ import com.bartolay.inventory.entity.Product;
 import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.repositories.BrandRepository;
+import com.bartolay.inventory.repositories.CategoryRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
+import com.bartolay.inventory.repositories.SupplierRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 
 @Component
 public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
-	private static Session session;
 	private String password = "123456a";
 
 	private Supplier supplier;
@@ -34,15 +34,23 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	private BrandRepository brandRepository;
 
 	@Autowired
+	private CategoryRepository categoryRepository;
+	
+	@Autowired
 	private CompanyRepository companyRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private SupplierRepository supplierRepository;
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
 		createEmployees();
+		createCategories();
 		createCompaniesAndBrand();
+		createSuppliers();
 	}
 
 	private void createCompaniesAndBrand() {
@@ -103,13 +111,20 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		supplier.setName("JFC Corporation");
 		supplier.setPhone("91-100");
 		supplier.setAddress("Las Pinas");
-
+		
+		supplierRepository.save(supplier);
 	}
 
 	private void createCategories() {
 		category = new Category();
 		category.setType("Computers - Hardware");
 		category.setDescription("IT supplies for hardware");
+		categoryRepository.save(category);
+		
+		category = new Category();
+		category.setType("Computers - Software");
+		category.setDescription("Drivers and Installers");
+		categoryRepository.save(category);
 	}
 
 	private void createProducts() {

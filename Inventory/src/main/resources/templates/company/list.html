@@ -175,11 +175,7 @@
 	            	$(this).attr("disabled", "disabled");
 	            
 	            	DELETE("/api/companies/" + data['id'], function(data) {
-	            		if(data.status == 'OK') {
-	            			toast("info", data.localizedMessage);
-	            		} else {
-	            			toast("error", data.localizedMessage);
-	            		}
+	            		showToast(data);
 	            		
 	            		confirmDeleteModal.toggle();
 	            		datatable.ajax.reload( null, false ); // user paging is not reset on reload

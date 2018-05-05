@@ -99,7 +99,7 @@ class CompanyRestController {
 		try {
 			Company company = companyService.delete(id);
 
-			response = new ApiResponse(HttpStatus.OK, "Record deleted " + company.getName());
+			response = new ApiResponse(HttpStatus.ACCEPTED, "Record deleted " + company.getName());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 			
