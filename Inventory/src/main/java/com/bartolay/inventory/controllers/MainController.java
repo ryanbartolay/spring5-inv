@@ -2,11 +2,13 @@ package com.bartolay.inventory.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,10 +16,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.form.CompanyForm;
+import com.bartolay.inventory.services.CompanyService;
 
 @Controller
 public class MainController {
 
+	@Autowired
+	private CompanyService companyService;
+	
 	@RequestMapping(value="/")
 	public String getDemo() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -53,6 +60,15 @@ public class MainController {
 	@RequestMapping(value="/dashboard")
 	public String dashboard() {
 		return "index";
+	}
+	
+	@RequestMapping(value="/companies", method=RequestMethod.GET)
+	public ModelAndView viewList(Model model) {
+		ModelAndView mav = new ModelAndView("company/index");
+		mav.addObject("companies", companyService.findAll());
+		mav.addObject("companyForm", new CompanyForm());
+		mav.addObject("html", "list");
+		return mav;
 	}
 	
 	@RequestMapping(value="/flot")

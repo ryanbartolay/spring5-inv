@@ -4,7 +4,7 @@ import org.json.JSONArray;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 
-public interface BrandDataTableRepository {
+public interface BrandDatatableRepository {
 	public long findAllCount(DatatableParameter datatableParameter);
 	public JSONArray findAllData(DatatableParameter datatableParameter);
 }

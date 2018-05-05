@@ -2,12 +2,9 @@ package com.bartolay.inventory.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.bartolay.inventory.entity.Brand;
-import com.bartolay.inventory.entity.Company;
 import com.bartolay.inventory.form.BrandForm;
 import com.bartolay.inventory.services.CompanyService;
 
@@ -15,7 +12,7 @@ import com.bartolay.inventory.services.CompanyService;
 public class StockController {
 
 	@Autowired
-	private CompanyService<Company> companyService;
+	private CompanyService companyService;
 	
 	@RequestMapping(value="/brands")
 	public ModelAndView brandsList() {

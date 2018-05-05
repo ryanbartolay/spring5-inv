@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.form.BrandForm;
-import com.bartolay.inventory.repositories.BrandDataTableRepository;
+import com.bartolay.inventory.repositories.BrandDatatableRepository;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
 import com.bartolay.inventory.services.BrandService;
@@ -33,7 +33,7 @@ public class BrandServiceImpl implements BrandService<Brand> {
 	private UserCredentials userCredentials;
 
 	@Autowired
-	private BrandDataTableRepository brandDataTableRepository;
+	private BrandDatatableRepository brandDataTableRepository;
 
 	@Override
 	public Brand create(BrandForm brandForm) {
@@ -49,7 +49,7 @@ public class BrandServiceImpl implements BrandService<Brand> {
 	@Override
 	public Brand update(BrandForm brandForm) {
 		
-		Brand brand = brandRepository.apiFindById(brandForm.getHiddenId());
+		Brand brand = brandRepository.apiFindById(brandForm.getId());
 		
 		brand.setCompany(companyRepository.findById(brandForm.getCompany_id()).orElse(null));
 		brand.setName(brandForm.getName());

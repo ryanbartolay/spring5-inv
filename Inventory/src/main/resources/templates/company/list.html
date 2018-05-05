@@ -3,7 +3,7 @@
 <!-- Create Button -->
 	<button type="button" class="btn btn-success pull-right"
 	data-toggle="modal" data-target="#formModal" id="createButton" data-backdrop="static"
-	data-keyboard="false">Add Brand</button>	
+	data-keyboard="false">Add Company</button>	
 <!-- /Create Button -->
 </div>
 
@@ -12,27 +12,19 @@
 	aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form data-async data-target="#rating-modal" id="createBrandForm" th:object="${brandForm}"
+			<form data-async data-target="#rating-modal" id="createBrandForm" th:object="${companyForm}"
 				th:action="@{/api/brands}" method="POST">
 				<input type="hidden" th:field="*{id}"/>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
-					<h4 class="modal-title" id="modalLabel">Brand Create</h4>
+					<h4 class="modal-title" id="modalLabel">Add Company</h4>
 				</div>
 
 				<div class="panel-body">
 				
 					<div class="form-group" id="errors"></div>
 					
-					<div class="form-group">
-						<label>Company</label> <select
-							class="form-control" th:field="*{company_id}" id="ddCompany">
-							<option th:each="company : ${companies}" th:value="${company.id}"
-								th:text="${company.name}"></option>
-						</select>
-					</div>
-				
 					<div class="form-group">
 						<label>Name</label> <input class="form-control" id="txtName" th:field="*{name}" maxlength="30">
 						<p class="help-block">This is the brand name.</p>
@@ -122,7 +114,7 @@
 		var brand_table = $('#brand-datatable').DataTable({
 			responsive : true,
 			ajax: {
-				url: '/api/datatable/brands'
+				url: '/api/datatable/companies'
 			},
 			processing: true,
 	        serverSide: true,
@@ -137,6 +129,16 @@
                 "data": null,
                 "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Edit</button>' 
                 	+ '<button id="btnDelete" class="btn btn-default pull-right" data-toggle="modal" data-target="#confirmDeleteModal" data-backdrop="static" data-keyboard="false">Delete</button>'
+                	+ '<div class="btn-group">'
+                	+ '<button class="btn bmd-btn-icon dropdown-toggle" type="button" id="ex2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+                	+ '<i class="material-icons">more_vert</i>'
+                	+ '</button>'
+                	+ '<div class="dropdown-menu dropdown-menu-left" aria-labelledby="ex2">'
+                	+ '<a class="dropdown-item" href="#">Regular link</a>'
+                	+ '<a class="dropdown-item disabled" href="#">Disabled link</a>'
+                	+ '<a class="dropdown-item" href="#">Another link</a>'
+                	+ '</div>'
+                	+ '</div>'
             } ]
 		});
 		
@@ -154,7 +156,7 @@
 	        var data = brand_table.row( $(this).parent('td') ).data();
 	        
 	        form.attr("method", "PUT"); // change to put when editing
-	        form.find('#id').val(data['id']);
+	        form.find('#hiddenId').val(data['id']);
 	        modalLabel.text("Update " + data['name']);
 	        submitButtonLabel.text("Update");
 	        
@@ -183,7 +185,7 @@
 	            	$(this).attr("disabled", "disabled");
 	            
 	            	DELETE("/api/brands/" + data['id'], function(data) {
-	            		toast("info", data.localizedMessage);
+	            		toast("warn", data.localizedMessage);
 	            		confirmDeleteModal.toggle();
 	            		brand_table.ajax.reload( null, false ); // user paging is not reset on reload
 	            		
