@@ -13,7 +13,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<form data-async data-target="#rating-modal" id="createBrandForm" th:object="${companyForm}"
-				th:action="@{/api/brands}" method="POST">
+				th:action="@{/api/companies}" method="POST">
 				<input type="hidden" th:field="*{id}"/>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
@@ -26,8 +26,12 @@
 					<div class="form-group" id="errors"></div>
 					
 					<div class="form-group">
-						<label>Name</label> <input class="form-control" id="txtName" th:field="*{name}" maxlength="30">
+						<label>Name</label> <input class="form-control" th:field="*{name}" maxlength="30">
 						<p class="help-block">This is the brand name.</p>
+					</div>
+					
+					<div class="form-group">
+						<label>Email</label> <input class="form-control" th:field="*{email}" maxlength="100">
 					</div>
 					
 				</div>
@@ -144,14 +148,13 @@
 	        var data = brand_table.row( $(this).parent('td') ).data();
 	        
 	        form.attr("method", "PUT"); // change to put when editing
-	        form.find('#hiddenId').val(data['id']);
+	        form.find('#id').val(data['id']);
 	        modalLabel.text("Update " + data['name']);
 	        submitButtonLabel.text("Update");
 	        
-	        GET("/api/brands/" + data['id'], function(data) {
-	        	console.log(data);
-	        	form.find('#txtName').val(data.name);
-	        	form.find('#ddCompany').val(data.company.id);
+	        GET("/api/companies/" + data['id'], function(data) {
+	        	form.find('#name').val(data.name);
+	        	form.find('#email').val(data.email);
 	        });
 	    } );
 		
@@ -174,7 +177,7 @@
 	            
 	            	DELETE("/api/companies/" + data['id'], function(data) {
 	            		if(data.status == 'OK') {
-	            			toast("warn", data.localizedMessage);
+	            			toast("info", data.localizedMessage);
 	            		} else {
 	            			toast("error", data.localizedMessage);
 	            		}

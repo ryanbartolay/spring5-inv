@@ -34,7 +34,7 @@
 					</div>
 				
 					<div class="form-group">
-						<label>Name</label> <input class="form-control" id="txtName" th:field="*{name}" maxlength="30">
+						<label>Name</label> <input class="form-control" th:field="*{name}" maxlength="30">
 						<p class="help-block">This is the brand name.</p>
 					</div>
 					
@@ -160,7 +160,7 @@
 	        
 	        GET("/api/brands/" + data['id'], function(data) {
 	        	console.log(data);
-	        	form.find('#txtName').val(data.name);
+	        	form.find('#name').val(data.name);
 	        	form.find('#ddCompany').val(data.company.id);
 	        });
 	    } );
@@ -183,7 +183,12 @@
 	            	$(this).attr("disabled", "disabled");
 	            
 	            	DELETE("/api/brands/" + data['id'], function(data) {
-	            		toast("info", data.localizedMessage);
+	            		if(data.status == 'OK') {
+	            			toast("info", data.localizedMessage);
+	            		} else {
+	            			toast("error", data.localizedMessage);
+	            		}
+	            		
 	            		confirmDeleteModal.toggle();
 	            		brand_table.ajax.reload( null, false ); // user paging is not reset on reload
 	            		

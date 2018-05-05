@@ -56,7 +56,7 @@ public class BrandRestController {
 
 	@RequestMapping(value="/api/datatable/brands", method=RequestMethod.GET, produces="application/json")
 	public String datatableBrand(@RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {
-		return stringUtils.encode(brandService.retrieveDatatableList(requestMap));
+		return brandService.retrieveDatatableList(requestMap).toString();
 	}
 
 	@RequestMapping(value="/api/brands/{id}", method=RequestMethod.GET)
@@ -72,38 +72,43 @@ public class BrandRestController {
 	}
 
 	@RequestMapping(value="/api/brands", method=RequestMethod.POST)
-	public ResponseEntity<ApiResponse> create(@Valid BrandForm brandForm, BindingResult bindingResult) throws RestApiException {
+	public String create(@Valid BrandForm brandForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		if (bindingResult.hasErrors()) {
 			throw new RestApiException(bindingResult);
 		}
 
+		ApiResponse response = null;
+		
 		try {
 			Brand brand = brandService.create(brandForm);
 
-			ApiResponse apiError = new ApiResponse(HttpStatus.OK, "Succesfully created " + brand.getName());
-			return new ResponseEntity<ApiResponse>(apiError, HttpStatus.OK);
+			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + brand.getName());
 		} catch(Exception e) {
-			throw new RestApiException(e);
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+//			throw new RestApiException(e);
 		}
 
-
+		return stringUtils.encode(response);
 	}
 
 	@RequestMapping(value="/api/brands", method=RequestMethod.PUT)
-	public ResponseEntity<ApiResponse> update(@Valid BrandForm brandForm, BindingResult bindingResult) throws RestApiException {
+	public String update(@Valid BrandForm brandForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		if (bindingResult.hasErrors()) {
 			throw new RestApiException(bindingResult);
 		}
 
+		ApiResponse response = null;
+		
 		try {
 			Brand brand = brandService.update(brandForm);
-			ApiResponse apiError = new ApiResponse(HttpStatus.OK, "Succesfully updated " + brand.getName());
-			return new ResponseEntity<ApiResponse>(apiError, HttpStatus.OK);
+			response = new ApiResponse(HttpStatus.OK, "Succesfully updated " + brand.getName());
 		} catch(Exception e) {
-			throw new RestApiException(e);
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
+		
+		return stringUtils.encode(response);
 	}
 
 	@RequestMapping(value="/api/brands/{id}", method=RequestMethod.DELETE)

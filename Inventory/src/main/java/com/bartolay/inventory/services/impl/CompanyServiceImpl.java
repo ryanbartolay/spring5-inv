@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Company;
+import com.bartolay.inventory.form.CompanyForm;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CompanyDatatableRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
@@ -55,10 +56,17 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	@Override
+	public Company update(CompanyForm companyForm) {
+		Company company = companyRepository.findById(companyForm.getId()).get();
+		company.setName(companyForm.getName());
+		company.setEmail(companyForm.getEmail());
+		return companyRepository.save(company);
+	}
+	
+	@Override
 	public Company delete(Long id) {
 
 		Optional<Company> company = companyRepository.findById(id);
-
 		List<Brand> brands = brandRepository.findByCompany(company.get());
 		
 		if(brands.size() > 0) {
@@ -68,11 +76,4 @@ public class CompanyServiceImpl implements CompanyService {
 		companyRepository.deleteById(id);
 		return company.get();
 	}
-
-	@Override
-	public Company update(Company company) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
