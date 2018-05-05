@@ -4,6 +4,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.beans.factory.annotation.Required;
+
 public class CompanyForm {
 	
 	private Long id;
@@ -36,6 +38,7 @@ public class CompanyForm {
 	
 	@NotNull
 	@Email(message="Invalid Email format" )
+	@Size(min=2, max=30, message="Name length minimum 2 and 30" )
 	private String email;
 	
 	private String site;

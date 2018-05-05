@@ -50,11 +50,13 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		Company c = new Company();
 		c.setName("Big Trading");
 		c.setEmail("rbartolay.gotechsolutions@gmail.com");
+		c.setCreatedBy(employeeRepository.findByUsername("admin"));
 		companyRepository.save(c);
 
 		Company company = new Company();
 		company.setName("GoTech Solutions");
 		company.setEmail("bartolay.ryan@gmail.com");
+		company.setCreatedBy(employeeRepository.findByUsername("admin"));
 		companyRepository.save(company);
 
 		// creating brands
@@ -101,14 +103,13 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		supplier.setName("JFC Corporation");
 		supplier.setPhone("91-100");
 		supplier.setAddress("Las Pinas");
-		session.save(supplier);
+
 	}
 
 	private void createCategories() {
 		category = new Category();
 		category.setType("Computers - Hardware");
 		category.setDescription("IT supplies for hardware");
-		session.save(category);
 	}
 
 	private void createProducts() {
@@ -118,6 +119,5 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		product.setPrice(1.156);
 		product.setSupplier(supplier);
 		product.setCategory(category);
-		session.save(product);
 	}
 }

@@ -2,7 +2,6 @@ package com.bartolay.inventory.controllers;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -45,13 +44,33 @@ class CompanyRestController {
 	@RequestMapping(value="/api/companies/{id}", method=RequestMethod.GET)
 	public String getById(@PathVariable Long id) {
 		try {
-			Optional<Company> company = companyRepository.findById(id);
-
-			return stringUtils.encode(company.get());
+			Company company = companyRepository.apiFindById(id);
+			return stringUtils.encode(company);
 		} catch(Exception e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	@RequestMapping(value="/api/companies", method=RequestMethod.POST)
+	public String create(@Valid CompanyForm companyForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+
+		if (bindingResult.hasErrors()) {
+			throw new RestApiException(bindingResult);
+		}
+
+		ApiResponse response = null;
+		
+		try {
+			Company company = companyService.create(companyForm);
+
+			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + company.getName());
+		} catch(Exception e) {
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+//			throw new RestApiException(e);
+		}
+
+		return stringUtils.encode(response);
 	}
 	
 	@RequestMapping(value="/api/companies", method=RequestMethod.PUT)

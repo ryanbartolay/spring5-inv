@@ -107,8 +107,6 @@
 	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
 <script
 	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
-<!-- Page-Level Demo Scripts - Tables - Use for reference -->
-<script th:src="@{/static/js/ajax-form.js}"></script>
 
 <script>
 /*<![CDATA[*/
@@ -141,6 +139,7 @@
 		});
 		
 		$("#createButton").on('click', function (e) {
+			form[0].reset();
 			form.attr("method", "POST"); // change to POST when editing
 			form.find('#hiddenId').val("");
 			modalLabel.text("Create new Brand");

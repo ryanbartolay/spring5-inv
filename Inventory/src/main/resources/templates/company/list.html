@@ -102,8 +102,6 @@
 	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
 <script
 	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
-<!-- Page-Level Demo Scripts - Tables - Use for reference -->
-<script th:src="@{/static/js/ajax-form.js}"></script>
 
 <script>
 /*<![CDATA[*/
@@ -113,8 +111,8 @@
 		var modalLabel = formModal.find("#modalLabel");
 		var submitButtonLabel = $("#formModal #submit");
 		var form = $("#createBrandForm");
-		
-		var brand_table = $('#brand-datatable').DataTable({
+		var table = $('#brand-datatable');
+		var datatable = table.DataTable({
 			responsive : true,
 			ajax: {
 				url: '/api/datatable/companies'
@@ -135,6 +133,7 @@
 		});
 		
 		$("#createButton").on('click', function (e) {
+			form[0].reset();
 			form.attr("method", "POST"); // change to POST when editing
 			form.find('#hiddenId').val("");
 			modalLabel.text("Create new Brand");
@@ -142,10 +141,10 @@
 		});
 		
 		// Edit button
-	    $("#brand-datatable tbody").on('click', '#btnEdit', function (e) {
+	    table.find("tbody").on('click', '#btnEdit', function (e) {
 	        e.preventDefault();
 	 		
-	        var data = brand_table.row( $(this).parent('td') ).data();
+	        var data = datatable.row( $(this).parent('td') ).data();
 	        
 	        form.attr("method", "PUT"); // change to put when editing
 	        form.find('#id').val(data['id']);
@@ -158,11 +157,11 @@
 	        });
 	    } );
 		
-	 // Delete button
-	    $("#brand-datatable tbody").on('click', '#btnDelete', function (e) {
+	 	// Delete button
+	    table.find("tbody").on('click', '#btnDelete', function (e) {
 	        e.preventDefault();
 	 		
-	        var data = brand_table.row( $(this).parent('td') ).data();
+	        var data = datatable.row( $(this).parent('td') ).data();
 	        var confirmDeleteModal = $("#confirmDeleteModal");
 	        var btnConfirm = confirmDeleteModal.find('#btnOk');
 	        
@@ -183,7 +182,7 @@
 	            		}
 	            		
 	            		confirmDeleteModal.toggle();
-	            		brand_table.ajax.reload( null, false ); // user paging is not reset on reload
+	            		datatable.ajax.reload( null, false ); // user paging is not reset on reload
 	            		
 	            		// force remove backdrop
 	            		$('body').removeClass('modal-open');
@@ -194,7 +193,7 @@
 	    });
 		
 		formModalAsync($("#formModal"), function() {
-			brand_table.ajax.reload( null, false ); // user paging is not reset on reload
+			datatable.ajax.reload( null, false ); // user paging is not reset on reload
 		});
 	});
 /*]]>*/

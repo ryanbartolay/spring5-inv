@@ -82,13 +82,19 @@ function formModalAsync(modal, successCallback = null) {
                 $target.html(data);
                 modal.modal("toggle");
                 var obj = decodeAPIResponse(data);
-                toast("success", obj.localizedMessage);
+                
+                if(obj.status == 'OK') {
+        			toast("info", obj.localizedMessage);
+        		} else {
+        			toast("error", obj.localizedMessage);
+        		}
             	
                 // calling success callback
                 if(successCallback != null) {
                 	successCallback();
                 }
                 
+                $divError.html("");
                 $form[0].reset();
                 $btnSubmit.removeAttr("disabled");
             	$btnSubmit.html($btnSubmitText);

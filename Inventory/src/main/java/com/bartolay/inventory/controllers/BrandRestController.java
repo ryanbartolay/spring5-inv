@@ -86,7 +86,6 @@ public class BrandRestController {
 			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + brand.getName());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-//			throw new RestApiException(e);
 		}
 
 		return stringUtils.encode(response);

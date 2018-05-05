@@ -21,6 +21,7 @@ import com.bartolay.inventory.repositories.CompanyDatatableRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
 import com.bartolay.inventory.services.CompanyService;
 import com.bartolay.inventory.utils.ServiceUtility;
+import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
 @Transactional
@@ -34,6 +35,9 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Autowired
 	private CompanyDatatableRepository companyDatatableRepository;
+	
+	@Autowired
+	private UserCredentials userCredentials;
 
 	@Override
 	public List<Company> findAll() {
@@ -75,5 +79,15 @@ public class CompanyServiceImpl implements CompanyService {
 		
 		companyRepository.deleteById(id);
 		return company.get();
+	}
+
+	@Override
+	public Company create(CompanyForm companyForm) {
+		Company company = new Company();
+		company.setName(companyForm.getName());
+		company.setEmail(companyForm.getEmail());
+		company.setCreatedBy(userCredentials.getLoggedInUser());
+
+		return companyRepository.save(company);
 	}
 }

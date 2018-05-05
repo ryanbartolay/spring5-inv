@@ -53,16 +53,6 @@ public class Brand {
 	@UpdateTimestamp
 	private Date updatedDated;
 
-//	@PrePersist
-//	protected void onCreate() {
-//		createdDate = new Date();
-//	}
-//
-//	@PreUpdate
-//	protected void onUpdate() {
-//		updatedDated = new Date();
-//	}
-
 	public Long getId() {
 		return id;
 	}
