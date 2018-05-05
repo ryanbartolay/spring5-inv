@@ -79,7 +79,6 @@
 				<thead>
 					<tr>
 						<th>Name</th>
-						<th>Company</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -121,24 +120,13 @@
 			length: 5,
 			start: 0,
 	        columns: [
-                { "data": "name", "name" : "Name", "title" : "Namezzzz"  },
-                { "data": "company_name", "name" : "Company" , "title" : "Company Inc."},
+                { "data": "name", "name" : "Name", "title" : "Name"  },
             ],
             "columnDefs": [ {
-                "targets": 2,
+                "targets": 1,
                 "data": null,
                 "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Edit</button>' 
                 	+ '<button id="btnDelete" class="btn btn-default pull-right" data-toggle="modal" data-target="#confirmDeleteModal" data-backdrop="static" data-keyboard="false">Delete</button>'
-                	+ '<div class="btn-group">'
-                	+ '<button class="btn bmd-btn-icon dropdown-toggle" type="button" id="ex2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
-                	+ '<i class="material-icons">more_vert</i>'
-                	+ '</button>'
-                	+ '<div class="dropdown-menu dropdown-menu-left" aria-labelledby="ex2">'
-                	+ '<a class="dropdown-item" href="#">Regular link</a>'
-                	+ '<a class="dropdown-item disabled" href="#">Disabled link</a>'
-                	+ '<a class="dropdown-item" href="#">Another link</a>'
-                	+ '</div>'
-                	+ '</div>'
             } ]
 		});
 		
@@ -184,8 +172,13 @@
 	            $(this).find('#btnOk').on('click', function(e) {
 	            	$(this).attr("disabled", "disabled");
 	            
-	            	DELETE("/api/brands/" + data['id'], function(data) {
-	            		toast("warn", data.localizedMessage);
+	            	DELETE("/api/companies/" + data['id'], function(data) {
+	            		if(data.status == 'OK') {
+	            			toast("warn", data.localizedMessage);
+	            		} else {
+	            			toast("error", data.localizedMessage);
+	            		}
+	            		
 	            		confirmDeleteModal.toggle();
 	            		brand_table.ajax.reload( null, false ); // user paging is not reset on reload
 	            		

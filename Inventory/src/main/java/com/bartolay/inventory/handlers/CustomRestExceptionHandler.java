@@ -19,7 +19,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
@@ -30,13 +29,17 @@ import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
 
 @ControllerAdvice
-@RestController
+@Deprecated
 public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler({ RestApiException.class })
 	public ResponseEntity<Object> handleRestApiException(final RestApiException ex, WebRequest request) {
 		logger.info(ex.getClass().getName());
 		logger.error("error", ex);
+		
+		System.err.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+		System.err.println(ex);
+		System.err.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 		
 		final List<String> errors = new ArrayList<String>();
 		
@@ -102,7 +105,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 		}
 
 		ApiResponse apiError = new ApiResponse(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors);
-		return new ResponseEntity<ApiResponse>(apiError, new HttpHeaders(), apiError.getStatus());
+		return new ResponseEntity<ApiResponse>(apiError, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
 
 	/**

@@ -217,27 +217,11 @@ public class Company {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Company other = (Company) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
+	public String toString() {
+		return "Company [id=" + id + ", nameArabic=" + nameArabic + ", name=" + name + ", contactName=" + contactName
+				+ ", contactPosition=" + contactPosition + ", telephone1=" + telephone1 + ", telephone2=" + telephone2
+				+ ", telephone3=" + telephone3 + ", fax=" + fax + ", mobile=" + mobile + ", pager=" + pager
+				+ ", addressArabic=" + addressArabic + ", address=" + address + ", title=" + title + ", last=" + last
+				+ ", logo=" + logo + ", pobox=" + pobox + ", email=" + email + ", site=" + site + "]";
 	}
 }

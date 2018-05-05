@@ -1,5 +1,6 @@
 package com.bartolay.inventory.controllers;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,6 @@ import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.services.BrandService;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 public class BrandRestController {
@@ -40,9 +40,6 @@ public class BrandRestController {
 	/** The entity manager. */
 	@PersistenceContext
 	private EntityManager entityManager;
-
-	@Autowired
-	private ObjectMapper objectMapper;
 	
 	@Autowired
 	private StringUtils stringUtils;
@@ -58,9 +55,8 @@ public class BrandRestController {
 	}
 
 	@RequestMapping(value="/api/datatable/brands", method=RequestMethod.GET, produces="application/json")
-	public String datatableBrand(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
-		System.err.println("raw request >>>>> " + requestMap);
-		return brandService.retrieveDatatableList(requestMap).toString();
+	public String datatableBrand(@RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {
+		return stringUtils.encode(brandService.retrieveDatatableList(requestMap));
 	}
 
 	@RequestMapping(value="/api/brands/{id}", method=RequestMethod.GET)
