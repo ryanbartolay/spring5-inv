@@ -142,6 +142,7 @@
 		form[0].reset();
 		form.attr("method", "POST"); // change to POST when editing
 		form.find('#id').val("");
+		form.find('#code').removeAttr("readonly");
 		modalLabel.text("Create new Item");
 		submitButtonLabel.text("Create");
 	});
@@ -158,8 +159,10 @@
         submitButtonLabel.text("Update");
         
         GET("/api/items/" + data['id'], function(data) {
+        	form.find('#code').val(data.code);
+        	form.find('#code').attr("readonly", "readonly");
         	form.find('#name').val(data.name);
-        	form.find('#email').val(data.email);
+        	form.find('#brand_id').val(data.brand.id);
         });
     } );
 	

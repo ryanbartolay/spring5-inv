@@ -12,7 +12,7 @@ public class ItemForm {
 	private String code;
 	
 	@NotNull
-    @Size(min=2, max=10, message="Code length minimum 2 and 150" )
+    @Size(min=2, max=150, message="Name length minimum 2 and 150" )
 	private String name;
 	
 	@NotNull

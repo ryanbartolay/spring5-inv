@@ -45,6 +45,10 @@ public class Item {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "created_by", nullable=false, updatable=false)
 	private User createdBy;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "updated_by", nullable=true, updatable=true)
+	private User updatedBy;
 
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
@@ -127,6 +131,14 @@ public class Item {
 
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+
+	public User getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(User updatedBy) {
+		this.updatedBy = updatedBy;
 	}
 
 	public Date getUpdatedDated() {
