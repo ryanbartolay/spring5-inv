@@ -7,8 +7,10 @@ import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
@@ -19,6 +21,7 @@ import com.bartolay.inventory.entity.Company;
 import com.bartolay.inventory.form.ColorForm;
 import com.bartolay.inventory.form.CompanyForm;
 import com.bartolay.inventory.repositories.ColorRepository;
+import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.ColorService;
 import com.bartolay.inventory.utils.ServiceUtility;
 
@@ -28,6 +31,9 @@ public class ColorServiceImpl implements ColorService{
 
 	@Autowired
 	private ColorRepository colorRepository;
+	@Autowired
+	@Qualifier("colorDataTableRepository")
+	private DatatableRepository colorDataTableRepository;
 	
 	@Override
 	public List<Color> findAll() {
@@ -37,35 +43,31 @@ public class ColorServiceImpl implements ColorService{
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
 		DatatableParameter parameter = new DatatableParameter(requestMap);
-		System.err.println(parameter);
-		List<Color> colors;
-		if(parameter.getSortOrder().equals(SortOrder.ASC)) {
-			colors = colorRepository.findAllByOrderByColorAsc();
-		}else {
-			colors = colorRepository.findAllByOrderByColorDesc();
-		}
-		long recordsTotal = colorRepository.count();
+		JSONArray array = colorDataTableRepository.findAllData(parameter);
+		long recordsTotal = colorDataTableRepository.findAllCount(parameter);
+		
+		System.err.println("data : "+array);
+		
 		JSONObject object = new JSONObject();
-		object.put("data", colors);
+		object.put("data", array);
 		object.put("recordsTotal", recordsTotal);
 		object.put("recordsFiltered", recordsTotal);
 		object.put("draw", parameter.getDraw());
+		
 		return object;
 	}
 
 	@Override
 	public Color create(@Valid ColorForm colorForm) {
 		Color color = new Color();
-		color.setCode(colorForm.getCode());
-		color.setColor(colorForm.getColor());
+		color.setName(colorForm.getName());
 		return colorRepository.save(color);
 	}
 
 	@Override
 	public Color update(@Valid ColorForm colorForm) {
 		Color color = colorRepository.findById(colorForm.getId()).get();
-		color.setCode(colorForm.getCode());
-		color.setColor(colorForm.getColor());
+		color.setName(colorForm.getName());;
 		return colorRepository.save(color);
 	}
 

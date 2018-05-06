@@ -26,12 +26,9 @@
 						<div class="form-group" id="errors"></div>
 						
 						<div class="form-group">
-							<label>Name</label> <input class="form-control" th:field="*{color}" maxlength="30">
+							<label>Name</label> <input class="form-control" th:field="*{name}" maxlength="30">
 						</div>
-						
-						<div class="form-group">
-							<label>Code</label> <input class="form-control" th:field="*{code}" maxlength="100">
-						</div>
+				
 						
 					</div>
 	
@@ -113,11 +110,7 @@
 	var table = $('#color-datatable');
 	var datatable = customDatatable(table, '/api/datatable/colors', 
 			[
-            	{ "data": "color", "color" : "Color", "title" : "Color",  render: function(data, type, full, meta){
-            		console.log(data)
-            		return ' <i class="fa fa-circle" style="color:'+full.code+'"></i> ' + data;
-            	}},
-				/* { "data": "color", "color" : "Color", "title" : "Color"}, */
+            	{ "data": "name", "name" : "Name", "title" : "Name",},
         	],
         	[ 
         		{
@@ -151,8 +144,7 @@
         modalLabel.text("Update " + data['color']);
         submitButtonLabel.text("Update");
         
-        form.find('#color').val(data.color);
-    	form.find('#code').val(data.code);
+        form.find('#name').val(data.name);
         
     	form.find('#code').colorpicker();
     	
@@ -170,7 +162,7 @@
  		
         data = datatable.row( $(this).parent('td') ).data();
         
-        confirmDeleteModal.find("#recordName").text(data['color']);
+        confirmDeleteModal.find("#recordName").text(data['name']);
         
     });
  	

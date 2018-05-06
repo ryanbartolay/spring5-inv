@@ -26,14 +26,14 @@ import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-public class ColorController {
+public class ColorRestController {
 
 	@Autowired
 	private ColorService colorService;
 	@Autowired
 	private StringUtils stringUtils;
 	@RequestMapping(value="/api/datatable/colors", method=RequestMethod.GET, produces="application/json")
-	public String datatableBrand(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
+	public String datatableColor(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
 		return colorService.retrieveDatatableList(requestMap).toString();
 	}
 	
@@ -47,7 +47,7 @@ public class ColorController {
 		try {
 			Color color = colorService.create(colorForm);
 
-			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + color.getColor());
+			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + color.getName());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 //			throw new RestApiException(e);
@@ -67,7 +67,7 @@ public class ColorController {
 
 		try {
 			Color color = colorService.update(colorForm);
-			response = new ApiResponse(HttpStatus.OK, "Succesfully updated " + color.getColor());
+			response = new ApiResponse(HttpStatus.OK, "Succesfully updated " + color.getName());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
@@ -82,7 +82,7 @@ public class ColorController {
 		try {
 			Color color = colorService.delete(id);
 
-			response = new ApiResponse(HttpStatus.ACCEPTED, "Record deleted " + color.getColor());
+			response = new ApiResponse(HttpStatus.ACCEPTED, "Record deleted " + color.getName());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 			
