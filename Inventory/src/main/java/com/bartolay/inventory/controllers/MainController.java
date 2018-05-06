@@ -83,9 +83,7 @@ public class MainController {
 		mav.addObject("html", "/items/list");
 		
 		return mav;
-	}
-	
-	
+	}	
 	
 	@RequestMapping(value="/flot")
 	public String flot() {

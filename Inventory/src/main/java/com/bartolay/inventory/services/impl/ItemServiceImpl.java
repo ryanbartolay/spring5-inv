@@ -66,9 +66,10 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public Item update(ItemForm itemForm) {
 		Item item = itemRepository.findById(itemForm.getId()).get();
-		item.setCode(itemForm.getCode());
+
 		item.setName(itemForm.getName());
 		item.setBrand(brandRepository.findById(itemForm.getBrand_id()).get());
+		item.setUpdatedBy(userCredentials.getLoggedInUser());
 		return itemRepository.save(item);
 	}
 
@@ -79,5 +80,4 @@ public class ItemServiceImpl implements ItemService {
 		itemRepository.deleteById(id);
 		return item.get();
 	}
-
 }
