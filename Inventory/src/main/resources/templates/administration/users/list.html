@@ -3,7 +3,7 @@
 <!-- Create Button -->
 	<button type="button" class="btn btn-success pull-right"
 	data-toggle="modal" data-target="#formModal" id="createButton" data-backdrop="static"
-	data-keyboard="false">Add Company</button>	
+	data-keyboard="false">Add User</button>	
 <!-- /Create Button -->
 </div>
 
@@ -13,7 +13,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<form data-async data-target="#rating-modal" id="createBrandForm" th:object="${userForm}"
-				th:action="@{/api/companies}" method="POST">
+				th:action="@{/api/users}" method="POST">
 				<input type="hidden" th:field="*{id}"/>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
@@ -26,7 +26,7 @@
 					<div class="form-group" id="errors"></div>
 					
 					<div class="form-group">
-						<label>Name</label> <input class="form-control" th:field="*{name}" maxlength="30">
+						<label>Username</label> <input class="form-control" th:field="*{username}" maxlength="30">
 						<p class="help-block">This is the brand name.</p>
 					</div>
 					
@@ -35,7 +35,10 @@
 					</div>
 					
 					<div class="form-group">
-						<label>User Type</label> <input class="form-control" th:field="*{userType}" maxlength="100">
+						<label>Firstname</label> <input class="form-control" th:field="*{firstname}" maxlength="100">
+					</div>
+					<div class="form-group">
+						<label>Lastname</label> <input class="form-control" th:field="*{lastname}" maxlength="100">
 					</div>
 					
 				</div>
@@ -86,9 +89,9 @@
 				id="brand-datatable">
 				<thead>
 					<tr>
-						<th>Name</th>
+						<th>Username</th>
 						<th>Email</th>
-						<th>User Type</th>
+						<th>Name</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -138,7 +141,7 @@
 		form[0].reset();
 		form.attr("method", "POST"); // change to POST when editing
 		form.find('#id').val("");
-		modalLabel.text("Create new Brand");
+		modalLabel.text("Create new User");
 		submitButtonLabel.text("Create");
 	});
 	
@@ -153,7 +156,7 @@
         modalLabel.text("Update " + data['name']);
         submitButtonLabel.text("Update");
         
-        GET("/api/companies/" + data['id'], function(data) {
+        GET("/api/users/" + data['id'], function(data) {
         	form.find('#name').val(data.name);
         	form.find('#email').val(data.email);
         });

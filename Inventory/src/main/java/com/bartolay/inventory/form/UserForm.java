@@ -1,5 +1,6 @@
 package com.bartolay.inventory.form;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -7,12 +8,17 @@ public class UserForm {
 	private Long id;
 	
 	@NotNull
-	@Size(min=5, max=100, message="Name length minimum 5 and 100")
-	private String name;
+	@Size(min=5, max=100, message="Username length minimum 5 and 100")
+	private String username;
 	
+	@NotNull(message="Firstname is required")
+	private String firstname;
+	
+	@NotNull(message="Lastname is required")
+	private String lastname;
+	
+	@Email(message="Invalid email format")
 	private String email;
-	
-	private String userType;
 
 	public Long getId() {
 		return id;
@@ -22,12 +28,28 @@ public class UserForm {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
 	}
 
 	public String getEmail() {
@@ -38,11 +60,4 @@ public class UserForm {
 		this.email = email;
 	}
 
-	public String getUserType() {
-		return userType;
-	}
-
-	public void setUserType(String userType) {
-		this.userType = userType;
-	}
 }

@@ -101,7 +101,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		user.setPassword(passwordEncoder.encode(password));
 		user.setFirstName("Admin");
 		user.setLastName("Admin");
-		user.setType("admin");
+		user.setType("ADMIN");
 		user.setEmail("bartolay.ryan@gmail.com");
 		user.setAuthority(AccountType.SUPERADMIN.toString());
 		userRepository.save(user);
