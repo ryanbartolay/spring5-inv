@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.bartolay.inventory.entity.Brand;
+import com.bartolay.inventory.entity.Category;
 import com.bartolay.inventory.entity.Color;
 
 public class ItemForm {
@@ -18,10 +19,13 @@ public class ItemForm {
     @Size(min=2, max=150, message="Name length minimum 2 and 150" )
 	private String name;
 	
-	@NotNull
+	@NotNull(message="Brand is required")
 	private Brand brand;
 	
-	@NotNull
+	@NotNull(message="Category is required")
+	private Category category;
+	
+	@NotNull(message="Color is required")
 	private Color color;
 
 	public Long getId() {
@@ -30,6 +34,14 @@ public class ItemForm {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
 	public String getCode() {

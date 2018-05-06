@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.itemForm.ItemForm;
-import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.services.ItemService;
@@ -26,10 +25,7 @@ public class ItemServiceImpl implements ItemService {
 	
 	@Autowired
 	private ItemRepository itemRepository;
-	
-	@Autowired
-	private BrandRepository brandRepository;
-	
+
 	@Autowired
 	@Qualifier("itemDatatableRepository")
 	private DatatableRepository itemDatatableRepository;
@@ -58,6 +54,7 @@ public class ItemServiceImpl implements ItemService {
 		item.setCode(itemForm.getCode());
 		item.setName(itemForm.getName());
 		item.setBrand(itemForm.getBrand());
+		item.setCategory(itemForm.getCategory());
 		item.setColor(itemForm.getColor());
 		item.setCreatedBy(userCredentials.getLoggedInUser());
 		item.setEnabled(true);
@@ -70,6 +67,7 @@ public class ItemServiceImpl implements ItemService {
 
 		item.setName(itemForm.getName());
 		item.setBrand(itemForm.getBrand());
+		item.setCategory(itemForm.getCategory());
 		item.setColor(itemForm.getColor());
 		item.setUpdatedBy(userCredentials.getLoggedInUser());
 		return itemRepository.save(item);

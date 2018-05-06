@@ -42,7 +42,9 @@ public class ItemDatatableRepositoryImpl extends RepositoryComponent implements 
 	public JSONArray findAllData(DatatableParameter datatableParameter) {
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT i.*, b.name as brand_name FROM Item i inner join Brand b on b.id = i.brand_id";
+			String SQL = "SELECT i.*, b.name as brand_name FROM Item i inner join Brand b on b.id = i.brand_id"
+					+ " left join Category c on c.id = i.category_id"
+					+ " left join Color co on co.id = i.color_id";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
@@ -59,7 +61,7 @@ public class ItemDatatableRepositoryImpl extends RepositoryComponent implements 
 			if(datatableParameter.getLength() > 0) {
 				SQL += " LIMIT " + datatableParameter.getLength() + " OFFSET " + datatableParameter.getStart();
 			}
-			
+			System.err.println(SQL);
 			List<JSONObject> domains = new ArrayList<>();
 
 

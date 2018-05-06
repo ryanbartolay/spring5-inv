@@ -10,8 +10,10 @@
 <!-- Modal Edit Brand -->
 <div class="modal fade" id="formModal" tabindex="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog"> <!-- modal-lg -->
 		<div class="modal-content">
+			
+	
 			<form data-async data-target="#rating-modal" id="createBrandForm" th:object="${itemForm}"
 				th:action="@{/api/items}" method="POST">
 				<input type="hidden" th:field="*{id}"/>
@@ -22,33 +24,74 @@
 				</div>
 
 				<div class="panel-body">
-				
-					<div class="form-group" id="errors"></div>
-					
-					<div class="form-group">
-						<label>Code</label> <input class="form-control" th:field="*{code}" maxlength="100">
-					</div>
-					
-					<div class="form-group">
-						<label>Name</label> <input class="form-control" th:field="*{name}" maxlength="30">
-					</div>
 					
 					
-					<div class="form-group">
-						<label>Brand</label> <select
-							class="form-control" th:field="*{brand}">
-							<option th:each="brand : ${brands}" th:value="${brand.id}"
-								th:text="${brand.name}"></option>
-						</select>
-					</div>
-					
-					<div class="form-group">
-						<label>Color</label> <select
-							class="form-control" th:field="*{color}">
-							<option th:each="color : ${colors}" th:value="${color.id}"
-								th:text="${color.name}"></option>
-						</select>
-					</div>
+					<!-- ROWW -->
+			<div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                        	<div class="form-group" id="errors"></div>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <th>Code</th>
+                                            <td><input class="form-control" th:field="*{code}" maxlength="100"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Name</th>
+                                            <td><input class="form-control" th:field="*{name}" maxlength="30"></td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Brand</th>
+                                            <td>
+                                                <select
+													class="form-control" th:field="*{brand}">
+													<option selected value=" "> -- select an option -- </option>
+													<option th:each="brand : ${brands}" th:value="${brand.id}"
+														th:text="${brand.name}"></option>
+												</select>
+                                            </td>
+                                            
+                                        </tr>
+                                        
+                                        <tr>
+                                            <th>Category</th>
+                                            <td>
+                                            	<select
+													class="form-control" th:field="*{category}">
+													<option selected value=" "> -- select an option -- </option>
+													<option th:each="category : ${categories}" th:value="${category.id}"
+														th:text="${category.name}"></option>
+												</select>
+											</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <th>Color</th>
+                                            <td>
+                                            	<select
+													class="form-control" th:field="*{color}">
+													<option selected value=" "> -- select an option -- </option>
+													<option th:each="color : ${colors}" th:value="${color.id}"
+														th:text="${color.name}"></option>
+												</select>
+											</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            All fields are <code>required</code>.
+                        </div>
+                    </div>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+	
 					
 				</div>
 
@@ -167,11 +210,13 @@
         submitButtonLabel.text("Update");
         
         GET("/api/items/" + data['id'], function(data) {
+
         	form.find('#code').val(data.code);
         	form.find('#code').attr("readonly", "readonly");
         	form.find('#name').val(data.name);
-        	form.find('#brand_id').val(data.brand.id);
-        	form.find('#color_id').val(data.color.id);
+        	form.find('#brand').val(data.brand.id);
+        	form.find('#category').val(data.category.id);
+        	form.find('#color').val(data.color.id);
         });
     } );
 	

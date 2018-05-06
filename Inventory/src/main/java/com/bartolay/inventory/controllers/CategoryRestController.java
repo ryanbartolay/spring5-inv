@@ -45,7 +45,7 @@ public class CategoryRestController {
 		try {
 			Category category = categoryService.create(categoryForm);
 
-			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + category.getType());
+			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + category.getName());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 //			throw new RestApiException(e);
@@ -65,7 +65,7 @@ public class CategoryRestController {
 
 		try {
 			Category category = categoryService.update(categoryForm);
-			response = new ApiResponse(HttpStatus.OK, "Succesfully updated " + category.getType());
+			response = new ApiResponse(HttpStatus.OK, "Succesfully updated " + category.getName());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
@@ -80,7 +80,7 @@ public class CategoryRestController {
 		try {
 			Category category = categoryService.delete(id);
 
-			response = new ApiResponse(HttpStatus.ACCEPTED, "Record deleted " + category.getType());
+			response = new ApiResponse(HttpStatus.ACCEPTED, "Record deleted " + category.getName());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 			

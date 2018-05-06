@@ -43,7 +43,7 @@ public class ItemRestController {
 	@RequestMapping(value="/api/items/{id}", method=RequestMethod.GET)
 	public String getById(@PathVariable Long id) {
 		try {
-			Item item = itemRepository.apiFindById(id);
+			Item item = itemRepository.apiFindById(id);	
 			return stringUtils.encode(item);
 		} catch(Exception e) {
 			e.printStackTrace();

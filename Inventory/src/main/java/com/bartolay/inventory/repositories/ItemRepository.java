@@ -10,6 +10,6 @@ import com.bartolay.inventory.entity.Item;
 @Repository
 public interface ItemRepository extends CrudRepository<Item, Long> {
 	
-	@Query(value = "SELECT p FROM Item p LEFT JOIN FETCH p.brand where p.id = :id")
+	@Query(value = "SELECT p FROM Item p LEFT JOIN FETCH p.brand LEFT JOIN FETCH p.category LEFT JOIN FETCH p.color LEFT JOIN FETCH p.category where p.id = :id")
     public Item apiFindById(@Param("id") Long id);
 }

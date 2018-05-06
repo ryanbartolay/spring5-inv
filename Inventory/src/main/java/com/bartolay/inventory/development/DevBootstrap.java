@@ -63,17 +63,16 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		createSuppliers();
 		createColors();
 		
-		
+		System.err.println("------------------------------------------");
+		System.err.println(categoryRepository.findById((long) 1).get());
 		// need to create this as last
 		createItems();
 	}
 
 	private void createColors() {
 		Color red = new Color();
-		red.setName("red");
-		
+		red.setName("red");	
 		colorRepository.save(red);
-		
 		
 		Color blue = new Color();
 		blue.setName("blue");
@@ -95,16 +94,17 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		Item item = new Item();
 		item.setBrand(brandRepository.findById((long) 1).get());
 		item.setColor(colorRepository.findByName("red"));
+		item.setCategory(categoryRepository.findById((long) 1).get());
 		item.setCode("ryan1234");
 		item.setName("HyperDunk Series X 2");
 		item.setCreatedBy(userRepository.findByUsername("admin"));
 		item.setEnabled(true);
 		
 		itemRepository.save(item);
-		
 		Item item2 = new Item();
 		item2.setBrand(brandRepository.findById((long) 1).get());
 		item2.setColor(colorRepository.findByName("black"));
+		item2.setCategory(categoryRepository.findById((long) 2).get());
 		item2.setCode("ryan1235");
 		item2.setName("HyperDunk Series X 3");
 		item2.setCreatedBy(userRepository.findByUsername("admin"));
@@ -181,13 +181,15 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 
 	private void createCategories() {
 		category = new Category();
-		category.setType("Computers - Hardware");
+		category.setName("Computers - Hardware");
 		category.setDescription("IT supplies for hardware");
+		category.setEnabled(true);
 		categoryRepository.save(category);
 		
 		category = new Category();
-		category.setType("Computers - Software");
+		category.setName("Computers - Software");
 		category.setDescription("Drivers and Installers");
+		category.setEnabled(true);
 		categoryRepository.save(category);
 	}
 
