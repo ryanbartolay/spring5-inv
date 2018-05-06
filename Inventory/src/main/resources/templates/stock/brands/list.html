@@ -70,7 +70,7 @@
             
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger" id="btnOk">Delete</a>
+                <a class="btn btn-danger" id="btnConfirmDelete">Delete</a>
             </div>
         </div>
     </div>
@@ -110,98 +110,87 @@
 
 <script>
 /*<![CDATA[*/
+
+	var DOCS = $(document);
+	var formModal = $("#formModal");
+	var modalLabel = formModal.find("#modalLabel");
+	var submitButtonLabel = $("#formModal #submit");
+	var form = $("#createBrandForm");
 	
-	$(document).ready(function() {
-		var formModal = $("#formModal");
-		var modalLabel = formModal.find("#modalLabel");
-		var submitButtonLabel = $("#formModal #submit");
-		var form = $("#createBrandForm");
+	var datatable = $('#brand-datatable').DataTable({
+		responsive : true,
+		ajax: {
+			url: '/api/datatable/brands'
+		},
+		processing: true,
+        serverSide: true,
+		length: 5,
+		start: 0,
+        columns: [
+               { "data": "name", "name" : "Name", "title" : "Namezzzz"  },
+               { "data": "company_name", "name" : "Company" , "title" : "Company Inc."},
+           ],
+           "columnDefs": [ {
+               "targets": 2,
+               "data": null,
+               "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Edit</button>' 
+               	+ '<button id="btnDelete" class="btn btn-default pull-right" data-toggle="modal" data-target="#confirmDeleteModal" data-backdrop="static" data-keyboard="false">Delete</button>'
+           } ]
+	});
+	
+	$("#createButton").on('click', function (e) {
+		form[0].reset();
+		form.attr("method", "POST"); // change to POST when editing
+		form.find('#hiddenId').val("");
+		modalLabel.text("Create new Brand");
+		submitButtonLabel.text("Create");
+	});
+	
+	// Edit button
+    $("#brand-datatable tbody").on('click', '#btnEdit', function (e) {
+        e.preventDefault();
+ 		
+        var data = datatable.row( $(this).parent('td') ).data();
+        
+        form.attr("method", "PUT"); // change to put when editing
+        form.find('#id').val(data['id']);
+        modalLabel.text("Update " + data['name']);
+        submitButtonLabel.text("Update");
+        
+        GET("/api/brands/" + data['id'], function(data) {
+        	console.log(data);
+        	form.find('#name').val(data.name);
+        	form.find('#ddCompany').val(data.company.id);
+        });
+    } );
+	
+	var data = null;
+	var confirmDeleteModal = $("#confirmDeleteModal");
+ 	// Delete button
+    $("#brand-datatable tbody").on('click', '#btnDelete', function (e) {
+        e.preventDefault();
+ 		
+        data = datatable.row( $(this).parent('td') ).data();
+        confirmDeleteModal.find("#recordName").text(data['name']);        
+    });
 		
-		var brand_table = $('#brand-datatable').DataTable({
-			responsive : true,
-			ajax: {
-				url: '/api/datatable/brands'
-			},
-			processing: true,
-	        serverSide: true,
-			length: 5,
-			start: 0,
-	        columns: [
-                { "data": "name", "name" : "Name", "title" : "Namezzzz"  },
-                { "data": "company_name", "name" : "Company" , "title" : "Company Inc."},
-            ],
-            "columnDefs": [ {
-                "targets": 2,
-                "data": null,
-                "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Edit</button>' 
-                	+ '<button id="btnDelete" class="btn btn-default pull-right" data-toggle="modal" data-target="#confirmDeleteModal" data-backdrop="static" data-keyboard="false">Delete</button>'
-            } ]
-		});
-		
-		$("#createButton").on('click', function (e) {
-			form[0].reset();
-			form.attr("method", "POST"); // change to POST when editing
-			form.find('#hiddenId').val("");
-			modalLabel.text("Create new Brand");
-			submitButtonLabel.text("Create");
-		});
-		
-		// Edit button
-	    $("#brand-datatable tbody").on('click', '#btnEdit', function (e) {
-	        e.preventDefault();
-	 		
-	        var data = brand_table.row( $(this).parent('td') ).data();
-	        
-	        form.attr("method", "PUT"); // change to put when editing
-	        form.find('#id').val(data['id']);
-	        modalLabel.text("Update " + data['name']);
-	        submitButtonLabel.text("Update");
-	        
-	        GET("/api/brands/" + data['id'], function(data) {
-	        	console.log(data);
-	        	form.find('#name').val(data.name);
-	        	form.find('#ddCompany').val(data.company.id);
-	        });
-	    } );
-		
-	 // Delete button
-	    $("#brand-datatable tbody").on('click', '#btnDelete', function (e) {
-	        e.preventDefault();
-	 		
-	        var data = brand_table.row( $(this).parent('td') ).data();
-	        var confirmDeleteModal = $("#confirmDeleteModal");
-	        var btnConfirm = confirmDeleteModal.find('#btnOk');
-	        
-	        confirmDeleteModal.find("#recordName").text(data['name']);
-	        
-	        confirmDeleteModal.on('show.bs.modal', function(e) {
-	        	
-	        	btnConfirm.removeAttr("disabled");
-	        	
-	            $(this).find('#btnOk').on('click', function(e) {
-	            	$(this).attr("disabled", "disabled");
-	            
-	            	DELETE("/api/brands/" + data['id'], function(data) {
-	            		if(data.status == 'OK') {
-	            			toast("info", data.localizedMessage);
-	            		} else {
-	            			toast("error", data.localizedMessage);
-	            		}
-	            		
-	            		confirmDeleteModal.toggle();
-	            		brand_table.ajax.reload( null, false ); // user paging is not reset on reload
-	            		
-	            		// force remove backdrop
-	            		$('body').removeClass('modal-open');
-	            		$('.modal-backdrop').remove();
-	            	});
-	            });
-	        });
-	    });
-		
-		formModalAsync($("#formModal"), function() {
-			brand_table.ajax.reload( null, false ); // user paging is not reset on reload
-		});
+	
+	// Confirm Delete button
+    DOCS.on('click', '#btnConfirmDelete', function(e) {
+    	$(this).attr("disabled", "disabled");
+    
+    	$(this).removeAttr("disabled");
+    	
+    	DELETE("/api/brands/" + data['id'], function(data) {
+    		showToast(data);
+    		
+    		confirmDeleteModal.modal('hide');
+    		datatable.ajax.reload( null, false ); // user paging is not reset on reload
+    	});
+    });
+	
+    formModalAsync($("#formModal"), function() {
+    	datatable.ajax.reload( null, false ); // user paging is not reset on reload
 	});
 /*]]>*/
 </script>

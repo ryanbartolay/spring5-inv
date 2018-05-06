@@ -36,7 +36,7 @@ public class CompanyForm {
 	
 	@NotNull
 	@Email(message="Invalid Email format" )
-	@Size(min=2, max=30, message="Name length minimum 2 and 30" )
+	@Size(min=2, max=100, message="Name length minimum 2 and 100" )
 	private String email;
 	
 	private String site;

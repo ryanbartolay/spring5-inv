@@ -174,10 +174,6 @@
     		
     		confirmDeleteModal.modal('hide');
     		datatable.ajax.reload( null, false ); // user paging is not reset on reload
-    		
-    		// force remove backdrop
-    		$('body').removeClass('modal-open');
-    		$('.modal-backdrop').remove();
     	});
     });
 	
