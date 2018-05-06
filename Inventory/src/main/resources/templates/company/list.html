@@ -66,7 +66,7 @@
             
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger" id="btnOk">Delete</a>
+                <a class="btn btn-danger" id="btnConfirmDelete">Delete</a>
             </div>
         </div>
     </div>
@@ -106,91 +106,83 @@
 <script>
 /*<![CDATA[*/
 	
-	$(document).ready(function() {
-		var formModal = $("#formModal");
-		var modalLabel = formModal.find("#modalLabel");
-		var submitButtonLabel = $("#formModal #submit");
-		var form = $("#createBrandForm");
-		var table = $('#brand-datatable');
-		var datatable = table.DataTable({
-			responsive : true,
-			ajax: {
-				url: '/api/datatable/companies'
-			},
-			processing: true,
-	        serverSide: true,
-			length: 5,
-			start: 0,
-	        columns: [
-                { "data": "name", "name" : "Name", "title" : "Name"  },
-            ],
-            "columnDefs": [ {
-                "targets": 1,
-                "data": null,
-                "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Edit</button>' 
-                	+ '<button id="btnDelete" class="btn btn-default pull-right" data-toggle="modal" data-target="#confirmDeleteModal" data-backdrop="static" data-keyboard="false">Delete</button>'
-            } ]
-		});
-		
-		$("#createButton").on('click', function (e) {
-			form[0].reset();
-			form.attr("method", "POST"); // change to POST when editing
-			form.find('#hiddenId').val("");
-			modalLabel.text("Create new Brand");
-			submitButtonLabel.text("Create");
-		});
-		
-		// Edit button
-	    table.find("tbody").on('click', '#btnEdit', function (e) {
-	        e.preventDefault();
-	 		
-	        var data = datatable.row( $(this).parent('td') ).data();
-	        
-	        form.attr("method", "PUT"); // change to put when editing
-	        form.find('#id').val(data['id']);
-	        modalLabel.text("Update " + data['name']);
-	        submitButtonLabel.text("Update");
-	        
-	        GET("/api/companies/" + data['id'], function(data) {
-	        	form.find('#name').val(data.name);
-	        	form.find('#email').val(data.email);
-	        });
-	    } );
-		
-	 	// Delete button
-	    table.find("tbody").on('click', '#btnDelete', function (e) {
-	        e.preventDefault();
-	 		
-	        var data = datatable.row( $(this).parent('td') ).data();
-	        var confirmDeleteModal = $("#confirmDeleteModal");
-	        var btnConfirm = confirmDeleteModal.find('#btnOk');
-	        
-	        confirmDeleteModal.find("#recordName").text(data['name']);
-	        
-	        confirmDeleteModal.on('show.bs.modal', function(e) {
-	        	
-	        	btnConfirm.removeAttr("disabled");
-	        	
-	            $(this).find('#btnOk').on('click', function(e) {
-	            	$(this).attr("disabled", "disabled");
-	            
-	            	DELETE("/api/companies/" + data['id'], function(data) {
-	            		showToast(data);
-	            		
-	            		confirmDeleteModal.toggle();
-	            		datatable.ajax.reload( null, false ); // user paging is not reset on reload
-	            		
-	            		// force remove backdrop
-	            		$('body').removeClass('modal-open');
-	            		$('.modal-backdrop').remove();
-	            	});
-	            });
-	        });
-	    });
-		
-		formModalAsync($("#formModal"), function() {
-			datatable.ajax.reload( null, false ); // user paging is not reset on reload
-		});
+	var DOCS = $(document);
+	var formModal = $("#formModal");
+	var modalLabel = formModal.find("#modalLabel");
+	var submitButtonLabel = $("#formModal #submit");
+	var form = $("#createBrandForm");
+	var table = $('#brand-datatable');
+	var datatable = customDatatable(table, '/api/datatable/companies', 
+			[
+            	{ "data": "name", "name" : "Name", "title" : "Name",  },
+        	],
+        	[ 
+        		{
+                    "targets": 1,
+                    "data": null,
+                    "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Edit</button>' 
+                    	+ '<button id="btnDelete" class="btn btn-default pull-right" data-toggle="modal" data-target="#confirmDeleteModal" data-backdrop="static" data-keyboard="false">Delete</button>'
+                }
+        	]
+	);
+	
+	$("#createButton").on('click', function (e) {
+		form[0].reset();
+		form.attr("method", "POST"); // change to POST when editing
+		form.find('#id').val("");
+		modalLabel.text("Create new Brand");
+		submitButtonLabel.text("Create");
+	});
+	
+	// Edit button
+    table.find("tbody").on('click', '#btnEdit', function (e) {
+        e.preventDefault();
+ 		
+        var data = datatable.row( $(this).parent('td') ).data();
+        
+        form.attr("method", "PUT"); // change to put when editing
+        form.find('#id').val(data['id']);
+        modalLabel.text("Update " + data['name']);
+        submitButtonLabel.text("Update");
+        
+        GET("/api/companies/" + data['id'], function(data) {
+        	form.find('#name').val(data.name);
+        	form.find('#email').val(data.email);
+        });
+    } );
+	
+    var confirmDeleteModal = $("#confirmDeleteModal");
+    var data = null;
+ 	// Delete button
+    table.find("tbody").on('click', '#btnDelete', function (e) {
+        /* e.preventDefault(); */
+ 		
+        data = datatable.row( $(this).parent('td') ).data();
+        
+        confirmDeleteModal.find("#recordName").text(data['name']);
+        
+    });
+ 	
+	// Confirm Delete button
+    DOCS.on('click', '#btnConfirmDelete', function(e) {
+    	$(this).attr("disabled", "disabled");
+    
+    	$(this).removeAttr("disabled");
+    	
+    	DELETE("/api/companies/" + data['id'], function(data) {
+    		showToast(data);
+    		
+    		confirmDeleteModal.modal('hide');
+    		datatable.ajax.reload( null, false ); // user paging is not reset on reload
+    		
+    		// force remove backdrop
+    		$('body').removeClass('modal-open');
+    		$('.modal-backdrop').remove();
+    	});
+    });
+	
+    formModalAsync($("#formModal"), function() {
+		datatable.ajax.reload( null, false ); // user paging is not reset on reload
 	});
 /*]]>*/
 </script>
