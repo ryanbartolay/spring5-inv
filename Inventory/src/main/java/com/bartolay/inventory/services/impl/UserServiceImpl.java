@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.form.UserForm;
-import com.bartolay.inventory.repositories.UserDatatableRepository;
+import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 import com.bartolay.inventory.services.UserService;
 import com.bartolay.inventory.utils.UserCredentials;
@@ -26,7 +27,8 @@ public class UserServiceImpl implements UserService<User> {
 	private UserRepository userRepository;
 	
 	@Autowired
-	private UserDatatableRepository userDatatableRepository;
+	@Qualifier("userDatatableRepository")
+	private DatatableRepository userDatatableRepository;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
