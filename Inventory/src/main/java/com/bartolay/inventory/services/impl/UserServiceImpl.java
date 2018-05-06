@@ -16,6 +16,7 @@ import com.bartolay.inventory.form.UserForm;
 import com.bartolay.inventory.repositories.UserDatatableRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 import com.bartolay.inventory.services.UserService;
+import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
 @Transactional
@@ -29,6 +30,9 @@ public class UserServiceImpl implements UserService<User> {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private UserCredentials userCredentials;
 	
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
@@ -73,6 +77,10 @@ public class UserServiceImpl implements UserService<User> {
 	public User delete(Long id) {
 
 		Optional<User> user = userRepository.findById(id);
+		
+		if(userCredentials.getLoggedInUser().getUsername().equals(user.get().getUsername())) {
+			throw new RuntimeException("Unable to delete your own account.");
+		}
 		
 		userRepository.deleteById(id);
 		return user.get();

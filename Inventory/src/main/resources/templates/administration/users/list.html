@@ -173,7 +173,7 @@
  		
         data = datatable.row( $(this).parent('td') ).data();
         
-        confirmDeleteModal.find("#recordName").text(data['name']);
+        confirmDeleteModal.find("#recordName").text(data['username']);
         
     });
  	
@@ -183,7 +183,7 @@
     
     	$(this).removeAttr("disabled");
     	
-    	DELETE("/api/companies/" + data['id'], function(data) {
+    	DELETE("/api/users/" + data['id'], function(data) {
     		showToast(data);
     		
     		confirmDeleteModal.modal('hide');
