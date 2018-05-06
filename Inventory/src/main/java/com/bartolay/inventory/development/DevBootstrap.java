@@ -66,6 +66,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		item.setCode("ryan1234");
 		item.setName("Nike HyperDunk Series X 2");
 		item.setCreatedBy(userRepository.findByUsername("admin"));
+		item.setEnabled(true);
 		
 		itemRepository.save(item);
 		
@@ -74,6 +75,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		item2.setCode("ryan1235");
 		item2.setName("Nike HyperDunk Series X 3");
 		item2.setCreatedBy(userRepository.findByUsername("admin"));
+		item2.setEnabled(true);
 		
 		itemRepository.save(item2);
 	}
