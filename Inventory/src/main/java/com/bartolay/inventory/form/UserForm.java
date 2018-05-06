@@ -12,10 +12,10 @@ public class UserForm {
 	private String username;
 	
 	@NotNull(message="Firstname is required")
-	private String firstname;
+	private String firstName;
 	
 	@NotNull(message="Lastname is required")
-	private String lastname;
+	private String lastName;
 	
 	@Email(message="Invalid email format")
 	private String email;
@@ -36,20 +36,20 @@ public class UserForm {
 		this.username = username;
 	}
 
-	public String getFirstname() {
-		return firstname;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getLastname() {
-		return lastname;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getEmail() {

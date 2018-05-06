@@ -35,10 +35,10 @@
 					</div>
 					
 					<div class="form-group">
-						<label>Firstname</label> <input class="form-control" th:field="*{firstname}" maxlength="100">
+						<label>Firstname</label> <input class="form-control" th:field="*{firstName}" maxlength="100">
 					</div>
 					<div class="form-group">
-						<label>Lastname</label> <input class="form-control" th:field="*{lastname}" maxlength="100">
+						<label>Lastname</label> <input class="form-control" th:field="*{lastName}" maxlength="100">
 					</div>
 					
 				</div>
@@ -157,7 +157,10 @@
         submitButtonLabel.text("Update");
         
         GET("/api/users/" + data['id'], function(data) {
-        	form.find('#name').val(data.name);
+        	console.log(data);
+        	form.find('#username').val(data.username);
+        	form.find('#firstName').val(data.firstName);
+        	form.find('#lastName').val(data.lastName);
         	form.find('#email').val(data.email);
         });
     } );

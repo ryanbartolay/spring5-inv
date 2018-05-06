@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,6 +50,18 @@ public class UserRestController {
 		return ResponseEntity.ok(users);
 	}
 	
+	@RequestMapping(value="/api/users/{id}", method=RequestMethod.GET)
+	public String getById(@PathVariable Long id) {
+		try {
+			Optional<User> user = userRepository.findById(id);
+			return stringUtils.encode(user.get());
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
 	@RequestMapping(value="/api/datatable/users", method=RequestMethod.GET, produces="application/json")
 	public String datatableBrand(@RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {
 		return userService.retrieveDatatableList(requestMap).toString();
@@ -73,43 +87,38 @@ public class UserRestController {
 		return stringUtils.encode(response);
 	}
 	
-//	@RequestMapping(value="/create", method=RequestMethod.GET)
-//	public ModelAndView createForm(Model model) {
-//		ModelAndView mav = new ModelAndView("user/edit");
-//		return mav;
-//	}
-//	
-//	@RequestMapping(value="/create", method=RequestMethod.POST)
-//	public ModelAndView createUser(@Valid User user, BindingResult bindingResult, Model model) {
-//		System.out.println("create user : " + user);
-//		
-//		ModelAndView mav = new ModelAndView();
-//		if (bindingResult.hasErrors()) {
-//			mav.setViewName("user/edit");
-//			return mav;
-//		}
-//		
-//		try {
-//			employeeService.create(user);	
-//		} catch(Exception e) {
-//			bindingResult.reject("error.app.binding.webform", "Error!!!");
-//		}
-//		
-//		mav.setViewName("user/edit_profile");
-//		return mav;
-//	}
-//	
-//	
-//	@RequestMapping(value="/edit/{username}", method=RequestMethod.GET)
-//	public ModelAndView create(Model model, @PathVariable String username) {
-//		//userService.
-//		//model.addAttribute("users", userService.getAll());
-//		ModelAndView mav = new ModelAndView("user/edit");
-//		return mav;
-//	}
-//
-//	@RequestMapping(value="/{username}", method=RequestMethod.GET)
-//	public String viewUserByUsername(ModelMap map, @PathVariable("username") String username) {
-//		return "users/view_single";
-//	}
+	@RequestMapping(value="/api/users", method=RequestMethod.PUT)
+	public String update(@Valid UserForm userForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+
+		ApiResponse response = null;
+		
+		if (bindingResult.hasErrors()) {
+			throw new RestApiException(bindingResult);
+		}
+
+		try {
+			User user = userService.update(userForm);
+			response = new ApiResponse(HttpStatus.OK, "Succesfully updated " + user.getName());
+		} catch(Exception e) {
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+		
+		return stringUtils.encode(response);
+	}
+	
+	@RequestMapping(value="/api/users/{id}", method=RequestMethod.DELETE)
+	public String delete(@PathVariable Long id) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+
+		ApiResponse response = null;
+		try {
+			User user = userService.delete(id);
+
+			response = new ApiResponse(HttpStatus.ACCEPTED, "Record deleted " + user.getName());
+		} catch(Exception e) {
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+			
+		}
+		return stringUtils.encode(response);
+	}
+
 }

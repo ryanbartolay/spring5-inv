@@ -1,6 +1,7 @@
 package com.bartolay.inventory.services.impl;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -49,8 +50,8 @@ public class UserServiceImpl implements UserService<User> {
 		User user = new User();
 		user.setUsername(userForm.getUsername());
 		user.setEmail(userForm.getEmail());
-		user.setFirstName(userForm.getFirstname());
-		user.setLastName(userForm.getLastname());
+		user.setFirstName(userForm.getFirstName());
+		user.setLastName(userForm.getLastName());
 		
 		user.setPassword(passwordEncoder.encode("123456a"));
 		
@@ -61,14 +62,20 @@ public class UserServiceImpl implements UserService<User> {
 
 	@Override
 	public User update(UserForm userForm) {
-		// TODO Auto-generated method stub
-		return null;
+		User user = userRepository.findById(userForm.getId()).get();
+		user.setEmail(userForm.getEmail());
+		user.setFirstName(userForm.getFirstName());
+		user.setLastName(userForm.getLastName());
+		return userRepository.save(user);
 	}
-
+	
 	@Override
 	public User delete(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		Optional<User> user = userRepository.findById(id);
+		
+		userRepository.deleteById(id);
+		return user.get();
 	}
 
 	
