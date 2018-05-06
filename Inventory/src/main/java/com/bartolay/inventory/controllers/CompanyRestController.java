@@ -37,7 +37,6 @@ class CompanyRestController {
 
 	@RequestMapping(value="/api/datatable/companies", method=RequestMethod.GET, produces="application/json")
 	public String datatableBrand(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
-		System.err.println("raw request >>>>> " + requestMap);
 		return companyService.retrieveDatatableList(requestMap).toString();
 	}
 

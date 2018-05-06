@@ -33,7 +33,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			String password = (String) auth.getCredentials();
 			
 			User user = userRepository.findByUsername(userName);
-			System.err.println("user  " + user);
 			
 			List<Authority> authorities = new ArrayList<>();
 			authorities.add(new Authority(user.getAuthority()));

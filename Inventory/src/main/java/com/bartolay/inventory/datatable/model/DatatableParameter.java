@@ -64,7 +64,6 @@ public class DatatableParameter {
 		this.setSortOrder(SortOrder.valueOf(getStringValue(SORT_ORDER).toUpperCase().trim()));
 
 		int numberOfColumns = getNumberOfColumns(requestMap);
-		System.err.println("numberOfColumns " + numberOfColumns);
 
 
 		List<DatatableColumn> columns = new ArrayList<>();

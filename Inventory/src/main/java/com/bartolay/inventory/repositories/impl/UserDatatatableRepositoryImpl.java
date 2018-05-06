@@ -61,7 +61,6 @@ public class UserDatatatableRepositoryImpl extends RepositoryComponent implement
 			}
 			
 			List<JSONObject> domains = new ArrayList<>();
-			System.err.println(SQL);
 
 			domains = jdbcTemplate.query(SQL, SQL_PARAMS.toArray(), new RowMapper<JSONObject>() {
 
@@ -76,7 +75,6 @@ public class UserDatatatableRepositoryImpl extends RepositoryComponent implement
 					return obj;
 				}
 			});
-			System.err.println(domains);
 			
 			JSONArray array = new JSONArray();
 			

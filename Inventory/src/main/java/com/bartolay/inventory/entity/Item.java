@@ -1,59 +1,178 @@
 package com.bartolay.inventory.entity;
 
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+@Entity
 public class Item {
 
-    private String itemName;
-    private double unitPrice;
-    private double quantity;
-    private double total;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_generator")
+	@SequenceGenerator(name="item_generator", sequenceName = "ITEM_SER_SEQ")
+	@Column(name = "id", updatable = false, nullable = false)
+	private Long id;
+	
+	@Column(nullable=false, length=50, unique=true)
+	private String code;
+	
+	@Column(nullable=false, length=150)
+    private String name;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "category_id", nullable=true)
+    private Category category;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "brand_id", nullable=false)
+	private Brand brand;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "model_id", nullable=true)
+	private Model model;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", nullable=false, updatable=false)
+	private User createdBy;
 
-    public Item() {
-    }
+	@Column(name="created_date", nullable=false, updatable=false)
+	@CreationTimestamp
+	private Date createdDate;
 
-    public Item(String itemName, double unitPrice, double quantity, double total) {
-        this.itemName = itemName;
-        this.unitPrice = unitPrice;
-        this.quantity = quantity;
-        this.total = total;
-    }
+	@Column(name="updated_date")
+	@UpdateTimestamp
+	private Date updatedDated;
+	
+	@Column(nullable=false)
+	private boolean enabled;
+	
+	public Item() {
+	
+	}
+	
+	public Item(Long id) {
+		this.id = id;
+	}
 
-    public String getItemName() {
-        return itemName;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public double getUnitPrice() {
-        return unitPrice;
-    }
+	public String getCode() {
+		return code;
+	}
 
-    public void setUnitPrice(double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
+	public void setCode(String code) {
+		this.code = code;
+	}
 
-    public double getQuantity() {
-        return quantity;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public double getTotal() {
-        return total;
-    }
+	public Category getCategory() {
+		return category;
+	}
 
-    public void setTotal(double total) {
-        this.total = total;
-    }
+	public void setCategory(Category category) {
+		this.category = category;
+	}
 
-    @Override
-    public String toString() {
-        return "Item{" + "itemName=" + itemName + 
-                ", unitPrice=" + unitPrice + 
-                ", quantity=" + quantity + 
-                ", total=" + total + '}';
-    }
+	public Brand getBrand() {
+		return brand;
+	}
+
+	public void setBrand(Brand brand) {
+		this.brand = brand;
+	}
+
+	public Model getModel() {
+		return model;
+	}
+
+	public void setModel(Model model) {
+		this.model = model;
+	}
+
+	public User getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getUpdatedDated() {
+		return updatedDated;
+	}
+
+	public void setUpdatedDated(Date updatedDated) {
+		this.updatedDated = updatedDated;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Item other = (Item) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Item [id=" + id + ", code=" + code + ", name=" + name + ", category=" + category + ", brand=" + brand
+				+ ", model=" + model + ", enabled=" + enabled + "]";
+	}
 }

@@ -75,12 +75,7 @@ public class Brand {
 		return nameArabic;
 	}
 	public void setNameArabic(String nameArabic) {
-		
-		for(Byte b : nameArabic.getBytes(StandardCharsets.UTF_8)) {
-			System.err.println(b);
-		}
-		
-		this.nameArabic = new String(nameArabic.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+		this.nameArabic = nameArabic;
 	}
 	public String getName() {
 		return name;

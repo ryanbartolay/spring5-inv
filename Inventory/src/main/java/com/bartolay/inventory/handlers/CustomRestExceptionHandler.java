@@ -37,10 +37,6 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 		logger.info(ex.getClass().getName());
 		logger.error("error", ex);
 		
-		System.err.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-		System.err.println(ex);
-		System.err.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-		
 		final List<String> errors = new ArrayList<String>();
 		
 		if(ex.getException() != null) {

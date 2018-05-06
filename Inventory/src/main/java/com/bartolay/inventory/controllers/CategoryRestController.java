@@ -50,7 +50,6 @@ public class CategoryRestController {
 	
 	@RequestMapping(value="/api/datatable/categories", method=RequestMethod.GET, produces="application/json")
 	public String datatable(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
-		System.err.println("raw request >>>>> " + requestMap);
 //		return brandService.retrieveList(requestMap).toString();
 		return null;
 	}

@@ -10,12 +10,14 @@ import com.bartolay.enums.AccountType;
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Category;
 import com.bartolay.inventory.entity.Company;
+import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.Product;
 import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CategoryRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
+import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.SupplierRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 
@@ -40,6 +42,9 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	private CompanyRepository companyRepository;
 
 	@Autowired
+	private ItemRepository itemRepository;
+	
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
@@ -51,6 +56,26 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		createCategories();
 		createCompaniesAndBrand();
 		createSuppliers();
+		
+		createItems();
+	}
+
+	private void createItems() {
+		Item item = new Item();
+		item.setBrand(brandRepository.findById((long) 1).get());
+		item.setCode("ryan1234");
+		item.setName("Nike HyperDunk Series X 2");
+		item.setCreatedBy(userRepository.findByUsername("admin"));
+		
+		itemRepository.save(item);
+		
+		Item item2 = new Item();
+		item2.setBrand(brandRepository.findById((long) 1).get());
+		item2.setCode("ryan1235");
+		item2.setName("Nike HyperDunk Series X 3");
+		item2.setCreatedBy(userRepository.findByUsername("admin"));
+		
+		itemRepository.save(item2);
 	}
 
 	private void createCompaniesAndBrand() {
