@@ -14,5 +14,4 @@ public interface CompanyService {
 	public Company create(CompanyForm companyForm);
 	public Company update(CompanyForm companyForm);
 	public Company delete(Long id);
-	
 }

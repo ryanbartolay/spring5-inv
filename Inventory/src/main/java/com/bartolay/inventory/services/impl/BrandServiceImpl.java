@@ -8,14 +8,15 @@ import javax.transaction.Transactional;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.form.BrandForm;
-import com.bartolay.inventory.repositories.BrandDatatableRepository;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
+import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.BrandService;
 import com.bartolay.inventory.utils.UserCredentials;
 
@@ -33,7 +34,8 @@ public class BrandServiceImpl implements BrandService<Brand> {
 	private UserCredentials userCredentials;
 
 	@Autowired
-	private BrandDatatableRepository brandDataTableRepository;
+	@Qualifier("brandDatatableRepository")
+	private DatatableRepository brandDataTableRepository;
 
 	@Override
 	public Brand create(BrandForm brandForm) {

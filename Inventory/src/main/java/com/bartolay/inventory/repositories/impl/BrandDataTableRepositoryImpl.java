@@ -9,16 +9,18 @@ import javax.persistence.Query;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.bartolay.inventory.components.RepositoryComponent;
 import com.bartolay.inventory.datatable.model.DatatableColumn;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
-import com.bartolay.inventory.repositories.BrandDatatableRepository;
+import com.bartolay.inventory.repositories.DatatableRepository;
 
 @Repository
-public class BrandDataTableRepositoryImpl extends RepositoryComponent implements BrandDatatableRepository {
+@Qualifier("brandDatatableRepository")
+public class BrandDataTableRepositoryImpl extends RepositoryComponent implements DatatableRepository {
 	
 	@Override
 	public long findAllCount(DatatableParameter datatableParameter) {
@@ -83,8 +85,6 @@ public class BrandDataTableRepositoryImpl extends RepositoryComponent implements
 			
 		}catch(Exception e){
 			return null;
-		}
-
-		
+		}	
 	}
 }

@@ -2,6 +2,7 @@ package com.bartolay.inventory.entity;
 
 import java.io.Serializable;
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -9,8 +10,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.bartolay.inventory.model.Authority;
 
@@ -20,7 +25,8 @@ public class User implements Serializable, Principal {
  
 	private static final long serialVersionUID = 1L;
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator")
+	@SequenceGenerator(name="user_generator", sequenceName = "USER_SER_SEQ")
     private long id;
     @Column(name = "firstname", nullable=false)
     private String firstName;
@@ -30,6 +36,8 @@ public class User implements Serializable, Principal {
     private String username;
     @Column(name = "password", nullable=false)
     private String password;
+    @Column(name = "email")
+    private String email;
     @Column(name = "phone")
     private String phone;
     @Column(name = "address")
@@ -39,6 +47,14 @@ public class User implements Serializable, Principal {
     @Column(name = "enabled", nullable=false)
     private boolean enabled;
     
+	@Column(name="created_date", nullable=false, updatable=false)
+	@CreationTimestamp
+	private Date createdDate;
+
+	@Column(name="updated_date")
+	@UpdateTimestamp
+	private Date updatedDated;
+	
     @Transient
     private List<Authority> authorities;
     
@@ -120,7 +136,15 @@ public class User implements Serializable, Principal {
         this.password = password;
     }
 
-    public String getPhone() {
+    public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
         return phone;
     }
 
@@ -158,10 +182,26 @@ public class User implements Serializable, Principal {
 		this.authorities = authorities;
 	}
 
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getUpdatedDated() {
+		return updatedDated;
+	}
+
+	public void setUpdatedDated(Date updatedDated) {
+		this.updatedDated = updatedDated;
+	}
+
 	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + username
-				+ ", password=" + password + ", phone=" + phone + ", address=" + address + ", type=" + type
+				+ ", password=" + password + ", email=" + email + ", phone=" + phone + ", address=" + address + ", type=" + type
 				+ ", enabled=" + enabled + ", authority=" + authority + "]";
 	}
 	

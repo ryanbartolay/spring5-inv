@@ -5,41 +5,49 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.bartolay.inventory.components.RepositoryComponent;
 import com.bartolay.inventory.datatable.model.DatatableColumn;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.repositories.DatatableRepository;
 
 @Repository
-@Qualifier("companyDatatableRepository")
-public class CompanyDatatableRepositoryImpl implements DatatableRepository {
-	
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+@Qualifier("itemDatatableRepository")
+public class ItemDatatableRepositoryImpl extends RepositoryComponent implements DatatableRepository {
 
 	@Override
 	public long findAllCount(DatatableParameter datatableParameter) {
-		// TODO Auto-generated method stub
-		return 0;
+		String SQL = "SELECT COUNT(i.id) FROM Item i";
+
+		if(datatableParameter.getSearch() != null) {
+			SQL += " WHERE i.name like :search";
+		}
+
+		Query query = em.createQuery( SQL);
+		if(datatableParameter.getSearch() != null) {
+			query.setParameter("search", "%" + datatableParameter.getSearch() + "%");
+		}
+
+		return (long) query.getSingleResult();
 	}
 
 	@Override
 	public JSONArray findAllData(DatatableParameter datatableParameter) {
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT * FROM Company ";
+			String SQL = "SELECT i.*, b.name as brand_name FROM Item i inner join Brand b on bid = i.brand_id";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
 			if(datatableParameter.getSearch() != null) {
-				SQL += " WHERE name like ?";
+				SQL += " WHERE i.name like ?";
 				SQL_PARAMS.add(datatableParameter.getSearch() + "%");
 			}
 
@@ -62,6 +70,7 @@ public class CompanyDatatableRepositoryImpl implements DatatableRepository {
 					JSONObject obj = new JSONObject();
 					obj.put("id", rs.getLong("id"));
 					obj.put("name", rs.getString("name"));
+					obj.put("brand_name", rs.getString("brand_name"));
 					return obj;
 				}
 			});
@@ -76,6 +85,7 @@ public class CompanyDatatableRepositoryImpl implements DatatableRepository {
 		}catch(Exception e){
 			return null;
 		}
+
 	}
 
 }

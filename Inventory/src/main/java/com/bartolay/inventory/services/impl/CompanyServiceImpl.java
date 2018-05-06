@@ -10,6 +10,7 @@ import javax.validation.ConstraintViolationException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
@@ -17,8 +18,8 @@ import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Company;
 import com.bartolay.inventory.form.CompanyForm;
 import com.bartolay.inventory.repositories.BrandRepository;
-import com.bartolay.inventory.repositories.CompanyDatatableRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
+import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.CompanyService;
 import com.bartolay.inventory.utils.ServiceUtility;
 import com.bartolay.inventory.utils.UserCredentials;
@@ -34,7 +35,8 @@ public class CompanyServiceImpl implements CompanyService {
 	private BrandRepository brandRepository;
 
 	@Autowired
-	private CompanyDatatableRepository companyDatatableRepository;
+	@Qualifier("companyDatatableRepository")
+	private DatatableRepository companyDatatableRepository;
 	
 	@Autowired
 	private UserCredentials userCredentials;

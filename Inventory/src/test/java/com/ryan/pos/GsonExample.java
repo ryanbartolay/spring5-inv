@@ -57,8 +57,6 @@ public class GsonExample {
 //        obj2.put("name", "Ryan2");
 //        obj2.put("company", "Gotech Solutions2");
         
-        System.err.println(gson.toJson(obj));
-        
         skills.add(obj);
         skills.add(obj2);
         

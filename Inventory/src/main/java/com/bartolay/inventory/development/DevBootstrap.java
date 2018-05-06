@@ -10,12 +10,14 @@ import com.bartolay.enums.AccountType;
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Category;
 import com.bartolay.inventory.entity.Company;
+import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.Product;
 import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CategoryRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
+import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.SupplierRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 
@@ -28,7 +30,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	private Category category;
 
 	@Autowired
-	private UserRepository employeeRepository;
+	private UserRepository userRepository;
 
 	@Autowired
 	private BrandRepository brandRepository;
@@ -39,6 +41,9 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	@Autowired
 	private CompanyRepository companyRepository;
 
+	@Autowired
+	private ItemRepository itemRepository;
+	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
@@ -51,6 +56,28 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		createCategories();
 		createCompaniesAndBrand();
 		createSuppliers();
+		
+		createItems();
+	}
+
+	private void createItems() {
+		Item item = new Item();
+		item.setBrand(brandRepository.findById((long) 1).get());
+		item.setCode("ryan1234");
+		item.setName("Nike HyperDunk Series X 2");
+		item.setCreatedBy(userRepository.findByUsername("admin"));
+		item.setEnabled(true);
+		
+		itemRepository.save(item);
+		
+		Item item2 = new Item();
+		item2.setBrand(brandRepository.findById((long) 1).get());
+		item2.setCode("ryan1235");
+		item2.setName("Nike HyperDunk Series X 3");
+		item2.setCreatedBy(userRepository.findByUsername("admin"));
+		item2.setEnabled(true);
+		
+		itemRepository.save(item2);
 	}
 
 	private void createCompaniesAndBrand() {
@@ -58,20 +85,20 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		Company c = new Company();
 		c.setName("Big Trading");
 		c.setEmail("rbartolay.gotechsolutions@gmail.com");
-		c.setCreatedBy(employeeRepository.findByUsername("admin"));
+		c.setCreatedBy(userRepository.findByUsername("admin"));
 		companyRepository.save(c);
 
 		Company company = new Company();
 		company.setName("GoTech Solutions");
 		company.setEmail("bartolay.ryan@gmail.com");
-		company.setCreatedBy(employeeRepository.findByUsername("admin"));
+		company.setCreatedBy(userRepository.findByUsername("admin"));
 		companyRepository.save(company);
 
 		// creating brands
 		Brand brand = new Brand();
 		brand.setName("Brand");
 		brand.setNameArabic("تفصيل بدون قماش");
-		brand.setCreatedBy(employeeRepository.findByUsername("admin"));
+		brand.setCreatedBy(userRepository.findByUsername("admin"));
 		brand.setCompany(company);
 
 		brandRepository.save(brand);
@@ -80,7 +107,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		Brand brand2 = new Brand();
 		brand2.setName("Hello World");
 		brand2.setNameArabic("تفصيل بدون قماش");
-		brand2.setCreatedBy(employeeRepository.findByUsername("admin"));
+		brand2.setCreatedBy(userRepository.findByUsername("admin"));
 		brand2.setCompany(c);
 
 		brandRepository.save(brand2);
@@ -89,21 +116,22 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		Brand brand3 = new Brand();
 		brand3.setName("Imbue 360");
 		brand3.setNameArabic("تفصيل بدون قماش");
-		brand3.setCreatedBy(employeeRepository.findByUsername("admin"));
+		brand3.setCreatedBy(userRepository.findByUsername("admin"));
 		brand3.setCompany(c);
 
 		brandRepository.save(brand3);
 	}
 
 	private void createEmployees() {
-		User employee = new User();
-		employee.setUsername("admin");
-		employee.setPassword(passwordEncoder.encode(password));
-		employee.setFirstName("Admin");
-		employee.setLastName("Admin");
-		employee.setType("admin");
-		employee.setAuthority(AccountType.SUPERADMIN.toString());
-		employeeRepository.save(employee);
+		User user = new User();
+		user.setUsername("admin");
+		user.setPassword(passwordEncoder.encode(password));
+		user.setFirstName("Admin");
+		user.setLastName("Admin");
+		user.setType("ADMIN");
+		user.setEmail("bartolay.ryan@gmail.com");
+		user.setAuthority(AccountType.SUPERADMIN.toString());
+		userRepository.save(user);
 	}
 
 	private void createSuppliers() {

@@ -15,9 +15,12 @@
 			<li><a th:href="@{/dashboard}"><i class="fa fa-dashboard fa-fw"></i>
 					Dashboard</a></li>
 					
-			<li><a th:href="@{/companies}"><i class="fa fa-briefcase"></i>
+			<li><a th:href="@{/companies}"><i class="fa fa-briefcase fa-fw"></i>
 					Companies</a></li>
-			<li><a href="#"><i class="fa fa-list fa-fw"></i> Stock<span class="fa arrow"></span></a>
+					
+			<li><a th:href="@{/items}"><i class="fa fa-th fa-fw"></i>
+					Items</a></li>
+			<li><a href="#"><i class="fa fa-list fa-fw"></i> Stock Attributes<span class="fa arrow"></span></a>
 				<ul class="nav nav-second-level">
 					<li><a th:href="@{/brands}">Brands</a></li>
 					<li><a th:href="@{/categories}">Categories</a></li>
@@ -25,6 +28,11 @@
 					<li><a th:href="@{/countries}">Countries</a></li>
 					<li><a th:href="@{/models}">Models</a></li>
 					<li><a th:href="@{/unit}">Unit</a></li>
+				</ul> <!-- /.nav-second-level --></li>
+			<li><a href="#"><i class="fa fa-sitemap fa-fw"></i>
+					Administration<span class="fa arrow"></span></a>
+				<ul class="nav nav-second-level">
+					<li><a th:href="@{/users}"><i class="fa fa-users fa-fw"></i> Users</a></li>
 				</ul> <!-- /.nav-second-level --></li>
 			<li><a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>
 					Charts<span class="fa arrow"></span></a>

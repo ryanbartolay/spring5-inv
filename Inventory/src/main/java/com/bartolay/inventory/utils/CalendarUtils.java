@@ -14,7 +14,6 @@ public class CalendarUtils {
 	private static final SimpleDateFormat timeFormat = new SimpleDateFormat(TIMEFORMAT);
 	
 	public static Date toDate(String date) throws ParseException {
-		System.err.println(">>>>>>>>>>>>> "+date);
 		return caledarFormat.parse(date);
 	}
 	public Time toTime(String date) throws ParseException {

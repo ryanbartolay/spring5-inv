@@ -3,7 +3,7 @@
 <!-- Create Button -->
 	<button type="button" class="btn btn-success pull-right"
 	data-toggle="modal" data-target="#formModal" id="createButton" data-backdrop="static"
-	data-keyboard="false">Add Company</button>	
+	data-keyboard="false">Add User</button>	
 <!-- /Create Button -->
 </div>
 
@@ -12,8 +12,8 @@
 	aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form data-async data-target="#rating-modal" id="createBrandForm" th:object="${companyForm}"
-				th:action="@{/api/companies}" method="POST">
+			<form data-async data-target="#rating-modal" id="createBrandForm" th:object="${userForm}"
+				th:action="@{/api/users}" method="POST">
 				<input type="hidden" th:field="*{id}"/>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
@@ -26,12 +26,19 @@
 					<div class="form-group" id="errors"></div>
 					
 					<div class="form-group">
-						<label>Name</label> <input class="form-control" th:field="*{name}" maxlength="30">
+						<label>Username</label> <input class="form-control" th:field="*{username}" maxlength="30">
 						<p class="help-block">This is the brand name.</p>
 					</div>
 					
 					<div class="form-group">
 						<label>Email</label> <input class="form-control" th:field="*{email}" maxlength="100">
+					</div>
+					
+					<div class="form-group">
+						<label>Firstname</label> <input class="form-control" th:field="*{firstName}" maxlength="100">
+					</div>
+					<div class="form-group">
+						<label>Lastname</label> <input class="form-control" th:field="*{lastName}" maxlength="100">
 					</div>
 					
 				</div>
@@ -82,6 +89,8 @@
 				id="brand-datatable">
 				<thead>
 					<tr>
+						<th>Username</th>
+						<th>Email</th>
 						<th>Name</th>
 						<th>Actions</th>
 					</tr>
@@ -112,13 +121,15 @@
 	var submitButtonLabel = $("#formModal #submit");
 	var form = $("#createBrandForm");
 	var table = $('#brand-datatable');
-	var datatable = customDatatable(table, '/api/datatable/companies', 
+	var datatable = customDatatable(table, '/api/datatable/users', 
 			[
-            	{ "data": "name", "name" : "Name", "title" : "Name",  },
+            	{ "data": "username" },
+            	{ "data": "email" },
+            	{ "data": "firstname" },
         	],
         	[ 
         		{
-                    "targets": 1,
+                    "targets": 3,
                     "data": null,
                     "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Edit</button>' 
                     	+ '<button id="btnDelete" class="btn btn-default pull-right" data-toggle="modal" data-target="#confirmDeleteModal" data-backdrop="static" data-keyboard="false">Delete</button>'
@@ -130,7 +141,7 @@
 		form[0].reset();
 		form.attr("method", "POST"); // change to POST when editing
 		form.find('#id').val("");
-		modalLabel.text("Create new Company");
+		modalLabel.text("Create new User");
 		submitButtonLabel.text("Create");
 	});
 	
@@ -145,8 +156,11 @@
         modalLabel.text("Update " + data['name']);
         submitButtonLabel.text("Update");
         
-        GET("/api/companies/" + data['id'], function(data) {
-        	form.find('#name').val(data.name);
+        GET("/api/users/" + data['id'], function(data) {
+        	console.log(data);
+        	form.find('#username').val(data.username);
+        	form.find('#firstName').val(data.firstName);
+        	form.find('#lastName').val(data.lastName);
         	form.find('#email').val(data.email);
         });
     } );
@@ -159,7 +173,7 @@
  		
         data = datatable.row( $(this).parent('td') ).data();
         
-        confirmDeleteModal.find("#recordName").text(data['name']);
+        confirmDeleteModal.find("#recordName").text(data['username']);
         
     });
  	
@@ -169,7 +183,7 @@
     
     	$(this).removeAttr("disabled");
     	
-    	DELETE("/api/companies/" + data['id'], function(data) {
+    	DELETE("/api/users/" + data['id'], function(data) {
     		showToast(data);
     		
     		confirmDeleteModal.modal('hide');

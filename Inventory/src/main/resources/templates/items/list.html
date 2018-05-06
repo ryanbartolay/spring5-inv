@@ -12,7 +12,7 @@
 	aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form data-async data-target="#rating-modal" id="createBrandForm" th:object="${companyForm}"
+			<form data-async data-target="#rating-modal" id="createBrandForm" th:object="${itemForm}"
 				th:action="@{/api/companies}" method="POST">
 				<input type="hidden" th:field="*{id}"/>
 				<div class="modal-header">

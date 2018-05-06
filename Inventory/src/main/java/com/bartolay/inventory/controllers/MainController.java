@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.form.CompanyForm;
+import com.bartolay.inventory.itemForm.ItemForm;
 import com.bartolay.inventory.services.CompanyService;
 
 @Controller
@@ -28,8 +29,6 @@ public class MainController {
 	@RequestMapping(value="/")
 	public String getDemo() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		System.err.println(((User) auth.getPrincipal()).getLastName());
-		System.err.println(auth.getAuthorities());
 		return "index";
 	}
 
@@ -70,6 +69,19 @@ public class MainController {
 		mav.addObject("html", "list");
 		return mav;
 	}
+	
+	@RequestMapping(value="/items", method=RequestMethod.GET)
+	public ModelAndView viewItems(Model model) {
+		
+		ModelAndView mav = new ModelAndView("generic");
+		mav.addObject("title", "Items");
+		mav.addObject("itemForm", new ItemForm());
+		mav.addObject("html", "/items/list");
+		
+		return mav;
+	}
+	
+	
 	
 	@RequestMapping(value="/flot")
 	public String flot() {
