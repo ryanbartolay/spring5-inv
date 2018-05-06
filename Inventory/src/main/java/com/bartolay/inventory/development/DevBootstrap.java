@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.bartolay.enums.AccountType;
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Category;
+import com.bartolay.inventory.entity.Color;
 import com.bartolay.inventory.entity.Company;
 import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.Product;
@@ -58,6 +59,13 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		createSuppliers();
 		
 		createItems();
+		
+		createColors();
+	}
+
+	private void createColors() {
+		Color color = new Color();
+		
 	}
 
 	private void createItems() {
@@ -100,6 +108,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		brand.setNameArabic("تفصيل بدون قماش");
 		brand.setCreatedBy(userRepository.findByUsername("admin"));
 		brand.setCompany(company);
+		brand.setEnabled(true);
 
 		brandRepository.save(brand);
 
@@ -109,6 +118,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		brand2.setNameArabic("تفصيل بدون قماش");
 		brand2.setCreatedBy(userRepository.findByUsername("admin"));
 		brand2.setCompany(c);
+		brand2.setEnabled(true);
 
 		brandRepository.save(brand2);
 
@@ -118,6 +128,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		brand3.setNameArabic("تفصيل بدون قماش");
 		brand3.setCreatedBy(userRepository.findByUsername("admin"));
 		brand3.setCompany(c);
+		brand3.setEnabled(true);
 
 		brandRepository.save(brand3);
 	}

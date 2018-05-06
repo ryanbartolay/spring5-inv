@@ -3,7 +3,7 @@
 <!-- Create Button -->
 	<button type="button" class="btn btn-success pull-right"
 	data-toggle="modal" data-target="#formModal" id="createButton" data-backdrop="static"
-	data-keyboard="false">Add Company</button>	
+	data-keyboard="false">Add Item</button>	
 <!-- /Create Button -->
 </div>
 
@@ -13,7 +13,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<form data-async data-target="#rating-modal" id="createBrandForm" th:object="${itemForm}"
-				th:action="@{/api/companies}" method="POST">
+				th:action="@{/api/items}" method="POST">
 				<input type="hidden" th:field="*{id}"/>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
@@ -31,7 +31,15 @@
 					
 					<div class="form-group">
 						<label>Name</label> <input class="form-control" th:field="*{name}" maxlength="30">
-						<p class="help-block">This is the brand name.</p>
+					</div>
+					
+					
+					<div class="form-group">
+						<label>Brand</label> <select
+							class="form-control" th:field="*{brand_id}" id="ddCompany">
+							<option th:each="brand : ${brands}" th:value="${brand.id}"
+								th:text="${brand.name}"></option>
+						</select>
 					</div>
 					
 				</div>
@@ -134,7 +142,7 @@
 		form[0].reset();
 		form.attr("method", "POST"); // change to POST when editing
 		form.find('#id').val("");
-		modalLabel.text("Create new Company");
+		modalLabel.text("Create new Item");
 		submitButtonLabel.text("Create");
 	});
 	
@@ -149,7 +157,7 @@
         modalLabel.text("Update " + data['name']);
         submitButtonLabel.text("Update");
         
-        GET("/api/companies/" + data['id'], function(data) {
+        GET("/api/items/" + data['id'], function(data) {
         	form.find('#name').val(data.name);
         	form.find('#email').val(data.email);
         });
@@ -173,7 +181,7 @@
     
     	$(this).removeAttr("disabled");
     	
-    	DELETE("/api/companies/" + data['id'], function(data) {
+    	DELETE("/api/items/" + data['id'], function(data) {
     		showToast(data);
     		
     		confirmDeleteModal.modal('hide');

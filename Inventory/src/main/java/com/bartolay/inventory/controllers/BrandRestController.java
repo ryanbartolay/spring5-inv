@@ -32,7 +32,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class BrandRestController {
 
 	@Autowired
-	private BrandService<Brand> brandService;
+	private BrandService brandService;
 
 	@Autowired
 	private BrandRepository brandRepository;

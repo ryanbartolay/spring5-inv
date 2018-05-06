@@ -1,6 +1,7 @@
 package com.bartolay.inventory.services.impl;
 
 import java.util.Map;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -12,12 +13,12 @@ import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.entity.Item;
-import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.itemForm.ItemForm;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.services.ItemService;
+import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
 @Transactional
@@ -32,6 +33,9 @@ public class ItemServiceImpl implements ItemService {
 	@Autowired
 	@Qualifier("itemDatatableRepository")
 	private DatatableRepository itemDatatableRepository;
+	
+	@Autowired
+	private UserCredentials userCredentials;
 
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
@@ -53,7 +57,8 @@ public class ItemServiceImpl implements ItemService {
 		Item item = new Item();
 		item.setCode(itemForm.getCode());
 		item.setName(itemForm.getName());
-		item.setBrand(brandRepository.findById(itemForm.getBrandId()).get());
+		item.setBrand(brandRepository.findById(itemForm.getBrand_id()).get());
+		item.setCreatedBy(userCredentials.getLoggedInUser());
 		item.setEnabled(true);
 		return itemRepository.save(item);
 	}
@@ -63,14 +68,16 @@ public class ItemServiceImpl implements ItemService {
 		Item item = itemRepository.findById(itemForm.getId()).get();
 		item.setCode(itemForm.getCode());
 		item.setName(itemForm.getName());
-		item.setBrand(brandRepository.findById(itemForm.getBrandId()).get());
+		item.setBrand(brandRepository.findById(itemForm.getBrand_id()).get());
 		return itemRepository.save(item);
 	}
 
 	@Override
 	public Item delete(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Item> item = itemRepository.findById(id);
+		
+		itemRepository.deleteById(id);
+		return item.get();
 	}
 
 }

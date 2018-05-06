@@ -16,7 +16,7 @@ public class ItemForm {
 	private String name;
 	
 	@NotNull
-	private Long brandId;
+	private Long brand_id;
 
 	public Long getId() {
 		return id;
@@ -42,11 +42,11 @@ public class ItemForm {
 		this.name = name;
 	}
 
-	public Long getBrandId() {
-		return brandId;
+	public Long getBrand_id() {
+		return brand_id;
 	}
 
-	public void setBrandId(Long brandId) {
-		this.brandId = brandId;
+	public void setBrand_id(Long brand_id) {
+		this.brand_id = brand_id;
 	}
 }

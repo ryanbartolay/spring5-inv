@@ -20,4 +20,6 @@ public interface BrandRepository extends CrudRepository<Brand, Long> {
     Brand apiFindById(@Param("id") Long id);
 	
 	List<Brand> findByCompany(Company company);
+	
+	List<Brand> findByEnabledTrue();
 }
