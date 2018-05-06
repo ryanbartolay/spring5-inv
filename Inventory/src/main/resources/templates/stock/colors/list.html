@@ -135,6 +135,7 @@
 		form.find('#id').val("");
 		modalLabel.text("Create new Color");
 		submitButtonLabel.text("Create");
+		form.find('#code').colorpicker();
 	});
 	
 	// Edit button
@@ -153,6 +154,8 @@
         form.find('#color').val(data.color);
     	form.find('#code').val(data.code);
         
+    	form.find('#code').colorpicker();
+    	
         /* GET("/api/colors/" + data['id'], function(data) {
         	form.find('#color').val(data.color);
         	form.find('#code').val(data.code);
