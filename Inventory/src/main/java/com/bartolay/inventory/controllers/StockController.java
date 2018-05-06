@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.bartolay.inventory.form.BrandForm;
+import com.bartolay.inventory.form.ColorForm;
 import com.bartolay.inventory.services.CompanyService;
 
 @Controller
@@ -23,7 +24,7 @@ public class StockController {
 		model.addObject("companies", companyService.findAll());
 		return model;
 	}
-	
+		
 	@RequestMapping(value="/categories")
 	public ModelAndView categories() {
 		ModelAndView model = new ModelAndView("stock/index");
@@ -36,7 +37,10 @@ public class StockController {
 	
 	@RequestMapping(value="/colors")
 	public ModelAndView colors() {
-		ModelAndView model = new ModelAndView("construction");
+		ModelAndView model = new ModelAndView("stock/index");
+		model.addObject("page", "Colors");
+		model.addObject("colorForm", new ColorForm());
+		model.addObject("html", "colors/list");
 		return model;
 	}
 	
