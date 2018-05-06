@@ -18,7 +18,7 @@
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
-					<h4 class="modal-title" id="modalLabel">Add Company</h4>
+					<h4 class="modal-title" id="modalLabel">Add Item</h4>
 				</div>
 
 				<div class="panel-body">
@@ -26,12 +26,12 @@
 					<div class="form-group" id="errors"></div>
 					
 					<div class="form-group">
-						<label>Name</label> <input class="form-control" th:field="*{name}" maxlength="30">
-						<p class="help-block">This is the brand name.</p>
+						<label>Code</label> <input class="form-control" th:field="*{code}" maxlength="100">
 					</div>
 					
 					<div class="form-group">
-						<label>Email</label> <input class="form-control" th:field="*{email}" maxlength="100">
+						<label>Name</label> <input class="form-control" th:field="*{name}" maxlength="30">
+						<p class="help-block">This is the brand name.</p>
 					</div>
 					
 				</div>
@@ -82,7 +82,9 @@
 				id="brand-datatable">
 				<thead>
 					<tr>
+						<th>Code</th>
 						<th>Name</th>
+						<th>Brand</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -112,13 +114,15 @@
 	var submitButtonLabel = $("#formModal #submit");
 	var form = $("#createBrandForm");
 	var table = $('#brand-datatable');
-	var datatable = customDatatable(table, '/api/datatable/companies', 
+	var datatable = customDatatable(table, '/api/datatable/items', 
 			[
-            	{ "data": "name", "name" : "Name", "title" : "Name",  },
+				{ "data": "code" },
+            	{ "data": "name" },
+            	{ "data": "brand_name" },
         	],
         	[ 
         		{
-                    "targets": 1,
+                    "targets": 3,
                     "data": null,
                     "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Edit</button>' 
                     	+ '<button id="btnDelete" class="btn btn-default pull-right" data-toggle="modal" data-target="#confirmDeleteModal" data-backdrop="static" data-keyboard="false">Delete</button>'

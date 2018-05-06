@@ -64,7 +64,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		Item item = new Item();
 		item.setBrand(brandRepository.findById((long) 1).get());
 		item.setCode("ryan1234");
-		item.setName("Nike HyperDunk Series X 2");
+		item.setName("HyperDunk Series X 2");
 		item.setCreatedBy(userRepository.findByUsername("admin"));
 		item.setEnabled(true);
 		
@@ -73,7 +73,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		Item item2 = new Item();
 		item2.setBrand(brandRepository.findById((long) 1).get());
 		item2.setCode("ryan1235");
-		item2.setName("Nike HyperDunk Series X 3");
+		item2.setName("HyperDunk Series X 3");
 		item2.setCreatedBy(userRepository.findByUsername("admin"));
 		item2.setEnabled(true);
 		
@@ -96,7 +96,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 
 		// creating brands
 		Brand brand = new Brand();
-		brand.setName("Brand");
+		brand.setName("Nike");
 		brand.setNameArabic("تفصيل بدون قماش");
 		brand.setCreatedBy(userRepository.findByUsername("admin"));
 		brand.setCompany(company);
@@ -105,7 +105,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 
 		// creating brands
 		Brand brand2 = new Brand();
-		brand2.setName("Hello World");
+		brand2.setName("Adidas");
 		brand2.setNameArabic("تفصيل بدون قماش");
 		brand2.setCreatedBy(userRepository.findByUsername("admin"));
 		brand2.setCompany(c);
@@ -114,7 +114,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 
 		// creating brands
 		Brand brand3 = new Brand();
-		brand3.setName("Imbue 360");
+		brand3.setName("And1");
 		brand3.setNameArabic("تفصيل بدون قماش");
 		brand3.setCreatedBy(userRepository.findByUsername("admin"));
 		brand3.setCompany(c);
