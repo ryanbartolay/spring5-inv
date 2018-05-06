@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.bartolay.inventory.form.CompanyForm;
 import com.bartolay.inventory.itemForm.ItemForm;
 import com.bartolay.inventory.repositories.BrandRepository;
+import com.bartolay.inventory.repositories.ColorRepository;
 import com.bartolay.inventory.services.CompanyService;
 
 @Controller
@@ -28,6 +29,9 @@ public class MainController {
 	
 	@Autowired
 	private BrandRepository brandRepository;
+	
+	@Autowired
+	private ColorRepository colorRepository;
 	
 	@RequestMapping(value="/")
 	public String getDemo() {
@@ -78,6 +82,7 @@ public class MainController {
 		
 		ModelAndView mav = new ModelAndView("generic");
 		mav.addObject("brands", brandRepository.findByEnabledTrue());
+		mav.addObject("colors", colorRepository.findAll());
 		mav.addObject("title", "Items");
 		mav.addObject("itemForm", new ItemForm());
 		mav.addObject("html", "/items/list");

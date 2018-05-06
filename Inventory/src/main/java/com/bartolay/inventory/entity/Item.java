@@ -11,11 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
+@Table(name="item")
 public class Item {
 
 	@Id
@@ -37,6 +39,10 @@ public class Item {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "brand_id", nullable=false)
 	private Brand brand;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "color_id", nullable=false)
+	private Color color;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "model_id", nullable=true)
@@ -107,6 +113,14 @@ public class Item {
 
 	public void setBrand(Brand brand) {
 		this.brand = brand;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 
 	public Model getModel() {
@@ -185,6 +199,7 @@ public class Item {
 	@Override
 	public String toString() {
 		return "Item [id=" + id + ", code=" + code + ", name=" + name + ", category=" + category + ", brand=" + brand
-				+ ", model=" + model + ", enabled=" + enabled + "]";
+				+ ", color=" + color + ", model=" + model + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
+				+ ", createdDate=" + createdDate + ", updatedDated=" + updatedDated + ", enabled=" + enabled + "]";
 	}
 }

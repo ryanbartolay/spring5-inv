@@ -17,6 +17,7 @@ import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CategoryRepository;
+import com.bartolay.inventory.repositories.ColorRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.SupplierRepository;
@@ -40,6 +41,9 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	private CategoryRepository categoryRepository;
 	
 	@Autowired
+	private ColorRepository colorRepository;
+	
+	@Autowired
 	private CompanyRepository companyRepository;
 
 	@Autowired
@@ -57,20 +61,40 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		createCategories();
 		createCompaniesAndBrand();
 		createSuppliers();
-		
-		createItems();
-		
 		createColors();
+		
+		
+		// need to create this as last
+		createItems();
 	}
 
 	private void createColors() {
-		Color color = new Color();
+		Color red = new Color();
+		red.setName("red");
 		
+		colorRepository.save(red);
+		
+		
+		Color blue = new Color();
+		blue.setName("blue");
+		
+		colorRepository.save(blue);
+		
+		Color green = new Color();
+		green.setName("green");
+		
+		colorRepository.save(green);
+		
+		Color black = new Color();
+		black.setName("black");
+		
+		colorRepository.save(black);
 	}
 
 	private void createItems() {
 		Item item = new Item();
 		item.setBrand(brandRepository.findById((long) 1).get());
+		item.setColor(colorRepository.findByName("red"));
 		item.setCode("ryan1234");
 		item.setName("HyperDunk Series X 2");
 		item.setCreatedBy(userRepository.findByUsername("admin"));
@@ -80,6 +104,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		
 		Item item2 = new Item();
 		item2.setBrand(brandRepository.findById((long) 1).get());
+		item2.setColor(colorRepository.findByName("black"));
 		item2.setCode("ryan1235");
 		item2.setName("HyperDunk Series X 3");
 		item2.setCreatedBy(userRepository.findByUsername("admin"));

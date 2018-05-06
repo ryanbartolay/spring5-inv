@@ -3,6 +3,9 @@ package com.bartolay.inventory.itemForm;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.bartolay.inventory.entity.Brand;
+import com.bartolay.inventory.entity.Color;
+
 public class ItemForm {
 	
 	private Long id;
@@ -16,7 +19,10 @@ public class ItemForm {
 	private String name;
 	
 	@NotNull
-	private Long brand_id;
+	private Brand brand;
+	
+	@NotNull
+	private Color color;
 
 	public Long getId() {
 		return id;
@@ -42,11 +48,19 @@ public class ItemForm {
 		this.name = name;
 	}
 
-	public Long getBrand_id() {
-		return brand_id;
+	public Brand getBrand() {
+		return brand;
 	}
 
-	public void setBrand_id(Long brand_id) {
-		this.brand_id = brand_id;
+	public void setBrand(Brand brand) {
+		this.brand = brand;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 }

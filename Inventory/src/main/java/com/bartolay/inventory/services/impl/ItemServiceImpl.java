@@ -57,7 +57,8 @@ public class ItemServiceImpl implements ItemService {
 		Item item = new Item();
 		item.setCode(itemForm.getCode());
 		item.setName(itemForm.getName());
-		item.setBrand(brandRepository.findById(itemForm.getBrand_id()).get());
+		item.setBrand(itemForm.getBrand());
+		item.setColor(itemForm.getColor());
 		item.setCreatedBy(userCredentials.getLoggedInUser());
 		item.setEnabled(true);
 		return itemRepository.save(item);
@@ -68,7 +69,8 @@ public class ItemServiceImpl implements ItemService {
 		Item item = itemRepository.findById(itemForm.getId()).get();
 
 		item.setName(itemForm.getName());
-		item.setBrand(brandRepository.findById(itemForm.getBrand_id()).get());
+		item.setBrand(itemForm.getBrand());
+		item.setColor(itemForm.getColor());
 		item.setUpdatedBy(userCredentials.getLoggedInUser());
 		return itemRepository.save(item);
 	}

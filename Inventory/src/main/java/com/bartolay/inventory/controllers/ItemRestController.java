@@ -44,8 +44,6 @@ public class ItemRestController {
 	public String getById(@PathVariable Long id) {
 		try {
 			Item item = itemRepository.apiFindById(id);
-			System.err.println(item);
-			System.err.println(stringUtils.encode(item));
 			return stringUtils.encode(item);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -68,7 +66,6 @@ public class ItemRestController {
 			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + item.getName());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-//			throw new RestApiException(e);
 		}
 
 		return stringUtils.encode(response);
