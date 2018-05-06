@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
 import org.json.JSONArray;
@@ -15,11 +14,8 @@ import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.datatable.model.SortOrder;
-import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Color;
-import com.bartolay.inventory.entity.Company;
 import com.bartolay.inventory.form.ColorForm;
-import com.bartolay.inventory.form.CompanyForm;
 import com.bartolay.inventory.repositories.ColorRepository;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.ColorService;

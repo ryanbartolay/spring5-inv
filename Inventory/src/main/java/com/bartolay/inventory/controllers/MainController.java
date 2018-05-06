@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.form.CompanyForm;
 import com.bartolay.inventory.itemForm.ItemForm;
+import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.services.CompanyService;
 
 @Controller
@@ -25,6 +25,9 @@ public class MainController {
 
 	@Autowired
 	private CompanyService companyService;
+	
+	@Autowired
+	private BrandRepository brandRepository;
 	
 	@RequestMapping(value="/")
 	public String getDemo() {
@@ -74,6 +77,7 @@ public class MainController {
 	public ModelAndView viewItems(Model model) {
 		
 		ModelAndView mav = new ModelAndView("generic");
+		mav.addObject("brands", brandRepository.findByEnabledTrue());
 		mav.addObject("title", "Items");
 		mav.addObject("itemForm", new ItemForm());
 		mav.addObject("html", "/items/list");

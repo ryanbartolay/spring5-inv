@@ -42,7 +42,7 @@ public class ItemDatatableRepositoryImpl extends RepositoryComponent implements 
 	public JSONArray findAllData(DatatableParameter datatableParameter) {
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT i.*, b.name as brand_name FROM Item i inner join Brand b on bid = i.brand_id";
+			String SQL = "SELECT i.*, b.name as brand_name FROM Item i inner join Brand b on b.id = i.brand_id";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
@@ -69,6 +69,7 @@ public class ItemDatatableRepositoryImpl extends RepositoryComponent implements 
 				public JSONObject mapRow(ResultSet rs, int arg1) throws SQLException {
 					JSONObject obj = new JSONObject();
 					obj.put("id", rs.getLong("id"));
+					obj.put("code", rs.getString("code"));
 					obj.put("name", rs.getString("name"));
 					obj.put("brand_name", rs.getString("brand_name"));
 					return obj;

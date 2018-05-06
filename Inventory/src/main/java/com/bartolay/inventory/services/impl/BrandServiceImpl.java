@@ -22,7 +22,7 @@ import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
 @Transactional
-public class BrandServiceImpl implements BrandService<Brand> {
+public class BrandServiceImpl implements BrandService {
 
 	@Autowired
 	private BrandRepository brandRepository;

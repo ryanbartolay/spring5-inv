@@ -51,6 +51,9 @@ public class Brand {
 	@Column(name="updated_date")
 	@UpdateTimestamp
 	private Date updatedDated;
+	
+	@Column(name="enabled", nullable=false)
+	private boolean enabled;
 
 	public Long getId() {
 		return id;
@@ -94,9 +97,22 @@ public class Brand {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
+	public Date getUpdatedDated() {
+		return updatedDated;
+	}
+	public void setUpdatedDated(Date updatedDated) {
+		this.updatedDated = updatedDated;
+	}
+	public boolean isEnabled() {
+		return enabled;
+	}
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 	@Override
 	public String toString() {
-		return "Brand [id=" + id + ", models=" + models + ", nameArabic=" + nameArabic + ", name=" + name 
-				+ ", company=" + company + ", createdBy=" + createdBy + ", createdDate=" + createdDate + "]";
+		return "Brand [id=" + id + ", models=" + models + ", nameArabic=" + nameArabic + ", name=" + name + ", company="
+				+ company + ", createdBy=" + createdBy + ", createdDate=" + createdDate + ", updatedDated="
+				+ updatedDated + ", enabled=" + enabled + "]";
 	}
 }

@@ -3,7 +3,7 @@
 <!-- Create Button -->
 	<button type="button" class="btn btn-success pull-right"
 	data-toggle="modal" data-target="#formModal" id="createButton" data-backdrop="static"
-	data-keyboard="false">Add Company</button>	
+	data-keyboard="false">Add Item</button>	
 <!-- /Create Button -->
 </div>
 
@@ -13,12 +13,12 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<form data-async data-target="#rating-modal" id="createBrandForm" th:object="${itemForm}"
-				th:action="@{/api/companies}" method="POST">
+				th:action="@{/api/items}" method="POST">
 				<input type="hidden" th:field="*{id}"/>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
-					<h4 class="modal-title" id="modalLabel">Add Company</h4>
+					<h4 class="modal-title" id="modalLabel">Add Item</h4>
 				</div>
 
 				<div class="panel-body">
@@ -26,12 +26,20 @@
 					<div class="form-group" id="errors"></div>
 					
 					<div class="form-group">
-						<label>Name</label> <input class="form-control" th:field="*{name}" maxlength="30">
-						<p class="help-block">This is the brand name.</p>
+						<label>Code</label> <input class="form-control" th:field="*{code}" maxlength="100">
 					</div>
 					
 					<div class="form-group">
-						<label>Email</label> <input class="form-control" th:field="*{email}" maxlength="100">
+						<label>Name</label> <input class="form-control" th:field="*{name}" maxlength="30">
+					</div>
+					
+					
+					<div class="form-group">
+						<label>Brand</label> <select
+							class="form-control" th:field="*{brand_id}" id="ddCompany">
+							<option th:each="brand : ${brands}" th:value="${brand.id}"
+								th:text="${brand.name}"></option>
+						</select>
 					</div>
 					
 				</div>
@@ -82,7 +90,9 @@
 				id="brand-datatable">
 				<thead>
 					<tr>
+						<th>Code</th>
 						<th>Name</th>
+						<th>Brand</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -112,13 +122,15 @@
 	var submitButtonLabel = $("#formModal #submit");
 	var form = $("#createBrandForm");
 	var table = $('#brand-datatable');
-	var datatable = customDatatable(table, '/api/datatable/companies', 
+	var datatable = customDatatable(table, '/api/datatable/items', 
 			[
-            	{ "data": "name", "name" : "Name", "title" : "Name",  },
+				{ "data": "code" },
+            	{ "data": "name" },
+            	{ "data": "brand_name" },
         	],
         	[ 
         		{
-                    "targets": 1,
+                    "targets": 3,
                     "data": null,
                     "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Edit</button>' 
                     	+ '<button id="btnDelete" class="btn btn-default pull-right" data-toggle="modal" data-target="#confirmDeleteModal" data-backdrop="static" data-keyboard="false">Delete</button>'
@@ -130,7 +142,7 @@
 		form[0].reset();
 		form.attr("method", "POST"); // change to POST when editing
 		form.find('#id').val("");
-		modalLabel.text("Create new Company");
+		modalLabel.text("Create new Item");
 		submitButtonLabel.text("Create");
 	});
 	
@@ -145,7 +157,7 @@
         modalLabel.text("Update " + data['name']);
         submitButtonLabel.text("Update");
         
-        GET("/api/companies/" + data['id'], function(data) {
+        GET("/api/items/" + data['id'], function(data) {
         	form.find('#name').val(data.name);
         	form.find('#email').val(data.email);
         });
@@ -169,7 +181,7 @@
     
     	$(this).removeAttr("disabled");
     	
-    	DELETE("/api/companies/" + data['id'], function(data) {
+    	DELETE("/api/items/" + data['id'], function(data) {
     		showToast(data);
     		
     		confirmDeleteModal.modal('hide');
