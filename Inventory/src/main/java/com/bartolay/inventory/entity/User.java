@@ -30,6 +30,8 @@ public class User implements Serializable, Principal {
     private String username;
     @Column(name = "password", nullable=false)
     private String password;
+    @Column(name = "email")
+    private String email;
     @Column(name = "phone")
     private String phone;
     @Column(name = "address")
@@ -120,7 +122,15 @@ public class User implements Serializable, Principal {
         this.password = password;
     }
 
-    public String getPhone() {
+    public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
         return phone;
     }
 
@@ -161,7 +171,7 @@ public class User implements Serializable, Principal {
 	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + username
-				+ ", password=" + password + ", phone=" + phone + ", address=" + address + ", type=" + type
+				+ ", password=" + password + ", email=" + email + ", phone=" + phone + ", address=" + address + ", type=" + type
 				+ ", enabled=" + enabled + ", authority=" + authority + "]";
 	}
 	
