@@ -22,6 +22,7 @@ public abstract class RepositoryComponent {
 	protected EntityManager em;
 	@Autowired
 	protected RestTemplate restTemplate;
+	protected static final String PERCENT = "%";
 	
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;

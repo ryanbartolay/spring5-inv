@@ -19,7 +19,7 @@ public class Model {
 	private Long id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "brand_id")
+    @JoinColumn(name = "brand_id", nullable=false)
     private Brand brand;
 	
 	private String description;
@@ -42,8 +42,5 @@ public class Model {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	@Override
-	public String toString() {
-		return "Model [id=" + id + ", description=" + description + "]";
-	}
+	
 }

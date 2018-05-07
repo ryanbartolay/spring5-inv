@@ -3,7 +3,7 @@
 	<!-- Create Button -->
 		<button type="button" class="btn btn-success pull-right"
 		data-toggle="modal" data-target="#formModal" id="createButton" data-backdrop="static"
-		data-keyboard="false">Add Model</button>	
+		data-keyboard="false">Add Country</button>	
 	<!-- /Create Button -->
 	</div>
 
@@ -12,13 +12,13 @@
 		aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form data-async data-target="#rating-modal" id="createModelForm" th:object="${modelForm}"
-					th:action="@{/api/models}" method="POST">
+				<form data-async data-target="#rating-modal" id="createCountryForm" th:object="${countryForm}"
+					th:action="@{/api/countries}" method="POST">
 					<input type="hidden" th:field="*{id}"/>
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"
 							aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="modalLabel">Add Model</h4>
+						<h4 class="modal-title" id="modalLabel">Add Country</h4>
 					</div>
 	
 					<div class="panel-body">
@@ -26,15 +26,12 @@
 						<div class="form-group" id="errors"></div>
 						
 						<div class="form-group">
-							<label>Brand</label> <select class="form-control" th:field="*{brand}">
-								<option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
-							</select>
+							<label>Code (ISO)</label> <input class="form-control" th:field="*{code}" maxlength="3">
 						</div>
 						
 						<div class="form-group">
-							<label>Description</label> <textarea class="form-control" th:field="*{description}" maxlength="30"></textarea>
+							<label>Name</label> <input class="form-control" th:field="*{name}" maxlength="30">
 						</div>
-				
 						
 					</div>
 	
@@ -84,8 +81,8 @@
 				id="category-datatable">
 				<thead>
 					<tr>
-						<th>Brand</th>
-						<th>Description</th>
+						<th>Code</th>
+						<th>Name</th>
 						<th width="120px">Actions</th>
 					</tr>
 				</thead>
@@ -113,12 +110,12 @@
 	var formModal = $("#formModal");
 	var modalLabel = formModal.find("#modalLabel");
 	var submitButtonLabel = $("#formModal #submit");
-	var form = $("#createModelForm");
+	var form = $("#createCountryForm");
 	var table = $('#category-datatable');
-	var datatable = customDatatable(table, '/api/datatable/models', 
+	var datatable = customDatatable(table, '/api/datatable/countries', 
 			[
-            	{ "data": "name", "name" : "Brand", "title" : "Brand",},
-            	{ "data": "description", "name" : "Description", "title" : "Description",},
+            	{ "data": "code", "name" : "Code", "title" : "Code",},
+            	{ "data": "name", "name" : "Name", "title" : "Name",},
         	],
         	[ 
         		{
@@ -134,7 +131,7 @@
 		form[0].reset();
 		form.attr("method", "POST"); // change to POST when editing
 		form.find('#id').val("");
-		modalLabel.text("Create new Model");
+		modalLabel.text("Create new Country");
 		submitButtonLabel.text("Create");
 	});
 	
@@ -151,8 +148,8 @@
         modalLabel.text("Update " + data['name']);
         submitButtonLabel.text("Update");
         
-        form.find('#brand').val(data.brand_id);
-        form.find('#description').val(data.description);
+        form.find('#name').val(data.name);
+        form.find('#code').val(data.code);
         
     } );
 	
@@ -174,7 +171,7 @@
     
     	$(this).removeAttr("disabled");
     	
-    	DELETE("/api/models/" + data['id'], function(data) {
+    	DELETE("/api/countries/" + data['id'], function(data) {
     		showToast(data);
     		
     		confirmDeleteModal.modal('hide');

@@ -1,5 +1,6 @@
 package com.bartolay.inventory.services.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.BrandService;
+import com.bartolay.inventory.utils.ServiceUtility;
 import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
@@ -82,5 +84,10 @@ public class BrandServiceImpl implements BrandService {
 		Optional<Brand> brand = brandRepository.findById(id);
 		brandRepository.deleteById(id);
 		return brand.get();
+	}
+
+	@Override
+	public List<Brand> findAll() {
+		return ServiceUtility.toList(brandRepository.findAll());
 	}
 }

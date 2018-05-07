@@ -26,7 +26,14 @@ public class Brand {
 	@SequenceGenerator(name="brand_generator", sequenceName = "BRAND_SER_SEQ")
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
-
+	
+	public Brand() {
+		// TODO Auto-generated constructor stub
+	}
+	public Brand(long id) {
+		this.id=id;
+	}
+	
 	@OneToMany(mappedBy = "brand")
 	private List<Model> models = new ArrayList<>();
 

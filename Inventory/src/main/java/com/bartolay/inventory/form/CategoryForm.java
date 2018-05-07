@@ -7,10 +7,10 @@ public class CategoryForm {
 
 	private Long id;
     @NotNull
-    @Size(min=2, max=30, message="Color name length minimum 2 and 30" )
+    @Size(min=2, max=30, message="Category type length minimum 2 and 30" )
     private String type;
     @NotNull
-    @Size(min=2, max=120, message="Color name length minimum 2 and 120" )
+    @Size(min=2, max=120, message="Category description length minimum 2 and 120" )
     private String description;
 	public Long getId() {
 		return id;

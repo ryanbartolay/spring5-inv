@@ -8,6 +8,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.bartolay.inventory.form.BrandForm;
 import com.bartolay.inventory.form.CategoryForm;
 import com.bartolay.inventory.form.ColorForm;
+import com.bartolay.inventory.form.CountryForm;
+import com.bartolay.inventory.form.ModelForm;
+import com.bartolay.inventory.services.BrandService;
 import com.bartolay.inventory.services.CompanyService;
 
 @Controller
@@ -15,6 +18,8 @@ public class StockController {
 
 	@Autowired
 	private CompanyService companyService;
+	@Autowired
+	private BrandService brandService;
 	
 	@RequestMapping(value="/brands")
 	public ModelAndView brandsList() {
@@ -47,15 +52,20 @@ public class StockController {
 	
 	@RequestMapping(value="/countries")
 	public ModelAndView countries() {
-		ModelAndView model = new ModelAndView("construction");
+		ModelAndView model = new ModelAndView("stock/index");
+		model.addObject("page", "Countries");
+		model.addObject("countryForm", new CountryForm());
+		model.addObject("html", "countries/list");
 		return model;
 	}
 	
 	@RequestMapping(value="/models")
 	public ModelAndView modelsList() {
-//		ModelAndView model = new ModelAndView("stock/index");
-		ModelAndView model = new ModelAndView("construction");
+		ModelAndView model = new ModelAndView("stock/index");
+//		ModelAndView model = new ModelAndView("construction");
 		model.addObject("page", "Models");
+		model.addObject("modelForm", new ModelForm());
+		model.addObject("brands", brandService.findAll());
 		model.addObject("html", "models/list");
 		return model;
 	}

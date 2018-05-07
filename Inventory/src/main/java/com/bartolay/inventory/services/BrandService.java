@@ -1,5 +1,6 @@
 package com.bartolay.inventory.services;
 
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -13,4 +14,6 @@ public interface BrandService {
 	
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
 	public Brand delete(Long id);
+	
+	public List<Brand> findAll();
 }
