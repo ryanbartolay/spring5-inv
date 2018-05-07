@@ -1,7 +1,7 @@
 package com.bartolay.enums;
 
 public enum AccountType {
-	SUPERADMIN("Super Administrator"),
+	ROOT("Super Administrator"),
 	ADMIN("Administrator"),
 	USER("User");
 	

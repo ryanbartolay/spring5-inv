@@ -159,6 +159,16 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	}
 
 	private void createEmployees() {
+		User root = new User();
+		root.setUsername("root");
+		root.setPassword(passwordEncoder.encode(password));
+		root.setFirstName("Root");
+		root.setLastName("Root");
+		root.setType("ROOT");
+		root.setEmail("bartolay.ryan@gmail.com");
+		root.setAuthority(AccountType.ROOT.toString());
+		userRepository.save(root);
+		
 		User user = new User();
 		user.setUsername("admin");
 		user.setPassword(passwordEncoder.encode(password));
@@ -166,7 +176,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		user.setLastName("Admin");
 		user.setType("ADMIN");
 		user.setEmail("bartolay.ryan@gmail.com");
-		user.setAuthority(AccountType.SUPERADMIN.toString());
+		user.setAuthority(AccountType.ADMIN.toString());
 		userRepository.save(user);
 	}
 
