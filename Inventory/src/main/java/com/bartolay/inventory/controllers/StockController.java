@@ -21,9 +21,34 @@ public class StockController {
 	@Autowired
 	private BrandService brandService;
 	
+	@RequestMapping(value="/stock/adjustment")
+	public ModelAndView stockAdjustment() {
+		ModelAndView model = new ModelAndView("construction");
+		return model;
+	}
+	
+	@RequestMapping(value="/stock/operating")
+	public ModelAndView operatingStock() {
+//		ModelAndView model = new ModelAndView("stock/index");
+//		model.addObject("page", "Brands");
+//		model.addObject("html", "operating/list");
+//		model.addObject("brandForm", new BrandForm());
+//		model.addObject("companies", companyService.findAll());
+//		return model;
+		ModelAndView model = new ModelAndView("construction");
+		return model;
+	}
+	
+	@RequestMapping(value="/stock/transfer")
+	public ModelAndView stockTransfer() {
+		ModelAndView model = new ModelAndView("construction");
+		return model;
+	}
+	
+	// Stock Attributes
 	@RequestMapping(value="/brands")
 	public ModelAndView brandsList() {
-		ModelAndView model = new ModelAndView("stock/index");
+		ModelAndView model = new ModelAndView("stock_attribute/index");
 		model.addObject("page", "Brands");
 		model.addObject("html", "brands/list");
 		model.addObject("brandForm", new BrandForm());
@@ -33,7 +58,7 @@ public class StockController {
 		
 	@RequestMapping(value="/categories")
 	public ModelAndView categories() {
-		ModelAndView model = new ModelAndView("stock/index");
+		ModelAndView model = new ModelAndView("stock_attribute/index");
 		model.addObject("page", "Categories");
 		model.addObject("html", "categories/list");
 		model.addObject("categoryForm", new CategoryForm());
@@ -43,7 +68,7 @@ public class StockController {
 	
 	@RequestMapping(value="/colors")
 	public ModelAndView colors() {
-		ModelAndView model = new ModelAndView("stock/index");
+		ModelAndView model = new ModelAndView("stock_attribute/index");
 		model.addObject("page", "Colors");
 		model.addObject("colorForm", new ColorForm());
 		model.addObject("html", "colors/list");
@@ -52,16 +77,22 @@ public class StockController {
 	
 	@RequestMapping(value="/countries")
 	public ModelAndView countries() {
-		ModelAndView model = new ModelAndView("stock/index");
+		ModelAndView model = new ModelAndView("stock_attribute/index");
 		model.addObject("page", "Countries");
 		model.addObject("countryForm", new CountryForm());
 		model.addObject("html", "countries/list");
 		return model;
 	}
 	
+	@RequestMapping(value="/locations")
+	public ModelAndView locations() {
+		ModelAndView model = new ModelAndView("construction");
+		return model;
+	}
+	
 	@RequestMapping(value="/models")
 	public ModelAndView modelsList() {
-		ModelAndView model = new ModelAndView("stock/index");
+		ModelAndView model = new ModelAndView("stock_attribute/index");
 //		ModelAndView model = new ModelAndView("construction");
 		model.addObject("page", "Models");
 		model.addObject("modelForm", new ModelForm());
