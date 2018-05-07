@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "invoices")
+@Deprecated
 public class Invoice implements Serializable {
     
     @Id

@@ -13,11 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
+@Deprecated
 public class Sale implements Serializable {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id

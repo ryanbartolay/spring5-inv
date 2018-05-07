@@ -18,12 +18,10 @@ public class ModelBootstrap implements ApplicationListener<ContextRefreshedEvent
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
 		
 		Model m = new Model();
-		m.setSerial(1000);
 		m.setDescription("Test Model");
 		modelRepository.save(m);
 		
 		Model m2 = new Model();
-		m2.setSerial(1001);
 		m2.setDescription("Test Model 2");
 		modelRepository.save(m2);
 		

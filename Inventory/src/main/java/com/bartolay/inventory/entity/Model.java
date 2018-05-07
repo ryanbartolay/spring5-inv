@@ -16,19 +16,25 @@ public class Model {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "model_generator")
 	@SequenceGenerator(name="model_generator", sequenceName = "MOD_SER_SEQ")
 	@Column(name = "id", updatable = false, nullable = false)
-	private Integer serial;
+	private Long id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "brand_code")
+    @JoinColumn(name = "brand_id")
     private Brand brand;
 	
 	private String description;
 	
-	public Integer getSerial() {
-		return serial;
+	public Long getId() {
+		return id;
 	}
-	public void setSerial(Integer serial) {
-		this.serial = serial;
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public Brand getBrand() {
+		return brand;
+	}
+	public void setBrand(Brand brand) {
+		this.brand = brand;
 	}
 	public String getDescription() {
 		return description;
@@ -38,6 +44,6 @@ public class Model {
 	}
 	@Override
 	public String toString() {
-		return "Model [serial=" + serial + ", description=" + description + "]";
+		return "Model [id=" + id + ", description=" + description + "]";
 	}
 }
