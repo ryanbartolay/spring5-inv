@@ -2,7 +2,9 @@ package com.bartolay.inventory.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.bartolay.inventory.form.BrandForm;
@@ -10,6 +12,10 @@ import com.bartolay.inventory.form.CategoryForm;
 import com.bartolay.inventory.form.ColorForm;
 import com.bartolay.inventory.form.CountryForm;
 import com.bartolay.inventory.form.ModelForm;
+import com.bartolay.inventory.itemForm.ItemForm;
+import com.bartolay.inventory.repositories.BrandRepository;
+import com.bartolay.inventory.repositories.CategoryRepository;
+import com.bartolay.inventory.repositories.ColorRepository;
 import com.bartolay.inventory.services.BrandService;
 import com.bartolay.inventory.services.CompanyService;
 
@@ -21,21 +27,28 @@ public class StockController {
 	@Autowired
 	private BrandService brandService;
 	
+	@Autowired
+	private BrandRepository brandRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
+	
+	@Autowired
+	private ColorRepository colorRepository;
+	
 	@RequestMapping(value="/stock/adjustment")
 	public ModelAndView stockAdjustment() {
 		ModelAndView model = new ModelAndView("construction");
 		return model;
 	}
 	
-	@RequestMapping(value="/stock/operating")
+	@RequestMapping(value="/stock/opening")
 	public ModelAndView operatingStock() {
-//		ModelAndView model = new ModelAndView("stock/index");
-//		model.addObject("page", "Brands");
-//		model.addObject("html", "operating/list");
-//		model.addObject("brandForm", new BrandForm());
-//		model.addObject("companies", companyService.findAll());
-//		return model;
-		ModelAndView model = new ModelAndView("construction");
+		ModelAndView model = new ModelAndView("stock/index");
+		model.addObject("page", "Opening Stock");
+		model.addObject("html", "opening/list");
+		model.addObject("brandForm", new BrandForm());
+		model.addObject("companies", companyService.findAll());
 		return model;
 	}
 	
@@ -83,6 +96,21 @@ public class StockController {
 		model.addObject("html", "countries/list");
 		return model;
 	}
+	
+	@RequestMapping(value="/items", method=RequestMethod.GET)
+	public ModelAndView viewItems(Model model) {
+		
+		ModelAndView mav = new ModelAndView("stock_attribute/index");
+		mav.addObject("page", "Items");
+		mav.addObject("brands", brandRepository.findByEnabledTrue());
+		mav.addObject("categories", categoryRepository.findByEnabledTrue());
+		mav.addObject("colors", colorRepository.findAll());
+		mav.addObject("title", "Items");
+		mav.addObject("itemForm", new ItemForm());
+		mav.addObject("html", "/items/list");
+		
+		return mav;
+	}	
 	
 	@RequestMapping(value="/locations")
 	public ModelAndView locations() {

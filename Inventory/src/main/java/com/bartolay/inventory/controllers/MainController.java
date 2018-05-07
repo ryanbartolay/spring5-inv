@@ -16,10 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.bartolay.inventory.form.CompanyForm;
-import com.bartolay.inventory.itemForm.ItemForm;
-import com.bartolay.inventory.repositories.BrandRepository;
-import com.bartolay.inventory.repositories.CategoryRepository;
-import com.bartolay.inventory.repositories.ColorRepository;
 import com.bartolay.inventory.services.CompanyService;
 
 @Controller
@@ -27,15 +23,6 @@ public class MainController {
 
 	@Autowired
 	private CompanyService companyService;
-	
-	@Autowired
-	private BrandRepository brandRepository;
-	
-	@Autowired
-	private CategoryRepository categoryRepository;
-	
-	@Autowired
-	private ColorRepository colorRepository;
 	
 	@RequestMapping(value="/")
 	public String getDemo() {
@@ -80,20 +67,6 @@ public class MainController {
 		mav.addObject("html", "list");
 		return mav;
 	}
-	
-	@RequestMapping(value="/items", method=RequestMethod.GET)
-	public ModelAndView viewItems(Model model) {
-		
-		ModelAndView mav = new ModelAndView("generic");
-		mav.addObject("brands", brandRepository.findByEnabledTrue());
-		mav.addObject("categories", categoryRepository.findByEnabledTrue());
-		mav.addObject("colors", colorRepository.findAll());
-		mav.addObject("title", "Items");
-		mav.addObject("itemForm", new ItemForm());
-		mav.addObject("html", "/items/list");
-		
-		return mav;
-	}	
 	
 	@RequestMapping(value="/flot")
 	public String flot() {

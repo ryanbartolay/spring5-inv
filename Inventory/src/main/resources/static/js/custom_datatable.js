@@ -15,3 +15,22 @@ function customDatatable(table, url, columns, columnDefs) {
 	});
 	
 }
+
+/* custom datatable */
+function customFixedDatatable(table, url, columns, columnDefs) {
+	
+	return table.DataTable({
+		responsive : true,
+		searching: false, 
+		paging: false,
+		bInfo: false,
+		ajax: {
+			url: url
+		},
+		processing: true,
+        serverSide: true,
+        columns: columns,
+        columnDefs: columnDefs
+	});
+	
+}
