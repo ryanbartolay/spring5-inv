@@ -49,6 +49,10 @@ public class Item {
 	private Model model;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "default_unit_id", nullable=false)
+	private Unit defaultUnit;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "created_by", nullable=false, updatable=false)
 	private User createdBy;
 	
@@ -97,6 +101,14 @@ public class Item {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Unit getDefaultUnit() {
+		return defaultUnit;
+	}
+
+	public void setDefaultUnit(Unit defaultUnit) {
+		this.defaultUnit = defaultUnit;
 	}
 
 	public Category getCategory() {

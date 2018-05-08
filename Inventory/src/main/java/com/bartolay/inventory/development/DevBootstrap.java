@@ -201,6 +201,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		item.setColor(colorRepository.findByName("red"));
 		item.setCategory(categoryRepository.findById((long) 1).get());
 		item.setCode("ryan1234");
+		item.setDefaultUnit(unitRepository.findById(1).get());
 		item.setName("HyperDunk Series X 2");
 		item.setCreatedBy(userRepository.findByUsername("admin"));
 		item.setEnabled(true);
@@ -211,6 +212,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		item2.setColor(colorRepository.findByName("black"));
 		item2.setCategory(categoryRepository.findById((long) 2).get());
 		item2.setCode("ryan1235");
+		item2.setDefaultUnit(unitRepository.findById(2).get());
 		item2.setName("HyperDunk Series X 3");
 		item2.setCreatedBy(userRepository.findByUsername("admin"));
 		item2.setEnabled(true);
