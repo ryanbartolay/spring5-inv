@@ -1,5 +1,7 @@
 package com.bartolay.inventory.entity;
 
+import java.math.BigInteger;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,7 +32,7 @@ public class ItemUnit {
 	private Unit unit;
 	
 	@Column(name="rate", nullable=false)
-	private Double rate;
+	private BigInteger rate;
 
 	public Long getId() {
 		return id;
@@ -48,11 +50,11 @@ public class ItemUnit {
 		this.unit = unit;
 	}
 
-	public Double getRate() {
+	public BigInteger getRate() {
 		return rate;
 	}
 
-	public void setRate(Double rate) {
+	public void setRate(BigInteger rate) {
 		this.rate = rate;
 	}
 
