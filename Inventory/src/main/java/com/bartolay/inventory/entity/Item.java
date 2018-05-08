@@ -1,6 +1,8 @@
 package com.bartolay.inventory.entity;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -51,6 +54,9 @@ public class Item {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "default_unit_id", nullable=false)
 	private Unit defaultUnit;
+	
+	@OneToMany(mappedBy = "item", fetch=FetchType.LAZY)
+	private Set<ItemUnit> itemUnits;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "created_by", nullable=false, updatable=false)
@@ -189,6 +195,13 @@ public class Item {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
+	}
+	public Set<ItemUnit> getItemUnits() {
+		return itemUnits;
+	}
+
+	public void setItemUnits(Set<ItemUnit> itemUnits) {
+		this.itemUnits = itemUnits;
 	}
 
 	@Override

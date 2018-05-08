@@ -23,7 +23,7 @@ import com.bartolay.inventory.services.OpeningStockService;
 public class OpeningStockServiceImpl implements OpeningStockService {
 
 	@Autowired
-	private DatatableRepository categoryDataTableRepository;
+//	private DatatableRepository categoryDataTableRepository;
 	
 	@Override
 	public List<OpeningStock> findAll() {
@@ -33,17 +33,17 @@ public class OpeningStockServiceImpl implements OpeningStockService {
 
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
-		DatatableParameter parameter = new DatatableParameter(requestMap);
-		JSONArray array = categoryDataTableRepository.findAllData(parameter);
-		long recordsTotal = categoryDataTableRepository.findAllCount(parameter);
+//		DatatableParameter parameter = new DatatableParameter(requestMap);
+//		JSONArray array = categoryDataTableRepository.findAllData(parameter);
+//		long recordsTotal = categoryDataTableRepository.findAllCount(parameter);
+//		
+//		JSONObject object = new JSONObject();
+//		object.put("data", array);
+//		object.put("recordsTotal", recordsTotal);
+//		object.put("recordsFiltered", recordsTotal);
+//		object.put("draw", parameter.getDraw());
 		
-		JSONObject object = new JSONObject();
-		object.put("data", array);
-		object.put("recordsTotal", recordsTotal);
-		object.put("recordsFiltered", recordsTotal);
-		object.put("draw", parameter.getDraw());
-		
-		return object;
+		return null;
 	}
 
 	@Override

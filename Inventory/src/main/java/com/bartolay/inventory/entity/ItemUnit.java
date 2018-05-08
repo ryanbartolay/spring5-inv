@@ -13,13 +13,17 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="item_units")
-public class ItemUnits {
+public class ItemUnit {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_units_generator")
 	@SequenceGenerator(name="item_units_generator", sequenceName = "ITEM_UNITS_SER_SEQ")
 	@Column(name = "id", updatable = false, nullable = false)
 	private Long id;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="item_id", nullable=false, updatable=true)
+	private Item item;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "unit_id", nullable=false)
