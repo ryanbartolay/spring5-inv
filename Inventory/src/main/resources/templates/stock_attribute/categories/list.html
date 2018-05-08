@@ -115,8 +115,8 @@
 	var table = $('#category-datatable');
 	var datatable = customDatatable(table, '/api/datatable/categories', 
 			[
-            	{ "data": "type", "name" : "Type", "title" : "Type",},
-            	{ "data": "description", "name" : "Description", "title" : "Description",},
+            	{ "data": "name" },
+            	{ "data": "description" },
         	],
         	[ 
         		{

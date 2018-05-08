@@ -44,12 +44,12 @@ public class CategoryDataTableRepositoryImpl extends RepositoryComponent impleme
 
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT b.* FROM categories b ";
+			String SQL = "SELECT * FROM category ";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
 			if(datatableParameter.getSearch() != null) {
-				SQL += " WHERE b.type like ? OR b.description like ?";
+				SQL += " WHERE type like ? OR description like ?";
 				SQL_PARAMS.add(datatableParameter.getSearch() + "%");
 				SQL_PARAMS.add(datatableParameter.getSearch() + "%");
 			}
@@ -73,7 +73,7 @@ public class CategoryDataTableRepositoryImpl extends RepositoryComponent impleme
 				public JSONObject mapRow(ResultSet rs, int arg1) throws SQLException {
 					JSONObject obj = new JSONObject();
 					obj.put("id", rs.getLong("id"));
-					obj.put("type", rs.getString("type"));
+					obj.put("name", rs.getString("name"));
 					obj.put("description", rs.getString("description"));
 					return obj;
 				}
