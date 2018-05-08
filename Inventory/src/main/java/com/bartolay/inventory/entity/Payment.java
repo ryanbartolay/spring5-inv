@@ -1,5 +1,6 @@
 package com.bartolay.inventory.entity;
 
+@Deprecated
 public class Payment {
     
     private double subTotal;

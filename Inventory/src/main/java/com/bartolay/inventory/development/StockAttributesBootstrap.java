@@ -10,7 +10,7 @@ import com.bartolay.inventory.entity.Model;
 import com.bartolay.inventory.repositories.ModelRepository;
 
 @Component
-public class ModelBootstrap implements ApplicationListener<ContextRefreshedEvent> {
+public class StockAttributesBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
 	@Autowired
 	private ModelRepository modelRepository;
