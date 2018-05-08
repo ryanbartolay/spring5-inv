@@ -24,6 +24,11 @@ public class Model {
 	
 	private String description;
 	
+	public Model() {
+	}
+	public Model(Long id) {
+		this.id=id;
+	}
 	public Long getId() {
 		return id;
 	}

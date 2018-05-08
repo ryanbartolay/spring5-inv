@@ -58,6 +58,10 @@ public class ItemServiceImpl implements ItemService {
 		item.setColor(itemForm.getColor());
 		item.setCreatedBy(userCredentials.getLoggedInUser());
 		item.setEnabled(true);
+		item.setDefaultUnit(itemForm.getUnit());
+		item.setItemUnits(itemForm.getItemUnits());
+		item.setModel(itemForm.getModel());
+		item.setSize(itemForm.getSize());
 		return itemRepository.save(item);
 	}
 
@@ -70,6 +74,10 @@ public class ItemServiceImpl implements ItemService {
 		item.setCategory(itemForm.getCategory());
 		item.setColor(itemForm.getColor());
 		item.setUpdatedBy(userCredentials.getLoggedInUser());
+		item.setDefaultUnit(itemForm.getUnit());
+		item.setItemUnits(itemForm.getItemUnits());
+		item.setModel(itemForm.getModel());
+		item.setSize(itemForm.getSize());
 		return itemRepository.save(item);
 	}
 

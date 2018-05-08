@@ -77,6 +77,9 @@ public class Item {
 	@Column(nullable=false)
 	private boolean enabled;
 	
+	@Column(nullable=false)
+	private String size;;
+	
 	public Item() {
 	
 	}
@@ -204,6 +207,14 @@ public class Item {
 		this.itemUnits = itemUnits;
 	}
 
+	public String getSize() {
+		return size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -227,4 +238,6 @@ public class Item {
 				+ ", color=" + color + ", model=" + model + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
 				+ ", createdDate=" + createdDate + ", updatedDated=" + updatedDated + ", enabled=" + enabled + "]";
 	}
+	
+	
 }

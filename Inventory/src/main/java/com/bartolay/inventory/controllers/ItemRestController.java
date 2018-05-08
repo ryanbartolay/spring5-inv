@@ -59,7 +59,7 @@ public class ItemRestController {
 		}
 
 		ApiResponse response = null;
-		
+		System.err.println("getItemUnits : "+itemForm.getItemUnits());
 		try {
 			Item item = itemService.create(itemForm);
 

@@ -16,6 +16,10 @@ import com.bartolay.inventory.itemForm.ItemForm;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CategoryRepository;
 import com.bartolay.inventory.repositories.ColorRepository;
+import com.bartolay.inventory.repositories.CountryRepository;
+import com.bartolay.inventory.repositories.ModelRepository;
+import com.bartolay.inventory.repositories.SupplierRepository;
+import com.bartolay.inventory.repositories.UnitRepository;
 import com.bartolay.inventory.services.BrandService;
 import com.bartolay.inventory.services.CompanyService;
 
@@ -35,6 +39,14 @@ public class StockController {
 	
 	@Autowired
 	private ColorRepository colorRepository;
+	@Autowired
+	private SupplierRepository supplierRepository;
+	@Autowired
+	private CountryRepository countryRepository;
+	@Autowired
+	private UnitRepository unitRepository;
+	@Autowired
+	private ModelRepository modelRepository;
 	
 	@RequestMapping(value="/stock/adjustment")
 	public ModelAndView stockAdjustment() {
@@ -105,6 +117,11 @@ public class StockController {
 		mav.addObject("brands", brandRepository.findByEnabledTrue());
 		mav.addObject("categories", categoryRepository.findByEnabledTrue());
 		mav.addObject("colors", colorRepository.findAll());
+		mav.addObject("suppliers", supplierRepository.findAll());
+		mav.addObject("countries", countryRepository.findAll());
+		mav.addObject("units", unitRepository.findAll());
+		mav.addObject("models", modelRepository.findAll());
+		
 		mav.addObject("title", "Items");
 		mav.addObject("itemForm", new ItemForm());
 		mav.addObject("html", "/items/list");

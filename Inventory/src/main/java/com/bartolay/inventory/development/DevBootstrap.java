@@ -14,8 +14,10 @@ import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Category;
 import com.bartolay.inventory.entity.Color;
 import com.bartolay.inventory.entity.Company;
+import com.bartolay.inventory.entity.Country;
 import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.Location;
+import com.bartolay.inventory.entity.Model;
 import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.entity.Unit;
 import com.bartolay.inventory.entity.User;
@@ -23,6 +25,7 @@ import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CategoryRepository;
 import com.bartolay.inventory.repositories.ColorRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
+import com.bartolay.inventory.repositories.CountryRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.SupplierRepository;
@@ -52,8 +55,6 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	@Autowired
 	private CompanyRepository companyRepository;
 
-	@Autowired
-	private ItemRepository itemRepository;
 	
 	@Autowired
 	private LocationRepository locationRepository;
@@ -66,6 +67,9 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	
 	@Autowired
 	private UnitRepository unitRepository;
+	
+	@Autowired
+	private CountryRepository countryRepository;
 	
 	private User admin;
 
@@ -87,8 +91,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		
 		createUnits();
 		
-		// need to create this as this has many dependencies
-		createItems();
+		createCountries();
 	}
 
 
@@ -195,30 +198,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		colorRepository.save(black);
 	}
 
-	private void createItems() {
-		Item item = new Item();
-		item.setBrand(brandRepository.findById((long) 1).get());
-		item.setColor(colorRepository.findByName("red"));
-		item.setCategory(categoryRepository.findById((long) 1).get());
-		item.setCode("ryan1234");
-		item.setDefaultUnit(unitRepository.findById(1).get());
-		item.setName("HyperDunk Series X 2");
-		item.setCreatedBy(userRepository.findByUsername("admin"));
-		item.setEnabled(true);
-		
-		itemRepository.save(item);
-		Item item2 = new Item();
-		item2.setBrand(brandRepository.findById((long) 1).get());
-		item2.setColor(colorRepository.findByName("black"));
-		item2.setCategory(categoryRepository.findById((long) 2).get());
-		item2.setCode("ryan1235");
-		item2.setDefaultUnit(unitRepository.findById(2).get());
-		item2.setName("HyperDunk Series X 3");
-		item2.setCreatedBy(userRepository.findByUsername("admin"));
-		item2.setEnabled(true);
-		
-		itemRepository.save(item2);
-	}
+	
 
 	private void createCompaniesAndBrand() {
 		// creating companies
@@ -310,4 +290,15 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		categoryRepository.save(category);
 	}
 
+	private void createCountries() {
+		Country country1 = new Country();
+		country1.setCode("SYR");
+		country1.setName("Syria");
+		countryRepository.save(country1);
+		
+		Country country2 = new Country();
+		country2.setCode("ARE");
+		country2.setName("United Arab Emirates");
+		countryRepository.save(country2);
+	}
 }

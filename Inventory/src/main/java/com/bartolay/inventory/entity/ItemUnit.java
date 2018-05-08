@@ -33,7 +33,9 @@ public class ItemUnit {
 	
 	@Column(name="rate", nullable=false)
 	private BigInteger rate;
-
+	
+	
+	
 	public Long getId() {
 		return id;
 	}
