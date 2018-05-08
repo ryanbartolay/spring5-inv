@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -37,10 +38,12 @@ public class StockTransfer {
 	@Column(name="transaction_date")
 	private Date transactionDate;
 	
-	@Column(name="from_location", nullable=false, updatable=true)
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="from_location_id")
 	private Location fromLocation;
 	
-	@Column(name="to_location", nullable=false, updatable=true)
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="to_location_id")
 	private Location toLocation;
 	
 	@Column(name="created_date", nullable=false, updatable=false)

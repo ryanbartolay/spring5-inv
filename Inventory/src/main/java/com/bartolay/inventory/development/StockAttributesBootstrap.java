@@ -7,13 +7,18 @@ import org.springframework.stereotype.Component;
 
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Model;
+import com.bartolay.inventory.entity.Unit;
 import com.bartolay.inventory.repositories.ModelRepository;
+import com.bartolay.inventory.repositories.UnitRepository;
 
 @Component
 public class StockAttributesBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
 	@Autowired
 	private ModelRepository modelRepository;
+	
+	@Autowired
+	private UnitRepository unitRepository;
 	
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
@@ -27,6 +32,7 @@ public class StockAttributesBootstrap implements ApplicationListener<ContextRefr
 		m2.setDescription("Test Model 2");
 		m2.setBrand(new Brand(2));
 		modelRepository.save(m2);
+		
 		
 	}
 

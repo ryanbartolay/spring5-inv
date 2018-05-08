@@ -1,9 +1,12 @@
 package com.bartolay.inventory.entity.stock;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -18,10 +21,18 @@ public class OpeningStockItem {
 	@SequenceGenerator(name="stock_opening_item_generator", sequenceName = "STOCK_OPENING_ITEM_SER_SEQ")
 	private Long id;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="item_id", nullable=false, updatable=true)
 	private Item item;
+	
 	private Double unit;
 	private String unitDesciption;
 	private Long quantity;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="opening_stock_id", nullable=false, updatable=true)
+	private OpeningStock openingStock;
+	
 	
 	public OpeningStockItem() {
 		
@@ -59,5 +70,10 @@ public class OpeningStockItem {
 	public void setQuantity(Long quantity) {
 		this.quantity = quantity;
 	}
-	
+	public OpeningStock getOpeningStock() {
+		return openingStock;
+	}
+	public void setOpeningStock(OpeningStock openingStock) {
+		this.openingStock = openingStock;
+	}
 }

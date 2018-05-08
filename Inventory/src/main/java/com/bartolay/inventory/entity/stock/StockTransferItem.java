@@ -1,16 +1,19 @@
 package com.bartolay.inventory.entity.stock;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.bartolay.inventory.entity.Item;
 
 @Entity
-@Table(name="stock_items")
+@Table(name="stock_transfer_items")
 public class StockTransferItem {
 	
 	@Id
@@ -18,6 +21,9 @@ public class StockTransferItem {
 	@SequenceGenerator(name="stock_items_generator", sequenceName = "STOCK_ITEMS_SER_SEQ")
 	private Long id;
 	
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "item_id", nullable=false, updatable=true)
 	private Item item;
 	private Double unit;
 	private String unitDesciption;

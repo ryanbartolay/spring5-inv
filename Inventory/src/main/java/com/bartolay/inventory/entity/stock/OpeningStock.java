@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -40,9 +41,11 @@ public class OpeningStock {
 	
 	private String description;
 	
+	@OneToMany(mappedBy = "openingStock", fetch=FetchType.LAZY)
 	private List<OpeningStockItem> items;
 	
-	@Column(name="location_id", nullable=false, updatable=true)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="location_id", nullable=false, updatable=true)
 	private Location location;
 	
 	@Column(name="created_date", nullable=false, updatable=false)

@@ -25,8 +25,11 @@ public class Unit {
 	@SequenceGenerator(name="unit_generator", sequenceName = "UNIT_SER_SEQ")
 	private int id;
 	
-	@Column(name="name")
+	@Column(name="name", nullable=false)
 	private String name;
+	
+	@Column(name="abbreviation", nullable=false)
+	private String abbreviation;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "created_by", nullable=false, updatable=false)
@@ -56,11 +59,15 @@ public class Unit {
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	public String getAbbreviation() {
+		return abbreviation;
+	}
+	public void setAbbreviation(String abbreviation) {
+		this.abbreviation = abbreviation;
+	}
 	public User getCreatedBy() {
 		return createdBy;
 	}

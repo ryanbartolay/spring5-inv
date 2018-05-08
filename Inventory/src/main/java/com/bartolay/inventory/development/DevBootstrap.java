@@ -1,5 +1,8 @@
 package com.bartolay.inventory.development;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -12,15 +15,18 @@ import com.bartolay.inventory.entity.Category;
 import com.bartolay.inventory.entity.Color;
 import com.bartolay.inventory.entity.Company;
 import com.bartolay.inventory.entity.Item;
-import com.bartolay.inventory.entity.Product;
+import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.Supplier;
+import com.bartolay.inventory.entity.Unit;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CategoryRepository;
 import com.bartolay.inventory.repositories.ColorRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
+import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.SupplierRepository;
+import com.bartolay.inventory.repositories.UnitRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 
 @Component
@@ -50,14 +56,26 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	private ItemRepository itemRepository;
 	
 	@Autowired
+	private LocationRepository locationRepository;
+	
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	private SupplierRepository supplierRepository;
+	
+	@Autowired
+	private UnitRepository unitRepository;
+	
+	private User admin;
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
 		createEmployees();
+		
+		admin = userRepository.findByUsername("admin");
+		
+		createLocations();
 		createCategories();
 		createCompaniesAndBrand();
 		createSuppliers();
@@ -65,10 +83,97 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		
 		System.err.println("------------------------------------------");
 		System.err.println(categoryRepository.findById((long) 1).get());
-		// need to create this as last
+
+		
+		createUnits();
+		
+		// need to create this as this has many dependencies
 		createItems();
 	}
 
+
+	private void createLocations() {
+		Location location = new Location();
+		location.setName("51.1 Tactical Showroom");
+		location.setFax("21315 local 442");
+		location.setEnabled(true);
+		
+		locationRepository.save(location);
+		
+		Location location2 = new Location();
+		location2.setName("Main Store Tactical 1 Showroom");
+		location2.setAbbreviation("MSR2");
+		location2.setEnabled(true);
+		
+		locationRepository.save(location2);
+		
+		Location location3 = new Location();
+		location3.setName("Colonel Shroom");
+		location3.setAddress("Manila, Philippines");
+		location3.setTelephone("029011234");
+		location3.setEnabled(true);
+		
+		locationRepository.save(location3);
+		
+		Location location4 = new Location();
+		location4.setName("Big Colonel Tactical Show room");
+		location4.setTelephone("10022-4233220");
+		location4.setEnabled(true);
+		
+		locationRepository.save(location4);
+		
+		Location location5 = new Location();
+		location5.setName("Colonel Trading");
+		location5.setAddress("Jeddah, Saudi Arabia");
+		location5.setEnabled(true);
+		
+		locationRepository.save(location5);
+	}
+
+
+	private void createUnits() {
+		
+		List<Unit> units = new ArrayList<>();
+		
+		Unit unit1 = new Unit();
+		unit1.setCreatedBy(admin);
+		unit1.setAbbreviation("pcs");
+		unit1.setName("Pieces");
+		units.add(unit1);
+		
+		Unit unit2 = new Unit();
+		unit2.setAbbreviation("pair");
+		unit2.setName("Pair");
+		unit2.setCreatedBy(admin);
+		units.add(unit2);
+		
+		Unit unit3 = new Unit();
+		unit3.setAbbreviation("meter");
+		unit3.setName("Meter");
+		unit3.setCreatedBy(admin);
+		units.add(unit3);
+		
+		Unit unit4 = new Unit();
+		unit4.setAbbreviation("meter");
+		unit4.setName("Meter");
+		unit4.setCreatedBy(admin);
+		units.add(unit4);
+		
+		Unit unit5 = new Unit();
+		unit5.setAbbreviation("ea");
+		unit5.setName("Each");
+		unit5.setCreatedBy(admin);
+		units.add(unit5);
+		
+		Unit unit6 = new Unit();
+		unit6.setAbbreviation("box");
+		unit6.setName("Box");
+		unit6.setCreatedBy(admin);
+		units.add(unit6);
+		
+		unitRepository.saveAll(units);
+	}
+	
 	private void createColors() {
 		Color red = new Color();
 		red.setName("red");	
@@ -203,12 +308,4 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 		categoryRepository.save(category);
 	}
 
-	private void createProducts() {
-		Product product = new Product();
-		product.setProductName("Kingston DDR3 Mega RAM");
-		product.setQuantity(0);
-		product.setPrice(1.156);
-		product.setSupplier(supplier);
-		product.setCategory(category);
-	}
 }

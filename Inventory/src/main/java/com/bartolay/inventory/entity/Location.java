@@ -19,9 +19,16 @@ public class Location {
 	@Column(name="name", nullable=false)
 	private String name;
 	
+	@Column(name="abbreviation", length=15, updatable=true, insertable=true)
 	private String abbreviation;
+	
+	@Column(name="telephone", length=50, updatable=true, insertable=true)
 	private String telephone;
+	
+	@Column(name="fax", length=50, updatable=true, insertable=true)
 	private String fax;
+	
+	@Column(name="address", length=200, updatable=true, insertable=true)
 	private String address;
 	
 	@Column(name="enabled", nullable=false)
