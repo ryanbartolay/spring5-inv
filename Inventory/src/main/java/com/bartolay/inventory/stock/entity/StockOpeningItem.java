@@ -1,4 +1,4 @@
-package com.bartolay.inventory.entity.stock;
+package com.bartolay.inventory.stock.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,26 +13,31 @@ import javax.persistence.Table;
 import com.bartolay.inventory.entity.Item;
 
 @Entity
-@Table(name="stock_transfer_items")
-public class StockTransferItem {
+@Table(name="stock_opening_item")
+public class StockOpeningItem {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_items_generator")
-	@SequenceGenerator(name="stock_items_generator", sequenceName = "STOCK_ITEMS_SER_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_opening_item_generator")
+	@SequenceGenerator(name="stock_opening_item_generator", sequenceName = "STOCK_OPENING_ITEM_SER_SEQ")
 	private Long id;
 	
-	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "item_id", nullable=false, updatable=true)
+	@JoinColumn(name="item_id", nullable=false, updatable=true)
 	private Item item;
+	
 	private Double unit;
 	private String unitDesciption;
 	private Long quantity;
 	
-	public StockTransferItem() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="stock_opening_id", nullable=false, updatable=true)
+	private StockOpening stockOpening;
+	
+	
+	public StockOpeningItem() {
 		
 	}
-	public StockTransferItem(Long id) {
+	public StockOpeningItem(Long id) {
 		this.id = id;
 	}
 	public Long getId() {
@@ -65,9 +70,10 @@ public class StockTransferItem {
 	public void setQuantity(Long quantity) {
 		this.quantity = quantity;
 	}
-	@Override
-	public String toString() {
-		return "StockTransferItem [id=" + id + ", item=" + item + ", unit=" + unit + ", unitDesciption="
-				+ unitDesciption + ", quantity=" + quantity + "]";
+	public StockOpening getStockOpening() {
+		return stockOpening;
+	}
+	public void setStockOpening(StockOpening stockOpening) {
+		this.stockOpening = stockOpening;
 	}
 }

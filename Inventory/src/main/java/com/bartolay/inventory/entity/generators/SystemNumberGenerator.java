@@ -12,7 +12,7 @@ import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
 
-import com.bartolay.inventory.entity.stock.StockOpening;
+import com.bartolay.inventory.stock.entity.StockOpening;
 
 public class SystemNumberGenerator implements IdentifierGenerator {
 

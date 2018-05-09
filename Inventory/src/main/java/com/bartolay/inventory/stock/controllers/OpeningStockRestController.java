@@ -1,4 +1,4 @@
-package com.bartolay.inventory.controllers;
+package com.bartolay.inventory.stock.controllers;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bartolay.inventory.entity.stock.StockOpening;
 import com.bartolay.inventory.form.OpeningStockForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
-import com.bartolay.inventory.services.StockOpeningService;
+import com.bartolay.inventory.stock.entity.StockOpening;
+import com.bartolay.inventory.stock.services.StockOpeningService;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
