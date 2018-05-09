@@ -12,6 +12,7 @@ import com.bartolay.inventory.form.CategoryForm;
 import com.bartolay.inventory.form.ColorForm;
 import com.bartolay.inventory.form.CountryForm;
 import com.bartolay.inventory.form.ModelForm;
+import com.bartolay.inventory.form.UnitForm;
 import com.bartolay.inventory.itemForm.ItemForm;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CategoryRepository;
@@ -152,7 +153,10 @@ public class StockController {
 
 	@RequestMapping(value="/unit")
 	public ModelAndView unit() {
-		ModelAndView model = new ModelAndView("construction");
+		ModelAndView model = new ModelAndView("stock_attribute/index");
+		model.addObject("page", "Units");
+		model.addObject("unitForm", new UnitForm());
+		model.addObject("html", "units/list");
 		return model;
 	}	
 }
