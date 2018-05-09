@@ -3,9 +3,9 @@ package com.bartolay.inventory.repositories;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.bartolay.inventory.entity.stock.StockOpening;
+import com.bartolay.inventory.entity.Size;
 
 @Repository
-public interface OpeningStockRepository extends CrudRepository<StockOpening, Long> {
+public interface SizeRepository extends CrudRepository<Size, Integer> {
 
 }

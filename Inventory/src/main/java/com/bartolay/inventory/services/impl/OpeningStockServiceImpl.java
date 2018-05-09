@@ -9,13 +9,13 @@ import javax.validation.Valid;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
-import com.bartolay.inventory.entity.stock.OpeningStock;
+import com.bartolay.inventory.entity.stock.StockOpening;
 import com.bartolay.inventory.form.OpeningStockForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
-import com.bartolay.inventory.repositories.impl.CategoryDataTableRepositoryImpl;
 import com.bartolay.inventory.services.OpeningStockService;
 
 @Service
@@ -23,43 +23,44 @@ import com.bartolay.inventory.services.OpeningStockService;
 public class OpeningStockServiceImpl implements OpeningStockService {
 
 	@Autowired
-//	private DatatableRepository categoryDataTableRepository;
+	@Qualifier("openingStockDatatableRepository")
+	private DatatableRepository openingStockDatatableRepository;
 	
 	@Override
-	public List<OpeningStock> findAll() {
+	public List<StockOpening> findAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
-//		DatatableParameter parameter = new DatatableParameter(requestMap);
-//		JSONArray array = categoryDataTableRepository.findAllData(parameter);
-//		long recordsTotal = categoryDataTableRepository.findAllCount(parameter);
-//		
-//		JSONObject object = new JSONObject();
-//		object.put("data", array);
-//		object.put("recordsTotal", recordsTotal);
-//		object.put("recordsFiltered", recordsTotal);
-//		object.put("draw", parameter.getDraw());
+		DatatableParameter parameter = new DatatableParameter(requestMap);
+		JSONArray array = openingStockDatatableRepository.findAllData(parameter);
+		long recordsTotal = openingStockDatatableRepository.findAllCount(parameter);
 		
-		return null;
+		JSONObject object = new JSONObject();
+		object.put("data", array);
+		object.put("recordsTotal", recordsTotal);
+		object.put("recordsFiltered", recordsTotal);
+		object.put("draw", parameter.getDraw());
+		
+		return object;
 	}
 
 	@Override
-	public OpeningStock create(@Valid OpeningStockForm openingStockForm) {
+	public StockOpening create(@Valid OpeningStockForm openingStockForm) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public OpeningStock update(@Valid OpeningStockForm openingStockForm) {
+	public StockOpening update(@Valid OpeningStockForm openingStockForm) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public OpeningStock delete(Long id) {
+	public StockOpening delete(Long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

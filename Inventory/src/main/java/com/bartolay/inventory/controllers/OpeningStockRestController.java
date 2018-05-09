@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bartolay.inventory.entity.stock.OpeningStock;
+import com.bartolay.inventory.entity.stock.StockOpening;
 import com.bartolay.inventory.form.OpeningStockForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
@@ -44,7 +44,7 @@ public class OpeningStockRestController {
 		ApiResponse response = null;
 		
 		try {
-			OpeningStock openingStock = openingStockService.create(openingStockForm);
+			StockOpening openingStock = openingStockService.create(openingStockForm);
 
 			response = new ApiResponse(HttpStatus.OK, "Succesfully created Document " + openingStock.getDocumentNumber());
 		} catch(Exception e) {
@@ -65,7 +65,7 @@ public class OpeningStockRestController {
 		}
 
 		try {
-			OpeningStock openingStock = openingStockService.update(openingStockForm);
+			StockOpening openingStock = openingStockService.update(openingStockForm);
 			response = new ApiResponse(HttpStatus.OK, "Succesfully updated Document " + openingStock.getDocumentNumber());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -79,7 +79,7 @@ public class OpeningStockRestController {
 
 		ApiResponse response = null;
 		try {
-			OpeningStock openingStock = openingStockService.delete(id);
+			StockOpening openingStock = openingStockService.delete(id);
 
 			response = new ApiResponse(HttpStatus.ACCEPTED, "Record deleted " + openingStock.getDocumentNumber());
 		} catch(Exception e) {

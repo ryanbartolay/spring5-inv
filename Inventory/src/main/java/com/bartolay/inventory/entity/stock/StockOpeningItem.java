@@ -13,8 +13,8 @@ import javax.persistence.Table;
 import com.bartolay.inventory.entity.Item;
 
 @Entity
-@Table(name="stock_opening_items")
-public class OpeningStockItem {
+@Table(name="stock_opening_item")
+public class StockOpeningItem {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_opening_item_generator")
@@ -30,14 +30,14 @@ public class OpeningStockItem {
 	private Long quantity;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="opening_stock_id", nullable=false, updatable=true)
-	private OpeningStock openingStock;
+	@JoinColumn(name="stock_opening_id", nullable=false, updatable=true)
+	private StockOpening stockOpening;
 	
 	
-	public OpeningStockItem() {
+	public StockOpeningItem() {
 		
 	}
-	public OpeningStockItem(Long id) {
+	public StockOpeningItem(Long id) {
 		this.id = id;
 	}
 	public Long getId() {
@@ -70,10 +70,10 @@ public class OpeningStockItem {
 	public void setQuantity(Long quantity) {
 		this.quantity = quantity;
 	}
-	public OpeningStock getOpeningStock() {
-		return openingStock;
+	public StockOpening getStockOpening() {
+		return stockOpening;
 	}
-	public void setOpeningStock(OpeningStock openingStock) {
-		this.openingStock = openingStock;
+	public void setStockOpening(StockOpening stockOpening) {
+		this.stockOpening = stockOpening;
 	}
 }

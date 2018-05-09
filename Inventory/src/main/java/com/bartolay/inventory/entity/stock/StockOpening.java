@@ -23,7 +23,7 @@ import com.bartolay.inventory.entity.User;
 
 @Entity
 @Table(name="stock_opening")
-public class OpeningStock {
+public class StockOpening {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_opening_generator")
@@ -41,8 +41,8 @@ public class OpeningStock {
 	
 	private String description;
 	
-	@OneToMany(mappedBy = "openingStock", fetch=FetchType.LAZY)
-	private List<OpeningStockItem> items;
+	@OneToMany(mappedBy = "stockOpening", fetch=FetchType.LAZY)
+	private List<StockOpeningItem> items;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="location_id", nullable=false, updatable=true)
@@ -70,11 +70,11 @@ public class OpeningStock {
 	@Column(name="enabled", nullable=false)
 	private boolean enabled;
 	
-	public OpeningStock() {
+	public StockOpening() {
 		super();
 	}
 
-	public OpeningStock(Long id) {
+	public StockOpening(Long id) {
 		super();
 		this.id = id;
 	}
@@ -200,7 +200,7 @@ public class OpeningStock {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		OpeningStock other = (OpeningStock) obj;
+		StockOpening other = (StockOpening) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
