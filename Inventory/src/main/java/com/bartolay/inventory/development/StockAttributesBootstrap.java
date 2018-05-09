@@ -149,7 +149,7 @@ public class StockAttributesBootstrap implements ApplicationListener<ContextRefr
 		item.setName("HyperDunk Series X 2");
 		item.setCreatedBy(admin);
 		item.setEnabled(true);
-		item.setSize("Small");
+		item.setSize(new Size(1));
 		item.setModel(new Model(1L));
 		itemRepository.save(item);
 
@@ -162,7 +162,7 @@ public class StockAttributesBootstrap implements ApplicationListener<ContextRefr
 		item2.setName("HyperDunk Series X 3");
 		item2.setCreatedBy(admin);
 		item2.setEnabled(true);
-		item2.setSize("Big");
+		item2.setSize(new Size(1));
 		item2.setModel(new Model(2L));
 		itemRepository.save(item2);
 	}

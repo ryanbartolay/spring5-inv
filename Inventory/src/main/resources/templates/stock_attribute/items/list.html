@@ -101,8 +101,12 @@
 													
 													<tr>
 														<th>Size</th>
-														<td><input class="form-control" th:field="*{size}"
-															maxlength="30"></td>
+														<td><select class="form-control" th:field="*{itemSize}">
+																<option selected value=" ">-- select an option
+																	--</option>
+																<option th:each="size : ${sizes}"
+																	th:value="${size.id}" th:text="${size.name}"></option>
+														</select></td>
 
 													</tr>
 													<tr>
@@ -286,14 +290,14 @@
         submitButtonLabel.text("Update");
         
         GET("/api/items/" + data['id'], function(data) {
-			console.log(data)
+			console.log("data : ", data)
         	form.find('#code').val(data.code);
         	form.find('#code').attr("readonly", "readonly");
         	form.find('#name').val(data.name);
         	form.find('#brand').val(data.brand.id);
         	form.find('#category').val(data.category.id);
-        	form.find('#color').val(data.color.id);
-        	form.find('#size').val(data.size);
+        	form.find('#color').val((data.color) ? data.color.id : ' ');
+        	form.find('#itemSize').val((data.size) ? data.size.id : ' ');
         	form.find('#model').val((data.model) ? data.model.id : ' ');
         	form.find('#unit').val((data.defaultUnit) ? data.defaultUnit.id : ' ');
         	form.find('#country').val((data.country) ? data.country.id : 1);

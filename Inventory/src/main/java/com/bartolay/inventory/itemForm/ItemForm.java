@@ -40,7 +40,7 @@ public class ItemForm {
 	private Model model;
 	
 	@NotNull(message="Size is required")
-	private String size;
+	private com.bartolay.inventory.entity.Size itemSize;
 	
 	@NotNull(message="Supplier is required")
 	private Supplier supplier;
@@ -121,12 +121,12 @@ public class ItemForm {
 		this.model = model;
 	}
 
-	public String getSize() {
-		return size;
+	public com.bartolay.inventory.entity.Size getItemSize() {
+		return itemSize;
 	}
 
-	public void setSize(String size) {
-		this.size = size;
+	public void setItemSize(com.bartolay.inventory.entity.Size itemSize) {
+		this.itemSize = itemSize;
 	}
 
 	public Supplier getSupplier() {

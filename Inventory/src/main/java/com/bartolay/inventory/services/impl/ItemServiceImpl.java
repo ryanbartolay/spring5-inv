@@ -61,7 +61,9 @@ public class ItemServiceImpl implements ItemService {
 		item.setDefaultUnit(itemForm.getUnit());
 		item.setItemUnits(itemForm.getItemUnits());
 		item.setModel(itemForm.getModel());
-		item.setSize(itemForm.getSize());
+		item.setSize(itemForm.getItemSize());
+		item.setCountry(itemForm.getCountry());
+		item.setSupplier(itemForm.getSupplier());
 		return itemRepository.save(item);
 	}
 
@@ -77,7 +79,9 @@ public class ItemServiceImpl implements ItemService {
 		item.setDefaultUnit(itemForm.getUnit());
 		item.setItemUnits(itemForm.getItemUnits());
 		item.setModel(itemForm.getModel());
-		item.setSize(itemForm.getSize());
+		item.setSize(itemForm.getItemSize());
+		item.setCountry(itemForm.getCountry());
+		item.setSupplier(itemForm.getSupplier());
 		return itemRepository.save(item);
 	}
 
