@@ -1,4 +1,4 @@
-package com.bartolay.inventory.entity.stock;
+package com.bartolay.inventory.stock.entity;
 
 import java.util.Date;
 import java.util.Set;
@@ -14,9 +14,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.bartolay.inventory.entity.Location;
@@ -26,6 +28,9 @@ import com.bartolay.inventory.entity.User;
 @Table(name="stock_opening")
 public class StockOpening {
 
+	@Transient
+	public static final String TABLE_NAME = "stock_opening";
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_opening_generator")
 	@SequenceGenerator(name="stock_opening_generator", sequenceName = "STOCK_OPENING_SER_SEQ")
@@ -33,13 +38,14 @@ public class StockOpening {
 
 	@GeneratedValue(generator = "UniqueIdGenerator")
 	@GenericGenerator(name = "UniqueIdGenerator", strategy = "com.bartolay.inventory.entity.generators.SystemNumberGenerator")
-	@Column(name="system_number", unique=true, updatable=false)
+	@Column(name="system_number", nullable=false, unique=true, updatable=false)
 	private String systemNumber;
 
 	@Column(name="document_number", unique=true)
 	private String documentNumber;
 
 	@Column(name="transaction_date", nullable=false)
+	@Type(type="date")
 	private Date transactionDate;
 
 	private String description;

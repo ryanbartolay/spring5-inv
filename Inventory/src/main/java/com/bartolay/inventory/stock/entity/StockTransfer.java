@@ -1,4 +1,4 @@
-package com.bartolay.inventory.entity.stock;
+package com.bartolay.inventory.stock.entity;
 
 import java.util.Date;
 

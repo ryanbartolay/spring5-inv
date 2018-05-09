@@ -1,4 +1,4 @@
-package com.bartolay.inventory.entity.stock;
+package com.bartolay.inventory.stock.entity;
 
 //@Entity
 //@Table(name="stock_adjust")

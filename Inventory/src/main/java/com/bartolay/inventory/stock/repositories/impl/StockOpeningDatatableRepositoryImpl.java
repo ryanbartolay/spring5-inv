@@ -1,4 +1,4 @@
-package com.bartolay.inventory.repositories.impl;
+package com.bartolay.inventory.stock.repositories.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +20,7 @@ import com.bartolay.inventory.repositories.DatatableRepository;
 
 @Repository
 @Qualifier("openingStockDatatableRepository")
-public class OpeningStockDatatableRepositoryImpl extends RepositoryComponent implements DatatableRepository {
+public class StockOpeningDatatableRepositoryImpl extends RepositoryComponent implements DatatableRepository {
 
 	@Override
 	public long findAllCount(DatatableParameter datatableParameter) {
