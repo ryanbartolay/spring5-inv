@@ -16,6 +16,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.bartolay.inventory.entity.Location;
@@ -29,29 +30,31 @@ public class StockOpening {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_opening_generator")
 	@SequenceGenerator(name="stock_opening_generator", sequenceName = "STOCK_OPENING_SER_SEQ")
 	private Long id;
-	
-	@Column(name="system_number", unique=true)
+
+	@GeneratedValue(generator = "UniqueIdGenerator")
+	@GenericGenerator(name = "UniqueIdGenerator", strategy = "com.bartolay.inventory.entity.generators.SystemNumberGenerator")
+	@Column(name="system_number", unique=true, updatable=false)
 	private String systemNumber;
-	
-	@Column(name="document_number", unique=true, nullable=false)
+
+	@Column(name="document_number", unique=true)
 	private String documentNumber;
-	
+
 	@Column(name="transaction_date", nullable=false)
 	private Date transactionDate;
-	
+
 	private String description;
-	
+
 	@OneToMany(mappedBy = "stockOpening", fetch=FetchType.LAZY)
 	private Set<StockOpeningItem> items;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="location_id", nullable=false, updatable=true)
+	@JoinColumn(name="location_id", nullable=false, updatable=false)
 	private Location location;
-	
+
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
 	private Date createdDate;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "created_by", nullable=false, updatable=false)
 	private User createdBy;
@@ -59,17 +62,17 @@ public class StockOpening {
 	@Column(name="updated_date")
 	@UpdateTimestamp
 	private Date updatedDated;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "updated_by", nullable=true, updatable=true)
 	private User updatedBy;
-	
+
 	@Column(name="draft", nullable=false)
 	private boolean draft;
-	
+
 	@Column(name="enabled", nullable=false)
 	private boolean enabled;
-	
+
 	public StockOpening() {
 		super();
 	}
@@ -118,7 +121,7 @@ public class StockOpening {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public Location getLocation() {
 		return location;
 	}

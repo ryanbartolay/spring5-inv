@@ -25,10 +25,10 @@ public class Unit {
 	@SequenceGenerator(name="unit_generator", sequenceName = "UNIT_SER_SEQ")
 	private int id;
 	
-	@Column(name="name", nullable=false)
+	@Column(name="name", nullable=false, unique=true, length=30)
 	private String name;
 	
-	@Column(name="abbreviation", nullable=false)
+	@Column(name="abbreviation", nullable=false, unique=true, length=6)
 	private String abbreviation;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

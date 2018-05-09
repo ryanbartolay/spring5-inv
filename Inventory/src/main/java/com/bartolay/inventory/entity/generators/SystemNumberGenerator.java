@@ -1,33 +1,50 @@
 package com.bartolay.inventory.entity.generators;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.stream.Stream;
 
 import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
 
+import com.bartolay.inventory.entity.stock.StockOpening;
+
 public class SystemNumberGenerator implements IdentifierGenerator {
 
-	private String prefix;
-	
 	@Override
-	public Serializable generate(SharedSessionContractImplementor session, Object obj) throws HibernateException {
-		String query = String.format("select %s from %s", 
-				session.getEntityPersister(obj.getClass().getName(), obj)
-				.getIdentifierPropertyName(),
-				obj.getClass().getSimpleName());
+	public Serializable generate(SharedSessionContractImplementor session, Object object)
+			throws HibernateException {
 
-		System.err.println("query " + query);
-		Stream ids = session.createQuery(query).stream();
+		Connection connection = session.connection();
 
-//		Long max = ids.map(o -> ((String) o).replace(prefix + "-", ""))
-//				.mapToLong(Long::parseLong)
-//				.max()
-//				.orElse(0L);
+		try {
+			StockOpening opening = (StockOpening) object;
+			System.err.println(opening.getDocumentNumber());
+			
+			Statement statement=connection.createStatement();
+			
+			
 
-//		return prefix + "-" + (max + 1);
+			ResultSet rs=statement.executeQuery("select count(systemnumber) as Id from stock_opening");
+
+			if(rs.next())
+			{
+				int id=rs.getInt(1)+101;
+				String generatedId = new Integer(id).toString();
+				System.out.println("Generated Id: " + generatedId);
+				return generatedId;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
 		return null;
 	}
-
 }

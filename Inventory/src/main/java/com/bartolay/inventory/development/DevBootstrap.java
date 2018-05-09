@@ -157,8 +157,8 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>,
 		units.add(unit2);
 		
 		Unit unit3 = new Unit();
-		unit3.setAbbreviation("meter");
-		unit3.setName("Meter");
+		unit3.setAbbreviation("cb");
+		unit3.setName("Cubic");
 		unit3.setCreatedBy(admin);
 		units.add(unit3);
 		

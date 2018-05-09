@@ -70,9 +70,9 @@
 	var table = $('#openingStock-datatable');
 	var datatable = customFixedDatatable(table, '/api/datatable/openingstock', 
 		[
-        	{ "data": "system_number" },
-        	{ "data": "document_number" },
-        	{ "data": "description" },
+        	{ data: "system_number" },
+        	{ data: "document_number" },
+        	{ data: "description", defaultContent: ""  },
     	],
     	[ 
     		/* {
