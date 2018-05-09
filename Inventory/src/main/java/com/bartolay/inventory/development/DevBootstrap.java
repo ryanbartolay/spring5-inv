@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.PriorityOrdered;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +34,7 @@ import com.bartolay.inventory.repositories.UnitRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 
 @Component
-public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> {
+public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
 
 	private String password = "123456a";
 
@@ -73,6 +74,11 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 	
 	private User admin;
 
+	@Override
+	public int getOrder() {
+		return 1;
+	}
+	
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
 		createEmployees();

@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.Ordered;
+import org.springframework.core.PriorityOrdered;
 import org.springframework.stereotype.Component;
 
 import com.bartolay.inventory.entity.Brand;
@@ -23,7 +25,7 @@ import com.bartolay.inventory.repositories.UnitRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 
 @Component
-public class StockAttributesBootstrap implements ApplicationListener<ContextRefreshedEvent> {
+public class StockAttributesBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
 
 	@Autowired
 	private ModelRepository modelRepository;
@@ -45,6 +47,11 @@ public class StockAttributesBootstrap implements ApplicationListener<ContextRefr
 
 	private User admin;
 
+	@Override
+	public int getOrder() {
+		return 2;
+	}
+	
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
 
