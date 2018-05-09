@@ -25,7 +25,7 @@ import com.bartolay.inventory.services.BrandService;
 import com.bartolay.inventory.services.CompanyService;
 
 @Controller
-public class StockController {
+public class StockAttributeController {
 
 	@Autowired
 	private CompanyService companyService;

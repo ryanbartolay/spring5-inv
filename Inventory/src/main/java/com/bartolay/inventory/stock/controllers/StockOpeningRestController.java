@@ -23,7 +23,7 @@ import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-public class OpeningStockRestController {
+public class StockOpeningRestController {
 
 	@Autowired
 	private StockOpeningService openingStockService;
