@@ -135,7 +135,7 @@
 										.
 									</div>
 									<div class="table-responsive">
-											<table class="table table-bordered table-striped">
+											<table class="table table-bordered table-striped" id="itemUnitTable">
 												<tbody>
 													<tr>
 														<td colspan="4" style="text-align: center;">ITEM UNITS</td>
@@ -154,7 +154,7 @@
 													</tr>
 													<tr id="available-item-unit_10"></tr>
 													<tr style="text-align: right;">
-														<td colspan="4"><button type="button" class="btn btn-primary add-item-unit">Add</button></td>
+														<td colspan="4"><button type="button" class="btn btn-primary add-item-unit" data-toggle="modal" data-target="#addItemUnitModal" data-backdrop="static" data-keyboard="false">Add</button></td>
 													</tr>
 
 													
@@ -212,6 +212,43 @@
 	</div>
 	<!-- /Delete Modal -->
 
+	<!-- Delete Modal -->
+	<div class="modal fade" id="addItemUnitModal" tabindex="-2"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">Add New Item Unit</h4>
+				</div>
+
+				<div class="modal-body">
+					<form>
+						<div class="form-group">
+							<label>Name</label>
+							<select class="form-control" name="unit">
+								<option selected value=" ">-- select an option --</option>
+								<option th:each="unit : ${units}" th:value="${unit.id}" th:text="${unit.name}"></option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label>Rate</label>
+							<input class="form-control" name="rate">
+						</div>
+					</form>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<a class="btn btn-danger" id="addItemUnitSubmit">Delete</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /Delete Modal -->
+
 
 	<div class="panel panel-default">
 		<!-- /.panel-heading -->
@@ -249,6 +286,7 @@
 	
 	var DOCS = $(document);
 	var formModal = $("#formModal");
+	var addItemUnitModal = $("#addItemUnitModal");
 	var modalLabel = formModal.find("#modalLabel");
 	var submitButtonLabel = $("#formModal #submit");
 	var form = $("#createItemForm");
@@ -335,25 +373,58 @@
 		datatable.ajax.reload( null, false ); // user paging is not reset on reload
 	});
     
-    
+	
+	
+
 	
     $(document).on("click", ".delete-item-unit", function(e){
-    	console.log($(this).parent().parent().remove())
+		var tr = $(this).parent().parent();
+		var val = tr.find('input[item="unit"]').val();
+		$("#createItemForm").find("#unit option[value='"+val+"']").removeAttr("disabled");
+		tr.remove()
     })
-    var index = 10;
+	var index = 10;
+	var selecteUnits = [];
     $(document).on("click", ".add-item-unit", function(e){
-    	var html = `
-    		<td><input class="form-control" maxlength="10" id="itemUnits`+index+`.unit.id" name="itemUnits[`+index+`].unit.id" value="0"></td>
-    		<td><input class="form-control" maxlength="10" id="itemUnits`+index+`.unit.name" name="itemUnits[`+index+`].unit.name" value=""></td>
-    		<td><input class="form-control" maxlength="10" id="itemUnits`+index+`.rate" name="itemUnits[`+index+`].rate" value=""></td>
-    		<td><button type="button" class="btn btn-danger delete-item-unit">Delete</button></td>
-    		`;
-    	var availUnit = $("#available-item-unit_"+index);
-    	console.log(availUnit.html(html))
-    	index++;
-    	availUnit.after('<tr id="available-item-unit_'+index+'"></tr> ');
+		var defUnit = form.find("#unit :selected").val();
+		addItemUnitModal.find("form").find("select option").removeAttr("disabled")
+		console.log(defUnit)
+		if(defUnit != " "){
+			selecteUnits.push({
+				"value" : defUnit,
+				"name" : form.find("#unit :selected").text()
+			})
+			addItemUnitModal.find("form").find("select option[value='"+defUnit+"']").attr("disabled", true)
+		}
+		
+		$("#itemUnitTable").find("tr.item-unit").map(function(index){
+			var addedUnit = $(this).find('input[item="unit"]').val();
+			addItemUnitModal.find("form").find("select option[value='"+addedUnit+"']").attr("disabled", true)
+			var inputs = addItemUnitModal.find("form").find("input");
+			inputs.map(function(i){
+				console.log($(this).attr("name", "itemUnits["+i+"].unit.name"))
+			})
+			
+		});
     	
-    })
+	})
+	
+	$(document).on("click", "#addItemUnitSubmit", function(){
+		var newUnitItemId = addItemUnitModal.find("form").find("select[name=\"unit\"] :selected").val();
+		var newUnitItemName = addItemUnitModal.find("form").find("select[name=\"unit\"] :selected").text();
+		var newUnitItemRate = addItemUnitModal.find("form").find("input[name=\"rate\"]").val();
+		
+		var html = `<tr class="item-unit">
+						<td><input class="form-control" maxlength="10" value="`+newUnitItemId+`" readonly item="unit"></td>
+						<td><input class="form-control" maxlength="10" value="`+newUnitItemName+`" readonly></td>
+						<td><input class="form-control" maxlength="10" value="`+newUnitItemRate+`" ></td>
+						<td><button type="button" class="btn btn-danger delete-item-unit">Delete</button></td>
+					</tr>`;
+		$("#createItemForm").find("#unit option[value='"+newUnitItemId+"']").attr("disabled", true);
+		$("#available-item-unit_10").before(html);
+		addItemUnitModal.find("form")[0].reset();
+		addItemUnitModal.modal("hide");
+	})
     
 /*]]>*/
 </script>

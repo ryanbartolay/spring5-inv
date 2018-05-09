@@ -54,7 +54,7 @@ public class ItemForm {
 	private Set<ItemUnit> itemUnits = new HashSet<>();
 	
 	public ItemForm() {
-		itemUnits.add(new ItemUnit());
+//		itemUnits.add(new ItemUnit());
 	}
 	
 	public Long getId() {
