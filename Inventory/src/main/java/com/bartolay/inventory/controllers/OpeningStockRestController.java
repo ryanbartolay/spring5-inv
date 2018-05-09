@@ -18,7 +18,7 @@ import com.bartolay.inventory.entity.stock.StockOpening;
 import com.bartolay.inventory.form.OpeningStockForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
-import com.bartolay.inventory.services.OpeningStockService;
+import com.bartolay.inventory.services.StockOpeningService;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -26,7 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class OpeningStockRestController {
 
 	@Autowired
-	private OpeningStockService openingStockService;
+	private StockOpeningService openingStockService;
 	
 	@Autowired
 	private StringUtils stringUtils;

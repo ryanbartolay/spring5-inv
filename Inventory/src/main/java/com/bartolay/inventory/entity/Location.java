@@ -14,7 +14,7 @@ public class Location {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "location_generator")
 	@SequenceGenerator(name="location_generator", sequenceName = "LOCATION_SER_SEQ")
 	@Column(name = "id", updatable = false, nullable = false)
-	private Long id;
+	private int id;
 	
 	@Column(name="name", nullable=false)
 	private String name;
@@ -38,16 +38,16 @@ public class Location {
 		super();
 	}
 
-	public Location(Long id) {
+	public Location(int id) {
 		super();
 		this.id = id;
 	}
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

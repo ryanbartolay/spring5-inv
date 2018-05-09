@@ -16,11 +16,11 @@ import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.entity.stock.StockOpening;
 import com.bartolay.inventory.form.OpeningStockForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
-import com.bartolay.inventory.services.OpeningStockService;
+import com.bartolay.inventory.services.StockOpeningService;
 
 @Service
 @Transactional
-public class OpeningStockServiceImpl implements OpeningStockService {
+public class StockOpeningServiceImpl implements StockOpeningService {
 
 	@Autowired
 	@Qualifier("openingStockDatatableRepository")

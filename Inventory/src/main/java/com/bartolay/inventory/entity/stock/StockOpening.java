@@ -1,7 +1,7 @@
 package com.bartolay.inventory.entity.stock;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,16 +33,16 @@ public class StockOpening {
 	@Column(name="system_number", unique=true)
 	private String systemNumber;
 	
-	@Column(name="document_number")
+	@Column(name="document_number", unique=true, nullable=false)
 	private String documentNumber;
 	
-	@Column(name="transaction_date")
+	@Column(name="transaction_date", nullable=false)
 	private Date transactionDate;
 	
 	private String description;
 	
 	@OneToMany(mappedBy = "stockOpening", fetch=FetchType.LAZY)
-	private List<StockOpeningItem> items;
+	private Set<StockOpeningItem> items;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="location_id", nullable=false, updatable=true)
@@ -173,6 +173,14 @@ public class StockOpening {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public Set<StockOpeningItem> getItems() {
+		return items;
+	}
+
+	public void setItems(Set<StockOpeningItem> items) {
+		this.items = items;
 	}
 
 	@Override

@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import com.bartolay.inventory.entity.stock.StockOpening;
 import com.bartolay.inventory.form.OpeningStockForm;
 
-public interface OpeningStockService {
+public interface StockOpeningService {
 	public List<StockOpening> findAll();
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
 	public StockOpening create(@Valid OpeningStockForm openingStockForm);
