@@ -12,8 +12,11 @@ public class StockController {
 
 	@RequestMapping(value="/stock/opening/create", method=RequestMethod.GET)
 	public ModelAndView datatableColor(ModelAndView mav) throws JsonProcessingException {
-		System.err.println(mav);
-		return null;
+		mav.setViewName("stock/index");
+		mav.addObject("page", "New Stock Opening");
+		mav.addObject("html", "/opening/edit");
+		mav.addObject("method", "POST");
+		return mav;
 		
 	}
 	

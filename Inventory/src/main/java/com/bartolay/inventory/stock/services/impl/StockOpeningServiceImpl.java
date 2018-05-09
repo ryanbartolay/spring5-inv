@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
-import com.bartolay.inventory.form.OpeningStockForm;
+import com.bartolay.inventory.form.StockOpeningForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
@@ -61,7 +61,7 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 	}
 
 	@Override
-	public StockOpening create(OpeningStockForm openingStockForm) {
+	public StockOpening create(StockOpeningForm openingStockForm) {
 		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(openingStockForm.getTransaction_date());
@@ -79,7 +79,7 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 	}
 
 	@Override
-	public StockOpening update(@Valid OpeningStockForm openingStockForm) {
+	public StockOpening update(@Valid StockOpeningForm openingStockForm) {
 		// TODO Auto-generated method stub
 		return null;
 	}

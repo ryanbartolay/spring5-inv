@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bartolay.inventory.form.OpeningStockForm;
+import com.bartolay.inventory.form.StockOpeningForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
 import com.bartolay.inventory.stock.entity.StockOpening;
@@ -37,7 +37,7 @@ public class StockOpeningRestController {
 	}
 	
 	@RequestMapping(value="/api/openingstock", method=RequestMethod.POST)
-	public String create(@Valid OpeningStockForm openingStockForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+	public String create(@Valid StockOpeningForm openingStockForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 		if (bindingResult.hasErrors()) {
 			throw new RestApiException(bindingResult);
 		}
@@ -56,7 +56,7 @@ public class StockOpeningRestController {
 	}
 	
 	@RequestMapping(value="/api/openingstock", method=RequestMethod.PUT)
-	public String update(@Valid OpeningStockForm openingStockForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+	public String update(@Valid StockOpeningForm openingStockForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		ApiResponse response = null;
 		

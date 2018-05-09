@@ -41,18 +41,18 @@ public class StockOpeningDatatableRepositoryImpl extends RepositoryComponent imp
 	public JSONArray findAllData(DatatableParameter datatableParameter) {
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT * FROM stock_opening ";
+			String SQL = "SELECT t1.id, t1.system_number, t1.document_number, t1.transaction_date, t1.description, t2.name as location_name FROM stock_opening t1 inner join location t2 on t1.location_id = t2.id ";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
 			if(datatableParameter.getSearch() != null) {
-				SQL += " WHERE document_number like ?";
+				SQL += " WHERE t1.system_number like ?";
 				SQL_PARAMS.add(datatableParameter.getSearch() + PERCENT);
 			}
 
 			// sort order by column
 			if(sortColumn != null && datatableParameter.getSortOrder() != null) {
-				SQL += " ORDER BY "+sortColumn.getData()+ " " + datatableParameter.getSortOrder().name();	
+				SQL += " ORDER BY t1."+sortColumn.getData()+ " " + datatableParameter.getSortOrder().name();	
 			}
 			
 			if(datatableParameter.getLength() > 0) {
@@ -70,6 +70,9 @@ public class StockOpeningDatatableRepositoryImpl extends RepositoryComponent imp
 					obj.put("system_number", rs.getString("system_number"));
 					obj.put("document_number", rs.getString("document_number"));
 					obj.put("description", rs.getString("description"));
+					obj.put("location_name", rs.getString("location_name"));
+					obj.put("transaction_date", rs.getString("transaction_date"));
+					
 					return obj;
 				}
 			});

@@ -6,7 +6,7 @@ import com.bartolay.inventory.entity.Location;
 
 import io.micrometer.core.lang.NonNull;
 
-public class OpeningStockForm {
+public class StockOpeningForm {
 	private Long id;
 	
 	private String document_number;
