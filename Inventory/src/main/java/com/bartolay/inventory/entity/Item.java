@@ -76,8 +76,17 @@ public class Item {
 	@Column(nullable=false)
 	private boolean enabled;
 	
-	@Column(nullable=false)
-	private String size;;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "size_id", nullable=true, updatable=true)
+	private Size size;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "country_id", nullable=true, updatable=true)
+	private Country country;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "supplier_id", nullable=true, updatable=true)
+	private Supplier supplier;
 	
 	public Item() {
 	
@@ -206,12 +215,28 @@ public class Item {
 		this.itemUnits = itemUnits;
 	}
 
-	public String getSize() {
+	public Size getSize() {
 		return size;
 	}
 
-	public void setSize(String size) {
+	public void setSize(Size size) {
 		this.size = size;
+	}
+	
+	public Country getCountry() {
+		return country;
+	}
+
+	public void setCountry(Country country) {
+		this.country = country;
+	}
+
+	public Supplier getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(Supplier supplier) {
+		this.supplier = supplier;
 	}
 
 	@Override

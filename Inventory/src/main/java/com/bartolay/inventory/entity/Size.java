@@ -24,7 +24,7 @@ public class Size {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "size_generator")
 	@SequenceGenerator(name="size_generator", sequenceName = "SIZE_SER_SEQ")
 	@Column(name = "id", updatable = false, nullable = false)
-	private Long id;
+	private Integer id;
 	
 	@Column(name="name", length=20, nullable=false, unique=true)
 	private String name;
@@ -49,15 +49,15 @@ public class Size {
 		
 	}
 	
-	public Size(Long id) {
+	public Size(Integer id) {
 		this.id = id;
 	}
 	
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

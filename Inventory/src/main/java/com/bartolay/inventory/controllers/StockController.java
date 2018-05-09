@@ -18,6 +18,7 @@ import com.bartolay.inventory.repositories.CategoryRepository;
 import com.bartolay.inventory.repositories.ColorRepository;
 import com.bartolay.inventory.repositories.CountryRepository;
 import com.bartolay.inventory.repositories.ModelRepository;
+import com.bartolay.inventory.repositories.SizeRepository;
 import com.bartolay.inventory.repositories.SupplierRepository;
 import com.bartolay.inventory.repositories.UnitRepository;
 import com.bartolay.inventory.services.BrandService;
@@ -47,6 +48,8 @@ public class StockController {
 	private UnitRepository unitRepository;
 	@Autowired
 	private ModelRepository modelRepository;
+	@Autowired
+	private SizeRepository sizeRepository;
 	
 	@RequestMapping(value="/stock/adjustment")
 	public ModelAndView stockAdjustment() {
@@ -121,6 +124,7 @@ public class StockController {
 		mav.addObject("countries", countryRepository.findAll());
 		mav.addObject("units", unitRepository.findAll());
 		mav.addObject("models", modelRepository.findAll());
+		mav.addObject("sizes", sizeRepository.findAll());
 		
 		mav.addObject("title", "Items");
 		mav.addObject("itemForm", new ItemForm());

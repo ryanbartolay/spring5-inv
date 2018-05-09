@@ -53,7 +53,8 @@ public class ItemRestController {
 	
 	@RequestMapping(value="/api/items", method=RequestMethod.POST)
 	public String create(@Valid ItemForm itemForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
-
+		System.err.println(itemForm.getItemSize());
+		
 		if (bindingResult.hasErrors()) {
 			throw new RestApiException(bindingResult);
 		}
