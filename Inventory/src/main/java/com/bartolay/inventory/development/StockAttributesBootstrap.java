@@ -1,7 +1,10 @@
 package com.bartolay.inventory.development;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Item;
+import com.bartolay.inventory.entity.ItemUnit;
 import com.bartolay.inventory.entity.Model;
 import com.bartolay.inventory.entity.Size;
 import com.bartolay.inventory.entity.User;
@@ -19,6 +23,7 @@ import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CategoryRepository;
 import com.bartolay.inventory.repositories.ColorRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
+import com.bartolay.inventory.repositories.ItemUnitRepository;
 import com.bartolay.inventory.repositories.ModelRepository;
 import com.bartolay.inventory.repositories.SizeRepository;
 import com.bartolay.inventory.repositories.UnitRepository;
@@ -34,6 +39,8 @@ public class StockAttributesBootstrap implements ApplicationListener<ContextRefr
 	private UnitRepository unitRepository;
 	@Autowired
 	private ItemRepository itemRepository;
+	@Autowired
+	private ItemUnitRepository itemUnitRepository;
 	@Autowired
 	private BrandRepository brandRepository;
 	@Autowired
@@ -140,6 +147,25 @@ public class StockAttributesBootstrap implements ApplicationListener<ContextRefr
 	}
 
 	private void createItems() {
+		Set<ItemUnit> itemUnits = new HashSet<>();
+		
+		ItemUnit itemUnit1 = new ItemUnit();
+		itemUnit1.setUnit(unitRepository.findById(1).get());
+		itemUnit1.setRate(new BigDecimal("221.441"));
+		
+		ItemUnit itemUnit2 = new ItemUnit();
+		itemUnit2.setUnit(unitRepository.findById(2).get());
+		itemUnit2.setRate(new BigDecimal("41.1111"));
+		
+		ItemUnit itemUnit3 = new ItemUnit();
+		itemUnit3.setUnit(unitRepository.findById(3).get());
+		itemUnit3.setRate(new BigDecimal("0.1111"));
+		
+		itemUnits.add(itemUnit1);
+		itemUnits.add(itemUnit2);
+		itemUnits.add(itemUnit3);
+		
+		
 		Item item = new Item();
 		item.setBrand(brandRepository.findById((long) 1).get());
 		item.setColor(colorRepository.findByName("red"));
@@ -151,8 +177,38 @@ public class StockAttributesBootstrap implements ApplicationListener<ContextRefr
 		item.setEnabled(true);
 		item.setSize(new Size(1));
 		item.setModel(new Model(1L));
+		item.setItemUnits(itemUnits);
 		itemRepository.save(item);
-
+		
+		for(ItemUnit itemUnit : itemUnits) {
+			itemUnit.setItem(item);
+		}
+		
+		itemUnitRepository.saveAll(itemUnits);
+		
+		itemUnits.clear();
+		
+		itemUnit1 = new ItemUnit();
+		itemUnit1.setUnit(unitRepository.findById(1).get());
+		itemUnit1.setRate(new BigDecimal("9821.441"));
+		
+		itemUnit2 = new ItemUnit();
+		itemUnit2.setUnit(unitRepository.findById(3).get());
+		itemUnit2.setRate(new BigDecimal("101.9911"));
+		
+		itemUnit3 = new ItemUnit();
+		itemUnit3.setUnit(unitRepository.findById(5).get());
+		itemUnit3.setRate(new BigDecimal("0.1111"));
+		
+		ItemUnit itemUnit4 = new ItemUnit();
+		itemUnit4.setUnit(unitRepository.findById(6).get());
+		itemUnit4.setRate(new BigDecimal("1213.191"));
+		
+		itemUnits.add(itemUnit1);
+		itemUnits.add(itemUnit2);
+		itemUnits.add(itemUnit3);
+		itemUnits.add(itemUnit4);
+		
 		Item item2 = new Item();
 		item2.setBrand(brandRepository.findById((long) 1).get());
 		item2.setColor(colorRepository.findByName("black"));
@@ -164,6 +220,14 @@ public class StockAttributesBootstrap implements ApplicationListener<ContextRefr
 		item2.setEnabled(true);
 		item2.setSize(new Size(1));
 		item2.setModel(new Model(2L));
+		item2.setItemUnits(itemUnits);
 		itemRepository.save(item2);
+		
+		
+		for(ItemUnit itemUnit : itemUnits) {
+			itemUnit.setItem(item2);
+		}
+		
+		itemUnitRepository.saveAll(itemUnits);
 	}
 }

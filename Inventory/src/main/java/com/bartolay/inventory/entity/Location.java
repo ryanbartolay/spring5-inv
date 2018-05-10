@@ -16,10 +16,10 @@ public class Location {
 	@Column(name = "id", updatable = false, nullable = false)
 	private int id;
 	
-	@Column(name="name", nullable=false)
+	@Column(name="name", nullable=false, unique=true)
 	private String name;
 	
-	@Column(name="abbreviation", length=15, updatable=true, insertable=true)
+	@Column(name="abbreviation", length=15, updatable=true, insertable=true, unique=true)
 	private String abbreviation;
 	
 	@Column(name="telephone", length=50, updatable=true, insertable=true)

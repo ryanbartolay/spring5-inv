@@ -1,6 +1,6 @@
 package com.bartolay.inventory.entity;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,10 +31,12 @@ public class ItemUnit {
 	@JoinColumn(name = "unit_id", nullable=false)
 	private Unit unit;
 	
-	@Column(name="rate", nullable=false)
-	private BigInteger rate;
-	
-	
+	/**
+	 * int - precision - (Optional) The precision for a decimal (exact numeric) column. (Applies only if a decimal column is used.)
+	 * int - scale - (Optional) The scale for a decimal (exact numeric) column. (Applies only if a decimal column is used.)
+	 */
+	@Column(name="rate", nullable=false, precision=10, scale=5)
+	private BigDecimal rate;
 	
 	public Long getId() {
 		return id;
@@ -52,12 +54,51 @@ public class ItemUnit {
 		this.unit = unit;
 	}
 
-	public BigInteger getRate() {
+	public Item getItem() {
+		return item;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+	
+	public BigDecimal getRate() {
 		return rate;
 	}
 
-	public void setRate(BigInteger rate) {
+	public void setRate(BigDecimal rate) {
 		this.rate = rate;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((item == null) ? 0 : item.hashCode());
+		result = prime * result + ((unit == null) ? 0 : unit.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ItemUnit other = (ItemUnit) obj;
+		if (item == null) {
+			if (other.item != null)
+				return false;
+		} else if (!item.equals(other.item))
+			return false;
+		if (unit == null) {
+			if (other.unit != null)
+				return false;
+		} else if (!unit.equals(other.unit))
+			return false;
+		return true;
 	}
 
 	@Override
