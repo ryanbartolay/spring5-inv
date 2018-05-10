@@ -11,6 +11,7 @@ import com.bartolay.inventory.form.BrandForm;
 import com.bartolay.inventory.form.CategoryForm;
 import com.bartolay.inventory.form.ColorForm;
 import com.bartolay.inventory.form.CountryForm;
+import com.bartolay.inventory.form.LocationForm;
 import com.bartolay.inventory.form.ModelForm;
 import com.bartolay.inventory.form.UnitForm;
 import com.bartolay.inventory.itemForm.ItemForm;
@@ -136,7 +137,10 @@ public class StockAttributeController {
 	
 	@RequestMapping(value="/locations")
 	public ModelAndView locations() {
-		ModelAndView model = new ModelAndView("construction");
+		ModelAndView model = new ModelAndView("stock_attribute/index");
+		model.addObject("page", "Locations");
+		model.addObject("locationForm", new LocationForm());
+		model.addObject("html", "locations/list");
 		return model;
 	}
 	

@@ -23,6 +23,7 @@ public abstract class RepositoryComponent {
 	@Autowired
 	protected RestTemplate restTemplate;
 	protected static final String PERCENT = "%";
+	protected static final String EMPTY = "- -";
 	
 	@Autowired
 	protected JdbcTemplate jdbcTemplate;
