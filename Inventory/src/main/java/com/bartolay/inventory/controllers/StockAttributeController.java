@@ -13,6 +13,7 @@ import com.bartolay.inventory.form.ColorForm;
 import com.bartolay.inventory.form.CountryForm;
 import com.bartolay.inventory.form.LocationForm;
 import com.bartolay.inventory.form.ModelForm;
+import com.bartolay.inventory.form.SizeForm;
 import com.bartolay.inventory.form.UnitForm;
 import com.bartolay.inventory.itemForm.ItemForm;
 import com.bartolay.inventory.repositories.BrandRepository;
@@ -161,6 +162,15 @@ public class StockAttributeController {
 		model.addObject("page", "Units");
 		model.addObject("unitForm", new UnitForm());
 		model.addObject("html", "units/list");
+		return model;
+	}	
+	
+	@RequestMapping(value="/sizes")
+	public ModelAndView sizes() {
+		ModelAndView model = new ModelAndView("stock_attribute/index");
+		model.addObject("page", "Sizes");
+		model.addObject("sizeForm", new SizeForm());
+		model.addObject("html", "sizes/list");
 		return model;
 	}	
 }
