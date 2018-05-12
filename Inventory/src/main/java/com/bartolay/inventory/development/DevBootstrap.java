@@ -33,7 +33,7 @@ import com.bartolay.inventory.repositories.UserRepository;
 @Component
 public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
 
-	private String password = "123456a";
+	public static final String PASSWORD = "123456a";
 
 	private Supplier supplier;
 	private Category category;
@@ -251,20 +251,20 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>,
 	private void createEmployees() {
 		User root = new User();
 		root.setUsername("root");
-		root.setPassword(passwordEncoder.encode(password));
+		root.setPassword(passwordEncoder.encode(PASSWORD));
 		root.setFirstName("Root");
 		root.setLastName("Root");
-		root.setType("ROOT");
+		root.setAccountType(AccountType.ROOT);
 		root.setEmail("bartolay.ryan@gmail.com");
 		root.setAuthority(AccountType.ROOT.toString());
 		userRepository.save(root);
 		
 		User user = new User();
 		user.setUsername("admin");
-		user.setPassword(passwordEncoder.encode(password));
+		user.setPassword(passwordEncoder.encode(PASSWORD));
 		user.setFirstName("Admin");
 		user.setLastName("Admin");
-		user.setType("ADMIN");
+		user.setAccountType(AccountType.ADMIN);
 		user.setEmail("bartolay.ryan@gmail.com");
 		user.setAuthority(AccountType.ADMIN.toString());
 		userRepository.save(user);

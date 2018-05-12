@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.form.UserForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.repositories.UserRepository;
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService<User> {
 		
 		user.setPassword(passwordEncoder.encode("123456a"));
 		
-		user.setType("ADMIN");
+		user.setAccountType(AccountType.ADMIN);
 		user.setEnabled(true);
 		return userRepository.save(user);
 	}
@@ -76,7 +77,7 @@ public class UserServiceImpl implements UserService<User> {
 	}
 	
 	@Override
-	public User delete(Long id) {
+	public User delete(Integer id) {
 
 		Optional<User> user = userRepository.findById(id);
 		

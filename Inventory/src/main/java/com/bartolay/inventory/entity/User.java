@@ -17,6 +17,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.model.Authority;
 
 @Entity
@@ -27,7 +28,7 @@ public class User implements Serializable, Principal {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator")
 	@SequenceGenerator(name="user_generator", sequenceName = "USER_SER_SEQ")
-    private long id;
+    private int id;
     @Column(name = "firstname", nullable=false)
     private String firstName;
     @Column(name = "lastname", nullable=false)
@@ -42,8 +43,8 @@ public class User implements Serializable, Principal {
     private String phone;
     @Column(name = "address")
     private String address;
-    @Column(name = "type", nullable=false, insertable = true)
-    private String type;
+    @Column(name = "account_type", nullable=false, insertable = true)
+    private AccountType accountType;
     @Column(name = "enabled", nullable=false)
     private boolean enabled;
     
@@ -73,7 +74,7 @@ public class User implements Serializable, Principal {
         this.address = address;
     }
 
-    public User(long id, String firstName, String lastName, 
+    public User(int id, String firstName, String lastName, 
             String userName, String password, String phone, String address) {
         this.id = id;
         this.firstName = firstName;
@@ -84,8 +85,8 @@ public class User implements Serializable, Principal {
         this.address = address;
     }
 
-    public User(long id, String firstName, String lastName, 
-            String userName, String password, String phone, String address, String type) {
+    public User(int id, String firstName, String lastName, 
+            String userName, String password, String phone, String address, AccountType account_type) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -93,14 +94,14 @@ public class User implements Serializable, Principal {
         this.password = password;
         this.phone = phone;
         this.address = address;
-        this.type = type;
+        this.accountType = account_type;
     }
     
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -159,14 +160,15 @@ public class User implements Serializable, Principal {
     public void setAddress(String address) {
         this.address = address;
     }
+    
+	public AccountType getAccountType() {
+		return accountType;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public void setAccountType(AccountType accountType) {
+		this.accountType = accountType;
+	}
 
-    public void setType(String type) {
-        this.type = type;
-    }
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -201,7 +203,7 @@ public class User implements Serializable, Principal {
 	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + username
-				+ ", password=" + password + ", email=" + email + ", phone=" + phone + ", address=" + address + ", type=" + type
+				+ ", password=" + password + ", email=" + email + ", phone=" + phone + ", address=" + address + ", accountType=" + accountType
 				+ ", enabled=" + enabled + ", authority=" + authority + "]";
 	}
 	

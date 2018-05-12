@@ -45,16 +45,18 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	
 	private String description;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="location_id", nullable=false, updatable=false)
 	private Location location;
 	
 	@Column(name="payment_method", nullable=false, length=10, updatable=true)
 	private PaymentMethod paymentMethod;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "credit_card_id", nullable=false, updatable=false)
+	@JoinColumn(name = "credit_card_details_id", nullable=true, updatable=true)
 	private CreditCardDetails creditCardDetails;
 	
-	@Column(name="created_date", nullable=false, updatable=true)
+	@Column(name="sales_person", nullable=false, updatable=true)
 	private User salesPerson;
 	
 	@Column(name="created_date", nullable=false, updatable=false)
@@ -76,57 +78,78 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	public String getSystemNumber() {
 		return systemNumber;
 	}
-
 	public void setSystemNumber(String systemNumber) {
 		this.systemNumber = systemNumber;
 	}
-
 	public Date getTransactionDate() {
 		return transactionDate;
 	}
-
 	public void setTransactionDate(Date transactionDate) {
 		this.transactionDate = transactionDate;
 	}
-
 	public String getDocumentNumber() {
 		return documentNumber;
 	}
-
 	public void setDocumentNumber(String documentNumber) {
 		this.documentNumber = documentNumber;
 	}
-
 	public String getDescription() {
 		return description;
 	}
-
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
 	public Location getLocation() {
 		return location;
 	}
-
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-
 	public PaymentMethod getPaymentMethod() {
 		return paymentMethod;
 	}
-
 	public void setPaymentMethod(PaymentMethod paymentMethod) {
 		this.paymentMethod = paymentMethod;
 	}
-
 	public CreditCardDetails getCreditCardDetails() {
 		return creditCardDetails;
 	}
-
 	public void setCreditCardDetails(CreditCardDetails creditCardDetails) {
 		this.creditCardDetails = creditCardDetails;
+	}
+	public User getSalesPerson() {
+		return salesPerson;
+	}
+	public void setSalesPerson(User salesPerson) {
+		this.salesPerson = salesPerson;
+	}
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	public User getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getUpdatedDated() {
+		return updatedDated;
+	}
+
+	public void setUpdatedDated(Date updatedDated) {
+		this.updatedDated = updatedDated;
+	}
+
+	public User getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(User updatedBy) {
+		this.updatedBy = updatedBy;
 	}
 
 	@Override

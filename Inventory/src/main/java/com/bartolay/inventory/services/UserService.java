@@ -11,5 +11,5 @@ public interface UserService<E> {
 	public E update(UserForm userForm);
 	
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
-	public E delete(Long id);
+	public E delete(Integer id);
 }

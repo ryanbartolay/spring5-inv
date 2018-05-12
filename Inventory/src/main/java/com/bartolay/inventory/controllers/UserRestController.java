@@ -51,7 +51,7 @@ public class UserRestController {
 	}
 	
 	@RequestMapping(value="/api/users/{id}", method=RequestMethod.GET)
-	public String getById(@PathVariable Long id) {
+	public String getById(@PathVariable Integer id) {
 		try {
 			Optional<User> user = userRepository.findById(id);
 			return stringUtils.encode(user.get());
@@ -107,7 +107,7 @@ public class UserRestController {
 	}
 	
 	@RequestMapping(value="/api/users/{id}", method=RequestMethod.DELETE)
-	public String delete(@PathVariable Long id) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+	public String delete(@PathVariable Integer id) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		ApiResponse response = null;
 		try {

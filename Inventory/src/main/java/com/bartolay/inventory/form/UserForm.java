@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class UserForm {
-	private Long id;
+	private Integer id;
 	
 	@NotNull
 	@Size(min=5, max=100, message="Username length minimum 5 and 100")
@@ -20,11 +20,11 @@ public class UserForm {
 	@Email(message="Invalid email format")
 	private String email;
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
