@@ -24,7 +24,7 @@ public class StockOpeningDatatableRepositoryImpl extends RepositoryComponent imp
 
 	@Override
 	public long findAllCount(DatatableParameter datatableParameter) {
-		String SQL = "SELECT COUNT(id) FROM stock_opening ";
+		String SQL = "SELECT COUNT(system_number) FROM stock_opening ";
 
 		if(datatableParameter.getSearch() != null) {
 			SQL += " WHERE  documentNumber like :documentNumber ";
@@ -41,7 +41,7 @@ public class StockOpeningDatatableRepositoryImpl extends RepositoryComponent imp
 	public JSONArray findAllData(DatatableParameter datatableParameter) {
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT t1.id, t1.system_number, t1.document_number, t1.transaction_date, t1.description, t2.name as location_name FROM stock_opening t1 inner join location t2 on t1.location_id = t2.id ";
+			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t1.description, t2.name as location_name FROM stock_opening t1 inner join location t2 on t1.location_id = t2.id ";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
@@ -66,7 +66,6 @@ public class StockOpeningDatatableRepositoryImpl extends RepositoryComponent imp
 				@Override
 				public JSONObject mapRow(ResultSet rs, int arg1) throws SQLException {
 					JSONObject obj = new JSONObject();
-					obj.put("id", rs.getLong("id"));
 					obj.put("system_number", rs.getString("system_number"));
 					obj.put("document_number", rs.getString("document_number"));
 					obj.put("description", rs.getString("description"));

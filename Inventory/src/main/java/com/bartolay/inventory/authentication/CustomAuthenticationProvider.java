@@ -38,6 +38,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			authorities.add(new Authority(user.getAuthority()));
 			user.setAuthorities(authorities);
 			
+			System.err.println(password + " : " + user.getPassword());
+			
 			if(passwordEncoder.matches(password, user.getPassword())) {
 				return new UsernamePasswordAuthenticationToken(user, user.getPassword(), authorities);
 			}

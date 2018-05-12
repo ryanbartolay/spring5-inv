@@ -165,4 +165,36 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	public String getTableName() {
 		return TABLE_NAME;
 	}
+	@Override
+	public String toString() {
+		return "SalesInvoice [systemNumber=" + systemNumber + ", year=" + year + ", transactionDate=" + transactionDate
+				+ ", documentNumber=" + documentNumber + ", description=" + description + ", location=" + location
+				+ ", paymentMethod=" + paymentMethod + ", creditCardDetails=" + creditCardDetails + ", salesPerson="
+				+ salesPerson + ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", updatedDated="
+				+ updatedDated + ", updatedBy=" + updatedBy + "]";
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((systemNumber == null) ? 0 : systemNumber.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SalesInvoice other = (SalesInvoice) obj;
+		if (systemNumber == null) {
+			if (other.systemNumber != null)
+				return false;
+		} else if (!systemNumber.equals(other.systemNumber))
+			return false;
+		return true;
+	}
+	
 }

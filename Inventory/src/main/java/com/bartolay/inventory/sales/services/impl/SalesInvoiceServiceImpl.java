@@ -37,6 +37,9 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 		salesInvoice.setPaymentMethod(salesInvoiceForm.getPaymentMethod());
 		salesInvoice.setDocumentNumber(salesInvoiceForm.getDocumentNumber());
 		salesInvoice.setSalesPerson(salesInvoiceForm.getSalesPerson());
+		salesInvoice.setTransactionDate(salesInvoiceForm.getTransactionDate());
+		salesInvoice.setLocation(salesInvoiceForm.getLocation());
+		salesInvoice.setYear(salesInvoiceForm.getYear());
 		salesInvoice.setCreatedBy(userCredentials.getLoggedInUser());
 		
 		return salesInvoiceRepository.save(salesInvoice);

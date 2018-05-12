@@ -89,9 +89,9 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>,
 		
 		createEmployees();
 		
-		setAuthentication();
 		user = userRepository.findByUsername("admin");		
 		
+		setAuthentication();
 		createLocations();
 		createCategories();
 		createCompaniesAndBrand();
@@ -110,7 +110,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>,
 
 	private void setAuthentication() {
 
-		UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(user, user.getPassword());
+		UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(user, "123456a");
 		Authentication auth = authManager.authenticate(authReq);
 		SecurityContext sc = SecurityContextHolder.getContext();
 		sc.setAuthentication(auth);

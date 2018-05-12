@@ -1,5 +1,7 @@
 package com.bartolay.inventory.development;
 
+import java.util.Calendar;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -11,11 +13,10 @@ import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.form.SalesInvoiceForm;
+import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 import com.bartolay.inventory.sales.entity.CreditCardDetails;
-import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.repositories.CreditCardDetailsRepository;
-import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.sales.services.SalesInvoiceService;
 
 @Component
@@ -26,6 +27,9 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 	
 	@Autowired
 	private SalesInvoiceService salesInvoiceService;
+
+	@Autowired
+	private LocationRepository locationRepository;
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -96,20 +100,31 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 
 	private void createSalesInvoices() {
 		
+		Calendar cal = Calendar.getInstance();
+		cal.set(2018, 4, 21, 22, 33, 5);
+		
 		SalesInvoiceForm salesForm = new SalesInvoiceForm();
 		salesForm.setPaymentMethod(PaymentMethod.CREDITCARD);
 		salesForm.setCreditCardDetails(ccDetails);
 		salesForm.setDocumentNumber("Sales#12344");
+		salesForm.setYear("2018");
+		salesForm.setTransactionDate(cal.getTime());
 		salesForm.setSalesPerson(sales1);
 		salesForm.setCreatedBy(user);
+		salesForm.setLocation(locationRepository.findById(1).get());
 		
 		salesInvoiceService.create(salesForm);
+		
+		cal.set(2018, 5, 21, 22, 33, 5);
 		
 		SalesInvoiceForm salesForm2 = new SalesInvoiceForm();
 		salesForm2.setPaymentMethod(PaymentMethod.CASH);
 		salesForm2.setDocumentNumber("Sales#12aas34");
+		salesForm2.setYear("2018");
+		salesForm2.setTransactionDate(cal.getTime());
 		salesForm2.setSalesPerson(sales2);
 		salesForm2.setCreatedBy(user);
+		salesForm2.setLocation(locationRepository.findById(2).get());
 		
 		salesInvoiceService.create(salesForm2);
 		
