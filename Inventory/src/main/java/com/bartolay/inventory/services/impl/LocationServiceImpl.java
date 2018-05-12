@@ -87,7 +87,6 @@ public class LocationServiceImpl implements LocationService {
 
 	@Override
 	public Location findOne(Integer id) {
-		// TODO Auto-generated method stub
 		return locationRepository.findById(id).get();
 	}
 }

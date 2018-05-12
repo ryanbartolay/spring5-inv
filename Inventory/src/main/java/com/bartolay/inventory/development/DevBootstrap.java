@@ -7,6 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.PriorityOrdered;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +39,9 @@ import com.bartolay.inventory.repositories.UserRepository;
 public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
 
 	public static final String PASSWORD = "123456a";
+	
+	@Autowired
+	private AuthenticationManager authManager;
 
 	private Supplier supplier;
 	private Category category;
@@ -69,7 +77,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>,
 	@Autowired
 	private CountryRepository countryRepository;
 	
-	private User admin;
+	private User user;
 
 	@Override
 	public int getOrder() {
@@ -78,9 +86,11 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>,
 	
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
+		
 		createEmployees();
 		
-		admin = userRepository.findByUsername("admin");
+		setAuthentication();
+		user = userRepository.findByUsername("admin");		
 		
 		createLocations();
 		createCategories();
@@ -97,6 +107,15 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>,
 		createCountries();
 	}
 
+
+	private void setAuthentication() {
+
+		UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(user, user.getPassword());
+		Authentication auth = authManager.authenticate(authReq);
+		SecurityContext sc = SecurityContextHolder.getContext();
+		sc.setAuthentication(auth);
+				
+	}
 
 	private void createLocations() {
 		Location location = new Location();
@@ -142,7 +161,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>,
 		List<Unit> units = new ArrayList<>();
 		
 		Unit unit1 = new Unit();
-		unit1.setCreatedBy(admin);
+		unit1.setCreatedBy(user);
 		unit1.setAbbreviation("pcs");
 		unit1.setName("Pieces");
 		units.add(unit1);
@@ -150,31 +169,31 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>,
 		Unit unit2 = new Unit();
 		unit2.setAbbreviation("pair");
 		unit2.setName("Pair");
-		unit2.setCreatedBy(admin);
+		unit2.setCreatedBy(user);
 		units.add(unit2);
 		
 		Unit unit3 = new Unit();
 		unit3.setAbbreviation("cb");
 		unit3.setName("Cubic");
-		unit3.setCreatedBy(admin);
+		unit3.setCreatedBy(user);
 		units.add(unit3);
 		
 		Unit unit4 = new Unit();
 		unit4.setAbbreviation("meter");
 		unit4.setName("Meter");
-		unit4.setCreatedBy(admin);
+		unit4.setCreatedBy(user);
 		units.add(unit4);
 		
 		Unit unit5 = new Unit();
 		unit5.setAbbreviation("ea");
 		unit5.setName("Each");
-		unit5.setCreatedBy(admin);
+		unit5.setCreatedBy(user);
 		units.add(unit5);
 		
 		Unit unit6 = new Unit();
 		unit6.setAbbreviation("box");
 		unit6.setName("Box");
-		unit6.setCreatedBy(admin);
+		unit6.setCreatedBy(user);
 		units.add(unit6);
 		
 		unitRepository.saveAll(units);

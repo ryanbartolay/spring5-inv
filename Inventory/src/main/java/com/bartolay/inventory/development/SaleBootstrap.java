@@ -10,11 +10,13 @@ import org.springframework.stereotype.Component;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.enums.PaymentMethod;
+import com.bartolay.inventory.form.SalesInvoiceForm;
 import com.bartolay.inventory.repositories.UserRepository;
 import com.bartolay.inventory.sales.entity.CreditCardDetails;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.repositories.CreditCardDetailsRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
+import com.bartolay.inventory.sales.services.SalesInvoiceService;
 
 @Component
 public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered  {
@@ -23,7 +25,7 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 	private CreditCardDetailsRepository creditCardDetailsRepository;
 	
 	@Autowired
-	private SalesInvoiceRepository salesInvoiceRepository;
+	private SalesInvoiceService salesInvoiceService;
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -94,22 +96,23 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 
 	private void createSalesInvoices() {
 		
-		SalesInvoice salesInvoice = new SalesInvoice();
-		salesInvoice.setPaymentMethod(PaymentMethod.CREDITCARD);
-		salesInvoice.setCreditCardDetails(ccDetails);
-		salesInvoice.setDocumentNumber("Sales#12344");
-		salesInvoice.setSalesPerson(sales1);
-		salesInvoice.setCreatedBy(user);
+		SalesInvoiceForm salesForm = new SalesInvoiceForm();
+		salesForm.setPaymentMethod(PaymentMethod.CREDITCARD);
+		salesForm.setCreditCardDetails(ccDetails);
+		salesForm.setDocumentNumber("Sales#12344");
+		salesForm.setSalesPerson(sales1);
+		salesForm.setCreatedBy(user);
 		
-		salesInvoiceRepository.save(salesInvoice);
+		salesInvoiceService.create(salesForm);
 		
-		SalesInvoice salesInvoice2 = new SalesInvoice();
-		salesInvoice2.setPaymentMethod(PaymentMethod.CREDITCARD);
-		salesInvoice2.setDocumentNumber("Sales#12344");
-		salesInvoice2.setSalesPerson(sales1);
-		salesInvoice2.setCreatedBy(user);
+		SalesInvoiceForm salesForm2 = new SalesInvoiceForm();
+		salesForm2.setPaymentMethod(PaymentMethod.CASH);
+		salesForm2.setDocumentNumber("Sales#12aas34");
+		salesForm2.setSalesPerson(sales2);
+		salesForm2.setCreatedBy(user);
 		
-		salesInvoiceRepository.save(salesInvoice2);
+		salesInvoiceService.create(salesForm2);
+		
 	}
 
 }
