@@ -5,15 +5,15 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import com.bartolay.inventory.entity.Brand;
-import com.bartolay.inventory.form.BrandForm;
+import com.bartolay.inventory.form.CreditCardDetailsForm;
+import com.bartolay.inventory.sales.entity.CreditCardDetails;
 
 public interface CreditCardDetailsService {
-	public Brand create(BrandForm brandForm);
-	public Brand update(BrandForm brandForm);
+	public CreditCardDetails create(CreditCardDetailsForm ccForm);
+	public CreditCardDetails update(CreditCardDetailsForm ccForm);
 	
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
-	public Brand delete(Long id);
+	public CreditCardDetails delete(Long id);
 	
-	public List<Brand> findAll();
+	public List<CreditCardDetails> findAll();
 }
