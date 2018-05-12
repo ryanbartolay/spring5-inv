@@ -1,5 +1,8 @@
 package com.bartolay.inventory.stock.entity;
 
+import java.math.BigDecimal;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,6 +14,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.bartolay.inventory.entity.Item;
+import com.bartolay.inventory.entity.ItemUnit;
 
 @Entity
 @Table(name="stock_opening_item")
@@ -25,8 +29,13 @@ public class StockOpeningItem {
 	@JoinColumn(name="item_id", nullable=false, updatable=true)
 	private Item item;
 	
-	private Double unit;
-	private String unitDesciption;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="item_unit_id", nullable=false, updatable=true)
+	private ItemUnit itemUnit;
+	
+	@Column(name="unit_cost", nullable=false)
+	private BigDecimal unitCost;
+	
 	private Long quantity;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -52,18 +61,6 @@ public class StockOpeningItem {
 	public void setItem(Item item) {
 		this.item = item;
 	}
-	public Double getUnit() {
-		return unit;
-	}
-	public void setUnit(Double unit) {
-		this.unit = unit;
-	}
-	public String getUnitDesciption() {
-		return unitDesciption;
-	}
-	public void setUnitDesciption(String unitDesciption) {
-		this.unitDesciption = unitDesciption;
-	}
 	public Long getQuantity() {
 		return quantity;
 	}
@@ -75,5 +72,17 @@ public class StockOpeningItem {
 	}
 	public void setStockOpening(StockOpening stockOpening) {
 		this.stockOpening = stockOpening;
+	}
+	public ItemUnit getItemUnit() {
+		return itemUnit;
+	}
+	public void setItemUnit(ItemUnit itemUnit) {
+		this.itemUnit = itemUnit;
+	}
+	public BigDecimal getUnitCost() {
+		return unitCost;
+	}
+	public void setUnitCost(BigDecimal unitCost) {
+		this.unitCost = unitCost;
 	}
 }

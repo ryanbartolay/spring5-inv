@@ -11,4 +11,6 @@ public interface StockOpeningRepository extends CrudRepository<StockOpening, Lon
 
 	@Query(value = "SELECT p FROM Brand p LEFT JOIN FETCH p.company LEFT JOIN FETCH p.createdBy")
     Iterable<StockOpening> apiFindAll();
+	
+	StockOpening findBySystemNumber(String system_number);
 }

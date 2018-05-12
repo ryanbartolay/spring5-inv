@@ -9,7 +9,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.core.Ordered;
 import org.springframework.core.PriorityOrdered;
 import org.springframework.stereotype.Component;
 
@@ -222,7 +221,6 @@ public class StockAttributesBootstrap implements ApplicationListener<ContextRefr
 		item2.setModel(new Model(2L));
 		item2.setItemUnits(itemUnits);
 		itemRepository.save(item2);
-		
 		
 		for(ItemUnit itemUnit : itemUnits) {
 			itemUnit.setItem(item2);
