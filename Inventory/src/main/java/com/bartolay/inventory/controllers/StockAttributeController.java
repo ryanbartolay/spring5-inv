@@ -34,13 +34,10 @@ public class StockAttributeController {
 	private CompanyService companyService;
 	@Autowired
 	private BrandService brandService;
-	
 	@Autowired
 	private BrandRepository brandRepository;
-	
 	@Autowired
 	private CategoryRepository categoryRepository;
-	
 	@Autowired
 	private ColorRepository colorRepository;
 	@Autowired
@@ -57,16 +54,6 @@ public class StockAttributeController {
 	@RequestMapping(value="/stock/adjustment")
 	public ModelAndView stockAdjustment() {
 		ModelAndView model = new ModelAndView("construction");
-		return model;
-	}
-	
-	@RequestMapping(value="/stock/opening")
-	public ModelAndView operatingStock() {
-		ModelAndView model = new ModelAndView("stock/index");
-		model.addObject("page", "Opening Stock");
-		model.addObject("html", "opening/list");
-		model.addObject("brandForm", new BrandForm());
-		model.addObject("companies", companyService.findAll());
 		return model;
 	}
 	

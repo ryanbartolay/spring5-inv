@@ -13,12 +13,12 @@ import javax.persistence.Table;
 import com.bartolay.inventory.entity.Item;
 
 @Entity
-@Table(name="stock_transfer_items")
+@Table(name="stock_transfer_item")
 public class StockTransferItem {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_items_generator")
-	@SequenceGenerator(name="stock_items_generator", sequenceName = "STOCK_ITEMS_SER_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_item_generator")
+	@SequenceGenerator(name="stock_item_generator", sequenceName = "STOCK_ITEM_SER_SEQ")
 	private Long id;
 	
 	

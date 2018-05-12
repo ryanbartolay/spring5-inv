@@ -10,7 +10,6 @@ import org.springframework.core.PriorityOrdered;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.bartolay.enums.AccountType;
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Category;
 import com.bartolay.inventory.entity.Color;
@@ -20,6 +19,7 @@ import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.entity.Unit;
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CategoryRepository;
 import com.bartolay.inventory.repositories.ColorRepository;

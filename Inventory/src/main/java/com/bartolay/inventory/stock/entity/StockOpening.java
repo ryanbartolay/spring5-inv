@@ -7,12 +7,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -23,31 +21,31 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.repositories.GeneratedSystemNumber;
 
 @Entity
 @Table(name="stock_opening")
-public class StockOpening {
+public class StockOpening implements GeneratedSystemNumber {
 
 	@Transient
 	public static final String TABLE_NAME = "stock_opening";
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_opening_generator")
-	@SequenceGenerator(name="stock_opening_generator", sequenceName = "STOCK_OPENING_SER_SEQ")
-	private Long id;
 
+	@Id
 	@GeneratedValue(generator = "UniqueIdGenerator")
 	@GenericGenerator(name = "UniqueIdGenerator", strategy = "com.bartolay.inventory.entity.generators.SystemNumberGenerator")
-	@Column(name="system_number", nullable=false, unique=true, updatable=false)
+	@Column(name="system_number", nullable=false, unique=true, updatable=false, length=10)
 	private String systemNumber;
 
-	@Column(name="document_number", unique=true)
+	@Column(name="document_number", unique=true, length=25)
 	private String documentNumber;
 
 	@Column(name="transaction_date", nullable=false)
 	@Type(type="date")
 	private Date transactionDate;
 
+	@Column(name="year", nullable=false, length=4, updatable=false)
+	private String year;
+	
 	private String description;
 
 	@OneToMany(mappedBy = "stockOpening", fetch=FetchType.LAZY)
@@ -83,19 +81,11 @@ public class StockOpening {
 		super();
 	}
 
-	public StockOpening(Long id) {
+	public StockOpening(String systemNumber) {
 		super();
-		this.id = id;
+		this.systemNumber = systemNumber;
 	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
+	
 	public String getSystemNumber() {
 		return systemNumber;
 	}
@@ -118,6 +108,14 @@ public class StockOpening {
 
 	public void setTransactionDate(Date transactionDate) {
 		this.transactionDate = transactionDate;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
 	}
 
 	public String getDescription() {
@@ -194,18 +192,18 @@ public class StockOpening {
 
 	@Override
 	public String toString() {
-		return "OpeningStock [id=" + id + ", systemNumber=" + systemNumber + ", documentNumber=" + documentNumber
-				+ ", transactionDate=" + transactionDate + ", description=" + description + ", items=" + items
-				+ ", location=" + location + ", createdDate=" + createdDate + ", createdBy=" + createdBy
-				+ ", updatedDated=" + updatedDated + ", updatedBy=" + updatedBy + ", draft=" + draft + ", enabled="
-				+ enabled + "]";
+		return "StockOpening [systemNumber=" + systemNumber + ", documentNumber=" + documentNumber
+				+ ", transactionDate=" + transactionDate + ", year=" + year + ", description=" + description
+				+ ", items=" + items + ", location=" + location + ", createdDate=" + createdDate + ", createdBy="
+				+ createdBy + ", updatedDated=" + updatedDated + ", updatedBy=" + updatedBy + ", draft=" + draft
+				+ ", enabled=" + enabled + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((systemNumber == null) ? 0 : systemNumber.hashCode());
 		return result;
 	}
 
@@ -218,11 +216,17 @@ public class StockOpening {
 		if (getClass() != obj.getClass())
 			return false;
 		StockOpening other = (StockOpening) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (systemNumber == null) {
+			if (other.systemNumber != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!systemNumber.equals(other.systemNumber))
 			return false;
 		return true;
 	}
+
+	@Override
+	public String getTableName() {
+		return TABLE_NAME;
+	}
+
 }

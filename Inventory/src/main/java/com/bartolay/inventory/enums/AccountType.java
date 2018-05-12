@@ -1,4 +1,4 @@
-package com.bartolay.enums;
+package com.bartolay.inventory.enums;
 
 public enum AccountType {
 	ROOT("Super Administrator"),
