@@ -33,7 +33,7 @@ public class StockOpening implements GeneratedSystemNumber {
 	@Id
 	@GeneratedValue(generator = "UniqueIdGenerator")
 	@GenericGenerator(name = "UniqueIdGenerator", strategy = "com.bartolay.inventory.entity.generators.SystemNumberGenerator")
-	@Column(name="system_number", nullable=false, unique=true, updatable=false, length=10)
+	@Column(name="system_number", nullable=false, unique=true, insertable=false, updatable=false, length=10)
 	private String systemNumber;
 
 	@Column(name="document_number", unique=true, length=25)

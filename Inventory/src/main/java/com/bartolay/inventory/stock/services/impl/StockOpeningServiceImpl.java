@@ -19,7 +19,6 @@ import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 import com.bartolay.inventory.stock.services.StockOpeningService;
-import com.bartolay.inventory.stock.utils.StockUtility;
 import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
@@ -32,9 +31,6 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 
 	@Autowired
 	private StockOpeningRepository stockOpeningRepository;
-	
-	@Autowired
-	private StockUtility stockUtility;
 	
 	@Autowired
 	private UserCredentials userCredentials;
@@ -66,10 +62,7 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(openingStockForm.getTransaction_date());
 		
-		String system_number = stockUtility.generateStockOpeningSystemNumber(openingStockForm.getLocation().getId(), cal.get(Calendar.YEAR));
-		
 		StockOpening opening = new StockOpening();
-		opening.setSystemNumber(system_number);
 		opening.setDocumentNumber(openingStockForm.getDocument_number());
 		opening.setLocation(openingStockForm.getLocation());
 		opening.setTransactionDate(openingStockForm.getTransaction_date());
