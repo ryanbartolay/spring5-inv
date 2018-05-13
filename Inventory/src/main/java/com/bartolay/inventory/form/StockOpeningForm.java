@@ -1,10 +1,12 @@
 package com.bartolay.inventory.form;
 
 import java.util.Date;
+import java.util.Set;
+
+import javax.validation.constraints.NotNull;
 
 import com.bartolay.inventory.entity.Location;
-
-import io.micrometer.core.lang.NonNull;
+import com.bartolay.inventory.stock.entity.StockOpeningItem;
 
 public class StockOpeningForm {
 	private Long id;
@@ -13,11 +15,14 @@ public class StockOpeningForm {
 	
 	private String description;
 	
-	@NonNull
+	@NotNull
 	private Location location;
 	
-	@NonNull
+	@NotNull
 	private Date transaction_date;
+	
+	@NotNull
+	private Set<StockOpeningItem> items;
 
 	public Long getId() {
 		return id;
@@ -58,4 +63,13 @@ public class StockOpeningForm {
 	public void setTransaction_date(Date transaction_date) {
 		this.transaction_date = transaction_date;
 	}
+
+	public Set<StockOpeningItem> getItems() {
+		return items;
+	}
+
+	public void setItems(Set<StockOpeningItem> items) {
+		this.items = items;
+	}
+	
 }

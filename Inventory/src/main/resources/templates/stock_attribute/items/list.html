@@ -135,19 +135,30 @@
 										.
 									</div>
 									<div class="table-responsive">
+									
+										<table class="table table-bordered table-striped">
+											<tbody>
+												<tr>
+													<td colspan="2" style="text-align: center;">Selling Price</td>
+												</tr>
+												<tr>
+													<td width="50%">Minimum <input type="number" class="form-control" maxlength="100"></td>
+													<td>Maximum <input type="number" class="form-control" maxlength="100"></td>
+												</tr>
+											</tbody>
+										</table>
 											<table class="table table-bordered table-striped" id="itemUnitTable">
 												<tbody>
 													<tr>
 														<td colspan="4" style="text-align: center;">ITEM UNITS</td>
 													</tr>
 													<tr>
-														<th>Code</th>
-														<th>Name</th>
+														<th>Unit</th>
 														<th>Rate</th>
+														<th title="Minimum Unit Price">Unit Price</th>
 														<th></th>
 													</tr>
 													 <tr th:each = "itemUnit, rowStat : *{itemUnits} ">
-														<td><input class="form-control" th:field="*{itemUnits[__${rowStat.index}__].unit.id}" maxlength="10"></td>
 														<td><input class="form-control" th:field="*{itemUnits[__${rowStat.index}__].unit.name}" maxlength="10"></td>
 														<td><input class="form-control" th:field="*{itemUnits[__${rowStat.index}__].rate}" maxlength="10"></td>
 														<td><button type="button" class="btn btn-danger delete-item-unit">Delete</button></td>
