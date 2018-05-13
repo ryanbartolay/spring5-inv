@@ -39,7 +39,6 @@ public class StockBootstrap implements ApplicationListener<ContextRefreshedEvent
 		admin = userRepository.findByUsername("admin");
 		
 		StockOpening opening1 = new StockOpening();
-//		opening1.setSystemNumber("2023123-9");
 		opening1.setDocumentNumber("XVMill221");
 		opening1.setYear("2018");
 		opening1.setLocation(locationRepository.findById(1).get());
@@ -49,7 +48,6 @@ public class StockBootstrap implements ApplicationListener<ContextRefreshedEvent
 		stockOpeningRepository.save(opening1);
 		
 		StockOpening opening2 = new StockOpening();
-//		opening2.setSystemNumber("2123123-1");
 		opening2.setDocumentNumber("35-22-GA2");
 		opening2.setYear("2016");
 		opening2.setLocation(locationRepository.findById(1).get());
@@ -59,7 +57,6 @@ public class StockBootstrap implements ApplicationListener<ContextRefreshedEvent
 		stockOpeningRepository.save(opening2);
 		
 		StockOpening opening3 = new StockOpening();
-//		opening3.setSystemNumber("2023122-1");
 		opening3.setDocumentNumber("377MLXzz");
 		opening3.setYear("2017");
 		opening3.setLocation(locationRepository.findById(1).get());
@@ -69,7 +66,6 @@ public class StockBootstrap implements ApplicationListener<ContextRefreshedEvent
 		stockOpeningRepository.save(opening3);
 		
 		StockOpening opening4 = new StockOpening();
-//		opening4.setSystemNumber("2023123-1");
 		opening4.setDocumentNumber("DOC2123");
 		opening4.setYear("2018");
 		opening4.setLocation(locationRepository.findById(1).get());

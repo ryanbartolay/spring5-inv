@@ -1,6 +1,7 @@
 package com.bartolay.inventory.sales.entity;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,13 +18,14 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.bartolay.inventory.entity.Location;
+import com.bartolay.inventory.entity.SaleTransactionItem;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.repositories.GeneratedSystemNumber;
 
 @Entity
 @Table(name="sales_invoice")
-public class SalesInvoice implements GeneratedSystemNumber {
+public class SalesInvoice implements GeneratedSystemNumber, SalesEntity {
 
 	@Transient
 	public static final String TABLE_NAME = "sales_invoice";
