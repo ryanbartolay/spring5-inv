@@ -19,8 +19,12 @@ function PUT(url, data, callback){
 	return ajax("PUT", url, data, callback)
 }
 function decodeAPIResponse(data) {
-	console.log(data);
-	return JSON.parse(getDecode(data));
+	try {
+		return JSON.parse(getDecode(data));
+	} catch (e) {
+		return data;
+	}
+	
 }
 
 function ajax(type, url, data, callback){
@@ -160,4 +164,24 @@ function errorHandler(data){
 
 function getDecode(str){
 	return decodeURIComponent(str).replace(/%20/g," ");
+}
+
+function singledatetimepicker(container){
+	container.daterangepicker({
+		singleDatePicker: true,
+		locale: {
+			format: 'YYYY-MM-DD HH:mm:ss'
+	    },
+	    timePicker: true,
+	    timePicker24Hour: true,
+	});
+}
+
+function singledatepicker(container){
+	container.daterangepicker({
+		singleDatePicker: true,
+		locale: {
+			format: 'YYYY-MM-DD'
+	    }
+	});
 }
