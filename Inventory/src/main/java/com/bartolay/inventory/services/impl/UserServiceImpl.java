@@ -1,5 +1,6 @@
 package com.bartolay.inventory.services.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -87,6 +88,11 @@ public class UserServiceImpl implements UserService<User> {
 		
 		userRepository.deleteById(id);
 		return user.get();
+	}
+
+	@Override
+	public List<User> findAllSales() {
+		return userRepository.findAllByAccountType(AccountType.USER);
 	}
 
 	

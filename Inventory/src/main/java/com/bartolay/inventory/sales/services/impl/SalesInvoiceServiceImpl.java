@@ -1,5 +1,6 @@
 package com.bartolay.inventory.sales.services.impl;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.sales.services.SalesInvoiceService;
+import com.bartolay.inventory.utils.CalendarUtils;
 import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
@@ -45,7 +47,11 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 		salesInvoice.setPaymentMethod(salesInvoiceForm.getPaymentMethod());
 		salesInvoice.setDocumentNumber(salesInvoiceForm.getDocumentNumber());
 		salesInvoice.setSalesPerson(salesInvoiceForm.getSalesPerson());
-		salesInvoice.setTransactionDate(salesInvoiceForm.getTransactionDate());
+		try {
+			salesInvoice.setTransactionDate(CalendarUtils.toDate(salesInvoiceForm.getTransactionDate()));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		salesInvoice.setLocation(salesInvoiceForm.getLocation());
 		salesInvoice.setYear(salesInvoiceForm.getYear());
 		salesInvoice.setCreatedBy(userCredentials.getLoggedInUser());

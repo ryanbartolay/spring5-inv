@@ -1,10 +1,13 @@
 package com.bartolay.inventory.repositories;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.enums.AccountType;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer> {
@@ -13,4 +16,5 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 	
 	@Query(value = "SELECT u FROM User u")
     Iterable<User> apiFindAll();
+	List<User> findAllByAccountType(AccountType accountType);
 }

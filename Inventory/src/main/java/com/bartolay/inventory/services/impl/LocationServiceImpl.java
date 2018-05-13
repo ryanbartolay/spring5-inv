@@ -98,7 +98,7 @@ public class LocationServiceImpl extends BeanComponent implements LocationServic
 	public ObjectNode findAllWithPage(String query) {
 		ObjectNode data = objectMapper.createObjectNode();
 		ArrayNode nodes = objectMapper.createArrayNode();
-		List<Location> locations = locationRepository.findByName(query, 15);
+		List<Location> locations = locationRepository.findByNameContaining(query);
 		for (Location location : locations) {
 			ObjectNode node = objectMapper.createObjectNode();
 			node.put("id", location.getId());

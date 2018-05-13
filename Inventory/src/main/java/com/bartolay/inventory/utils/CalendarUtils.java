@@ -22,10 +22,10 @@ public class CalendarUtils {
 	public Timestamp toTimestamp(String date) throws ParseException {
 		return new Timestamp(timeFormat.parse(date).getTime());
 	}
-	public String timestampToString(Timestamp timestamp) {
+	public static String timestampToString(Timestamp timestamp) {
 		return timeFormat.format(timestamp);
 	}
-	public String dateToString(Date date) {
+	public static String dateToString(Date date) {
 		return timeFormat.format(date);
 	}
 

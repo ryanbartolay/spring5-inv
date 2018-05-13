@@ -38,6 +38,13 @@ public class ItemUnit {
 	@Column(name="rate", nullable=false, precision=10, scale=5)
 	private BigDecimal rate;
 	
+	public ItemUnit() {
+	}
+	
+	public ItemUnit(Long id) {
+		this.id=id;
+	}
+	
 	public Long getId() {
 		return id;
 	}

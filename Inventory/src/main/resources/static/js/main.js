@@ -165,3 +165,14 @@ function errorHandler(data){
 function getDecode(str){
 	return decodeURIComponent(str).replace(/%20/g," ");
 }
+
+function singledatetimepicker(container){
+	container.daterangepicker({
+		singleDatePicker: true,
+		locale: {
+			format: 'YYYY-MM-DD HH:mm:ss'
+	    },
+	    timePicker: true,
+	    timePicker24Hour: true,
+	});
+}

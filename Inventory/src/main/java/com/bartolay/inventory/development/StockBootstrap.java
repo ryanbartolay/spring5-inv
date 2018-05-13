@@ -8,6 +8,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.PriorityOrdered;
 import org.springframework.stereotype.Component;
 
+import com.bartolay.inventory.entity.Inventory;
+import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.UserRepository;
@@ -74,4 +76,5 @@ public class StockBootstrap implements ApplicationListener<ContextRefreshedEvent
 		
 		stockOpeningRepository.save(opening4);
 	}
+	
 }
