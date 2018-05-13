@@ -1,7 +1,6 @@
 package com.bartolay.inventory.sales.entity;
 
 import java.util.Date;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,14 +17,14 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.bartolay.inventory.entity.Location;
-import com.bartolay.inventory.entity.SaleTransactionItem;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
+import com.bartolay.inventory.enums.SaleStatus;
 import com.bartolay.inventory.repositories.GeneratedSystemNumber;
 
 @Entity
 @Table(name="sales_invoice")
-public class SalesInvoice implements GeneratedSystemNumber, SalesEntity {
+public class SalesInvoice implements GeneratedSystemNumber {
 
 	@Transient
 	public static final String TABLE_NAME = "sales_invoice";
@@ -53,6 +52,9 @@ public class SalesInvoice implements GeneratedSystemNumber, SalesEntity {
 	
 	@Column(name="payment_method", nullable=false, length=10, updatable=true)
 	private PaymentMethod paymentMethod;
+	
+	@Column(name="sale_status", nullable=false, updatable=true, length=10)
+	private SaleStatus sale_status;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "credit_card_details_id", nullable=true, updatable=true)
@@ -154,6 +156,12 @@ public class SalesInvoice implements GeneratedSystemNumber, SalesEntity {
 		this.updatedBy = updatedBy;
 	}
 
+	public SaleStatus getSale_status() {
+		return sale_status;
+	}
+	public void setSale_status(SaleStatus sale_status) {
+		this.sale_status = sale_status;
+	}
 	@Override
 	public String getYear() {
 		return this.year;
@@ -167,13 +175,14 @@ public class SalesInvoice implements GeneratedSystemNumber, SalesEntity {
 	public String getTableName() {
 		return TABLE_NAME;
 	}
+	
 	@Override
 	public String toString() {
 		return "SalesInvoice [systemNumber=" + systemNumber + ", year=" + year + ", transactionDate=" + transactionDate
 				+ ", documentNumber=" + documentNumber + ", description=" + description + ", location=" + location
-				+ ", paymentMethod=" + paymentMethod + ", creditCardDetails=" + creditCardDetails + ", salesPerson="
-				+ salesPerson + ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", updatedDated="
-				+ updatedDated + ", updatedBy=" + updatedBy + "]";
+				+ ", paymentMethod=" + paymentMethod + ", sale_status=" + sale_status + ", creditCardDetails="
+				+ creditCardDetails + ", salesPerson=" + salesPerson + ", createdDate=" + createdDate + ", createdBy="
+				+ createdBy + ", updatedDated=" + updatedDated + ", updatedBy=" + updatedBy + "]";
 	}
 	@Override
 	public int hashCode() {

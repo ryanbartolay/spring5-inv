@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.bartolay.inventory.enums.SaleTransaction;
+import com.bartolay.inventory.enums.SaleTransactionStatus;
 
 @Entity
 @Table(name="sales_transaction_item")
@@ -32,7 +32,7 @@ public class SaleTransactionItem {
 	private String systemNumber;
 	
 	@Column(name="transaction_type", nullable=false, unique=false, insertable=true, updatable=false, length=10)
-	private SaleTransaction transactionType;
+	private SaleTransactionStatus transactionType;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="item_id", nullable=false, updatable=false)
@@ -77,11 +77,11 @@ public class SaleTransactionItem {
 		this.systemNumber = systemNumber;
 	}
 
-	public SaleTransaction getTransactionType() {
+	public SaleTransactionStatus getTransactionType() {
 		return transactionType;
 	}
 
-	public void setTransactionType(SaleTransaction transactionType) {
+	public void setTransactionType(SaleTransactionStatus transactionType) {
 		this.transactionType = transactionType;
 	}
 
