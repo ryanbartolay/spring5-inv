@@ -19,8 +19,12 @@ function PUT(url, data, callback){
 	return ajax("PUT", url, data, callback)
 }
 function decodeAPIResponse(data) {
-	console.log(data);
-	return JSON.parse(getDecode(data));
+	try {
+		return JSON.parse(getDecode(data));
+	} catch (e) {
+		return data;
+	}
+	
 }
 
 function ajax(type, url, data, callback){

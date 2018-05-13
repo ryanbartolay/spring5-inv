@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.form.SalesInvoiceForm;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 

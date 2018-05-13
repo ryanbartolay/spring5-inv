@@ -4,11 +4,14 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -49,6 +52,7 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	@JoinColumn(name="location_id", nullable=false, updatable=false)
 	private Location location;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name="payment_method", nullable=false, length=10, updatable=true)
 	private PaymentMethod paymentMethod;
 	
@@ -56,7 +60,8 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	@JoinColumn(name = "credit_card_details_id", nullable=true, updatable=true)
 	private CreditCardDetails creditCardDetails;
 	
-	@Column(name="sales_person", nullable=false, updatable=true)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sales_person_id", nullable=true, updatable=true)
 	private User salesPerson;
 	
 	@Column(name="created_date", nullable=false, updatable=false)
@@ -64,7 +69,7 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	private Date createdDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "created_by", nullable=false, updatable=false)
+	@JoinColumn(name = "created_by_id", nullable=false, updatable=false)
 	private User createdBy;
 
 	@Column(name="updated_date")
@@ -72,7 +77,7 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	private Date updatedDated;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "updated_by", nullable=true, updatable=true)
+	@JoinColumn(name = "updated_by_id", nullable=true, updatable=true)
 	private User updatedBy;
 
 	public String getSystemNumber() {

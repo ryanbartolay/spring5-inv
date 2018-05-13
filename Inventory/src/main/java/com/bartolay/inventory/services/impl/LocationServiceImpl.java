@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.bartolay.inventory.components.BeanComponent;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.form.LocationForm;
@@ -19,10 +20,13 @@ import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.services.LocationService;
 import com.bartolay.inventory.utils.ServiceUtility;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Service
 @Transactional
-public class LocationServiceImpl implements LocationService {
+public class LocationServiceImpl extends BeanComponent implements LocationService {
 
 	@Autowired
 	private LocationRepository locationRepository;
@@ -83,10 +87,25 @@ public class LocationServiceImpl implements LocationService {
 	@Override
 	public List<Location> findAll() {
 		return ServiceUtility.toList(locationRepository.findAll());
-	}
+	} 
 
 	@Override
 	public Location findOne(Integer id) {
 		return locationRepository.findById(id).get();
+	}
+
+	@Override
+	public ObjectNode findAllWithPage(String query) {
+		ObjectNode data = objectMapper.createObjectNode();
+		ArrayNode nodes = objectMapper.createArrayNode();
+		List<Location> locations = locationRepository.findByName(query, 15);
+		for (Location location : locations) {
+			ObjectNode node = objectMapper.createObjectNode();
+			node.put("id", location.getId());
+			node.put("text", location.getName());
+			nodes.add(node);
+		}
+		data.set("results", nodes);
+		return data;
 	}
 }

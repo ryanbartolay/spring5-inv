@@ -1,3 +1,52 @@
 .item-modal-lg .modal-dialog{
 	width:900px;
 }
+
+#stock_invoice_form{
+	font-size: 12px; 
+}
+
+#stock_invoice_form label{
+	padding-top: 12px;
+	width: 76px;
+}
+
+#stock_invoice_form .inner-label{
+	 width: 30px;
+}
+
+#stock_invoice_form .doc-no-group{
+ 	width: 302px;
+}
+
+#stock_invoice_form .date-group{
+ 	width: 211px;
+}
+
+#stock_invoice_form .payment-group{
+ 	margin-left: -65px;
+ 	margin-right: 65px;
+}
+
+#stock_invoice_form .lpo-label{
+ 	width: 80px;
+}
+
+#stock_invoice_form .lpo-group{
+ 	margin-left: -19px;
+    width: 130px;
+}
+
+#stock_invoice_form .date-left-group{
+ 	margin-left: -34px;
+    width: 147px;
+}
+
+
+   
+
+
+
+#stock_invoice_form .search-btn{
+	text-align: center;
+}

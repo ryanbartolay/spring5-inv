@@ -1,0 +1,195 @@
+<div class="col-lg-12">
+	<div class="row">
+		<form id="stock_invoice_form">
+			<div class="col-sm-5">
+		  		<div class="form-group">
+				    <label for="inputEmail3" class="col-sm-2 control-label">Sys No.</label>
+				    <div class="col-sm-3">
+		      			<input type="text" class="form-control" id="inputEmail3" placeholder="">
+		    		</div>
+		    		<label for="inputEmail3" class="col-sm-1 control-label inner-label">Year</label>
+				    <div class="col-sm-2">
+		      			<input type="text" class="form-control" id="inputEmail3" placeholder="">
+		    		</div>
+		    		<label for="inputEmail3" class="col-sm-1 control-label inner-label">Date</label>
+				    <div class="col-sm-3 date-group">
+		      			<input type="text" class="form-control" id="inputEmail3" placeholder="">
+		    		</div>
+	  			</div>
+	  			
+			  	<br/>
+				<div class="clearfix"></div>
+			  	<div class="form-group ">
+				    <label for="inputPassword3" class="col-sm-2 control-label">Doc No.</label>
+				    <div class="col-sm-4 doc-no-group">
+			      		<input type="text" class="form-control" id="inputPassword3" placeholder="">
+			    	</div>
+			    	<label for="inputPassword3" class="col-sm-2 control-label inner-label">Type</label>
+				    <div class="col-sm-4">
+			      		<label><input type="radio" class="" id="inputPassword3" placeholder=""> CASH</label>
+			      		<label><input type="radio" class="" id="inputPassword3" placeholder=""> CREDIT</label>
+			    	</div>
+			  	</div>
+			  	<br/>
+				<div class="clearfix"></div>
+			  	<div class="form-group">
+				    <label for="inputPassword3" class="col-sm-2 control-label">Location</label>
+				    <div class="col-sm-10">
+			      		<select class="form-control" id="location" style="width: 100%"></select>
+			    	</div>
+			  	</div>
+			  	
+			  	<br/>
+				<div class="clearfix"></div>
+			  	<div class="form-group">
+				    <label for="inputPassword3" class="col-sm-2 control-label">Description</label>
+				    <div class="col-sm-10">
+			      		<input type="text" class="form-control" id="inputPassword3" placeholder="">
+			    	</div>
+			  	</div>
+		  	</div>
+		  	<div class="col-sm-2 payment-group">
+		  		<div class="form-group">
+				    <label for="inputEmail3" class="col-sm-2 control-label">Payment</label>
+				    <div class="col-sm-10">
+		      			<input type="text" class="form-control" id="inputEmail3" placeholder="">
+		    		</div>
+	  			</div>
+	  			
+		  	</div>
+		  	<div class="col-sm-5">
+		  		<div class="form-group">
+				    <label for="inputEmail3" class="col-sm-2 control-label">Customer</label>
+				    <div class="col-sm-10">
+		      			<input type="text" class="form-control" id="inputEmail3" placeholder="">
+		    		</div>
+	  			</div>
+	  			
+			  	<br/>
+				<div class="clearfix"></div>
+			  	<div class="form-group">
+				    <label for="inputPassword3" class="col-sm-2 control-label">Address</label>
+				    <div class="col-sm-10">
+			      		<input type="text" class="form-control" id="inputPassword3" placeholder="">
+			    	</div>
+			  	</div>
+			  	
+			  	<br/>
+				<div class="clearfix"></div>
+			  	<div class="form-group">
+				    <label for="inputPassword3" class="col-sm-2 control-label">Phone</label>
+				    <div class="col-sm-3">
+			      		<input type="text" class="form-control" id="inputPassword3" placeholder="">
+			    	</div>
+			    	<label for="inputPassword3" class="col-sm-2 control-label lpo-label">LPO NO.</label>
+				    <div class="col-sm-2 lpo-group">
+			      		<input type="text" class="form-control" id="inputPassword3" placeholder="">
+			    	</div>
+			    	<label for="inputPassword3" class="col-sm-1 control-label">Date</label>
+				    <div class="col-sm-2 date-left-group">
+			      		<input type="text" class="form-control" id="inputPassword3" placeholder="">
+			    	</div>
+			  	</div>
+			  	<br/>
+				<div class="clearfix"></div>
+			  	<div class="form-group">
+				    <label for="inputPassword3" class="col-sm-2 control-label">S.Person</label>
+				    <div class="col-sm-10">
+			      		<input type="text" class="form-control" id="inputPassword3" placeholder="">
+			    	</div>
+			  	</div>
+			  	
+		  	</div>
+		  	
+		  	<div class="form-group">
+			    <div class="col-sm-12 search-btn">
+	     			<button class="btn btn-primary">Search</button>
+	     			<button class="btn btn-danger">Clear</button>
+		   		</div>
+			</div>
+		</form>
+		
+		
+	  			
+		
+	</div>
+	<br/>
+	<div class="clearfix"></div>
+	<div class="panel panel-default">
+		<!-- /.panel-heading -->
+		<div class="panel-body">
+			<table width="100%"
+				class="table table-striped table-bordered table-hover"
+				id="category-datatable">
+				<thead>
+					<tr>
+						<th>SN</th>
+						<th>CODE</th>
+						<th>DESCRIPTION</th>
+						<th>UNIT</th>
+						<th>U-DESC</th>
+						<th>QTY</th>
+						<th>UNIT PRICE</th>
+						<th>ACTIONS</th>
+					</tr>
+				</thead>
+				
+			</table>
+			<!-- /.table-responsive -->
+		</div>
+		<!-- /.panel-body -->
+	</div>
+	<!-- /.panel -->
+</div>
+
+<!-- DataTables JavaScript -->
+<script
+	th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
+
+<script>
+/*<![CDATA[*/
+	
+	var DOCS = $(document);
+	var formModal = $("#formModal");
+	var modalLabel = formModal.find("#modalLabel");
+	var submitButtonLabel = $("#formModal #submit");
+	var form = $("#createUnitForm");
+	var table = $('#category-datatable');
+	var datatable = customDatatable(table, '/api/datatable/sales/invoices', 
+			[
+            	{ "data": "system_number", "name" : "SN", "title" : "SN",},
+            	{ "data": "code", "name" : "CODE", "title" : "CODE",},
+            	{ "data": "description", "name" : "DESCRIPTION", "title" : "DESCRIPTION",},
+            	{ "data": "unit", "name" : "UNIT", "title" : "UNIT",},
+            	{ "data": "quantity", "name" : "QTY", "title" : "QTY",},
+            	{ "data": "unit_price", "name" : "UNIT PRICE", "title" : "UNIT PRICE",},
+            	{ "data": "amount", "name" : "AMOUNT", "title" : "AMOUNT",},
+        	],
+        	[ 
+        		{
+                    "targets": 7,
+                    "data": null,
+                    "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Edit</button>' 
+                    	+ '<button id="btnDelete" class="btn btn-default pull-right" data-toggle="modal" data-target="#confirmDeleteModal" data-backdrop="static" data-keyboard="false">Delete</button>'
+                }
+        	]
+	);
+	
+	loadLocationData();
+	
+	function loadLocationData(){
+		$('#location').select2({
+	  		ajax: {
+		    	url: '/api/sales/locations',
+		    	dataType: 'json',
+		    	delay: 250
+		 	}
+		});
+	}
+	
+/*]]>*/
+</script>
