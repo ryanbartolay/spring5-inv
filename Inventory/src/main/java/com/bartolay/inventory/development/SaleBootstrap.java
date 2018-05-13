@@ -13,17 +13,16 @@ import org.springframework.stereotype.Component;
 
 import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.entity.Item;
-import com.bartolay.inventory.entity.ItemUnit;
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.form.SalesInvoiceForm;
+import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 import com.bartolay.inventory.sales.entity.CreditCardDetails;
 import com.bartolay.inventory.sales.repositories.CreditCardDetailsRepository;
-import com.bartolay.inventory.sales.repositories.InventoryRepository;
 import com.bartolay.inventory.sales.services.SalesInvoiceService;
 import com.bartolay.inventory.utils.CalendarUtils;
 

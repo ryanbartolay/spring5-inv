@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.bartolay.inventory.form.BrandForm;
 import com.bartolay.inventory.form.StockOpeningForm;
+import com.bartolay.inventory.form.StockTransferForm;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.services.CompanyService;
 import com.bartolay.inventory.stock.entity.StockOpening;
@@ -78,6 +79,7 @@ public class StockController {
 		model.setViewName("stock/index");
 		model.addObject("page", "Stock Transfer");
 		model.addObject("html", "../stock/transfer/list");
+		model.addObject("stockTransferForm", new StockTransferForm());
 		return model;
 	}
 	
