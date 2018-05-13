@@ -1,7 +1,6 @@
 package com.bartolay.inventory.stock.services;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -10,11 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.entity.Inventory;
-import com.bartolay.inventory.entity.Item;
-import com.bartolay.inventory.entity.ItemUnit;
 import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.stock.entity.StockOpening;
+import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
@@ -27,6 +25,9 @@ public class InventoryService {
 	@Autowired
 	private InventoryRepository inventoryRepository;
 	
+	@Autowired
+	private StockOpeningRepository stockOpeningRepository;
+	
 	/**
 	 * Creates the Stock Opening
 	 * @param stockOpening
@@ -34,8 +35,6 @@ public class InventoryService {
 	public void createStockOpening(StockOpening stockOpening) {
 		
 		List<Inventory> inventories = inventoryRepository.findByLocation(stockOpening.getLocation());
-		
-		List<ItemUnit> itemPlaceholder = null;
 		
 		// iterate through items and check if default unit
 		stockOpening.getItems().forEach(stockOpeningItem -> {
@@ -68,6 +67,8 @@ public class InventoryService {
 			
 			inventoryRepository.save(inventory);
 		});
+		
+		stockOpeningRepository.save(stockOpening);
 		
 	}
 	
