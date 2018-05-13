@@ -1,5 +1,6 @@
 package com.bartolay.inventory.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
@@ -33,6 +34,12 @@ public class Item {
 	
 	@Column(nullable=false, length=150)
     private String name;
+	
+	@Column(name="minimum_unit_price",  nullable=false, precision=10, scale=5)
+	private BigDecimal minimumUnitPrice;
+	
+	@Column(name="maximum_unit_price",  nullable=true, precision=10, scale=5)
+	private BigDecimal maximumUnitPrice;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id", nullable=true)
@@ -239,6 +246,22 @@ public class Item {
 		this.supplier = supplier;
 	}
 
+	public BigDecimal getMinimumUnitPrice() {
+		return minimumUnitPrice;
+	}
+
+	public void setMinimumUnitPrice(BigDecimal minimumUnitPrice) {
+		this.minimumUnitPrice = minimumUnitPrice;
+	}
+
+	public BigDecimal getMaximumUnitPrice() {
+		return maximumUnitPrice;
+	}
+
+	public void setMaximumUnitPrice(BigDecimal maximumUnitPrice) {
+		this.maximumUnitPrice = maximumUnitPrice;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -258,10 +281,11 @@ public class Item {
 
 	@Override
 	public String toString() {
-		return "Item [id=" + id + ", code=" + code + ", name=" + name + ", category=" + category + ", brand=" + brand
-				+ ", color=" + color + ", model=" + model + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
-				+ ", createdDate=" + createdDate + ", updatedDated=" + updatedDated + ", enabled=" + enabled + "]";
+		return "Item [id=" + id + ", code=" + code + ", name=" + name + ", minimumUnitPrice=" + minimumUnitPrice
+				+ ", maximumUnitPrice=" + maximumUnitPrice + ", category=" + category + ", brand=" + brand + ", color="
+				+ color + ", model=" + model + ", defaultUnit=" + defaultUnit + ", itemUnits=" + itemUnits
+				+ ", createdBy=" + createdBy + ", updatedBy=" + updatedBy + ", createdDate=" + createdDate
+				+ ", updatedDated=" + updatedDated + ", enabled=" + enabled + ", size=" + size + ", country=" + country
+				+ ", supplier=" + supplier + "]";
 	}
-	
-	
 }
