@@ -42,11 +42,19 @@
     width: 147px;
 }
 
-
-   
-
-
-
 #stock_invoice_form .search-btn{
 	text-align: center;
+}
+
+#stock_transfer_form{
+	font-size: 12px;
+}
+
+#stock_transfer_form label{
+	padding-top: 12px;
+}
+
+#stock_transfer_form .search-btn{
+	text-align: center;
+    margin-top: 20px;
 }

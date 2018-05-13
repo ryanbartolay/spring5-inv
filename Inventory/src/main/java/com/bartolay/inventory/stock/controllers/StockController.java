@@ -73,4 +73,12 @@ public class StockController {
 		return mav;
 	}
 	
+	@RequestMapping(value="/stock/transfer")
+	public ModelAndView stockTransfer(ModelAndView model) {
+		model.setViewName("stock/index");
+		model.addObject("page", "Stock Transfer");
+		model.addObject("html", "../stock/transfer/list");
+		return model;
+	}
+	
 }

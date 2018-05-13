@@ -176,3 +176,12 @@ function singledatetimepicker(container){
 	    timePicker24Hour: true,
 	});
 }
+
+function singledatepicker(container){
+	container.daterangepicker({
+		singleDatePicker: true,
+		locale: {
+			format: 'YYYY-MM-DD'
+	    }
+	});
+}
