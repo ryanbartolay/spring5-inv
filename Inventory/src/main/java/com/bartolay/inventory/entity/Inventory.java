@@ -34,10 +34,6 @@ public class Inventory {
 	public BigDecimal quantity;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="item_unit_id", nullable=false, updatable=false)
-	public ItemUnit itemUnit;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="location_id", nullable=false, updatable=false)
 	private Location location;
 
@@ -85,14 +81,6 @@ public class Inventory {
 		this.quantity = quantity;
 	}
 
-	public ItemUnit getItemUnit() {
-		return itemUnit;
-	}
-
-	public void setItemUnit(ItemUnit itemUnit) {
-		this.itemUnit = itemUnit;
-	}
-
 	public Location getLocation() {
 		return location;
 	}
@@ -132,6 +120,11 @@ public class Inventory {
 	public void setUpdatedBy(User updatedBy) {
 		this.updatedBy = updatedBy;
 	}
-	
 
+	@Override
+	public String toString() {
+		return "Inventory [id=" + id + ", item=" + item + ", quantity=" + quantity + ", location=" + location
+				+ ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", updatedDated=" + updatedDated
+				+ ", updatedBy=" + updatedBy + "]";
+	}
 }
