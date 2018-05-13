@@ -261,6 +261,10 @@ public class Item {
 	public void setMaximumUnitPrice(BigDecimal maximumUnitPrice) {
 		this.maximumUnitPrice = maximumUnitPrice;
 	}
+	
+	public boolean isDefaultUnit(Unit unit) {
+		return this.defaultUnit.equals(unit);
+	}
 
 	@Override
 	public boolean equals(Object obj) {

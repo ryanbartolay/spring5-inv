@@ -8,7 +8,9 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.PriorityOrdered;
 import org.springframework.stereotype.Component;
 
+import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 import com.bartolay.inventory.stock.entity.StockOpening;
@@ -26,6 +28,9 @@ public class StockBootstrap implements ApplicationListener<ContextRefreshedEvent
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private ItemRepository itemRepository;
+	
 	private User admin;
 	
 	@Override
@@ -35,6 +40,8 @@ public class StockBootstrap implements ApplicationListener<ContextRefreshedEvent
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
+		
+		Item item1 = itemRepository.findById((long) 1).get(); 
 		
 		admin = userRepository.findByUsername("admin");
 		

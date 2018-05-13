@@ -30,13 +30,14 @@ public class StockOpeningItem {
 	private Item item;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="item_unit_id", nullable=false, updatable=true)
+	@JoinColumn(name="unit_id", nullable=false, updatable=true)
 	private ItemUnit itemUnit;
 	
 	@Column(name="unit_cost", nullable=false)
 	private BigDecimal unitCost;
 	
-	private Long quantity;
+	@Column(name="quantity", nullable=false)
+	private BigDecimal quantity;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="stock_opening_id", nullable=false, updatable=true)
@@ -61,10 +62,10 @@ public class StockOpeningItem {
 	public void setItem(Item item) {
 		this.item = item;
 	}
-	public Long getQuantity() {
+	public BigDecimal getQuantity() {
 		return quantity;
 	}
-	public void setQuantity(Long quantity) {
+	public void setQuantity(BigDecimal quantity) {
 		this.quantity = quantity;
 	}
 	public StockOpening getStockOpening() {
@@ -84,5 +85,10 @@ public class StockOpeningItem {
 	}
 	public void setUnitCost(BigDecimal unitCost) {
 		this.unitCost = unitCost;
+	}
+	@Override
+	public String toString() {
+		return "StockOpeningItem [id=" + id + ", item=" + item + ", itemUnit=" + itemUnit + ", unitCost=" + unitCost
+				+ ", quantity=" + quantity + ", stockOpening=" + stockOpening + "]";
 	}
 }
