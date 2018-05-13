@@ -1,6 +1,8 @@
 package com.bartolay.inventory.development;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -9,6 +11,10 @@ import org.springframework.core.PriorityOrdered;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.bartolay.inventory.entity.Inventory;
+import com.bartolay.inventory.entity.Item;
+import com.bartolay.inventory.entity.ItemUnit;
+import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.enums.PaymentMethod;
@@ -17,7 +23,9 @@ import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 import com.bartolay.inventory.sales.entity.CreditCardDetails;
 import com.bartolay.inventory.sales.repositories.CreditCardDetailsRepository;
+import com.bartolay.inventory.sales.repositories.InventoryRepository;
 import com.bartolay.inventory.sales.services.SalesInvoiceService;
+import com.bartolay.inventory.utils.CalendarUtils;
 
 @Component
 public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered  {
@@ -36,6 +44,9 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private InventoryRepository inventoryRepository;
 	
 	private User user;
 	
@@ -74,6 +85,10 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 		
 		createSalesPerson();
 		createSalesInvoices();
+		try {
+			createInventories();
+		} catch (Exception e) {
+		}
 	}
 
 	private void createSalesPerson() {
@@ -108,7 +123,7 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 		salesForm.setCreditCardDetails(ccDetails);
 		salesForm.setDocumentNumber("Sales#12344");
 		salesForm.setYear("2018");
-		salesForm.setTransactionDate(cal.getTime());
+		salesForm.setTransactionDate(CalendarUtils.dateToString(cal.getTime()));
 		salesForm.setSalesPerson(sales1);
 		salesForm.setCreatedBy(user);
 		salesForm.setLocation(locationRepository.findById(1).get());
@@ -121,13 +136,38 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 		salesForm2.setPaymentMethod(PaymentMethod.CASH);
 		salesForm2.setDocumentNumber("Sales#12aas34");
 		salesForm2.setYear("2018");
-		salesForm2.setTransactionDate(cal.getTime());
+		salesForm2.setTransactionDate(CalendarUtils.dateToString(cal.getTime()));
 		salesForm2.setSalesPerson(sales2);
 		salesForm2.setCreatedBy(user);
 		salesForm2.setLocation(locationRepository.findById(2).get());
 		
 		salesInvoiceService.create(salesForm2);
 		
+	}
+	
+	private void createInventories() {
+		Inventory inventory = new Inventory();
+		inventory.setCreatedBy(user);
+		inventory.setCreatedDate(new Date());
+		inventory.setItem(new Item(1L));
+//		inventory.setItemUnit(new ItemUnit(1L));
+		inventory.setLocation(new Location(1));
+		inventory.setQuantity(new BigDecimal(100));
+		inventory.setUpdatedBy(null);
+		
+		inventoryRepository.save(inventory);
+		
+		
+		Inventory inventory1 = new Inventory();
+		inventory1.setCreatedBy(user);
+		inventory.setCreatedDate(new Date());
+		inventory1.setItem(new Item(2L));
+//		inventory1.setItemUnit(new ItemUnit(1L));
+		inventory1.setLocation(new Location(2));
+		inventory1.setQuantity(new BigDecimal(120));
+		inventory1.setUpdatedBy(null);
+		
+		inventoryRepository.save(inventory1);
 	}
 
 }

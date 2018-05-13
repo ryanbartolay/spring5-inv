@@ -57,12 +57,6 @@ public class StockAttributeController {
 		return model;
 	}
 	
-	@RequestMapping(value="/stock/transfer")
-	public ModelAndView stockTransfer() {
-		ModelAndView model = new ModelAndView("construction");
-		return model;
-	}
-	
 	// Stock Attributes
 	@RequestMapping(value="/brands")
 	public ModelAndView brandsList() {

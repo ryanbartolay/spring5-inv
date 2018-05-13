@@ -21,27 +21,22 @@ public class SalesInvoiceForm {
 	@Digits(fraction = 0, integer = 4, message="Year only accepts digits.")
 	private String year;
 	
-	@NotBlank
 	@NotNull
-	private Date transactionDate;
+	private String transactionDate;
 	
-	@NotBlank
 	@NotNull
 	private String documentNumber;
 	
 	private String description;
 	
-	@NotBlank
 	@NotNull
 	private Location location;
 	
-	@NotBlank
 	@NotNull
 	private PaymentMethod paymentMethod;
 	
 	private CreditCardDetails creditCardDetails;
 	
-	@NotBlank
 	@NotNull
 	private User salesPerson;
 
@@ -63,11 +58,11 @@ public class SalesInvoiceForm {
 		this.year = year;
 	}
 
-	public Date getTransactionDate() {
+	public String getTransactionDate() {
 		return transactionDate;
 	}
 
-	public void setTransactionDate(Date transactionDate) {
+	public void setTransactionDate(String transactionDate) {
 		this.transactionDate = transactionDate;
 	}
 
