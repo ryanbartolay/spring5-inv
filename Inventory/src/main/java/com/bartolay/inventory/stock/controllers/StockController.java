@@ -33,7 +33,7 @@ public class StockController {
 		ModelAndView model = new ModelAndView("stock/index");
 		model.addObject("page", "Opening Stock");
 		model.addObject("html", "opening/list");
-		model.addObject("brandForm", new BrandForm());
+		model.addObject("stockOpeningForm", new StockOpeningForm());
 		model.addObject("companies", companyService.findAll());
 		return model;
 	}

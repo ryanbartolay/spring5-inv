@@ -48,6 +48,7 @@ public class StockOpeningRestController {
 
 			response = new ApiResponse(HttpStatus.OK, "Succesfully created Document " + openingStock.getDocumentNumber());
 		} catch(Exception e) {
+			e.printStackTrace();
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 //			throw new RestApiException(e);
 		}

@@ -1,6 +1,8 @@
 package com.bartolay.inventory.stock.services.impl;
 
+import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +18,11 @@ import org.springframework.stereotype.Service;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.form.StockOpeningForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
+import com.bartolay.inventory.services.InventoryService;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 import com.bartolay.inventory.stock.services.StockOpeningService;
+import com.bartolay.inventory.utils.CalendarUtils;
 import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
@@ -27,13 +31,11 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 
 	@Autowired
 	@Qualifier("openingStockDatatableRepository")
-	private DatatableRepository openingStockDatatableRepository;
-
-	@Autowired
-	private StockOpeningRepository stockOpeningRepository;
-	
+	private DatatableRepository openingStockDatatableRepository;	
 	@Autowired
 	private UserCredentials userCredentials;
+	@Autowired
+	private InventoryService inventoryService;
 	
 	@Override
 	public List<StockOpening> findAll() {
@@ -57,18 +59,21 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 	}
 
 	@Override
-	public StockOpening create(StockOpeningForm openingStockForm) {
+	public StockOpening create(StockOpeningForm openingStockForm) throws ParseException {
 		
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(openingStockForm.getTransaction_date());
+		cal.setTime(new Date());
 		
 		StockOpening opening = new StockOpening();
 		opening.setDocumentNumber(openingStockForm.getDocument_number());
 		opening.setLocation(openingStockForm.getLocation());
-		opening.setTransactionDate(openingStockForm.getTransaction_date());
+		opening.setTransactionDate(cal.getTime());
+		opening.setItems(openingStockForm.getItems());
+		opening.setYear(openingStockForm.getYear());
+		opening.setDescription(openingStockForm.getDescription());
 		opening.setCreatedBy(userCredentials.getLoggedInUser());
-		
-		return stockOpeningRepository.save(opening);
+		inventoryService.createStockOpening(opening);
+		return opening;
 	}
 
 	@Override

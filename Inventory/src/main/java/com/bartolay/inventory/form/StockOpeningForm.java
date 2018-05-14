@@ -1,9 +1,12 @@
 package com.bartolay.inventory.form;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.stock.entity.StockOpeningItem;
@@ -11,18 +14,22 @@ import com.bartolay.inventory.stock.entity.StockOpeningItem;
 public class StockOpeningForm {
 	private Long id;
 	
+	@NotNull(message="Stock Opening document number is required!")
 	private String document_number;
 	
+	@NotNull(message="Stock Opening description is required!")
 	private String description;
 	
-	@NotNull
+	@NotNull(message="Stock Opening location is required!")
 	private Location location;
 	
-	@NotNull
-	private Date transaction_date;
+	@NotNull(message="Stock Opening year date is required!")
+	@Size(min=4, max=4, message="Incorrect Year format")
+	@Digits(fraction = 0, integer = 4, message="Year only accepts digits.")
+	private String year;
 	
-	@NotNull
-	private Set<StockOpeningItem> items;
+//	@NotNull
+	private Set<StockOpeningItem> items = new HashSet<>();
 
 	public Long getId() {
 		return id;
@@ -55,21 +62,21 @@ public class StockOpeningForm {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-
-	public Date getTransaction_date() {
-		return transaction_date;
-	}
-
-	public void setTransaction_date(Date transaction_date) {
-		this.transaction_date = transaction_date;
-	}
-
+	
 	public Set<StockOpeningItem> getItems() {
 		return items;
 	}
 
 	public void setItems(Set<StockOpeningItem> items) {
 		this.items = items;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
 	}
 	
 }
