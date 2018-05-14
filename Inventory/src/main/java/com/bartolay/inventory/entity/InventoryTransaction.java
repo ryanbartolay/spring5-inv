@@ -1,6 +1,7 @@
 package com.bartolay.inventory.entity;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.bartolay.inventory.enums.TransactionType;
 
@@ -49,6 +52,19 @@ public class InventoryTransaction {
 	
 	@Column(name="quantity", nullable=false, precision=10, scale=5, updatable=false)
 	private BigDecimal quantity;
+	
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="inventory_id", nullable=false, updatable=true)
+	private Inventory inventory;
+	
+	@Column(name="created_date", nullable=false, updatable=false)
+	@CreationTimestamp
+	private Date createdDate;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", nullable=false, updatable=false)
+	private User createdBy;
 	
 	public InventoryTransaction() {
 		super();
@@ -124,6 +140,30 @@ public class InventoryTransaction {
 
 	public void setQuantity(BigDecimal quantity) {
 		this.quantity = quantity;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public User getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Inventory getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
 	}
 
 }

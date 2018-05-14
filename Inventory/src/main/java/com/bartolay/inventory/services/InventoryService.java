@@ -2,6 +2,7 @@ package com.bartolay.inventory.services;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.entity.InventoryTransaction;
 import com.bartolay.inventory.entity.ItemUnit;
+import com.bartolay.inventory.enums.TransactionType;
 import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.InventoryTransactionRepository;
 import com.bartolay.inventory.repositories.ItemUnitRepository;
@@ -45,9 +47,12 @@ public class InventoryService {
 	 */
 	public void createStockOpening(StockOpening stockOpening) {
 		
+		// Lets save the stock opening first so we can generate a system number
+		stockOpeningRepository.save(stockOpening);
+		
 		List<Inventory> inventories = inventoryRepository.findByLocation(stockOpening.getLocation());
 		
-		stockOpeningRepository.save(stockOpening);
+		List<InventoryTransaction> invTransactions = new ArrayList<>();
 		
 		// iterate through items and check if default unit
 		stockOpening.getItems().forEach(stockOpeningItem -> {
@@ -67,6 +72,9 @@ public class InventoryService {
 				inventory.setQuantity(new BigDecimal("0"));
 			}
 			
+			inventoryTransaction.setQuantityBefore(inventory.getQuantity());
+			
+			// Now lets compute for the quantity of the item
 			// if unit is the default unit of the item
 			// save the quantity as is
 			if(stockOpeningItem.getItem().isDefaultUnit(stockOpeningItem.getUnit())) {
@@ -91,15 +99,20 @@ public class InventoryService {
 			inventoryTransaction.setItem(stockOpeningItem.getItem());
 			inventoryTransaction.setLocation(stockOpening.getLocation());
 			inventoryTransaction.setTransactionSystemNumber(stockOpening.getSystemNumber());
-			
-			
+			inventoryTransaction.setQuantity(inventory.getQuantity());
+			inventoryTransaction.setUnit(stockOpeningItem.getUnit());
+			inventoryTransaction.setUnitCost(stockOpeningItem.getUnitCost());
+			inventoryTransaction.setTransactionType(TransactionType.STOCK_OPENING);
+			inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
 			
 			inventoryRepository.save(inventory);
-			inventoryTransactionRepository.save(inventoryTransaction);
+			
+			inventoryTransaction.setInventory(inventory);
+			
+			invTransactions.add(inventoryTransaction);
 		});
 		
-		
-		
+		inventoryTransactionRepository.saveAll(invTransactions);
 	}
 	
 	public void createSalesInvoice(SalesInvoice salesInvoice) {
