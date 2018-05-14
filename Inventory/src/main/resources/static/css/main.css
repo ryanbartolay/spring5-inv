@@ -58,3 +58,33 @@
 	text-align: center;
     margin-top: 20px;
 }
+
+#stock_ajdustment_form{
+	font-size: 12px;
+}
+
+#stock_ajdustment_form label{
+	padding-top: 12px;
+	width: 76px;
+}
+
+.year-label{
+	width: 50px!important;
+}
+
+#stock_ajdustment_form .year-group{
+	width: 115px;
+	
+}
+
+#stock_ajdustment_form .date-group{
+	width: 204px;
+	
+}
+
+#stock_ajdustment_form .search-btn{
+	text-align: center;
+    margin-top: 20px;
+}
+
+

@@ -33,7 +33,7 @@ public class StockController {
 		ModelAndView model = new ModelAndView("stock/index");
 		model.addObject("page", "Opening Stock");
 		model.addObject("html", "opening/list");
-		model.addObject("brandForm", new BrandForm());
+		model.addObject("stockOpeningForm", new StockOpeningForm());
 		model.addObject("companies", companyService.findAll());
 		return model;
 	}
@@ -79,6 +79,15 @@ public class StockController {
 		model.setViewName("stock/index");
 		model.addObject("page", "Stock Transfer");
 		model.addObject("html", "../stock/transfer/list");
+		model.addObject("stockTransferForm", new StockTransferForm());
+		return model;
+	}
+	
+	@RequestMapping(value="/stock/adjustment")
+	public ModelAndView stockAdjustment(ModelAndView model) {
+		model.setViewName("stock/index");
+		model.addObject("page", "Stock Adjustment");
+		model.addObject("html", "../stock/adjustment/list");
 		model.addObject("stockTransferForm", new StockTransferForm());
 		return model;
 	}

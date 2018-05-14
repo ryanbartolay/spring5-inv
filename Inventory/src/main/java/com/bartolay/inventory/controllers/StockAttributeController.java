@@ -51,12 +51,6 @@ public class StockAttributeController {
 	@Autowired
 	private SizeRepository sizeRepository;
 	
-	@RequestMapping(value="/stock/adjustment")
-	public ModelAndView stockAdjustment() {
-		ModelAndView model = new ModelAndView("construction");
-		return model;
-	}
-	
 	// Stock Attributes
 	@RequestMapping(value="/brands")
 	public ModelAndView brandsList() {

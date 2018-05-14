@@ -19,12 +19,12 @@ import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.repositories.DatatableRepository;
 
 @Repository
-@Qualifier("openingStockDatatableRepository")
-public class StockOpeningDatatableRepositoryImpl extends RepositoryComponent implements DatatableRepository {
+@Qualifier("stockAdjustmentDatatableRepository")
+public class StockAdjustmentDatatableRepositoryImpl extends RepositoryComponent implements DatatableRepository {
 
 	@Override
 	public long findAllCount(DatatableParameter datatableParameter) {
-		String SQL = "SELECT COUNT(system_number) FROM stock_opening ";
+		String SQL = "SELECT COUNT(system_number) FROM stock_transfer ";
 
 		if(datatableParameter.getSearch() != null) {
 			SQL += " WHERE  documentNumber like :documentNumber ";
@@ -41,7 +41,9 @@ public class StockOpeningDatatableRepositoryImpl extends RepositoryComponent imp
 	public JSONArray findAllData(DatatableParameter datatableParameter) {
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t1.description, t2.name as location_name FROM stock_opening t1 inner join location t2 on t1.location_id = t2.id ";
+			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t2.name as from_location_name, t3.name as to_location_name FROM stock_transfer t1 "
+					+ "inner join location t2 on t1.from_location_id = t2.id "
+					+ "inner join location t3 on t1.to_location_id = t3.id ";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
@@ -52,7 +54,7 @@ public class StockOpeningDatatableRepositoryImpl extends RepositoryComponent imp
 
 			// sort order by column
 			if(sortColumn != null && datatableParameter.getSortOrder() != null) {
-				SQL += " ORDER BY "+sortColumn.getData()+ " " + datatableParameter.getSortOrder().name();	
+				SQL += " ORDER BY t1."+sortColumn.getData()+ " " + datatableParameter.getSortOrder().name();	
 			}
 			
 			if(datatableParameter.getLength() > 0) {
@@ -68,9 +70,16 @@ public class StockOpeningDatatableRepositoryImpl extends RepositoryComponent imp
 					JSONObject obj = new JSONObject();
 					obj.put("system_number", rs.getString("system_number"));
 					obj.put("document_number", rs.getString("document_number"));
-					obj.put("description", rs.getString("description"));
-					obj.put("location_name", rs.getString("location_name"));
+					obj.put("description", rs.getString("document_number"));
 					obj.put("transaction_date", rs.getString("transaction_date"));
+					obj.put("from_location.name", rs.getString("from_location_name"));
+					obj.put("to_location_name", rs.getString("to_location_name"));
+					obj.put("code", rs.getString("to_location_name"));
+					obj.put("unit", rs.getString("to_location_name"));
+					obj.put("amount", rs.getString("to_location_name"));
+					obj.put("quantity", rs.getString("to_location_name"));
+					
+//					dummy data
 					
 					return obj;
 				}
