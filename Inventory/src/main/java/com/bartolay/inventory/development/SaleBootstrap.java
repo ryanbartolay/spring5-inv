@@ -83,7 +83,7 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 		
 		
 		createSalesPerson();
-		createSalesInvoices();
+//		createSalesInvoices();
 		try {
 			createInventories();
 		} catch (Exception e) {
@@ -127,7 +127,7 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 		salesForm.setCreatedBy(user);
 		salesForm.setLocation(locationRepository.findById(1).get());
 		
-		salesInvoiceService.create(salesForm);
+//		salesInvoiceService.create(salesForm);
 		
 		cal.set(2018, 5, 21, 22, 33, 5);
 		
@@ -140,7 +140,7 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 		salesForm2.setCreatedBy(user);
 		salesForm2.setLocation(locationRepository.findById(2).get());
 		
-		salesInvoiceService.create(salesForm2);
+//		salesInvoiceService.create(salesForm2);
 		
 	}
 	

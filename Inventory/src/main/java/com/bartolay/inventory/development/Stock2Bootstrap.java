@@ -57,7 +57,7 @@ public class Stock2Bootstrap implements ApplicationListener<ContextRefreshedEven
 	
 	@Override
 	public int getOrder() {
-		return 4;
+		return 5;
 	}
 
 	@Override

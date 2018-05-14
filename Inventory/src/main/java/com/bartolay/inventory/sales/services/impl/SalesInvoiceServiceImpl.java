@@ -55,7 +55,7 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 		salesInvoice.setLocation(salesInvoiceForm.getLocation());
 		salesInvoice.setYear(salesInvoiceForm.getYear());
 		salesInvoice.setCreatedBy(userCredentials.getLoggedInUser());
-		salesInvoice.setSale_status(Status.CREATED);
+		salesInvoice.setStatus(Status.CREATED);
 		
 		return salesInvoiceRepository.save(salesInvoice);
 	}

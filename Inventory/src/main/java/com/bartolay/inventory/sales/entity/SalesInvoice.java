@@ -1,6 +1,7 @@
 package com.bartolay.inventory.sales.entity;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.bartolay.inventory.entity.InventoryTransaction;
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
@@ -30,6 +32,9 @@ public class SalesInvoice implements GeneratedSystemNumber {
 
 	@Transient
 	public static final String TABLE_NAME = "sales_invoice";
+	
+	@Transient
+	private Set<InventoryTransaction> intentoryTransactions;
 
 	@Id
 	@GeneratedValue(generator = "SalesInvoice-UniqueIdGenerator")
@@ -56,8 +61,8 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	@Column(name="payment_method", nullable=false, length=10, updatable=true)
 	private PaymentMethod paymentMethod;
 	
-	@Column(name="sale_status", nullable=false, updatable=true, length=10)
-	private Status sale_status;
+	@Column(name="status", nullable=false, updatable=true, length=10)
+	private Status status;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "credit_card_details_id", nullable=true, updatable=true)
@@ -160,11 +165,11 @@ public class SalesInvoice implements GeneratedSystemNumber {
 		this.updatedBy = updatedBy;
 	}
 
-	public Status getSale_status() {
-		return sale_status;
+	public Status getStatus() {
+		return status;
 	}
-	public void setSale_status(Status sale_status) {
-		this.sale_status = sale_status;
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 	@Override
 	public String getYear() {
@@ -175,6 +180,12 @@ public class SalesInvoice implements GeneratedSystemNumber {
 		this.year = year;
 	}
 	
+	public Set<InventoryTransaction> getIntentoryTransactions() {
+		return intentoryTransactions;
+	}
+	public void setIntentoryTransactions(Set<InventoryTransaction> intentoryTransactions) {
+		this.intentoryTransactions = intentoryTransactions;
+	}
 	@Override
 	public String getTableName() {
 		return TABLE_NAME;
@@ -184,7 +195,7 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	public String toString() {
 		return "SalesInvoice [systemNumber=" + systemNumber + ", year=" + year + ", transactionDate=" + transactionDate
 				+ ", documentNumber=" + documentNumber + ", description=" + description + ", location=" + location
-				+ ", paymentMethod=" + paymentMethod + ", sale_status=" + sale_status + ", creditCardDetails="
+				+ ", paymentMethod=" + paymentMethod + ", status=" + status + ", creditCardDetails="
 				+ creditCardDetails + ", salesPerson=" + salesPerson + ", createdDate=" + createdDate + ", createdBy="
 				+ createdBy + ", updatedDated=" + updatedDated + ", updatedBy=" + updatedBy + "]";
 	}

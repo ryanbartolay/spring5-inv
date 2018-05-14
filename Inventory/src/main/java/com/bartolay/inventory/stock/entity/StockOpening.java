@@ -19,8 +19,10 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.bartolay.inventory.entity.InventoryTransaction;
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.enums.Status;
 import com.bartolay.inventory.repositories.GeneratedSystemNumber;
 
 @Entity
@@ -29,6 +31,9 @@ public class StockOpening implements GeneratedSystemNumber {
 
 	@Transient
 	public static final String TABLE_NAME = "stock_opening";
+	
+	@Transient
+	private Set<InventoryTransaction> inventories;
 
 	@Id
 	@GeneratedValue(generator = "UniqueIdGenerator")
@@ -75,6 +80,9 @@ public class StockOpening implements GeneratedSystemNumber {
 	@Column(name="draft", nullable=false)
 	private boolean draft;
 
+	@Column(name="status", nullable=false, updatable=true, length=3)
+	private Status status;
+	
 	@Column(name="enabled", nullable=false)
 	private boolean enabled;
 
@@ -189,6 +197,21 @@ public class StockOpening implements GeneratedSystemNumber {
 
 	public void setItems(Set<StockOpeningItem> items) {
 		this.items = items;
+	}
+	
+	public Set<InventoryTransaction> getInventories() {
+		return inventories;
+	}
+
+	public void setInventories(Set<InventoryTransaction> inventories) {
+		this.inventories = inventories;
+	}
+	
+	public Status getStatus() {
+		return status;
+	}
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	@Override

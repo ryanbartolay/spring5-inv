@@ -263,8 +263,6 @@ public class Item {
 	}
 	
 	public boolean isDefaultUnit(Unit unit) {
-		
-		System.err.println(unit);
 		return this.defaultUnit.equals(unit);
 	}
 
@@ -287,11 +285,8 @@ public class Item {
 
 	@Override
 	public String toString() {
-		return "Item [id=" + id + ", code=" + code + ", name=" + name + ", minimumUnitPrice=" + minimumUnitPrice
-				+ ", maximumUnitPrice=" + maximumUnitPrice + ", category=" + category + ", brand=" + brand + ", color="
-				+ color + ", model=" + model + ", defaultUnit=" + defaultUnit + ", itemUnits=" + itemUnits
-				+ ", createdBy=" + createdBy + ", updatedBy=" + updatedBy + ", createdDate=" + createdDate
-				+ ", updatedDated=" + updatedDated + ", enabled=" + enabled + ", size=" + size + ", country=" + country
-				+ ", supplier=" + supplier + "]";
+		return "Item [id=" + id + ", code=" + code + ", name=" + name + ", defaultUnit=" + defaultUnit + "]";
 	}
+
+
 }

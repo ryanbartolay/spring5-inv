@@ -154,8 +154,6 @@ public class Inventory {
 
 	@Override
 	public String toString() {
-		return "Inventory [id=" + id + ", item=" + item + ", quantity=" + quantity + ", location=" + location
-				+ ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", updatedDated=" + updatedDated
-				+ "]";
+		return "Inventory [item=" + item + ", location=" + location + "]";
 	}
 }
