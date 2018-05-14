@@ -28,7 +28,7 @@ import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 
 @Component
 @Transactional
-public class StockBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
+public class Stock2Bootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
 
 	@Autowired
 	private LocationRepository locationRepository;
@@ -54,73 +54,53 @@ public class StockBootstrap implements ApplicationListener<ContextRefreshedEvent
 
 	@Autowired
 	private UnitRepository unitRepository;
-
-	private User admin;
-
+	
 	@Override
 	public int getOrder() {
-		return 3;
+		return 4;
 	}
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
-
+		// opening 2 ---------------------------------------------------
 		Set<StockOpeningItem> soItems = new HashSet<>();
 
-		Item item1 = itemRepository.findById((long) 1).get();
+
+		Item item2 = itemRepository.findById((long) 1).get();
+		Item item3 = itemRepository.findById((long) 2).get();
+
 
 		StockOpeningItem soItem = new StockOpeningItem();
-		soItem.setItem(item1);
+		soItem.setItem(item2);
 		soItem.setUnit(unitRepository.findById(1).get());
-		soItem.setQuantity(new BigDecimal("20.1234"));
-		soItem.setUnitCost(new BigDecimal("1.50"));
+		soItem.setQuantity(new BigDecimal("77.1234"));
+		soItem.setUnitCost(new BigDecimal("19.560"));
 
-		admin = userRepository.findByUsername("admin");
+		StockOpeningItem soItem2 = new StockOpeningItem();
+		soItem2.setItem(item3);
+		soItem2.setUnit(unitRepository.findById(1).get());
+		soItem2.setQuantity(new BigDecimal("55.1234"));
+		soItem2.setUnitCost(new BigDecimal("92.560"));
 
-		StockOpening stockOpening = new StockOpening();
-		stockOpening.setDocumentNumber("XVMill221");
-		stockOpening.setYear("2018");
-		stockOpening.setLocation(locationRepository.findById(1).get());
-		stockOpening.setTransactionDate(new Date());
-		stockOpening.setCreatedBy(admin);
-		stockOpening.setItems(soItems);
+		User admin = userRepository.findByUsername("admin");
 
-		soItem.setStockOpening(stockOpening);
+		StockOpening stockOpening2 = new StockOpening();
+		stockOpening2.setDocumentNumber("XVMill222");
+		stockOpening2.setYear("2018");
+		stockOpening2.setLocation(locationRepository.findById(1).get());
+		stockOpening2.setTransactionDate(new Date());
+		stockOpening2.setCreatedBy(admin);
+		stockOpening2.setItems(soItems);
+
+		soItem.setStockOpening(stockOpening2);
+		soItem2.setStockOpening(stockOpening2);
 		soItems.add(soItem);
+		soItems.add(soItem2);
 
-		System.err.println("stockOpening");
-		System.err.println(stockOpening);
+		System.err.println("stockOpening22222222");
+		System.err.println(stockOpening2);
 
-		inventoryService.createStockOpening(stockOpening);
-
+		inventoryService.createStockOpening(stockOpening2);
 	}
 
-
-
-	//	StockOpening opening2 = new StockOpening();
-	//	opening2.setDocumentNumber("35-22-GA2");
-	//	opening2.setYear("2016");
-	//	opening2.setLocation(locationRepository.findById(1).get());
-	//	opening2.setTransactionDate(new Date());
-	//	opening2.setCreatedBy(admin);
-	//	
-	//	stockOpeningRepository.save(opening2);
-	//	
-	//	StockOpening opening3 = new StockOpening();
-	//	opening3.setDocumentNumber("377MLXzz");
-	//	opening3.setYear("2017");
-	//	opening3.setLocation(locationRepository.findById(1).get());
-	//	opening3.setTransactionDate(new Date());
-	//	opening3.setCreatedBy(admin);
-	//	
-	//	stockOpeningRepository.save(opening3);
-	//	
-	//	StockOpening opening4 = new StockOpening();
-	//	opening4.setDocumentNumber("DOC2123");
-	//	opening4.setYear("2018");
-	//	opening4.setLocation(locationRepository.findById(1).get());
-	//	opening4.setTransactionDate(new Date());
-	//	opening4.setCreatedBy(admin);
-	//	
-	//	stockOpeningRepository.save(opening4);
 }
