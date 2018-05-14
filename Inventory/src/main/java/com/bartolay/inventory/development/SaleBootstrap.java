@@ -154,7 +154,7 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 		inventory.setQuantity(new BigDecimal(100));
 		inventory.setUpdatedBy(null);
 		
-		inventoryRepository.save(inventory);
+		//inventoryRepository.save(inventory);
 		
 		
 		Inventory inventory1 = new Inventory();
@@ -166,7 +166,7 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 		inventory1.setQuantity(new BigDecimal(120));
 		inventory1.setUpdatedBy(null);
 		
-		inventoryRepository.save(inventory1);
+		//inventoryRepository.save(inventory1);
 	}
 
 }

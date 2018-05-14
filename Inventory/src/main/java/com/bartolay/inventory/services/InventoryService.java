@@ -23,7 +23,6 @@ import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
-@Transactional
 public class InventoryService {
 	
 	@Autowired 
@@ -45,12 +44,16 @@ public class InventoryService {
 	 * Creates the Stock Opening
 	 * @param stockOpening
 	 */
+	@Transactional
 	public void createStockOpening(StockOpening stockOpening) {
 		
 		// Lets save the stock opening first so we can generate a system number
 		stockOpeningRepository.save(stockOpening);
 		
 		List<Inventory> inventories = inventoryRepository.findByLocation(stockOpening.getLocation());
+		
+		System.err.println("inventories");
+		System.err.println(inventories);
 		
 		List<InventoryTransaction> invTransactions = new ArrayList<>();
 		
