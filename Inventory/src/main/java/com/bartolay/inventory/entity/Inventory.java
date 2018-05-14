@@ -30,7 +30,7 @@ public class Inventory {
 	@JoinColumn(name="item_id", nullable=false, updatable=false)
 	public Item item;
 	
-	@Column(name="quantity", updatable=true)
+	@Column(name="quantity", updatable=true, precision=10, scale=5)
 	public BigDecimal quantity;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

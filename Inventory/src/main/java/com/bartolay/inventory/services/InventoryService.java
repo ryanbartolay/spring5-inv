@@ -1,6 +1,7 @@
 package com.bartolay.inventory.services;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -9,7 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.entity.Inventory;
+import com.bartolay.inventory.entity.InventoryTransaction;
+import com.bartolay.inventory.entity.ItemUnit;
 import com.bartolay.inventory.repositories.InventoryRepository;
+import com.bartolay.inventory.repositories.InventoryTransactionRepository;
+import com.bartolay.inventory.repositories.ItemUnitRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
@@ -26,6 +31,12 @@ public class InventoryService {
 	private InventoryRepository inventoryRepository;
 	
 	@Autowired
+	private InventoryTransactionRepository inventoryTransactionRepository;
+	
+	@Autowired
+	private ItemUnitRepository itemUnitRepository;
+	
+	@Autowired
 	private StockOpeningRepository stockOpeningRepository;
 	
 	/**
@@ -36,10 +47,14 @@ public class InventoryService {
 		
 		List<Inventory> inventories = inventoryRepository.findByLocation(stockOpening.getLocation());
 		
+		stockOpeningRepository.save(stockOpening);
+		
 		// iterate through items and check if default unit
 		stockOpening.getItems().forEach(stockOpeningItem -> {
 			
 			Inventory inventory = new Inventory();
+			InventoryTransaction inventoryTransaction = new InventoryTransaction();
+			
 			inventory.setItem(stockOpeningItem.getItem());
 			inventory.setLocation(stockOpening.getLocation());
 			
@@ -49,26 +64,41 @@ public class InventoryService {
 				inventory.setUpdatedBy(userCredentials.getLoggedInUser());
 			} else {
 				inventory.setCreatedBy(userCredentials.getLoggedInUser());
+				inventory.setQuantity(new BigDecimal("0"));
 			}
 			
 			// if unit is the default unit of the item
 			// save the quantity as is
-			if(stockOpeningItem.getItem().isDefaultUnit(stockOpeningItem.getItemUnit().getUnit())) {
+			if(stockOpeningItem.getItem().isDefaultUnit(stockOpeningItem.getUnit())) {
 				inventory.setQuantity(inventory.getQuantity().add(stockOpeningItem.getQuantity()));
 			} else { // if unit is not the default then we compute for the actual quantity
 				BigDecimal quantity = stockOpeningItem.getQuantity(); // user input quantity
 				
-				BigDecimal rate = stockOpeningItem.getItemUnit().getRate(); // items rate
+				// lets get the rate of the item unit
+				ItemUnit itemUnit = itemUnitRepository.findByItemAndUnit(stockOpeningItem.getItem(), stockOpeningItem.getUnit());
+				BigDecimal rate = itemUnit.getRate(); // items rate
 				
-				BigDecimal rateQuantity = quantity.divide(rate);
+				System.err.println("rate " + rate);
+				System.err.println("quantity " + quantity);
+				
+				BigDecimal rateQuantity = quantity.divide(rate, 5, RoundingMode.HALF_UP);
+				
+				System.err.println("rateQuantity " + rateQuantity);
 				
 				inventory.setQuantity(inventory.getQuantity().add(rateQuantity));
 			}
+
+			inventoryTransaction.setItem(stockOpeningItem.getItem());
+			inventoryTransaction.setLocation(stockOpening.getLocation());
+			inventoryTransaction.setTransactionSystemNumber(stockOpening.getSystemNumber());
+			
+			
 			
 			inventoryRepository.save(inventory);
+			inventoryTransactionRepository.save(inventoryTransaction);
 		});
 		
-		stockOpeningRepository.save(stockOpening);
+		
 		
 	}
 	

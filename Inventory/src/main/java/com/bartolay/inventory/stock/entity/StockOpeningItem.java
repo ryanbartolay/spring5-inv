@@ -14,7 +14,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.bartolay.inventory.entity.Item;
-import com.bartolay.inventory.entity.ItemUnit;
+import com.bartolay.inventory.entity.Unit;
 
 @Entity
 @Table(name="stock_opening_item")
@@ -23,7 +23,7 @@ public class StockOpeningItem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_opening_item_generator")
 	@SequenceGenerator(name="stock_opening_item_generator", sequenceName = "STOCK_OPENING_ITEM_SER_SEQ")
-	private Long id;
+	private Integer id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="item_id", nullable=false, updatable=true)
@@ -31,12 +31,12 @@ public class StockOpeningItem {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="unit_id", nullable=false, updatable=true)
-	private ItemUnit itemUnit;
+	private Unit unit;
 	
-	@Column(name="unit_cost", nullable=false)
+	@Column(name="unit_cost", nullable=false, precision=10, scale=5)
 	private BigDecimal unitCost;
 	
-	@Column(name="quantity", nullable=false)
+	@Column(name="quantity", nullable=false, precision=10, scale=5)
 	private BigDecimal quantity;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -47,13 +47,13 @@ public class StockOpeningItem {
 	public StockOpeningItem() {
 		
 	}
-	public StockOpeningItem(Long id) {
+	public StockOpeningItem(Integer id) {
 		this.id = id;
 	}
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public Item getItem() {
@@ -74,11 +74,11 @@ public class StockOpeningItem {
 	public void setStockOpening(StockOpening stockOpening) {
 		this.stockOpening = stockOpening;
 	}
-	public ItemUnit getItemUnit() {
-		return itemUnit;
+	public Unit getUnit() {
+		return unit;
 	}
-	public void setItemUnit(ItemUnit itemUnit) {
-		this.itemUnit = itemUnit;
+	public void setUnit(Unit unit) {
+		this.unit = unit;
 	}
 	public BigDecimal getUnitCost() {
 		return unitCost;
@@ -88,7 +88,7 @@ public class StockOpeningItem {
 	}
 	@Override
 	public String toString() {
-		return "StockOpeningItem [id=" + id + ", item=" + item + ", itemUnit=" + itemUnit + ", unitCost=" + unitCost
-				+ ", quantity=" + quantity + ", stockOpening=" + stockOpening + "]";
+		return "StockOpeningItem [id=" + id + ", item=" + item + ", unit=" + unit + ", unitCost=" + unitCost
+				+ ", quantity=" + quantity + "]";
 	}
 }

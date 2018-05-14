@@ -263,6 +263,8 @@ public class Item {
 	}
 	
 	public boolean isDefaultUnit(Unit unit) {
+		
+		System.err.println(unit);
 		return this.defaultUnit.equals(unit);
 	}
 
