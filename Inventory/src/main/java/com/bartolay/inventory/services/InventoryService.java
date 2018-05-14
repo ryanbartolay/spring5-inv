@@ -1,4 +1,4 @@
-package com.bartolay.inventory.stock.services;
+package com.bartolay.inventory.services;
 
 import java.math.BigDecimal;
 import java.util.List;
