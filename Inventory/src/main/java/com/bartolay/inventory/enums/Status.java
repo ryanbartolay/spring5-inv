@@ -1,6 +1,6 @@
 package com.bartolay.inventory.enums;
 
-public enum SaleStatus {
+public enum Status {
 	CREATED,
 	CANCELLED;
 }

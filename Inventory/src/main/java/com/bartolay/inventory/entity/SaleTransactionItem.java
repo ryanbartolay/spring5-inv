@@ -19,6 +19,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.bartolay.inventory.enums.SaleTransactionStatus;
 
+@Deprecated
 @Entity
 @Table(name="sales_transaction_item")
 public class SaleTransactionItem {	

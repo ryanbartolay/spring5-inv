@@ -52,9 +52,6 @@ public class InventoryService {
 		
 		List<Inventory> inventories = inventoryRepository.findByLocation(stockOpening.getLocation());
 		
-		System.err.println("inventories");
-		System.err.println(inventories);
-		
 		List<InventoryTransaction> invTransactions = new ArrayList<>();
 		
 		// iterate through items and check if default unit
@@ -89,12 +86,7 @@ public class InventoryService {
 				ItemUnit itemUnit = itemUnitRepository.findByItemAndUnit(stockOpeningItem.getItem(), stockOpeningItem.getUnit());
 				BigDecimal rate = itemUnit.getRate(); // items rate
 				
-				System.err.println("rate " + rate);
-				System.err.println("quantity " + quantity);
-				
 				BigDecimal rateQuantity = quantity.divide(rate, 5, RoundingMode.HALF_UP);
-				
-				System.err.println("rateQuantity " + rateQuantity);
 				
 				inventory.setQuantity(inventory.getQuantity().add(rateQuantity));
 			}

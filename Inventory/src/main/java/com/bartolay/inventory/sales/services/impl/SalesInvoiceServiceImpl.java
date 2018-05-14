@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.enums.PaymentMethod;
-import com.bartolay.inventory.enums.SaleStatus;
+import com.bartolay.inventory.enums.Status;
 import com.bartolay.inventory.form.SalesInvoiceForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
@@ -55,7 +55,7 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 		salesInvoice.setLocation(salesInvoiceForm.getLocation());
 		salesInvoice.setYear(salesInvoiceForm.getYear());
 		salesInvoice.setCreatedBy(userCredentials.getLoggedInUser());
-		salesInvoice.setSale_status(SaleStatus.CREATED);
+		salesInvoice.setSale_status(Status.CREATED);
 		
 		return salesInvoiceRepository.save(salesInvoice);
 	}

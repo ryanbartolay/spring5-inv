@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -22,7 +21,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
-import com.bartolay.inventory.enums.SaleStatus;
+import com.bartolay.inventory.enums.Status;
 import com.bartolay.inventory.repositories.GeneratedSystemNumber;
 
 @Entity
@@ -58,7 +57,7 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	private PaymentMethod paymentMethod;
 	
 	@Column(name="sale_status", nullable=false, updatable=true, length=10)
-	private SaleStatus sale_status;
+	private Status sale_status;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "credit_card_details_id", nullable=true, updatable=true)
@@ -161,10 +160,10 @@ public class SalesInvoice implements GeneratedSystemNumber {
 		this.updatedBy = updatedBy;
 	}
 
-	public SaleStatus getSale_status() {
+	public Status getSale_status() {
 		return sale_status;
 	}
-	public void setSale_status(SaleStatus sale_status) {
+	public void setSale_status(Status sale_status) {
 		this.sale_status = sale_status;
 	}
 	@Override
