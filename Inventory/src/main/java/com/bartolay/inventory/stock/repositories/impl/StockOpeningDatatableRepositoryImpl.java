@@ -52,7 +52,7 @@ public class StockOpeningDatatableRepositoryImpl extends RepositoryComponent imp
 
 			// sort order by column
 			if(sortColumn != null && datatableParameter.getSortOrder() != null) {
-				SQL += " ORDER BY t1."+sortColumn.getData()+ " " + datatableParameter.getSortOrder().name();	
+				SQL += " ORDER BY "+sortColumn.getData()+ " " + datatableParameter.getSortOrder().name();	
 			}
 			
 			if(datatableParameter.getLength() > 0) {
