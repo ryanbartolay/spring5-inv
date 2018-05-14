@@ -83,4 +83,13 @@ public class StockController {
 		return model;
 	}
 	
+	@RequestMapping(value="/stock/adjustment")
+	public ModelAndView stockAdjustment(ModelAndView model) {
+		model.setViewName("stock/index");
+		model.addObject("page", "Stock Adjustment");
+		model.addObject("html", "../stock/adjustment/list");
+		model.addObject("stockTransferForm", new StockTransferForm());
+		return model;
+	}
+	
 }
