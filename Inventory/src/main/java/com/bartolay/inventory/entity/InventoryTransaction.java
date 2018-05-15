@@ -47,12 +47,17 @@ public class InventoryTransaction {
 	@Column(name="unit_cost", nullable=false, precision=10, scale=5, updatable=false)
 	private BigDecimal unitCost;
 	
+	@Column(name="quantity_raw", nullable=false, precision=10, scale=5, updatable=false)
+	private BigDecimal rawQuantity;
+	
 	@Column(name="quantity_before", nullable=false, precision=10, scale=5, updatable=false)
 	private BigDecimal quantityBefore;
 	
-	@Column(name="quantity", nullable=false, precision=10, scale=5, updatable=false)
-	private BigDecimal quantity;
+	@Column(name="quantity_rate", nullable=false, precision=10, scale=5, updatable=false)
+	private BigDecimal rateQuantity;
 	
+	@Column(name="quantity_after", nullable=false, precision=10, scale=5, updatable=false)
+	private BigDecimal quantityAfter;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="inventory_id", nullable=false, updatable=true)
@@ -126,6 +131,14 @@ public class InventoryTransaction {
 		this.unitCost = unitCost;
 	}
 
+	public BigDecimal getRawQuantity() {
+		return rawQuantity;
+	}
+
+	public void setRawQuantity(BigDecimal rawQuantity) {
+		this.rawQuantity = rawQuantity;
+	}
+
 	public BigDecimal getQuantityBefore() {
 		return quantityBefore;
 	}
@@ -134,12 +147,20 @@ public class InventoryTransaction {
 		this.quantityBefore = quantityBefore;
 	}
 
-	public BigDecimal getQuantity() {
-		return quantity;
+	public BigDecimal getRateQuantity() {
+		return rateQuantity;
 	}
 
-	public void setQuantity(BigDecimal quantity) {
-		this.quantity = quantity;
+	public void setRateQuantity(BigDecimal rateQuantity) {
+		this.rateQuantity = rateQuantity;
+	}
+	
+	public BigDecimal getQuantityAfter() {
+		return quantityAfter;
+	}
+
+	public void setQuantityAfter(BigDecimal quantityAfter) {
+		this.quantityAfter = quantityAfter;
 	}
 
 	public Date getCreatedDate() {

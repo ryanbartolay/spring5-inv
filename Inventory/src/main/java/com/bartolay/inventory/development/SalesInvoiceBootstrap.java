@@ -66,7 +66,7 @@ public class SalesInvoiceBootstrap implements ApplicationListener<ContextRefresh
 		InventoryTransaction inventoryTransaction = new InventoryTransaction();
 		inventoryTransaction.setCreatedBy(user);
 		inventoryTransaction.setItem(item);
-		inventoryTransaction.setQuantity(new BigDecimal("2.211"));
+		inventoryTransaction.setRawQuantity(new BigDecimal("2.211"));
 		inventoryTransaction.setUnit(item.getDefaultUnit());
 		inventoryTransaction.setUnitCost(new BigDecimal("30.33"));
 		
@@ -86,7 +86,7 @@ public class SalesInvoiceBootstrap implements ApplicationListener<ContextRefresh
 		salesInvoice.setSalesPerson(salesPerson);
 		salesInvoice.setCreatedBy(user);
 		salesInvoice.setLocation(locationRepository.findById(1).get());
-		salesInvoice.setIntentoryTransactions(transactions);
+		salesInvoice.setInventoryTransactions(transactions);
 		
 		System.err.println("creating sales invoice");
 		

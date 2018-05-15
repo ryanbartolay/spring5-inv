@@ -34,7 +34,7 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	public static final String TABLE_NAME = "sales_invoice";
 	
 	@Transient
-	private Set<InventoryTransaction> intentoryTransactions;
+	private Set<InventoryTransaction> inventoryTransactions;
 
 	@Id
 	@GeneratedValue(generator = "SalesInvoice-UniqueIdGenerator")
@@ -180,11 +180,11 @@ public class SalesInvoice implements GeneratedSystemNumber {
 		this.year = year;
 	}
 	
-	public Set<InventoryTransaction> getIntentoryTransactions() {
-		return intentoryTransactions;
+	public Set<InventoryTransaction> getInventoryTransactions() {
+		return inventoryTransactions;
 	}
-	public void setIntentoryTransactions(Set<InventoryTransaction> intentoryTransactions) {
-		this.intentoryTransactions = intentoryTransactions;
+	public void setInventoryTransactions(Set<InventoryTransaction> inventoryTransactions) {
+		this.inventoryTransactions = inventoryTransactions;
 	}
 	@Override
 	public String getTableName() {
