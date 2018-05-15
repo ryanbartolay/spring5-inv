@@ -1,8 +1,10 @@
 package com.bartolay.inventory.sales.services.impl;
 
 import java.text.ParseException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -20,6 +22,7 @@ import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.sales.services.SalesInvoiceService;
+import com.bartolay.inventory.services.InventoryService;
 import com.bartolay.inventory.utils.CalendarUtils;
 import com.bartolay.inventory.utils.UserCredentials;
 
@@ -32,6 +35,8 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 	
 	@Autowired
 	private SalesInvoiceRepository salesInvoiceRepository;
+	@Autowired
+	private InventoryService inventoryService;
 	@Autowired
 	@Qualifier("salesInvoiceDataTableRepository")
 	private DatatableRepository salesInvoiceDataTableRepository;
@@ -54,10 +59,12 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 		}
 		salesInvoice.setLocation(salesInvoiceForm.getLocation());
 		salesInvoice.setYear(salesInvoiceForm.getYear());
-		salesInvoice.setCreatedBy(userCredentials.getLoggedInUser());
-		salesInvoice.setStatus(Status.CREATED);
+		salesInvoice.setInventoryTransactions(new HashSet<>());
+	
+		inventoryService.createSalesInvoice(salesInvoice);
+
 		
-		return salesInvoiceRepository.save(salesInvoice);
+		return salesInvoice;
 	}
 
 	@Override
@@ -93,6 +100,23 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 	public List<SalesInvoice> findAll() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public SalesInvoice cancel(String systemNumber) {
+		Optional<SalesInvoice> salesInvoice = salesInvoiceRepository.findById(systemNumber);
+		System.err.println("salesInvoice : " + salesInvoice);
+		if(!salesInvoice.isPresent()) {
+			throw new RuntimeException("Please specify Credit Card Details");
+		}
+		SalesInvoice sInvoice = salesInvoice.get();
+		try {
+			inventoryService.cancelSalesInvoice(sInvoice);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return sInvoice;
 	}
 
 }

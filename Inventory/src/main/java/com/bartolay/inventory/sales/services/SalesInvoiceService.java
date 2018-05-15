@@ -16,4 +16,5 @@ public interface SalesInvoiceService {
 	public SalesInvoice delete(Long id);
 	
 	public List<SalesInvoice> findAll();
+	public SalesInvoice cancel(String systemNumber);
 }

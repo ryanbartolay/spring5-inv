@@ -193,6 +193,34 @@
 		</div>
 		<!-- /.modal-dialog -->
 	</div>
+
+
+		<!-- /.modal -->
+	<!-- Delete Modal -->
+	<div class="modal fade" id="confirmCancelModal" tabindex="-2" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+	        
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h4 class="modal-title" id="myModalLabel">Confirm Cancel</h4>
+	            </div>
+	        
+	            <div class="modal-body">
+	                <p>You are about to cancel <b id="recordName"></b>, this procedure is irreversible.</p>
+	                <p>Do you want to proceed?</p>
+	                <p class="debug-url"></p>
+	            </div>
+	            
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	                <a class="btn btn-danger" id="btnConfirmCancel">Confirm</a>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<!-- /Delete Modal -->
 	
 	<div class="panel panel-default">
 		<!-- /.panel-heading -->
@@ -256,7 +284,7 @@
         		{
                     "targets": 7,
                     "data": null,
-                    "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Cancel</button>'
+                    "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#confirmCancelModal" data-backdrop="static" data-keyboard="false" id="btnCancel">Cancel</button>'
                 }
         	]
 	);
@@ -280,12 +308,37 @@
 		form[0].reset();
 		form.attr("method", "POST"); // change to POST when editing
 		form.find('#id').val("");
-		modalLabel.text("Create new Unit");
+		modalLabel.text("Create Sales Invoice");
 		submitButtonLabel.text("Create");
 
 		singledatetimepicker($("input#transactionDate"))
 		$("input#transactionDate").val(moment(new Date()).format("YYYY-MM-DD HH:mm:ss"))
 	});
+
+	var confirmCancelModal = $("#confirmCancelModal");
+    var data = null;
+ 	// Delete button
+    table.find("tbody").on('click', '#btnCancel', function (e) {
+        /* e.preventDefault(); */
+ 		
+        data = datatable.row( $(this).parent('td') ).data();
+        console.log(data)
+        confirmCancelModal.find("#recordName").text(data['system_number']);
+        
+    });
+	// Confirm Delete button
+    DOCS.on('click', '#btnConfirmCancel', function(e) {
+    	$(this).attr("disabled", "disabled");
+    
+    	$(this).removeAttr("disabled");
+    	console.log($(this));
+    	DELETE("/api/sales/invoices/" + data['system_number'], function(data) {
+    		showToast(data);
+    		console.log(data)
+    		confirmCancelModal.modal('hide');
+    		datatable.ajax.reload( null, false ); // user paging is not reset on reload
+    	});
+    });
 	
 	formModalAsync($("#formModal"), function() {
 		datatable.ajax.reload( null, false ); // user paging is not reset on reload

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -62,6 +63,22 @@ public class SalesInvoiceController {
 			SalesInvoice salesInvoice = salesInvoiceService.create(salesInvoiceForm);
 
 			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + salesInvoice.getSystemNumber());
+		} catch(Exception e) {
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+
+		return stringUtils.encode(response);
+	}
+	
+	@RequestMapping(value="/sales/invoices/{systemNumber}", method=RequestMethod.DELETE)
+	public String create(@PathVariable String systemNumber) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+
+		ApiResponse response = null;
+		
+		try {
+			SalesInvoice salesInvoice = salesInvoiceService.cancel(systemNumber);
+
+			response = new ApiResponse(HttpStatus.OK, "Succesfully cancelled " + salesInvoice.getSystemNumber());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
