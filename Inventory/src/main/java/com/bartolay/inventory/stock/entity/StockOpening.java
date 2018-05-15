@@ -77,6 +77,7 @@ public class StockOpening implements GeneratedSystemNumber {
 	@JoinColumn(name = "updated_by", nullable=true, updatable=true)
 	private User updatedBy;
 
+	@Deprecated
 	@Column(name="draft", nullable=false)
 	private boolean draft;
 
@@ -175,10 +176,12 @@ public class StockOpening implements GeneratedSystemNumber {
 		this.updatedBy = updatedBy;
 	}
 
+	@Deprecated
 	public boolean isDraft() {
 		return draft;
 	}
 
+	@Deprecated
 	public void setDraft(boolean draft) {
 		this.draft = draft;
 	}

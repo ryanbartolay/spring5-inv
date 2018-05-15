@@ -23,6 +23,7 @@ import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 import com.bartolay.inventory.utils.UserCredentials;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class InventoryService {
@@ -44,6 +45,9 @@ public class InventoryService {
 
 	@Autowired
 	private StockOpeningRepository stockOpeningRepository;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	/**
 	 * Creates the Stock Opening
@@ -51,6 +55,7 @@ public class InventoryService {
 	 */
 	@Transactional
 	public void createStockOpening(StockOpening stockOpening) {
+		// TODO should have stock opening items
 
 		// Lets save the stock opening first so we can generate a system number
 		stockOpening.setStatus(Status.CREATED);
@@ -59,11 +64,7 @@ public class InventoryService {
 
 		List<Inventory> inventories = inventoryRepository.findByLocation(stockOpening.getLocation());
 
-		inventories.stream().forEach(System.err::println);
-
 		List<Inventory> inventories2 = inventoryRepository.findByLocation(stockOpening.getLocation());
-
-		inventories2.stream().forEach(System.err::println);
 
 		List<InventoryTransaction> invTransactions = new ArrayList<>();
 
@@ -136,6 +137,7 @@ public class InventoryService {
 	 */
 	@Transactional
 	public void createSalesInvoice(SalesInvoice salesInvoice) {
+		// TODO should have sales invoice item
 
 		// Lets save the sales invoice first so we can generate a system number
 		// this will be essential in case theres a wrong data on the sales invoice
@@ -250,4 +252,6 @@ public class InventoryService {
 		inventoryRepository.saveAll(inventories);
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
 	}
+	
+	
 }

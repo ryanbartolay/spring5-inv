@@ -15,6 +15,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 
 import com.bartolay.inventory.enums.TransactionType;
 
@@ -70,6 +71,14 @@ public class InventoryTransaction {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "created_by", nullable=false, updatable=false)
 	private User createdBy;
+	
+	@Column(name="tx_json_before")
+	@Type(type="text")
+	private String transactionBefore;
+	
+	@Column(name="tx_json_after")
+	@Type(type="text")
+	private String transactionAfter;
 	
 	public InventoryTransaction() {
 		super();
@@ -185,6 +194,22 @@ public class InventoryTransaction {
 
 	public void setInventory(Inventory inventory) {
 		this.inventory = inventory;
+	}
+
+	public String getTransactionBefore() {
+		return transactionBefore;
+	}
+
+	public void setTransactionBefore(String transactionBefore) {
+		this.transactionBefore = transactionBefore;
+	}
+
+	public String getTransactionAfter() {
+		return transactionAfter;
+	}
+
+	public void setTransactionAfter(String transactionAfter) {
+		this.transactionAfter = transactionAfter;
 	}
 
 	@Override

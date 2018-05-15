@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -87,6 +88,9 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "updated_by_id", nullable=true, updatable=true)
 	private User updatedBy;
+	
+//	@OneToMany(mappedBy = "salesInvoice", fetch=FetchType.LAZY)
+//	private Set<SalesInvoiceItem> salesInvoiceItems;
 
 	public String getSystemNumber() {
 		return systemNumber;

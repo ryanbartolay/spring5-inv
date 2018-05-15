@@ -6,15 +6,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.bartolay.inventory.entity.Location;
@@ -25,18 +24,19 @@ import com.bartolay.inventory.entity.User;
 public class StockTransfer {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_transfer_generator")
-	@SequenceGenerator(name="stock_transfer_generator", sequenceName = "STOCK_TRANSFER_SER_SEQ")
-	private Long id;
-	
-	@Column(name="system_number", updatable=false, unique=true)
+	@GeneratedValue(generator = "StockTransferSystemNumberGenerator")
+	@GenericGenerator(name = "StockTransferSystemNumberGenerator", strategy = "com.bartolay.inventory.entity.generators.SystemNumberGenerator")
+	@Column(name="system_number", nullable=false, unique=true, insertable=false, updatable=false, length=10)
 	private String systemNumber;
 	
-	@Column(name="document_number", nullable=false, unique=true)
+	@Column(name="document_number", unique=true, length=25)
 	private String documentNumber;
 	
 	@Column(name="transaction_date")
 	private Date transactionDate;
+	
+	@Column(name="year", nullable=false, length=4, updatable=false)
+	private String year;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="from_location_id")
@@ -62,9 +62,6 @@ public class StockTransfer {
 	@JoinColumn(name = "updated_by", nullable=true, updatable=true)
 	private User updatedBy;
 	
-	@Column(name="draft", nullable=false)
-	private boolean draft;
-	
 	@Column(name="enabled", nullable=false)
 	private boolean enabled;
 	
@@ -72,17 +69,9 @@ public class StockTransfer {
 		super();
 	}
 
-	public StockTransfer(Long id) {
+	public StockTransfer(String systemNumber) {
 		super();
-		this.id = id;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
+		this.systemNumber = systemNumber;
 	}
 
 	public String getSystemNumber() {
@@ -156,45 +145,12 @@ public class StockTransfer {
 	public void setUpdatedBy(User updatedBy) {
 		this.updatedBy = updatedBy;
 	}
-
-	public boolean isDraft() {
-		return draft;
-	}
-
-	public void setDraft(boolean draft) {
-		this.draft = draft;
-	}
-
+	
 	public boolean isEnabled() {
 		return enabled;
 	}
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		StockTransfer other = (StockTransfer) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
 	}
 }
