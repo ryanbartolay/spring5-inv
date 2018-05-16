@@ -3,7 +3,9 @@ package com.bartolay.inventory.enums;
 public enum AccountType {
 	ROOT("Super Administrator"),
 	ADMIN("Administrator"),
-	USER("User");
+	USER("User"),
+	CUSTOMER("Customer");
+	;
 	
 	private String name;
 	

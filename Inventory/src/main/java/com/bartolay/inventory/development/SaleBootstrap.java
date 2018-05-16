@@ -124,7 +124,6 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 		salesForm.setYear("2018");
 		salesForm.setTransactionDate(CalendarUtils.dateToString(cal.getTime()));
 		salesForm.setSalesPerson(sales1);
-		salesForm.setCreatedBy(user);
 		salesForm.setLocation(locationRepository.findById(1).get());
 		
 //		salesInvoiceService.create(salesForm);
@@ -137,7 +136,7 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 		salesForm2.setYear("2018");
 		salesForm2.setTransactionDate(CalendarUtils.dateToString(cal.getTime()));
 		salesForm2.setSalesPerson(sales2);
-		salesForm2.setCreatedBy(user);
+
 		salesForm2.setLocation(locationRepository.findById(2).get());
 		
 //		salesInvoiceService.create(salesForm2);

@@ -23,8 +23,11 @@ import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.stock.entity.StockOpening;
+import com.bartolay.inventory.stock.entity.StockTransfer;
 import com.bartolay.inventory.stock.repositories.StockOpeningItemRepository;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
+import com.bartolay.inventory.stock.repositories.StockTransferItemRepository;
+import com.bartolay.inventory.stock.repositories.StockTransferRepository;
 import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
@@ -53,6 +56,12 @@ public class InventoryService {
 	
 	@Autowired
 	private StockOpeningItemRepository stockOpeningItemRepository;
+	
+	@Autowired
+	private StockTransferRepository stockTransferRepository;
+	
+	@Autowired
+	private StockTransferItemRepository stockTransferItemRepository;
 
 	/**
 	 * Creates the Stock Opening
@@ -290,6 +299,10 @@ public class InventoryService {
 		salesInvoiceItemRepository.saveAll(salesInvoiceItems);
 		inventoryRepository.saveAll(inventories);
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
+		
+	}
+	
+	public void createStockTransfer(StockTransfer stockTransfer) {
 		
 	}
 	

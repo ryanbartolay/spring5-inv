@@ -17,7 +17,6 @@ public class StockOpeningForm {
 	@NotNull(message="Stock Opening document number is required!")
 	private String document_number;
 	
-	@NotNull(message="Stock Opening description is required!")
 	private String description;
 	
 	@NotNull(message="Stock Opening location is required!")
@@ -28,7 +27,9 @@ public class StockOpeningForm {
 	@Digits(fraction = 0, integer = 4, message="Year only accepts digits.")
 	private String year;
 	
-//	@NotNull
+	private Date transaction_date;
+	
+	@NotNull(message="Needed atleast 1 item")
 	private Set<StockOpeningItem> items = new HashSet<>();
 
 	public Long getId() {
@@ -77,6 +78,14 @@ public class StockOpeningForm {
 
 	public void setYear(String year) {
 		this.year = year;
+	}
+
+	public Date getTransaction_date() {
+		return transaction_date;
+	}
+
+	public void setTransaction_date(Date transaction_date) {
+		this.transaction_date = transaction_date;
 	}
 	
 }

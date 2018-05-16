@@ -1,9 +1,9 @@
 package com.bartolay.inventory.form;
 
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -11,6 +11,7 @@ import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.sales.entity.CreditCardDetails;
+import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
 
 public class SalesInvoiceForm {
 	
@@ -21,10 +22,9 @@ public class SalesInvoiceForm {
 	@Digits(fraction = 0, integer = 4, message="Year only accepts digits.")
 	private String year;
 	
-	@NotNull
+	@NotNull(message="Transaction Date is required")
 	private String transactionDate;
 	
-	@NotNull
 	private String documentNumber;
 	
 	private String description;
@@ -35,12 +35,18 @@ public class SalesInvoiceForm {
 	@NotNull
 	private PaymentMethod paymentMethod;
 	
+	@NotNull
 	private CreditCardDetails creditCardDetails;
+
+	@NotNull
+	private User customer;
 	
 	@NotNull
 	private User salesPerson;
+	
+	@NotNull(message="Needed atleast 1 item")
+	private Set<SalesInvoiceItem> items = new HashSet<>();
 
-	private User createdBy;
 	
 	public String getSystem_number() {
 		return system_number;
@@ -112,14 +118,6 @@ public class SalesInvoiceForm {
 
 	public void setSalesPerson(User salesPerson) {
 		this.salesPerson = salesPerson;
-	}
-
-	public User getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(User createdBy) {
-		this.createdBy = createdBy;
 	}
 	
 }
