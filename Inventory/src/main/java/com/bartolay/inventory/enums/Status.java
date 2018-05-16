@@ -1,7 +1,7 @@
 package com.bartolay.inventory.enums;
 
 public enum Status {
-	CREATED,
+	SUCCESS,
 	CANCELLED,
 	PENDING,
 	FAILED;

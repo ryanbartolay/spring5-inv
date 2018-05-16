@@ -25,7 +25,6 @@ import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.repositories.StockOpeningItemRepository;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 import com.bartolay.inventory.utils.UserCredentials;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class InventoryService {
@@ -54,9 +53,6 @@ public class InventoryService {
 	@Autowired
 	private StockOpeningItemRepository stockOpeningItemRepository;
 
-	@Autowired
-	private ObjectMapper objectMapper;
-
 	/**
 	 * Creates the Stock Opening
 	 * @param stockOpening
@@ -66,7 +62,7 @@ public class InventoryService {
 		// TODO should have stock opening items
 
 		// Lets save the stock opening first so we can generate a system number
-		stockOpening.setStatus(Status.CREATED);
+		stockOpening.setStatus(Status.SUCCESS);
 		stockOpening.setCreatedBy(userCredentials.getLoggedInUser());
 		stockOpeningRepository.save(stockOpening);
 
@@ -124,6 +120,8 @@ public class InventoryService {
 			inventoryTransaction.setTransactionType(TransactionType.STOCK_OPENING);
 			inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
 
+			stockOpeningItem.setStatus(Status.SUCCESS);
+			
 			stockOpeningItemRepository.save(stockOpeningItem);
 			
 			inventoryTransaction.setTransactionItemId(stockOpeningItem.getId());
@@ -152,7 +150,7 @@ public class InventoryService {
 		// Lets save the sales invoice first so we can generate a system number
 		// this will be essential in case theres a wrong data on the sales invoice
 		salesInvoice.setCreatedBy(userCredentials.getLoggedInUser());
-		salesInvoice.setStatus(Status.CREATED);
+		salesInvoice.setStatus(Status.SUCCESS);
 		salesInvoiceRepository.save(salesInvoice);
 
 		// we get the inventories by location
@@ -211,6 +209,8 @@ public class InventoryService {
 				inventory.setQuantity(inventory.getQuantity().subtract(rateQuantity));
 			}
 
+			salesInvoiceItem.setStatus(Status.SUCCESS);
+			
 			inventoryTransaction.setQuantityAfter(inventory.getQuantity());
 			
 			salesInvoiceItemRepository.save(salesInvoiceItem);

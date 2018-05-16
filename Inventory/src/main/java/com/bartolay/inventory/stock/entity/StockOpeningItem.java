@@ -15,6 +15,7 @@ import javax.persistence.Table;
 
 import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.Unit;
+import com.bartolay.inventory.enums.Status;
 
 @Entity
 @Table(name="stock_opening_item")
@@ -43,6 +44,8 @@ public class StockOpeningItem {
 	@JoinColumn(name="stock_opening_id", nullable=false, updatable=true)
 	private StockOpening stockOpening;
 	
+	@Column(name="status", nullable=false, updatable=true, length=3)
+	private Status status;
 	
 	public StockOpeningItem() {
 		
@@ -85,6 +88,12 @@ public class StockOpeningItem {
 	}
 	public void setUnitCost(BigDecimal unitCost) {
 		this.unitCost = unitCost;
+	}
+	public Status getStatus() {
+		return status;
+	}
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 	@Override
 	public String toString() {
