@@ -13,7 +13,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.PriorityOrdered;
 import org.springframework.stereotype.Component;
 
-import com.bartolay.inventory.entity.InventoryTransaction;
 import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;

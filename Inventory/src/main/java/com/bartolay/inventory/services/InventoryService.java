@@ -19,6 +19,7 @@ import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.InventoryTransactionRepository;
 import com.bartolay.inventory.repositories.ItemUnitRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
+import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.stock.entity.StockOpening;
@@ -162,6 +163,7 @@ public class InventoryService {
 		salesInvoice.getSalesInvoiceItems().forEach(salesInvoiceItem -> {
 			
 			salesInvoiceItem.setSalesInvoice(salesInvoice);
+			salesInvoiceItem.setSystemNumber(salesInvoice.getSystemNumber());
 			
 			Inventory inventory = new Inventory();
 
@@ -228,54 +230,67 @@ public class InventoryService {
 	@Transactional
 	public void cancelSalesInvoice(SalesInvoice salesInvoice) {
 
+		System.err.println("cancelSalesInvoice");
 		System.err.println(salesInvoice);
 
 		final SalesInvoice updatedSalesInvoice = salesInvoiceRepository.findById(salesInvoice.getSystemNumber()).get();
-
+		List<SalesInvoiceItem> salesInvoiceItems = salesInvoiceItemRepository.findBySystemNumber(updatedSalesInvoice.getSystemNumber());
+		
 		List<Inventory> inventories = new ArrayList<>(); 
-		List<InventoryTransaction> inventoryTransactions = new ArrayList<>(); 
+		List<InventoryTransaction> inventoryTransactions = inventoryTransactionRepository.findByTransactionSystemNumberAndTransactionType(updatedSalesInvoice.getSystemNumber(), TransactionType.SALES_INVOICE); 
 
 		updatedSalesInvoice.setStatus(Status.CANCELLED);
 		updatedSalesInvoice.setUpdatedBy(userCredentials.getLoggedInUser());
-
-		// we get all the inventory transactions for this invoice
-		List<InventoryTransaction> transactions = inventoryTransactionRepository.findByTransactionSystemNumberAndTransactionType(updatedSalesInvoice.getSystemNumber(), TransactionType.SALES_INVOICE);
-
-		transactions.forEach(transaction -> {
-
+		
+		
+		System.err.println(salesInvoiceItems);
+		
+		salesInvoiceItems.forEach(salesInvoiceItem -> {
 			InventoryTransaction cancelledTransaction = new InventoryTransaction();
-			cancelledTransaction.setTransactionSystemNumber(updatedSalesInvoice.getSystemNumber());
-			cancelledTransaction.setTransactionType(TransactionType.SALES_CANCEL_INVOICE);
-			cancelledTransaction.setRawQuantity(transaction.getRawQuantity());
-			cancelledTransaction.setUnitCost(transaction.getUnitCost());
-			cancelledTransaction.setCreatedBy(userCredentials.getLoggedInUser());
-			cancelledTransaction.setInventory(transaction.getInventory());
-			cancelledTransaction.setItem(transaction.getItem());
-			cancelledTransaction.setLocation(transaction.getLocation());
-			cancelledTransaction.setUnit(transaction.getUnit());
+			cancelledTransaction.setItem(salesInvoiceItem.getItem());
+			cancelledTransaction.setLocation(salesInvoice.getLocation());
+			
+			System.err.println("FINDING??? ");
+			if(inventoryTransactions.contains(cancelledTransaction)) {
+				
+				System.err.println("FOUNDED");
+				
+				InventoryTransaction inventoryTransaction = inventoryTransactions.get(inventoryTransactions.indexOf(cancelledTransaction));
+				Inventory inventory = inventoryTransaction.getInventory();
+				
+				cancelledTransaction.setTransactionSystemNumber(updatedSalesInvoice.getSystemNumber());
+				cancelledTransaction.setTransactionType(TransactionType.SALES_CANCEL_INVOICE);
+				cancelledTransaction.setRawQuantity(salesInvoiceItem.getQuantity());
+				cancelledTransaction.setUnitCost(salesInvoiceItem.getUnitCost());
+				cancelledTransaction.setCreatedBy(userCredentials.getLoggedInUser());
+				cancelledTransaction.setUnit(salesInvoiceItem.getUnit());
+				cancelledTransaction.setInventory(inventory);
+				
+				cancelledTransaction.setRawQuantity(inventory.getQuantity());
+				cancelledTransaction.setQuantityBefore(inventory.getQuantity());
+	
+				// lets rollback the quantity to the inventory
+				BigDecimal rateQuantity = inventoryTransaction.getRateQuantity();
+	
+				// we add up the rate quantity to the total quantity of the inventory
+				inventory.setQuantity(inventory.getQuantity().add(rateQuantity));
+	
+				cancelledTransaction.setRateQuantity(rateQuantity);
+				cancelledTransaction.setQuantityAfter(inventory.getQuantity());
+	
+				salesInvoiceItem.setStatus(Status.CANCELLED);
+				
+				inventories.add(inventory);
+				inventoryTransactions.add(cancelledTransaction);
+				
+			}
 
-			Inventory inventory = transaction.getInventory();
-
-			cancelledTransaction.setRawQuantity(inventory.getQuantity());
-			cancelledTransaction.setQuantityBefore(inventory.getQuantity());
-
-			// lets rollback the quantity to the inventory
-			BigDecimal rateQuantity = transaction.getRateQuantity();
-
-			// we add up the rate quantity to the total quantity of the inventory
-			inventory.setQuantity(inventory.getQuantity().add(rateQuantity));
-
-			cancelledTransaction.setRateQuantity(rateQuantity);
-			cancelledTransaction.setQuantityAfter(inventory.getQuantity());
-
-			inventories.add(inventory);
-			inventoryTransactions.add(cancelledTransaction);
 		});
-
+		
 		salesInvoiceRepository.save(updatedSalesInvoice);
+		salesInvoiceItemRepository.saveAll(salesInvoiceItems);
 		inventoryRepository.saveAll(inventories);
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
+		
 	}
-
-
 }
