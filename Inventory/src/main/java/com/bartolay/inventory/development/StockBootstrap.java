@@ -67,7 +67,7 @@ public class StockBootstrap implements ApplicationListener<ContextRefreshedEvent
 
 		Set<StockOpeningItem> soItems = new HashSet<>();
 
-		Item item1 = itemRepository.findById((long) 1).get();
+		Item item1 = itemRepository.findById(1).get();
 
 		StockOpeningItem soItem = new StockOpeningItem();
 		soItem.setItem(item1);

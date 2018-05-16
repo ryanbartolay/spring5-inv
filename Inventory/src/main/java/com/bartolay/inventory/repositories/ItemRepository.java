@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.bartolay.inventory.entity.Item;
 
 @Repository
-public interface ItemRepository extends CrudRepository<Item, Long> {
+public interface ItemRepository extends CrudRepository<Item, Integer> {
 	
 	@Query(value = "SELECT p FROM Item p LEFT JOIN FETCH p.brand "
 			+ "LEFT JOIN FETCH p.category "
@@ -20,5 +20,5 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
 			+ "LEFT JOIN FETCH p.country "
 			+ "LEFT JOIN FETCH p.supplier "
 			+ "where p.id = :id")
-    public Item apiFindById(@Param("id") Long id);
+    public Item apiFindById(@Param("id") Integer id);
 }

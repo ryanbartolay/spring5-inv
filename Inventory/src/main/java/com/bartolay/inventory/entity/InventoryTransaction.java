@@ -243,14 +243,38 @@ public class InventoryTransaction {
 		InventoryTransaction other = (InventoryTransaction) obj;
 		if (item == null) {
 			if (other.item != null)
+				System.err.println("1111111");
 				return false;
-		} else if (!item.equals(other.item))
+		} else if (!item.equals(other.item)) {
+			
+			System.err.println("222222");
+			System.err.println(item);
+			System.err.println(other.item);
+			System.err.println("222222");
 			return false;
+		}
+		
 		if (location == null) {
-			if (other.location != null)
+			if (other.location != null) {
+				System.err.println("3333333");
 				return false;
-		} else if (!location.equals(other.location))
+			}
+		} else if (!location.equals(other.location)) {
+			System.err.println("444444444444");
 			return false;
+		}
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "InventoryTransaction [id=" + id + ", transactionType=" + transactionType + ", transactionSystemNumber="
+				+ transactionSystemNumber + ", transactionItemId=" + transactionItemId + ", location=" + location
+				+ ", item=" + item + ", unit=" + unit + ", unitCost=" + unitCost + ", rawQuantity=" + rawQuantity
+				+ ", quantityBefore=" + quantityBefore + ", rateQuantity=" + rateQuantity + ", quantityAfter="
+				+ quantityAfter + ", createdDate=" + createdDate + ", transactionBefore=" + transactionBefore
+				+ ", transactionAfter=" + transactionAfter + "]";
+	}
+	
+	
 }

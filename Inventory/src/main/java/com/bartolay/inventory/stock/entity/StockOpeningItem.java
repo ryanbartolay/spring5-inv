@@ -26,6 +26,9 @@ public class StockOpeningItem {
 	@SequenceGenerator(name="stock_opening_item_generator", sequenceName = "STOCK_OPENING_ITEM_SER_SEQ")
 	private Integer id;
 	
+	@Column(name="transaction_system_number", nullable=false, updatable=false)
+	private String transactionSystemNumber;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="item_id", nullable=false, updatable=true)
 	private Item item;
@@ -58,6 +61,12 @@ public class StockOpeningItem {
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	public String getTransactionSystemNumber() {
+		return transactionSystemNumber;
+	}
+	public void setTransactionSystemNumber(String transactionSystemNumber) {
+		this.transactionSystemNumber = transactionSystemNumber;
 	}
 	public Item getItem() {
 		return item;

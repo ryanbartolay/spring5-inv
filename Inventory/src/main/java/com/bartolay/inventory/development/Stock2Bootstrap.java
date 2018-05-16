@@ -66,8 +66,8 @@ public class Stock2Bootstrap implements ApplicationListener<ContextRefreshedEven
 		Set<StockOpeningItem> soItems = new HashSet<>();
 
 
-		Item item2 = itemRepository.findById((long) 1).get();
-		Item item3 = itemRepository.findById((long) 2).get();
+		Item item2 = itemRepository.findById(1).get();
+		Item item3 = itemRepository.findById(2).get();
 
 
 		StockOpeningItem soItem = new StockOpeningItem();

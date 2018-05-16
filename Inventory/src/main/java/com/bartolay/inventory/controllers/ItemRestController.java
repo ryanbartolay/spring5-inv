@@ -41,7 +41,7 @@ public class ItemRestController {
 	}
 
 	@RequestMapping(value="/api/items/{id}", method=RequestMethod.GET)
-	public String getById(@PathVariable Long id) {
+	public String getById(@PathVariable Integer id) {
 		try {
 			Item item = itemRepository.apiFindById(id);	
 			return stringUtils.encode(item);
@@ -92,7 +92,7 @@ public class ItemRestController {
 	}
 	
 	@RequestMapping(value="/api/items/{id}", method=RequestMethod.DELETE)
-	public String delete(@PathVariable Long id) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+	public String delete(@PathVariable Integer id) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		ApiResponse response = null;
 		try {

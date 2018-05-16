@@ -58,7 +58,7 @@ public class SalesInvoiceBootstrap implements ApplicationListener<ContextRefresh
 		Calendar cal = Calendar.getInstance();
 		cal.set(2018, 4, 21, 22, 33, 5);
 		
-		Item item = itemRepository.findById((long) 1).get();
+		Item item = itemRepository.findById(1).get();
 		
 		Set<SalesInvoiceItem> salesInvoiceItems = new HashSet<>();
 		

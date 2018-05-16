@@ -148,7 +148,7 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 		Inventory inventory = new Inventory();
 		inventory.setCreatedBy(user);
 		inventory.setCreatedDate(new Date());
-		inventory.setItem(new Item(1L));
+		inventory.setItem(new Item(1));
 //		inventory.setItemUnit(new ItemUnit(1L));
 		inventory.setLocation(new Location(1));
 		inventory.setQuantity(new BigDecimal(100));
@@ -160,7 +160,7 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 		Inventory inventory1 = new Inventory();
 		inventory1.setCreatedBy(user);
 		inventory.setCreatedDate(new Date());
-		inventory1.setItem(new Item(2L));
+		inventory1.setItem(new Item(2));
 //		inventory1.setItemUnit(new ItemUnit(1L));
 		inventory1.setLocation(new Location(2));
 		inventory1.setQuantity(new BigDecimal(120));

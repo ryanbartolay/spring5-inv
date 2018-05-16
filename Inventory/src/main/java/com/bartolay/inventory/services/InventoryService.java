@@ -74,6 +74,8 @@ public class InventoryService {
 
 		// iterate through items and check if default unit
 		stockOpening.getItems().forEach(stockOpeningItem -> {
+			
+			stockOpeningItem.setTransactionSystemNumber(stockOpening.getSystemNumber());
 
 			Inventory inventory = new Inventory();
 			InventoryTransaction inventoryTransaction = new InventoryTransaction();
@@ -229,10 +231,7 @@ public class InventoryService {
 
 	@Transactional
 	public void cancelSalesInvoice(SalesInvoice salesInvoice) {
-
-		System.err.println("cancelSalesInvoice");
-		System.err.println(salesInvoice);
-
+		
 		final SalesInvoice updatedSalesInvoice = salesInvoiceRepository.findById(salesInvoice.getSystemNumber()).get();
 		List<SalesInvoiceItem> salesInvoiceItems = salesInvoiceItemRepository.findBySystemNumber(updatedSalesInvoice.getSystemNumber());
 		
@@ -242,21 +241,21 @@ public class InventoryService {
 		updatedSalesInvoice.setStatus(Status.CANCELLED);
 		updatedSalesInvoice.setUpdatedBy(userCredentials.getLoggedInUser());
 		
-		
-		System.err.println(salesInvoiceItems);
-		
 		salesInvoiceItems.forEach(salesInvoiceItem -> {
 			InventoryTransaction cancelledTransaction = new InventoryTransaction();
 			cancelledTransaction.setItem(salesInvoiceItem.getItem());
-			cancelledTransaction.setLocation(salesInvoice.getLocation());
+			cancelledTransaction.setLocation(updatedSalesInvoice.getLocation());
 			
-			System.err.println("FINDING??? ");
-			if(inventoryTransactions.contains(cancelledTransaction)) {
+			// we find the transaction to cancel first
+			InventoryTransaction foundTransaction = inventoryTransactions.stream()
+		            .filter(t -> t.getItem().getId() == cancelledTransaction.getItem().getId() 
+		            		&& t.getLocation().getId() == cancelledTransaction.getLocation().getId())
+		            .findAny()
+		            .orElse(null);
+			
+			if(inventoryTransactions != null) {
 				
-				System.err.println("FOUNDED");
-				
-				InventoryTransaction inventoryTransaction = inventoryTransactions.get(inventoryTransactions.indexOf(cancelledTransaction));
-				Inventory inventory = inventoryTransaction.getInventory();
+				Inventory inventory = foundTransaction.getInventory();
 				
 				cancelledTransaction.setTransactionSystemNumber(updatedSalesInvoice.getSystemNumber());
 				cancelledTransaction.setTransactionType(TransactionType.SALES_CANCEL_INVOICE);
@@ -270,7 +269,7 @@ public class InventoryService {
 				cancelledTransaction.setQuantityBefore(inventory.getQuantity());
 	
 				// lets rollback the quantity to the inventory
-				BigDecimal rateQuantity = inventoryTransaction.getRateQuantity();
+				BigDecimal rateQuantity = foundTransaction.getRateQuantity();
 	
 				// we add up the rate quantity to the total quantity of the inventory
 				inventory.setQuantity(inventory.getQuantity().add(rateQuantity));
@@ -293,4 +292,5 @@ public class InventoryService {
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
 		
 	}
+	
 }

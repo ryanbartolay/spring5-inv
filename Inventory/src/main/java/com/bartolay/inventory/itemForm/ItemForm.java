@@ -17,7 +17,7 @@ import com.bartolay.inventory.entity.Unit;
 
 public class ItemForm {
 	
-	private Long id;
+	private Integer id;
 	
 	@NotNull
     @Size(min=2, max=10, message="Code length minimum 2 and 10" )
@@ -57,11 +57,11 @@ public class ItemForm {
 //		itemUnits.add(new ItemUnit());
 	}
 	
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

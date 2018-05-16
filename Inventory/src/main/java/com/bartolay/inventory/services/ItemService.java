@@ -11,5 +11,5 @@ public interface ItemService {
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
 	public Item create(ItemForm itemForm);
 	public Item update(ItemForm itemForm);
-	public Item delete(Long id);
+	public Item delete(Integer id);
 }
