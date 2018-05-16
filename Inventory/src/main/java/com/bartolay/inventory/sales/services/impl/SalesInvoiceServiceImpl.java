@@ -59,7 +59,7 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 		}
 		salesInvoice.setLocation(salesInvoiceForm.getLocation());
 		salesInvoice.setYear(salesInvoiceForm.getYear());
-		salesInvoice.setInventoryTransactions(new HashSet<>());
+		salesInvoice.setSalesInvoiceItems(new HashSet<>());
 	
 		inventoryService.createSalesInvoice(salesInvoice);
 

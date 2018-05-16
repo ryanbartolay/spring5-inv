@@ -20,7 +20,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.bartolay.inventory.entity.InventoryTransaction;
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
@@ -33,9 +32,6 @@ public class SalesInvoice implements GeneratedSystemNumber {
 
 	@Transient
 	public static final String TABLE_NAME = "sales_invoice";
-	
-	@Transient
-	private Set<InventoryTransaction> inventoryTransactions;
 
 	@Id
 	@GeneratedValue(generator = "SalesInvoice-UniqueIdGenerator")
@@ -89,8 +85,8 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	@JoinColumn(name = "updated_by_id", nullable=true, updatable=true)
 	private User updatedBy;
 	
-//	@OneToMany(mappedBy = "salesInvoice", fetch=FetchType.LAZY)
-//	private Set<SalesInvoiceItem> salesInvoiceItems;
+	@OneToMany(mappedBy = "salesInvoice", fetch=FetchType.LAZY)
+	private Set<SalesInvoiceItem> salesInvoiceItems;
 
 	public String getSystemNumber() {
 		return systemNumber;
@@ -184,11 +180,11 @@ public class SalesInvoice implements GeneratedSystemNumber {
 		this.year = year;
 	}
 	
-	public Set<InventoryTransaction> getInventoryTransactions() {
-		return inventoryTransactions;
+	public Set<SalesInvoiceItem> getSalesInvoiceItems() {
+		return salesInvoiceItems;
 	}
-	public void setInventoryTransactions(Set<InventoryTransaction> inventoryTransactions) {
-		this.inventoryTransactions = inventoryTransactions;
+	public void setSalesInvoiceItems(Set<SalesInvoiceItem> salesInvoiceItems) {
+		this.salesInvoiceItems = salesInvoiceItems;
 	}
 	@Override
 	public String getTableName() {

@@ -100,7 +100,7 @@ public class Stock2Bootstrap implements ApplicationListener<ContextRefreshedEven
 		System.err.println("stockOpening22222222");
 		System.err.println(stockOpening2);
 
-		inventoryService.createStockOpening(stockOpening2);
+//		inventoryService.createStockOpening(stockOpening2);
 	}
 
 }

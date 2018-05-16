@@ -33,6 +33,9 @@ public class InventoryTransaction {
 	@Column(name="transaction_system_number", nullable=false, updatable=false)
 	private String transactionSystemNumber;
 	
+	@Column(name="transaction_item_id", updatable=false)
+	private int transactionItemId;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="location_id", nullable=false, updatable=false)
 	private Location location;
@@ -45,7 +48,7 @@ public class InventoryTransaction {
 	@JoinColumn(name="unit_id", nullable=false, updatable=false)
 	private Unit unit;
 	
-	@Column(name="unit_cost", nullable=false, precision=10, scale=5, updatable=false)
+	@Column(name="unit_cost", precision=10, scale=5, updatable=false)
 	private BigDecimal unitCost;
 	
 	@Column(name="quantity_raw", nullable=false, precision=10, scale=5, updatable=false)
@@ -210,6 +213,14 @@ public class InventoryTransaction {
 
 	public void setTransactionAfter(String transactionAfter) {
 		this.transactionAfter = transactionAfter;
+	}
+	
+	public int getTransactionItemId() {
+		return transactionItemId;
+	}
+
+	public void setTransactionItemId(int transactionItemId) {
+		this.transactionItemId = transactionItemId;
 	}
 
 	@Override

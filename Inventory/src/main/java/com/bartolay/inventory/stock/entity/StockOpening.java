@@ -53,7 +53,6 @@ public class StockOpening implements GeneratedSystemNumber {
 	
 	private String description;
 
-	@Deprecated
 	@OneToMany(mappedBy = "stockOpening", fetch=FetchType.LAZY)
 	private Set<StockOpeningItem> items;
 

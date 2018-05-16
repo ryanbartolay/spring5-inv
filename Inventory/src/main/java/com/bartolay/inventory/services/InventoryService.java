@@ -19,8 +19,10 @@ import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.InventoryTransactionRepository;
 import com.bartolay.inventory.repositories.ItemUnitRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
+import com.bartolay.inventory.sales.repositories.SalesInvoiceItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.stock.entity.StockOpening;
+import com.bartolay.inventory.stock.repositories.StockOpeningItemRepository;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 import com.bartolay.inventory.utils.UserCredentials;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,11 +43,17 @@ public class InventoryService {
 	private ItemUnitRepository itemUnitRepository;
 
 	@Autowired
-	private SalesInvoiceRepository salesInvoiceRepository; 
+	private SalesInvoiceRepository salesInvoiceRepository;
+	
+	@Autowired
+	private SalesInvoiceItemRepository salesInvoiceItemRepository; 
 
 	@Autowired
 	private StockOpeningRepository stockOpeningRepository;
 	
+	@Autowired
+	private StockOpeningItemRepository stockOpeningItemRepository;
+
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -64,9 +72,8 @@ public class InventoryService {
 
 		List<Inventory> inventories = inventoryRepository.findByLocation(stockOpening.getLocation());
 
-		List<Inventory> inventories2 = inventoryRepository.findByLocation(stockOpening.getLocation());
-
 		List<InventoryTransaction> invTransactions = new ArrayList<>();
+		List<Inventory> inventoriesForSave = new ArrayList<>();
 
 		// iterate through items and check if default unit
 		stockOpening.getItems().forEach(stockOpeningItem -> {
@@ -117,13 +124,16 @@ public class InventoryService {
 			inventoryTransaction.setTransactionType(TransactionType.STOCK_OPENING);
 			inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
 
-			inventoryRepository.save(inventory);
-
+			stockOpeningItemRepository.save(stockOpeningItem);
+			
+			inventoryTransaction.setTransactionItemId(stockOpeningItem.getId());
 			inventoryTransaction.setInventory(inventory);
 
 			invTransactions.add(inventoryTransaction);
+			inventoriesForSave.add(inventory);
 		});
 
+		inventoryRepository.saveAll(inventoriesForSave);
 		inventoryTransactionRepository.saveAll(invTransactions);
 	}
 
@@ -147,15 +157,17 @@ public class InventoryService {
 
 		// we get the inventories by location
 		List<Inventory> inventories = inventoryRepository.findByLocation(salesInvoice.getLocation());
-
+	
 		List<InventoryTransaction> inventoryTransactions = new ArrayList<>(); // just a placeholder for one commit only
 		List<Inventory> inventoriesForSave = new ArrayList<>(); // just a placeholder for one commit only
-
-		salesInvoice.getInventoryTransactions().forEach(inventoryTransaction -> {
-
+		
+		salesInvoice.getSalesInvoiceItems().forEach(salesInvoiceItem -> {
+			
+			salesInvoiceItem.setSalesInvoice(salesInvoice);
+			
 			Inventory inventory = new Inventory();
 
-			inventory.setItem(inventoryTransaction.getItem());
+			inventory.setItem(salesInvoiceItem.getItem());
 			inventory.setLocation(salesInvoice.getLocation());
 
 			// checking if the item is already existing in the inventory, if not we continue the stream
@@ -167,19 +179,30 @@ public class InventoryService {
 			inventory = inventories.get(inventories.indexOf(inventory));
 			inventory.setUpdatedBy(userCredentials.getLoggedInUser());
 
+			// we can create transaction if inventory is found
+			InventoryTransaction inventoryTransaction = new InventoryTransaction();
+			inventoryTransaction.setTransactionSystemNumber(salesInvoice.getSystemNumber());
+			inventoryTransaction.setLocation(salesInvoice.getLocation());
+			inventoryTransaction.setTransactionType(TransactionType.SALES_INVOICE);
+			inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
+			inventoryTransaction.setInventory(inventory);
+			inventoryTransaction.setItem(salesInvoiceItem.getItem());
+			inventoryTransaction.setUnit(salesInvoiceItem.getUnit());
+			inventoryTransaction.setRawQuantity(salesInvoiceItem.getQuantity());
+			inventoryTransaction.setUnitCost(salesInvoiceItem.getUnitCost());
 			inventoryTransaction.setQuantityBefore(inventory.getQuantity());
 
 			// Now lets compute for the quantity of the item
 			// if unit is the default unit of the item
 			// save the quantity as is
-			if(inventory.getItem().isDefaultUnit(inventoryTransaction.getUnit())) { 
-				inventory.setQuantity(inventory.getQuantity().subtract(inventoryTransaction.getRawQuantity()));
-				inventoryTransaction.setRateQuantity(inventoryTransaction.getRawQuantity());
+			if(inventory.getItem().isDefaultUnit(salesInvoiceItem.getUnit())) { 
+				inventory.setQuantity(inventory.getQuantity().subtract(salesInvoiceItem.getQuantity()));
+				inventoryTransaction.setRateQuantity(salesInvoiceItem.getQuantity());
 			} else {
-				BigDecimal quantity = inventoryTransaction.getRawQuantity(); // user input quantity
+				BigDecimal quantity = salesInvoiceItem.getQuantity(); // user input quantity
 
 				// lets get the rate of the item unit
-				ItemUnit itemUnit = itemUnitRepository.findByItemAndUnit(inventoryTransaction.getItem(), inventoryTransaction.getUnit());
+				ItemUnit itemUnit = itemUnitRepository.findByItemAndUnit(salesInvoiceItem.getItem(), salesInvoiceItem.getUnit());
 				BigDecimal rate = itemUnit.getRate(); // items rate
 
 				BigDecimal rateQuantity = quantity.divide(rate, 5, RoundingMode.HALF_UP);
@@ -189,22 +212,22 @@ public class InventoryService {
 			}
 
 			inventoryTransaction.setQuantityAfter(inventory.getQuantity());
-			inventoryTransaction.setTransactionSystemNumber(salesInvoice.getSystemNumber());
-			inventoryTransaction.setTransactionType(TransactionType.SALES_INVOICE);
-			inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
-			inventoryTransaction.setInventory(inventory);
-			inventoryTransaction.setLocation(salesInvoice.getLocation());
-
+			
+			salesInvoiceItemRepository.save(salesInvoiceItem);
+			
+			inventoryTransaction.setTransactionItemId(salesInvoiceItem.getId());
+			
+			inventoriesForSave.add(inventory);
 			inventoryTransactions.add(inventoryTransaction);
 		});
-
+		
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
 		inventoryRepository.saveAll(inventoriesForSave);
 	}
 
 	@Transactional
 	public void cancelSalesInvoice(SalesInvoice salesInvoice) {
-		
+
 		System.err.println(salesInvoice);
 
 		final SalesInvoice updatedSalesInvoice = salesInvoiceRepository.findById(salesInvoice.getSystemNumber()).get();
@@ -219,10 +242,11 @@ public class InventoryService {
 		List<InventoryTransaction> transactions = inventoryTransactionRepository.findByTransactionSystemNumberAndTransactionType(updatedSalesInvoice.getSystemNumber(), TransactionType.SALES_INVOICE);
 
 		transactions.forEach(transaction -> {
-			
+
 			InventoryTransaction cancelledTransaction = new InventoryTransaction();
 			cancelledTransaction.setTransactionSystemNumber(updatedSalesInvoice.getSystemNumber());
 			cancelledTransaction.setTransactionType(TransactionType.SALES_CANCEL_INVOICE);
+			cancelledTransaction.setRawQuantity(transaction.getRawQuantity());
 			cancelledTransaction.setUnitCost(transaction.getUnitCost());
 			cancelledTransaction.setCreatedBy(userCredentials.getLoggedInUser());
 			cancelledTransaction.setInventory(transaction.getInventory());
@@ -240,7 +264,7 @@ public class InventoryService {
 
 			// we add up the rate quantity to the total quantity of the inventory
 			inventory.setQuantity(inventory.getQuantity().add(rateQuantity));
-			
+
 			cancelledTransaction.setRateQuantity(rateQuantity);
 			cancelledTransaction.setQuantityAfter(inventory.getQuantity());
 
@@ -252,6 +276,6 @@ public class InventoryService {
 		inventoryRepository.saveAll(inventories);
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
 	}
-	
-	
+
+
 }
