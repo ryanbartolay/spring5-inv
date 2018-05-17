@@ -12,7 +12,8 @@ import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.stock.entity.StockOpeningItem;
 
 public class StockOpeningForm {
-	private Long id;
+	
+	private String system_number;
 	
 	@NotNull(message="Stock Opening document number is required!")
 	private String document_number;
@@ -32,12 +33,12 @@ public class StockOpeningForm {
 	@NotNull(message="Needed atleast 1 item")
 	private Set<StockOpeningItem> items = new HashSet<>();
 
-	public Long getId() {
-		return id;
+	public String getSystem_number() {
+		return system_number;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setSystem_number(String system_number) {
+		this.system_number = system_number;
 	}
 
 	public String getDocument_number() {
