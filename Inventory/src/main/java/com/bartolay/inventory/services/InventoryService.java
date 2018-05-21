@@ -328,6 +328,8 @@ public class InventoryService {
 			
 			InventoryTransaction inventoryTransaction = new InventoryTransaction();
 			inventoryTransaction.setRawQuantity(stockTransferItem.getQuantity());
+			inventoryTransaction.setTransactionSystemNumber(stockTransfer.getSystemNumber());
+			inventoryTransaction.setTransactionItemId(stockTransferItem.getItem().getId());
 			inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
 			
 			Inventory fromInventory = new Inventory();

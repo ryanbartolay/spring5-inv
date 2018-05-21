@@ -54,13 +54,13 @@ public class InventoryTransaction {
 	@Column(name="quantity_raw", nullable=false, precision=10, scale=5, updatable=false)
 	private BigDecimal rawQuantity;
 	
-	@Column(name="quantity_before", nullable=false, precision=10, scale=5, updatable=false)
+	@Column(name="quantity_before", precision=10, scale=5, updatable=false)
 	private BigDecimal quantityBefore;
 	
 	@Column(name="quantity_rate", nullable=false, precision=10, scale=5, updatable=false)
 	private BigDecimal rateQuantity;
 	
-	@Column(name="quantity_after", nullable=false, precision=10, scale=5, updatable=false)
+	@Column(name="quantity_after", precision=10, scale=5, updatable=false)
 	private BigDecimal quantityAfter;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
