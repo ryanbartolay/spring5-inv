@@ -27,7 +27,7 @@ import com.bartolay.inventory.sales.services.SalesInvoiceService;
 import com.bartolay.inventory.utils.CalendarUtils;
 
 @Component
-public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered  {
+public class _4SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered  {
 
 	@Autowired
 	private CreditCardDetailsRepository creditCardDetailsRepository;
@@ -93,7 +93,7 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 	private void createSalesPerson() {
 		sales1 = new User();
 		sales1.setUsername("sales1");
-		sales1.setPassword(passwordEncoder.encode(DevBootstrap.PASSWORD));
+		sales1.setPassword(passwordEncoder.encode(_1DevBootstrap.PASSWORD));
 		sales1.setFirstName("Sales");
 		sales1.setLastName("Sales");
 		sales1.setAccountType(AccountType.USER);
@@ -103,7 +103,7 @@ public class SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>
 		
 		sales2 = new User();
 		sales2.setUsername("sales2");
-		sales2.setPassword(passwordEncoder.encode(DevBootstrap.PASSWORD));
+		sales2.setPassword(passwordEncoder.encode(_1DevBootstrap.PASSWORD));
 		sales2.setFirstName("Sales2");
 		sales2.setLastName("Sales2");
 		sales2.setAccountType(AccountType.USER);

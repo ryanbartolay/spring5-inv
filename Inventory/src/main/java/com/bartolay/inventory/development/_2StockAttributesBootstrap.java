@@ -29,7 +29,7 @@ import com.bartolay.inventory.repositories.UnitRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 
 @Component
-public class StockAttributesBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
+public class _2StockAttributesBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
 
 	@Autowired
 	private ModelRepository modelRepository;

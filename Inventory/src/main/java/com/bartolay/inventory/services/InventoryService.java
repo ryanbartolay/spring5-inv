@@ -50,22 +50,22 @@ public class InventoryService {
 
 	@Autowired
 	private SalesInvoiceRepository salesInvoiceRepository;
-	
+
 	@Autowired
 	private SalesInvoiceItemRepository salesInvoiceItemRepository; 
 
 	@Autowired
 	private StockOpeningRepository stockOpeningRepository;
-	
+
 	@Autowired
 	private StockOpeningItemRepository stockOpeningItemRepository;
-	
+
 	@Autowired
 	private StockTransferRepository stockTransferRepository;
-	
+
 	@Autowired
 	private StockTransferItemRepository stockTransferItemRepository;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -89,7 +89,7 @@ public class InventoryService {
 
 		// iterate through items and check if default unit
 		stockOpening.getItems().forEach(stockOpeningItem -> {
-			
+
 			stockOpeningItem.setTransactionSystemNumber(stockOpening.getSystemNumber());
 
 			Inventory inventory = new Inventory();
@@ -139,10 +139,9 @@ public class InventoryService {
 			inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
 
 			stockOpeningItem.setStatus(Status.SUCCESS);
-			
+
 			stockOpeningItemRepository.save(stockOpeningItem);
-			
-			inventoryTransaction.setTransactionItemId(stockOpeningItem.getId());
+
 			inventoryTransaction.setInventory(inventory);
 
 			invTransactions.add(inventoryTransaction);
@@ -173,15 +172,14 @@ public class InventoryService {
 
 		// we get the inventories by location
 		List<Inventory> inventories = inventoryRepository.findByLocation(salesInvoice.getLocation());
-	
+
 		List<InventoryTransaction> inventoryTransactions = new ArrayList<>(); // just a placeholder for one commit only
 		List<Inventory> inventoriesForSave = new ArrayList<>(); // just a placeholder for one commit only
-		
+
 		salesInvoice.getSalesInvoiceItems().forEach(salesInvoiceItem -> {
-			
+
 			salesInvoiceItem.setSalesInvoice(salesInvoice);
-			salesInvoiceItem.setSystemNumber(salesInvoice.getSystemNumber());
-			
+
 			Inventory inventory = new Inventory();
 
 			inventory.setItem(salesInvoiceItem.getItem());
@@ -229,49 +227,58 @@ public class InventoryService {
 			}
 
 			salesInvoiceItem.setStatus(Status.SUCCESS);
-			
+
 			inventoryTransaction.setQuantityAfter(inventory.getQuantity());
-			
+
 			salesInvoiceItemRepository.save(salesInvoiceItem);
-			
-			inventoryTransaction.setTransactionItemId(salesInvoiceItem.getId());
-			
+
+			inventoryTransaction.setItem(salesInvoiceItem.getItem());
+
 			inventoriesForSave.add(inventory);
 			inventoryTransactions.add(inventoryTransaction);
 		});
-		
+
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
 		inventoryRepository.saveAll(inventoriesForSave);
 	}
 
 	@Transactional
 	public void cancelSalesInvoice(SalesInvoice salesInvoice) {
-		
+
 		final SalesInvoice updatedSalesInvoice = salesInvoiceRepository.findById(salesInvoice.getSystemNumber()).get();
-		List<SalesInvoiceItem> salesInvoiceItems = salesInvoiceItemRepository.findBySystemNumber(updatedSalesInvoice.getSystemNumber());
 		
+		System.err.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+		System.err.println(updatedSalesInvoice);
+		System.err.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+		List<SalesInvoiceItem> salesInvoiceItems = salesInvoiceItemRepository.findBySalesInvoice(updatedSalesInvoice);
+
+		System.err.println(salesInvoiceItems);
+		System.err.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 		List<Inventory> inventories = new ArrayList<>(); 
 		List<InventoryTransaction> inventoryTransactions = inventoryTransactionRepository.findByTransactionSystemNumberAndTransactionType(updatedSalesInvoice.getSystemNumber(), TransactionType.SALES_INVOICE); 
 
 		updatedSalesInvoice.setStatus(Status.CANCELLED);
 		updatedSalesInvoice.setUpdatedBy(userCredentials.getLoggedInUser());
-		
+
 		salesInvoiceItems.forEach(salesInvoiceItem -> {
 			InventoryTransaction cancelledTransaction = new InventoryTransaction();
 			cancelledTransaction.setItem(salesInvoiceItem.getItem());
 			cancelledTransaction.setLocation(updatedSalesInvoice.getLocation());
+			System.err.println("xxxxyyyyyxyxyxxyxyxyxyxyxyxyxxy");
+			System.err.println(cancelledTransaction);
+			
 			
 			// we find the transaction to cancel first
 			InventoryTransaction foundTransaction = inventoryTransactions.stream()
-		            .filter(t -> t.getItem().getId() == cancelledTransaction.getItem().getId() 
-		            		&& t.getLocation().getId() == cancelledTransaction.getLocation().getId())
-		            .findAny()
-		            .orElse(null);
-			
+					.filter(t -> t.getItem().getId() == cancelledTransaction.getItem().getId() 
+					&& t.getLocation().getId() == cancelledTransaction.getLocation().getId())
+					.findAny()
+					.orElse(null);
+
 			if(inventoryTransactions != null) {
-				
+
 				Inventory inventory = foundTransaction.getInventory();
-				
+
 				cancelledTransaction.setTransactionSystemNumber(updatedSalesInvoice.getSystemNumber());
 				cancelledTransaction.setTransactionType(TransactionType.SALES_CANCEL_INVOICE);
 				cancelledTransaction.setRawQuantity(salesInvoiceItem.getQuantity());
@@ -279,92 +286,94 @@ public class InventoryService {
 				cancelledTransaction.setCreatedBy(userCredentials.getLoggedInUser());
 				cancelledTransaction.setUnit(salesInvoiceItem.getUnit());
 				cancelledTransaction.setInventory(inventory);
-				
+
 				cancelledTransaction.setRawQuantity(inventory.getQuantity());
 				cancelledTransaction.setQuantityBefore(inventory.getQuantity());
-	
+
 				// lets rollback the quantity to the inventory
 				BigDecimal rateQuantity = foundTransaction.getRateQuantity();
-	
+
 				// we add up the rate quantity to the total quantity of the inventory
 				inventory.setQuantity(inventory.getQuantity().add(rateQuantity));
-	
+
 				cancelledTransaction.setRateQuantity(rateQuantity);
 				cancelledTransaction.setQuantityAfter(inventory.getQuantity());
-	
+
 				salesInvoiceItem.setStatus(Status.CANCELLED);
-				
+
 				inventories.add(inventory);
 				inventoryTransactions.add(cancelledTransaction);
-				
+
 			}
 
 		});
-		
+
 		salesInvoiceRepository.save(updatedSalesInvoice);
 		salesInvoiceItemRepository.saveAll(salesInvoiceItems);
 		inventoryRepository.saveAll(inventories);
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
-		
+
 	}
-	
+
 	@Transactional
 	public void createStockTransfer(StockTransfer stockTransfer) {
-		
+
 		// lets save the stock transfer first to generate system number
+		stockTransfer.setCreatedBy(userCredentials.getLoggedInUser());
 		stockTransferRepository.save(stockTransfer);
-		
+
 		// we get the inventories by FROM and TO location
 		List<Inventory> inventories = inventoryRepository.findByLocation(stockTransfer.getFromLocation());
 		inventories.addAll(inventoryRepository.findByLocation(stockTransfer.getToLocation()));
-	
+
 		// this list will be saved as new inventory transaction
 		List<InventoryTransaction> inventoryTransactions = new ArrayList<>(); // just a placeholder for one commit only
 		List<Inventory> inventoriesForSave = new ArrayList<>(); // just a placeholder for one commit only
-		
+
 		stockTransfer.getStockTransferItems().forEach(stockTransferItem -> {
-			
-			stockTransferItem.setSystemNumber(stockTransfer.getSystemNumber());
-			
+
+			stockTransferItem.setStockTransfer(stockTransfer);
+			stockTransferItem.setCreatedBy(userCredentials.getLoggedInUser());
+
 			InventoryTransaction inventoryTransaction = new InventoryTransaction();
+			inventoryTransaction.setItem(stockTransferItem.getItem());
+			inventoryTransaction.setLocation(stockTransfer.getFromLocation());
+			inventoryTransaction.setUnit(stockTransferItem.getUnit());
+			inventoryTransaction.setTransactionType(TransactionType.STOCK_TRANSFER);
 			inventoryTransaction.setRawQuantity(stockTransferItem.getQuantity());
 			inventoryTransaction.setTransactionSystemNumber(stockTransfer.getSystemNumber());
-			inventoryTransaction.setTransactionItemId(stockTransferItem.getItem().getId());
 			inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
-			
+
 			Inventory fromInventory = new Inventory();
 
 			fromInventory.setItem(stockTransferItem.getItem());
 			fromInventory.setLocation(stockTransfer.getFromLocation());
-			
+
 			Inventory toInventory = new Inventory();
 
 			toInventory.setItem(stockTransferItem.getItem());
 			toInventory.setLocation(stockTransfer.getFromLocation());
-			
+
 			// we check if FROM already exists
 			if(inventories.contains(fromInventory)) {
 				fromInventory = inventories.get(inventories.indexOf(fromInventory));
 			}
-			
+
 			// we also need to check if the TO already exists
 			if(inventories.contains(toInventory)) {
 				toInventory = inventories.get(inventories.indexOf(toInventory));
 			}
-			
+
+			inventoryTransaction.setInventory(fromInventory);
+
 			// Inventory Transaction
 			// before transaction
 			JSONObject jsonObj = new JSONObject();
 			jsonObj.put("from_quantity", fromInventory.getQuantity());
 			jsonObj.put("to_quantity", toInventory.getQuantity());
-			try {
-				inventoryTransaction.setTransactionBefore(objectMapper.writeValueAsString(jsonObj));
-			} catch (JsonProcessingException e) {
-				inventoryTransaction.setTransactionBefore(e.getLocalizedMessage());
-				e.printStackTrace();
-			}
-			
-			
+
+			inventoryTransaction.setTransactionBefore(jsonObj.toString());
+
 			// Now lets compute for the quantity of the item
 			// if unit is the default unit of the item
 			// save the quantity as is
@@ -389,23 +398,21 @@ public class InventoryService {
 				fromInventory.setQuantity(fromInventory.getQuantity().subtract(rateQuantity));
 				toInventory.setQuantity(toInventory.getQuantity().add(rateQuantity));
 			}
-			
+
 			// after transaction
-			try {
-				inventoryTransaction.setTransactionAfter(objectMapper.writeValueAsString(jsonObj));
-			} catch (JsonProcessingException e) {
-				inventoryTransaction.setTransactionBefore(e.getLocalizedMessage());
-				e.printStackTrace();
-			}
+			jsonObj.put("from_quantity", fromInventory.getQuantity());
+			jsonObj.put("to_quantity", toInventory.getQuantity());
 			
+			inventoryTransaction.setTransactionAfter(jsonObj.toString());
+
 			inventoryTransactions.add(inventoryTransaction);
 			inventoriesForSave.add(fromInventory);
 			inventoriesForSave.add(toInventory);
 		});
-		
+
 		stockTransferItemRepository.saveAll(stockTransfer.getStockTransferItems());
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
 		inventoryRepository.saveAll(inventoriesForSave);
 	}
-	
+
 }

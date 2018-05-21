@@ -33,9 +33,6 @@ public class InventoryTransaction {
 	@Column(name="transaction_system_number", nullable=false, updatable=false)
 	private String transactionSystemNumber;
 	
-	@Column(name="transaction_item_id", updatable=false)
-	private int transactionItemId;
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="location_id", nullable=false, updatable=false)
 	private Location location;
@@ -215,14 +212,6 @@ public class InventoryTransaction {
 		this.transactionAfter = transactionAfter;
 	}
 	
-	public int getTransactionItemId() {
-		return transactionItemId;
-	}
-
-	public void setTransactionItemId(int transactionItemId) {
-		this.transactionItemId = transactionItemId;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -269,7 +258,7 @@ public class InventoryTransaction {
 	@Override
 	public String toString() {
 		return "InventoryTransaction [id=" + id + ", transactionType=" + transactionType + ", transactionSystemNumber="
-				+ transactionSystemNumber + ", transactionItemId=" + transactionItemId + ", location=" + location
+				+ transactionSystemNumber + ",  location=" + location
 				+ ", item=" + item + ", unit=" + unit + ", unitCost=" + unitCost + ", rawQuantity=" + rawQuantity
 				+ ", quantityBefore=" + quantityBefore + ", rateQuantity=" + rateQuantity + ", quantityAfter="
 				+ quantityAfter + ", createdDate=" + createdDate + ", transactionBefore=" + transactionBefore

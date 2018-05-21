@@ -36,7 +36,7 @@ import com.bartolay.inventory.repositories.UnitRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 
 @Component
-public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
+public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
 
 	public static final String PASSWORD = "123456a";
 	

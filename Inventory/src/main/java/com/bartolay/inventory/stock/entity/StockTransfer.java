@@ -30,7 +30,7 @@ public class StockTransfer implements GeneratedStockTransferSystemNumber {
 	
 	@Id
 	@GeneratedValue(generator = "StockTransferSystemNumberGenerator")
-	@GenericGenerator(name = "StockTransferSystemNumberGenerator", strategy = "com.bartolay.inventory.entity.generators.SystemNumberGenerator")
+	@GenericGenerator(name = "StockTransferSystemNumberGenerator", strategy = "com.bartolay.inventory.entity.generators.StockTransferSystemNumberGenerator")
 	@Column(name="system_number", nullable=false, unique=true, insertable=false, updatable=false, length=10)
 	private String systemNumber;
 	
@@ -66,9 +66,6 @@ public class StockTransfer implements GeneratedStockTransferSystemNumber {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "updated_by", nullable=true, updatable=true)
 	private User updatedBy;
-	
-	@Column(name="enabled", nullable=false)
-	private boolean enabled;
 	
 	@OneToMany(mappedBy = "stockTransfer", fetch=FetchType.LAZY)
 	private Set<StockTransferItem> stockTransferItems;
@@ -152,14 +149,6 @@ public class StockTransfer implements GeneratedStockTransferSystemNumber {
 
 	public void setUpdatedBy(User updatedBy) {
 		this.updatedBy = updatedBy;
-	}
-	
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
 	}
 	
 	public Set<StockTransferItem> getStockTransferItems() {

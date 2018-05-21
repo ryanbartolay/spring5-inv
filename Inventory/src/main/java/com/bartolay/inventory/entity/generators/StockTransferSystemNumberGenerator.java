@@ -46,7 +46,7 @@ public class StockTransferSystemNumberGenerator implements IdentifierGenerator {
 
 					return system_number[0] + DELIMETER + system_number[1] + DELIMETER + system_number[2] + DELIMETER + index;
 				} else {
-					return obj.getYear() + DELIMETER +  obj.getFromLocation().getId() + DELIMETER + obj.getFromLocation().getId() + DELIMETER + 1;
+					return obj.getYear() + DELIMETER +  obj.getFromLocation().getId() + DELIMETER + obj.getToLocation().getId() + DELIMETER + 1;
 				}
 			} 
 		} catch (SQLException e) {

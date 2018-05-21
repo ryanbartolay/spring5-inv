@@ -29,8 +29,9 @@ public class StockTransferItem {
 	@SequenceGenerator(name="stock_transfer_item_generator", sequenceName = "STOCK_TRANSFERITEM_SER_SEQ")
 	private Long id;
 	
-	@Column(name="system_number", nullable=false, updatable=false, length=10)
-	private String systemNumber;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable=false, updatable=false)
+	private StockTransfer stockTransfer;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "item_id", nullable=false, updatable=true)
@@ -63,11 +64,11 @@ public class StockTransferItem {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getSystemNumber() {
-		return systemNumber;
+	public StockTransfer getStockTransfer() {
+		return stockTransfer;
 	}
-	public void setSystemNumber(String systemNumber) {
-		this.systemNumber = systemNumber;
+	public void setStockTransfer(StockTransfer stockTransfer) {
+		this.stockTransfer = stockTransfer;
 	}
 	public Item getItem() {
 		return item;

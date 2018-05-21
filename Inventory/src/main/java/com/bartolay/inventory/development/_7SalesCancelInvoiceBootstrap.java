@@ -13,14 +13,13 @@ import com.bartolay.inventory.services.InventoryService;
 
 @Component
 @Transactional
-public class SalesCancelInvoiceBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
+public class _7SalesCancelInvoiceBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
 
 	@Autowired
 	private InventoryService inventoryService;
 	
 	@Override
 	public int getOrder() {
-		// TODO Auto-generated method stub
 		return 7;
 	}
 

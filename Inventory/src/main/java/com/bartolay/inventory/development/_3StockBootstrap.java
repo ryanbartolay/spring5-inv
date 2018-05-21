@@ -28,7 +28,7 @@ import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 
 @Component
 @Transactional
-public class StockBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
+public class _3StockBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
 
 	@Autowired
 	private LocationRepository locationRepository;

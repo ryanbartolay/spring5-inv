@@ -32,9 +32,6 @@ public class SalesInvoiceItem {
 	@JoinColumn(nullable=false, updatable=false)
 	private SalesInvoice salesInvoice;
 	
-	@Column(name="system_number", nullable=false, updatable=false, length=10)
-	private String systemNumber;
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="item_id", nullable=false, updatable=false)
 	private Item item;
@@ -82,14 +79,6 @@ public class SalesInvoiceItem {
 
 	public void setSalesInvoice(SalesInvoice salesInvoice) {
 		this.salesInvoice = salesInvoice;
-	}
-
-	public String getSystemNumber() {
-		return systemNumber;
-	}
-
-	public void setSystemNumber(String systemNumber) {
-		this.systemNumber = systemNumber;
 	}
 
 	public Item getItem() {
@@ -188,9 +177,10 @@ public class SalesInvoiceItem {
 
 	@Override
 	public String toString() {
-		return "SalesInvoiceItem [id=" + id + ", systemNumber=" + systemNumber + ", salesInvoice=" + salesInvoice
-				+ ", quantity=" + quantity + ", unit=" + unit + ", unitCost=" + unitCost + ", createdDate="
-				+ createdDate + ", updatedDated=" + updatedDated + ", status=" + status + "]";
+		return "SalesInvoiceItem [id=" + id + ", salesInvoice=" + salesInvoice + ", item=" + item + ", quantity="
+				+ quantity + ", unit=" + unit + ", unitCost=" + unitCost + ", createdDate=" + createdDate
+				+ ", createdBy=" + createdBy + ", updatedDated=" + updatedDated + ", updatedBy=" + updatedBy
+				+ ", status=" + status + "]";
 	}
 	
 }

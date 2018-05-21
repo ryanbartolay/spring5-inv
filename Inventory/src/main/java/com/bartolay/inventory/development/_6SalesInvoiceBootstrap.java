@@ -27,7 +27,7 @@ import com.bartolay.inventory.services.InventoryService;
 
 @Component
 @Transactional
-public class SalesInvoiceBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
+public class _6SalesInvoiceBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
 
 	@Autowired
 	private CreditCardDetailsRepository creditCardDetailsRepository;
