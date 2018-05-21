@@ -29,8 +29,8 @@ public class StockTransferItem {
 	@SequenceGenerator(name="stock_transfer_item_generator", sequenceName = "STOCK_TRANSFERITEM_SER_SEQ")
 	private Long id;
 	
-	@Column(name="transaction_system_number", nullable=false, updatable=false)
-	private String transactionSystemNumber;
+	@Column(name="system_number", nullable=false, updatable=false, length=10)
+	private String systemNumber;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "item_id", nullable=false, updatable=true)
@@ -40,23 +40,8 @@ public class StockTransferItem {
 	@JoinColumn(name="unit_id", nullable=false, updatable=false)
 	private Unit unit;
 	
-	@Column(name="quantity_raw", nullable=false, precision=10, scale=5, updatable=false)
-	private BigDecimal rawQuantity;
-	
-	@Column(name="quantity_rate", nullable=false, precision=10, scale=5, updatable=false)
-	private BigDecimal rateQuantity;
-	
-	@Column(name="quantity_to_before", nullable=false, precision=10, scale=5, updatable=false)
-	private BigDecimal quantityToBefore;
-	
-	@Column(name="quantity_to_after", nullable=false, precision=10, scale=5, updatable=false)
-	private BigDecimal quantityToAfter;
-	
-	@Column(name="quantity_from_before", nullable=false, precision=10, scale=5, updatable=false)
-	private BigDecimal quantityFromBefore;
-	
-	@Column(name="quantity_from_after", nullable=false, precision=10, scale=5, updatable=false)
-	private BigDecimal quantityFromAfter;
+	@Column(name="quantity", nullable=false, precision=10, scale=5, updatable=false)
+	private BigDecimal quantity;
 	
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
@@ -78,11 +63,11 @@ public class StockTransferItem {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getTransactionSystemNumber() {
-		return transactionSystemNumber;
+	public String getSystemNumber() {
+		return systemNumber;
 	}
-	public void setTransactionSystemNumber(String transactionSystemNumber) {
-		this.transactionSystemNumber = transactionSystemNumber;
+	public void setSystemNumber(String systemNumber) {
+		this.systemNumber = systemNumber;
 	}
 	public Item getItem() {
 		return item;
@@ -96,41 +81,11 @@ public class StockTransferItem {
 	public void setUnit(Unit unit) {
 		this.unit = unit;
 	}
-	public BigDecimal getRawQuantity() {
-		return rawQuantity;
+	public BigDecimal getQuantity() {
+		return quantity;
 	}
-	public void setRawQuantity(BigDecimal rawQuantity) {
-		this.rawQuantity = rawQuantity;
-	}
-	public BigDecimal getRateQuantity() {
-		return rateQuantity;
-	}
-	public void setRateQuantity(BigDecimal rateQuantity) {
-		this.rateQuantity = rateQuantity;
-	}
-	public BigDecimal getQuantityToBefore() {
-		return quantityToBefore;
-	}
-	public void setQuantityToBefore(BigDecimal quantityToBefore) {
-		this.quantityToBefore = quantityToBefore;
-	}
-	public BigDecimal getQuantityToAfter() {
-		return quantityToAfter;
-	}
-	public void setQuantityToAfter(BigDecimal quantityToAfter) {
-		this.quantityToAfter = quantityToAfter;
-	}
-	public BigDecimal getQuantityFromBefore() {
-		return quantityFromBefore;
-	}
-	public void setQuantityFromBefore(BigDecimal quantityFromBefore) {
-		this.quantityFromBefore = quantityFromBefore;
-	}
-	public BigDecimal getQuantityFromAfter() {
-		return quantityFromAfter;
-	}
-	public void setQuantityFromAfter(BigDecimal quantityFromAfter) {
-		this.quantityFromAfter = quantityFromAfter;
+	public void setQuantity(BigDecimal quantity) {
+		this.quantity = quantity;
 	}
 	public Date getCreatedDate() {
 		return createdDate;

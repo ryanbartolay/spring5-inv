@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,8 @@ import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferItemRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferRepository;
 import com.bartolay.inventory.utils.UserCredentials;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class InventoryService {
@@ -62,6 +65,9 @@ public class InventoryService {
 	
 	@Autowired
 	private StockTransferItemRepository stockTransferItemRepository;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	/**
 	 * Creates the Stock Opening
@@ -302,8 +308,102 @@ public class InventoryService {
 		
 	}
 	
+	@Transactional
 	public void createStockTransfer(StockTransfer stockTransfer) {
 		
+		// lets save the stock transfer first to generate system number
+		stockTransferRepository.save(stockTransfer);
+		
+		// we get the inventories by FROM and TO location
+		List<Inventory> inventories = inventoryRepository.findByLocation(stockTransfer.getFromLocation());
+		inventories.addAll(inventoryRepository.findByLocation(stockTransfer.getToLocation()));
+	
+		// this list will be saved as new inventory transaction
+		List<InventoryTransaction> inventoryTransactions = new ArrayList<>(); // just a placeholder for one commit only
+		List<Inventory> inventoriesForSave = new ArrayList<>(); // just a placeholder for one commit only
+		
+		stockTransfer.getStockTransferItems().forEach(stockTransferItem -> {
+			
+			stockTransferItem.setSystemNumber(stockTransfer.getSystemNumber());
+			
+			InventoryTransaction inventoryTransaction = new InventoryTransaction();
+			inventoryTransaction.setRawQuantity(stockTransferItem.getQuantity());
+			inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
+			
+			Inventory fromInventory = new Inventory();
+
+			fromInventory.setItem(stockTransferItem.getItem());
+			fromInventory.setLocation(stockTransfer.getFromLocation());
+			
+			Inventory toInventory = new Inventory();
+
+			toInventory.setItem(stockTransferItem.getItem());
+			toInventory.setLocation(stockTransfer.getFromLocation());
+			
+			// we check if FROM already exists
+			if(inventories.contains(fromInventory)) {
+				fromInventory = inventories.get(inventories.indexOf(fromInventory));
+			}
+			
+			// we also need to check if the TO already exists
+			if(inventories.contains(toInventory)) {
+				toInventory = inventories.get(inventories.indexOf(toInventory));
+			}
+			
+			// Inventory Transaction
+			// before transaction
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("from_quantity", fromInventory.getQuantity());
+			jsonObj.put("to_quantity", toInventory.getQuantity());
+			try {
+				inventoryTransaction.setTransactionBefore(objectMapper.writeValueAsString(jsonObj));
+			} catch (JsonProcessingException e) {
+				inventoryTransaction.setTransactionBefore(e.getLocalizedMessage());
+				e.printStackTrace();
+			}
+			
+			
+			// Now lets compute for the quantity of the item
+			// if unit is the default unit of the item
+			// save the quantity as is
+			if(stockTransferItem.getItem().isDefaultUnit(stockTransferItem.getUnit())) {
+				// transactions FROM and TO
+				// we subtract from FROM
+				fromInventory.setQuantity(fromInventory.getQuantity().subtract(stockTransferItem.getQuantity()));
+				toInventory.setQuantity(toInventory.getQuantity().add(stockTransferItem.getQuantity()));
+				inventoryTransaction.setRateQuantity(stockTransferItem.getQuantity());
+			} else { // if unit is not the default then we compute for the actual quantity
+				BigDecimal quantity = stockTransferItem.getQuantity(); // user input quantity
+
+				// lets get the rate of the item unit
+				ItemUnit itemUnit = itemUnitRepository.findByItemAndUnit(stockTransferItem.getItem(), stockTransferItem.getUnit());
+				BigDecimal rate = itemUnit.getRate(); // items rate
+
+				BigDecimal rateQuantity = quantity.divide(rate, 5, RoundingMode.HALF_UP);
+				inventoryTransaction.setRateQuantity(rateQuantity);
+
+				// transactions FROM and TO
+				// we subtract from FROM
+				fromInventory.setQuantity(fromInventory.getQuantity().subtract(rateQuantity));
+				toInventory.setQuantity(toInventory.getQuantity().add(rateQuantity));
+			}
+			
+			// after transaction
+			try {
+				inventoryTransaction.setTransactionAfter(objectMapper.writeValueAsString(jsonObj));
+			} catch (JsonProcessingException e) {
+				inventoryTransaction.setTransactionBefore(e.getLocalizedMessage());
+				e.printStackTrace();
+			}
+			
+			inventoryTransactions.add(inventoryTransaction);
+			inventoriesForSave.add(fromInventory);
+			inventoriesForSave.add(toInventory);
+		});
+		
+		stockTransferItemRepository.saveAll(stockTransfer.getStockTransferItems());
+		inventoryTransactionRepository.saveAll(inventoryTransactions);
+		inventoryRepository.saveAll(inventoriesForSave);
 	}
 	
 }

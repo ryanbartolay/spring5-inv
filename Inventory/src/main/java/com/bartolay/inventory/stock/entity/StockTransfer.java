@@ -1,6 +1,7 @@
 package com.bartolay.inventory.stock.entity;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -18,10 +20,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.repositories.GeneratedStockTransferSystemNumber;
 
 @Entity
 @Table(name="stock_transfer")
-public class StockTransfer {
+public class StockTransfer implements GeneratedStockTransferSystemNumber {
+	
+	public final static String TABLE_NAME = "stock_transfer";
 	
 	@Id
 	@GeneratedValue(generator = "StockTransferSystemNumberGenerator")
@@ -64,6 +69,9 @@ public class StockTransfer {
 	
 	@Column(name="enabled", nullable=false)
 	private boolean enabled;
+	
+	@OneToMany(mappedBy = "stockTransfer", fetch=FetchType.LAZY)
+	private Set<StockTransferItem> stockTransferItems;
 	
 	public StockTransfer() {
 		super();
@@ -152,5 +160,27 @@ public class StockTransfer {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	
+	public Set<StockTransferItem> getStockTransferItems() {
+		return stockTransferItems;
+	}
+
+	public void setStockTransferItems(Set<StockTransferItem> stockTransferItems) {
+		this.stockTransferItems = stockTransferItems;
+	}
+
+	@Override
+	public String getYear() {
+		return this.year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	@Override
+	public String getTableName() {
+		return TABLE_NAME;
 	}
 }
