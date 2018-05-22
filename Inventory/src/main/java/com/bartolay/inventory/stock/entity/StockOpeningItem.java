@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.Unit;
 import com.bartolay.inventory.enums.Status;
+import com.bartolay.inventory.sales.entity.SalesInvoice;
 
 @Entity
 @Table(name="stock_opening_item")
@@ -26,12 +27,13 @@ public class StockOpeningItem {
 	@SequenceGenerator(name="stock_opening_item_generator", sequenceName = "STOCK_OPENING_ITEM_SER_SEQ")
 	private Integer id;
 	
-	@Column(name="transaction_system_number", nullable=false, updatable=false)
-	private String transactionSystemNumber;
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="item_id", nullable=false, updatable=true)
 	private Item item;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable=false, updatable=true)
+	private StockOpening stockOpening;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="unit_id", nullable=false, updatable=true)
@@ -43,9 +45,11 @@ public class StockOpeningItem {
 	@Column(name="quantity", nullable=false, precision=10, scale=5)
 	private BigDecimal quantity;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="stock_opening_id", nullable=false, updatable=true)
-	private StockOpening stockOpening;
+	@Column(name="rate_quantity", nullable=false, precision=10, scale=5)
+	private BigDecimal rateQuantity;
+	
+	@Column(name="unit_cost_total", nullable=false, precision=10, scale=5)
+	private BigDecimal unitCostTotal;
 	
 	@Column(name="status", nullable=false, updatable=true, length=3)
 	private Status status;
@@ -62,12 +66,6 @@ public class StockOpeningItem {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getTransactionSystemNumber() {
-		return transactionSystemNumber;
-	}
-	public void setTransactionSystemNumber(String transactionSystemNumber) {
-		this.transactionSystemNumber = transactionSystemNumber;
-	}
 	public Item getItem() {
 		return item;
 	}
@@ -80,11 +78,23 @@ public class StockOpeningItem {
 	public void setQuantity(BigDecimal quantity) {
 		this.quantity = quantity;
 	}
+	public BigDecimal getUnitCostTotal() {
+		return unitCostTotal;
+	}
+	public void setUnitCostTotal(BigDecimal unitCostTotal) {
+		this.unitCostTotal = unitCostTotal;
+	}
 	public StockOpening getStockOpening() {
 		return stockOpening;
 	}
 	public void setStockOpening(StockOpening stockOpening) {
 		this.stockOpening = stockOpening;
+	}
+	public BigDecimal getRateQuantity() {
+		return rateQuantity;
+	}
+	public void setRateQuantity(BigDecimal rateQuantity) {
+		this.rateQuantity = rateQuantity;
 	}
 	public Unit getUnit() {
 		return unit;

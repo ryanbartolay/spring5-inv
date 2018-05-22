@@ -13,7 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
 @RequestMapping(value="/api")
-public class StockTransferController {
+public class StockTransferRestController {
 
 	@Autowired
 	private StockTransferService stockTransferService;

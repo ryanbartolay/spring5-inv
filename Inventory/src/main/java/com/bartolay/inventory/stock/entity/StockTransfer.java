@@ -172,4 +172,13 @@ public class StockTransfer implements GeneratedStockTransferSystemNumber {
 	public String getTableName() {
 		return TABLE_NAME;
 	}
+
+	@Override
+	public String toString() {
+		return "StockTransfer [systemNumber=" + systemNumber + ", documentNumber=" + documentNumber
+				+ ", transactionDate=" + transactionDate + ", year=" + year + ", fromLocation=" + fromLocation
+				+ ", toLocation=" + toLocation + ", createdDate=" + createdDate + ", createdBy=" + createdBy
+				+ ", updatedDated=" + updatedDated + ", updatedBy=" + updatedBy + ", stockTransferItems="
+				+ stockTransferItems + "]";
+	}
 }

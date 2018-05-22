@@ -80,17 +80,18 @@ public class InventoryService {
 		// Lets save the stock opening first so we can generate a system number
 		stockOpening.setStatus(Status.SUCCESS);
 		stockOpening.setCreatedBy(userCredentials.getLoggedInUser());
+		stockOpening.setTotal(new BigDecimal("0"));
 		stockOpeningRepository.save(stockOpening);
-
+		
 		List<Inventory> inventories = inventoryRepository.findByLocation(stockOpening.getLocation());
-
 		List<InventoryTransaction> invTransactions = new ArrayList<>();
 		List<Inventory> inventoriesForSave = new ArrayList<>();
 
 		// iterate through items and check if default unit
 		stockOpening.getItems().forEach(stockOpeningItem -> {
-
-			stockOpeningItem.setTransactionSystemNumber(stockOpening.getSystemNumber());
+			
+			System.err.println("<><><><><<><><>><" + stockOpening);
+			stockOpeningItem.setStockOpening(stockOpening);
 
 			Inventory inventory = new Inventory();
 			InventoryTransaction inventoryTransaction = new InventoryTransaction();
@@ -138,16 +139,24 @@ public class InventoryService {
 			inventoryTransaction.setTransactionType(TransactionType.STOCK_OPENING);
 			inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
 
+			
+			stockOpeningItem.setRateQuantity(inventoryTransaction.getRateQuantity());
+			stockOpeningItem.setUnitCostTotal(stockOpeningItem.getUnitCost().multiply(stockOpeningItem.getRateQuantity()));
 			stockOpeningItem.setStatus(Status.SUCCESS);
+			
+			System.err.println(stockOpeningItem.getUnitCostTotal() + " + " + stockOpening.getTotal() + " = " + stockOpening.getTotal().add(stockOpeningItem.getUnitCostTotal()));
+			stockOpening.setTotal(stockOpening.getTotal().add(stockOpeningItem.getUnitCostTotal()));
 
 			stockOpeningItemRepository.save(stockOpeningItem);
-
+			
 			inventoryTransaction.setInventory(inventory);
 
 			invTransactions.add(inventoryTransaction);
 			inventoriesForSave.add(inventory);
 		});
 
+		stockOpeningRepository.save(stockOpening);
+		
 		inventoryRepository.saveAll(inventoriesForSave);
 		inventoryTransactionRepository.saveAll(invTransactions);
 	}

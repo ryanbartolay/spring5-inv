@@ -1,5 +1,6 @@
 package com.bartolay.inventory.stock.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
@@ -55,6 +56,9 @@ public class StockOpening implements GeneratedSystemNumber {
 
 	@OneToMany(mappedBy = "stockOpening", fetch=FetchType.LAZY)
 	private Set<StockOpeningItem> items;
+	
+	@Column(name="total", nullable=false, precision=10, scale=5)
+	private BigDecimal total;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="location_id", nullable=false, updatable=false)
@@ -75,10 +79,6 @@ public class StockOpening implements GeneratedSystemNumber {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "updated_by", nullable=true, updatable=true)
 	private User updatedBy;
-
-	@Deprecated
-	@Column(name="draft", nullable=false)
-	private boolean draft;
 
 	@Column(name="status", nullable=false, updatable=true, length=3)
 	private Status status;
@@ -134,6 +134,14 @@ public class StockOpening implements GeneratedSystemNumber {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
+	}
 
 	public Location getLocation() {
 		return location;
@@ -175,16 +183,6 @@ public class StockOpening implements GeneratedSystemNumber {
 		this.updatedBy = updatedBy;
 	}
 
-	@Deprecated
-	public boolean isDraft() {
-		return draft;
-	}
-
-	@Deprecated
-	public void setDraft(boolean draft) {
-		this.draft = draft;
-	}
-
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -218,11 +216,11 @@ public class StockOpening implements GeneratedSystemNumber {
 
 	@Override
 	public String toString() {
-		return "StockOpening [systemNumber=" + systemNumber + ", documentNumber=" + documentNumber
-				+ ", transactionDate=" + transactionDate + ", year=" + year + ", description=" + description
-				+ ", items=" + items + ", location=" + location + ", createdDate=" + createdDate + ", createdBy="
-				+ createdBy + ", updatedDated=" + updatedDated + ", updatedBy=" + updatedBy + ", draft=" + draft
-				+ ", enabled=" + enabled + "]";
+		return "StockOpening [inventories=" + inventories + ", systemNumber=" + systemNumber + ", documentNumber="
+				+ documentNumber + ", transactionDate=" + transactionDate + ", year=" + year + ", description="
+				+ description + ", items=" + items + ", total=" + total + ", location=" + location + ", createdDate="
+				+ createdDate + ", createdBy=" + createdBy + ", updatedDated=" + updatedDated + ", updatedBy="
+				+ updatedBy + ", status=" + status + ", enabled=" + enabled + "]";
 	}
 
 	@Override

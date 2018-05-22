@@ -284,7 +284,13 @@
         		{
                     "targets": 7,
                     "data": null,
-                    "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#confirmCancelModal" data-backdrop="static" data-keyboard="false" id="btnCancel">Cancel</button>'
+                    "defaultContent": 
+                    	'<div class="btn-group" role="group">'
+                    	+ '<button class="btn btn-default glyphicon glyphicon-eye-open" id="btnView"/>'
+                    	+ '<button type="button" class="btn btn-danger glyphicon glyphicon-remove" data-toggle="modal" data-target="#confirmCancelModal" data-backdrop="static" data-keyboard="false" id="btnCancel" />'
+                    	+ '</div>'
+                    	
+                    	
                 }
         	]
 	);

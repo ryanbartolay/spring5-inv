@@ -5,7 +5,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.bartolay.inventory.entity.Item;
-import com.bartolay.inventory.itemForm.ItemForm;
+import com.bartolay.inventory.form.ItemForm;
 
 public interface ItemService {
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);

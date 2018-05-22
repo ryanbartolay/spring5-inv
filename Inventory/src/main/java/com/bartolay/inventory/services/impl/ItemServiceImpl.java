@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.entity.Item;
-import com.bartolay.inventory.itemForm.ItemForm;
+import com.bartolay.inventory.form.ItemForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.services.ItemService;

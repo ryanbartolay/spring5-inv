@@ -181,7 +181,12 @@
         		{
                     "targets": 6,
                     "data": null,
-                    "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Cancel</button>'
+                    "defaultContent": 
+                    	'<div class="btn-group" role="group">'
+                    	+ '<button class="btn btn-default glyphicon glyphicon-eye-open" id="btnView"/>'
+                    	+ '<button type="button" class="btn btn-danger glyphicon glyphicon-remove" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit"></button>'
+                    	+ '</div>'
+                 
                 }
         	]
 	);
@@ -219,6 +224,15 @@
 	formModalAsync($("#formModal"), function() {
 		datatable.ajax.reload( null, false ); // user paging is not reset on reload
 	});
+	
+	// View button
+    table.find("tbody").on('click', '#btnView', function (e) {
+        e.preventDefault();
+ 		
+        var data = datatable.row($(this).parent('div').parent('td')).data();
+        window.location="transfer/view/" + data.system_number;
+        
+    } );
 	
 /*]]>*/
 </script>

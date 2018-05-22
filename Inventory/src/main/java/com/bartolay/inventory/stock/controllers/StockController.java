@@ -13,7 +13,9 @@ import com.bartolay.inventory.form.StockTransferForm;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.services.CompanyService;
 import com.bartolay.inventory.stock.entity.StockOpening;
+import com.bartolay.inventory.stock.entity.StockTransfer;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
+import com.bartolay.inventory.stock.repositories.StockTransferRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
@@ -24,6 +26,9 @@ public class StockController {
 	
 	@Autowired
 	private StockOpeningRepository stockOpeningRepository;
+	
+	@Autowired
+	private StockTransferRepository stockTransferRepository;
 
 	@Autowired
 	private CompanyService companyService;
@@ -56,7 +61,6 @@ public class StockController {
 		mav.addObject("page", "Opening Stock");
 		mav.addObject("html", "/opening/view");
 		StockOpening opening = stockOpeningRepository.findBySystemNumber(system_number);
-		System.err.println(opening.getItems());
 		mav.addObject("stockOpening", opening);
 	
 		return mav;
@@ -81,6 +85,17 @@ public class StockController {
 		model.addObject("html", "../stock/transfer/list");
 		model.addObject("stockTransferForm", new StockTransferForm());
 		return model;
+	}
+	
+	@RequestMapping(value="/stock/transfer/view/{system_number}", method=RequestMethod.GET)
+	public ModelAndView stockTransferView(ModelAndView mav, @PathVariable String system_number) throws JsonProcessingException {
+		mav.setViewName("stock/index");
+		mav.addObject("page", "Stock Transfer");
+		mav.addObject("html", "transfer/view");
+		StockTransfer stockTransfer = stockTransferRepository.findById(system_number).get();
+		mav.addObject("stockTransfer", stockTransfer);
+	
+		return mav;
 	}
 	
 	@RequestMapping(value="/stock/adjustment")

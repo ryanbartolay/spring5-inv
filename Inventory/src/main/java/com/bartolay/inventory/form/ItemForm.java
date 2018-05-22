@@ -1,4 +1,4 @@
-package com.bartolay.inventory.itemForm;
+package com.bartolay.inventory.form;
 
 import java.util.HashSet;
 import java.util.Set;

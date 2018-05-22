@@ -100,5 +100,9 @@ public class StockTransferItem {
 	public void setCreatedBy(User createdBy) {
 		this.createdBy = createdBy;
 	}
-	
+	@Override
+	public String toString() {
+		return "StockTransferItem [id=" + id + ", item=" + item + ", unit=" + unit + ", quantity=" + quantity
+				+ ", createdDate=" + createdDate + ", createdBy=" + createdBy + "]";
+	}
 }
