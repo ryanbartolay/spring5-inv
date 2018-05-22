@@ -7,5 +7,5 @@ import com.bartolay.inventory.sales.entity.SalesInvoice;
 
 @Repository
 public interface SalesInvoiceRepository extends CrudRepository<SalesInvoice, String> {
-//	public SalesInvoice findBySystemNumber(Strig salesInvoice);
+	
 }

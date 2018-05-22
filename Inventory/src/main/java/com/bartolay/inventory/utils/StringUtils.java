@@ -10,6 +10,7 @@ import java.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.bartolay.inventory.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,6 +37,10 @@ public class StringUtils {
 			ex.printStackTrace();
 		}
 		return null;
+	}
+	
+	public String userFullnameWithEmail(User user) {
+		return user.getLastName() + ", " + user.getFirstName() + " (" + user.getEmail() + ")";
 	}
 	
 	public String base64decode(String raw) {
