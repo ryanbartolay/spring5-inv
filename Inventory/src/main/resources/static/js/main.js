@@ -2,9 +2,21 @@ $(document).on("submit", "form", function(e){
 	e.preventDefault();
 });
 
-function GET(url, callback){
-	return ajax("GET", url, "", function(data) {
+function GET(url, callback, error_callback = null){
+//	return ajax("GET", url, "", function(data) {
+//		callback(decodeAPIResponse(data));
+//	});
+	
+	$.get( {
+		url: url,
+		dataType: "text"
+	}, function(data) {
 		callback(decodeAPIResponse(data));
+	})
+	.fail(function(error) {
+		if(typeof error_callback == 'function'){
+			error_callback(error);
+		}
 	});
 }
 function DELETE(url, callback){
@@ -28,16 +40,18 @@ function decodeAPIResponse(data) {
 }
 
 function ajax(type, url, data, callback){
+
 	var strReturn;
 	if(typeof callback == 'function'){
+		
 		$.ajax({
 			type: type,
 		    url: url,
-		    contentType : "application/json",
+		    contentType : "text", // all requests are expected to be url encoded
 			data: JSON.stringify(data),
 			success: function(data, status, xhr) {
 				if(typeof callback == 'function'){
-					callback(data)
+					callback(data);
 				}
 		    },
 		    error: errorHandler // see function errorHandler
@@ -46,7 +60,7 @@ function ajax(type, url, data, callback){
 		$.ajax({
 			type: type,
 			url: url,
-		    contentType : "application/json",
+		    contentType : "text",
 			data: JSON.stringify(data),
 			async:false,
 			success : function(data) {
@@ -86,9 +100,6 @@ function formModalAsync(modal, successCallback = null) {
                 $target.html(data);
                 modal.modal("toggle");
                 var obj = decodeAPIResponse(data);
-                
-                console.log(obj.status);
-                console.log(obj.status == 'ACCEPTED');
                 
                 showToast(obj);
             	
@@ -146,6 +157,7 @@ function toast(icon, message) {
 }
 
 function errorHandler(data){
+	console.log(data);
 	if(data.status==500){
 		return {
 			status : "error",
@@ -159,7 +171,7 @@ function errorHandler(data){
 			status : "error",
 			message : "Access Denied. You don't access this action!"
 		})
-	}
+	} 
 }
 
 function getDecode(str){

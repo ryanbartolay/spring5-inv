@@ -1,24 +1,44 @@
 <!-- Modal Edit Brand -->
-<div class="modal fade" id="formModal" tabindex="-1" role="dialog"
+<div class="modal fade" id="itemFormModal" tabindex="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form data-async data-target="#rating-modal" id="createStockOpeningItemForm" th:object="${stockOpeningItemForm}"
+			<form data-async data-target="#rating-modal"
+				id="createStockOpeningItemForm" th:object="${stockOpeningItemForm}"
 				th:action="@{/api/stockOpening/item}" method="POST">
-				<input type="hidden" th:field="*{id}"/>
+				<input type="hidden" th:field="*{id}" />
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
-					<h4 class="modal-title" id="modalLabel">Add Stock Opening Item</h4>
+					<h4 class="modal-title" id="itemModalLabel"></h4>
 				</div>
 
 				<div class="panel-body">
+				
+					<table class="table table-bordered table-striped">
+						<tbody>
+							<tr>
+								<td>
+								
+									<div class="input-group">
+										<span class="input-group-addon">Item</span>
+										<select class="form-control" th:field="*{item}">
+											<option value="">------</option>
+										</select>
+									</div>
+								
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				
 					
 				</div>
 
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-					<button type="submit" id="submit" class="btn btn-success btn-primary">Add Item</button>
+					<button type="submit" id="submit"
+						class="btn btn-success btn-primary">Add Item</button>
 				</div>
 			</form>
 		</div>
@@ -29,9 +49,20 @@
 <!-- /.modal -->
 
 <script>
-function addItem(callback) {
-	$('#formModal').modal('toggle');
-	
-	 //callback();
-}
+	var isLoadedModelItems = false;
+	function addItem(label, callback) {
+		$("#itemModalLabel").text(label);
+		$('#itemFormModal').modal('toggle');
+
+		$("#itemFormModal").on('shown.bs.modal', function() {
+			if(!isLoadedModelItems) {
+				GET("/api/items", function(data) {
+					$.each(data, function(i, obj) {
+						$('#item option:last').after('<option value="'+ obj.id +'">'+ obj.name +'</option>');
+					});
+					isLoadedModelItems = true;
+				});
+			}
+		});
+	}
 </script>
