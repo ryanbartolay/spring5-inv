@@ -46,6 +46,12 @@ public class SalesInvoiceItem {
 	@Column(name="unit_cost", nullable=false, precision=10, scale=5)
 	private BigDecimal unitCost;
 	
+	@Column(name="rate_quantity", nullable=false, precision=10, scale=5)
+	private BigDecimal rateQuantity;
+	
+	@Column(name="unit_cost_total", nullable=false, precision=10, scale=5)
+	private BigDecimal unitCostTotal;
+	
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
 	private Date createdDate;
@@ -111,6 +117,22 @@ public class SalesInvoiceItem {
 
 	public void setUnitCost(BigDecimal unitCost) {
 		this.unitCost = unitCost;
+	}
+
+	public BigDecimal getRateQuantity() {
+		return rateQuantity;
+	}
+
+	public void setRateQuantity(BigDecimal rateQuantity) {
+		this.rateQuantity = rateQuantity;
+	}
+
+	public BigDecimal getUnitCostTotal() {
+		return unitCostTotal;
+	}
+
+	public void setUnitCostTotal(BigDecimal unitCostTotal) {
+		this.unitCostTotal = unitCostTotal;
 	}
 
 	public Date getCreatedDate() {

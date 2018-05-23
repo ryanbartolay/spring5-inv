@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.bartolay.inventory.form.BrandForm;
 import com.bartolay.inventory.form.StockOpeningForm;
+import com.bartolay.inventory.form.StockOpeningItemForm;
 import com.bartolay.inventory.form.StockTransferForm;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.services.CompanyService;
@@ -51,7 +52,9 @@ public class StockController {
 		mav.addObject("method", "POST");
 		
 		mav.addObject("stockOpeningForm", new StockOpeningForm());
+		mav.addObject("stockOpeningItemForm", new StockOpeningItemForm());
 		mav.addObject("locations", locationRepository.findAll());
+		
 		return mav;
 	}
 	

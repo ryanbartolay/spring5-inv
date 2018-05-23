@@ -30,7 +30,6 @@ import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferItemRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferRepository;
 import com.bartolay.inventory.utils.UserCredentials;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -90,7 +89,6 @@ public class InventoryService {
 		// iterate through items and check if default unit
 		stockOpening.getItems().forEach(stockOpeningItem -> {
 			
-			System.err.println("<><><><><<><><>><" + stockOpening);
 			stockOpeningItem.setStockOpening(stockOpening);
 
 			Inventory inventory = new Inventory();
@@ -146,7 +144,7 @@ public class InventoryService {
 			
 			System.err.println(stockOpeningItem.getUnitCostTotal() + " + " + stockOpening.getTotal() + " = " + stockOpening.getTotal().add(stockOpeningItem.getUnitCostTotal()));
 			stockOpening.setTotal(stockOpening.getTotal().add(stockOpeningItem.getUnitCostTotal()));
-
+			
 			stockOpeningItemRepository.save(stockOpeningItem);
 			
 			inventoryTransaction.setInventory(inventory);
@@ -177,6 +175,7 @@ public class InventoryService {
 		// this will be essential in case theres a wrong data on the sales invoice
 		salesInvoice.setCreatedBy(userCredentials.getLoggedInUser());
 		salesInvoice.setStatus(Status.SUCCESS);
+		salesInvoice.setTotal(new BigDecimal("0"));
 		salesInvoiceRepository.save(salesInvoice);
 
 		// we get the inventories by location
@@ -234,9 +233,13 @@ public class InventoryService {
 
 				inventory.setQuantity(inventory.getQuantity().subtract(rateQuantity));
 			}
-
+			
+			salesInvoiceItem.setRateQuantity(inventoryTransaction.getRateQuantity());
+			salesInvoiceItem.setUnitCostTotal(salesInvoiceItem.getUnitCost().multiply(salesInvoiceItem.getRateQuantity()));
 			salesInvoiceItem.setStatus(Status.SUCCESS);
 
+			salesInvoice.setTotal(salesInvoice.getTotal().add(salesInvoiceItem.getUnitCostTotal()));
+			
 			inventoryTransaction.setQuantityAfter(inventory.getQuantity());
 
 			salesInvoiceItemRepository.save(salesInvoiceItem);
@@ -247,6 +250,7 @@ public class InventoryService {
 			inventoryTransactions.add(inventoryTransaction);
 		});
 
+		salesInvoiceRepository.save(salesInvoice);
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
 		inventoryRepository.saveAll(inventoriesForSave);
 	}

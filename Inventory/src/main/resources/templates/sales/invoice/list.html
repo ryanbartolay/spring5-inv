@@ -350,5 +350,13 @@
 		datatable.ajax.reload( null, false ); // user paging is not reset on reload
 	});
 	
+	// View button
+    table.find("tbody").on('click', '#btnView', function (e) {
+        e.preventDefault();
+ 		
+        var data = datatable.row($(this).parent('div').parent('td')).data();
+        window.location="/sales/invoice/" + data.system_number;
+        
+    } );
 /*]]>*/
 </script>

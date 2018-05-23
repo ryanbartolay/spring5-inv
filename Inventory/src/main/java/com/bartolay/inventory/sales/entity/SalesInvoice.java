@@ -1,5 +1,6 @@
 package com.bartolay.inventory.sales.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
@@ -69,6 +70,13 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	@JoinColumn(name = "sales_person_id", nullable=true, updatable=true)
 	private User salesPerson;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "customer_user_id", nullable=false, updatable=true)
+	private User customer;
+	
+	@Column(name="total", nullable=false, precision=10, scale=5)
+	private BigDecimal total;
+	
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
 	private Date createdDate;
@@ -135,6 +143,18 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	}
 	public void setSalesPerson(User salesPerson) {
 		this.salesPerson = salesPerson;
+	}
+	public User getCustomer() {
+		return customer;
+	}
+	public void setCustomer(User customer) {
+		this.customer = customer;
+	}
+	public BigDecimal getTotal() {
+		return total;
+	}
+	public void setTotal(BigDecimal total) {
+		this.total = total;
 	}
 	public Date getCreatedDate() {
 		return createdDate;

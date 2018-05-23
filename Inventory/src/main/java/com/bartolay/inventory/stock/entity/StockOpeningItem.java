@@ -16,7 +16,6 @@ import javax.persistence.Table;
 import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.Unit;
 import com.bartolay.inventory.enums.Status;
-import com.bartolay.inventory.sales.entity.SalesInvoice;
 
 @Entity
 @Table(name="stock_opening_item")

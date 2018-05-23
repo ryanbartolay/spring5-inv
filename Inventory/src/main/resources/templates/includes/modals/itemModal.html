@@ -1,0 +1,37 @@
+<!-- Modal Edit Brand -->
+<div class="modal fade" id="formModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form data-async data-target="#rating-modal" id="createStockOpeningItemForm" th:object="${stockOpeningItemForm}"
+				th:action="@{/api/stockOpening/item}" method="POST">
+				<input type="hidden" th:field="*{id}"/>
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="modalLabel">Add Stock Opening Item</h4>
+				</div>
+
+				<div class="panel-body">
+					
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button type="submit" id="submit" class="btn btn-success btn-primary">Add Item</button>
+				</div>
+			</form>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<script>
+function addItem(callback) {
+	$('#formModal').modal('toggle');
+	
+	 //callback();
+}
+</script>

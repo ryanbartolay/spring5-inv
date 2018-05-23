@@ -1,6 +1,6 @@
 <div class="row">
-	<div class="col-lg-12">
-		<div th:text="${salesInvoice}"></div>
+	<div class="col-lg-12"><!-- 
+		<div th:text="${salesInvoice}"></div> -->
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				
@@ -25,10 +25,16 @@
 									</div>
 								</td>
 								
-								<td class="col-md-8">
+								<td class="col-md-6">
 									<div class="input-group">
 										<span class="input-group-addon">Sales Person</span>
 										<span class="form-control" th:text="${StringUtils.userFullnameWithEmail(salesInvoice.salesPerson)}"></span>
+									</div>
+								</td>
+								<td class="col-md-2">
+									<div class="input-group">
+										<span class="input-group-addon">Payment</span>
+										<span class="form-control" th:text="${salesInvoice.paymentMethod}"></span>
 									</div>
 								</td>
 							</tr>
@@ -48,8 +54,8 @@
 									</div>
 								</td>
 								
-								<td class="col-md-1">
-									<div class="input-group">
+								<td colspan="2">
+									<div class="input-group col-md-12">
 										<span class="input-group-addon">Location</span>
 										<span class="form-control" th:text="${salesInvoice.location.name}"></span>
 									</div>
@@ -57,7 +63,7 @@
 							</tr>
 							
 							<tr>
-								<td colspan="3">
+								<td colspan="4">
 									<div class="input-group col-md-12">
 										<span class="input-group-addon">Description</span>
 										<span class="form-control" th:text="${salesInvoice.description}"></span>
@@ -84,12 +90,21 @@
 							<tr:block th:each="salesInvoiceItem : ${salesInvoice.salesInvoiceItems}">
 								<th th:text="${salesInvoiceItem.item.id}"></th>
 								<td th:text="${salesInvoiceItem.item.code}"></td>
-								<td th:text="${salesInvoiceItem.item.name}"></td>
+								<td th:text="${salesInvoiceItem.item.name} + '( '+ ${salesInvoiceItem.item.defaultUnit.abbreviation} +' )'"></td>
 								<td th:text="${salesInvoiceItem.unit.abbreviation}"></td>
 								<td th:text="${salesInvoiceItem.unit.name}"></td>
-								<td th:text="${salesInvoiceItem.quantity}"></td>
+								<td th:text="${salesInvoiceItem.rateQuantity}"></td>
+								<td th:text="${salesInvoiceItem.unitCost}"></td>
+								<td class="text-right" th:text="${salesInvoiceItem.unitCostTotal}"></td>
 							</tr:block>
 						</tbody>
+						<tfoot>
+							<tr>
+								<th colspan="6"></th>
+								<th><h3>Total<h3></h3></th>
+								<th><h3 class="text-right" th:text="${salesInvoice.total}"></h3></th>
+							</tr>
+						</tfoot>
 					</table>
 					
 				</div>
@@ -100,20 +115,47 @@
 		<div class="col-lg-6">
 			<div class="panel panel-info">
 			    <div class="panel-heading">
-			        Info Panel
+			    	Customer Information
 			    </div>
 			    <div class="panel-body">
-			        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-			    </div>
-			    <div class="panel-footer">
-			        Panel Footer
+			    
+			    	<table class="table table-bordered table-striped">
+						<tbody>
+							<tr>
+								<th>
+									<div class="input-group">
+										<span class="input-group-addon">Customer</span>
+										<span class="form-control" th:text="${StringUtils.userFullnameWithEmail(salesInvoice.customer)}"></span>
+									</div>
+								</th>
+							</tr>
+							<tr>
+								<th>
+									<div class="input-group">
+										<span class="input-group-addon">Address</span>
+										<span class="form-control" th:text="${salesInvoice.customer.address}"></span>
+									</div>
+								</th>
+							</tr>
+							<tr>
+								<th>
+									<div class="input-group">
+										<span class="input-group-addon">Phone</span>
+										<span class="form-control" th:text="${salesInvoice.customer.phone}"></span>
+									</div>
+								</th>
+							</tr>
+						</tbody>
+					</table>
 			    </div>
 			</div>
 		</div>
-		<div class="col-lg-6">
+		<div th:text="${salesInvoice.paymentMethod}"></div>
+		<div th:text="T(com.bartolay.inventory.enums.PaymentMethod).CREDITCARD"></div>
+		<div class="col-lg-6" th:if="${salesInvoice.paymentMethod == T(com.bartolay.inventory.enums.PaymentMethod).CREDITCARD}">
 			<div class="panel panel-warning">
 			    <div class="panel-heading">
-			        Info Panel
+			        Payment Method
 			    </div>
 			    <div class="panel-body">
 			        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>

@@ -16,7 +16,7 @@ import com.bartolay.inventory.utils.StringUtils;
 
 @Controller
 @RequestMapping(value="/sales")
-public class SaleController {
+public class SalesController {
 	
 	@Autowired
 	private SalesInvoiceRepository salesInvoiceRepository;

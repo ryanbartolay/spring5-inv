@@ -55,6 +55,8 @@ public class _6SalesInvoiceBootstrap implements ApplicationListener<ContextRefre
 		User user = userRepository.findByUsername("admin");
 		User salesPerson = userRepository.findByUsername("sales1");
 		
+		User customer = userRepository.findByUsername("customer");
+		
 		Calendar cal = Calendar.getInstance();
 		cal.set(2018, 4, 21, 22, 33, 5);
 		
@@ -80,6 +82,7 @@ public class _6SalesInvoiceBootstrap implements ApplicationListener<ContextRefre
 		salesInvoice.setYear("2018");
 		salesInvoice.setTransactionDate(cal.getTime());
 		salesInvoice.setSalesPerson(salesPerson);
+		salesInvoice.setCustomer(customer);
 		salesInvoice.setCreatedBy(user);
 		salesInvoice.setLocation(locationRepository.findById(1).get());
 		salesInvoice.setSalesInvoiceItems(salesInvoiceItems);

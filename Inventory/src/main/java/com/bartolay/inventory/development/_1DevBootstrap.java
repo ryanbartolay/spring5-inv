@@ -88,6 +88,7 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
 		
 		createEmployees();
+		createCustomers();
 		
 		user = userRepository.findByUsername("admin");		
 		
@@ -286,6 +287,18 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		user.setAccountType(AccountType.ADMIN);
 		user.setEmail("bartolay.ryan@gmail.com");
 		user.setAuthority(AccountType.ADMIN.toString());
+		userRepository.save(user);
+	}
+	
+	private void createCustomers() {
+		User user = new User();
+		user.setUsername("customer");
+		user.setPassword(passwordEncoder.encode(PASSWORD));
+		user.setFirstName("Ryan");
+		user.setLastName("Bartolay");
+		user.setAccountType(AccountType.CUSTOMER);
+		user.setEmail("bartolay.ryann@gmail.com");
+		user.setAuthority(AccountType.CUSTOMER.toString());
 		userRepository.save(user);
 	}
 

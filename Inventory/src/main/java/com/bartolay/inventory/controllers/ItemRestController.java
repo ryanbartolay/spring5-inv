@@ -40,6 +40,16 @@ public class ItemRestController {
 		return itemService.retrieveDatatableList(requestMap).toString();
 	}
 
+	@RequestMapping(value="/api/items", method=RequestMethod.GET, produces="application/json")
+	public String getAll() {
+		try {
+			return stringUtils.encode(itemRepository.findAll());
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	@RequestMapping(value="/api/items/{id}", method=RequestMethod.GET)
 	public String getById(@PathVariable Integer id) {
 		try {
