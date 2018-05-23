@@ -12,4 +12,6 @@ public interface ItemService {
 	public Item create(ItemForm itemForm);
 	public Item update(ItemForm itemForm);
 	public Item delete(Integer id);
+	
+	public String retrieveItemUnitsById(Integer id);
 }

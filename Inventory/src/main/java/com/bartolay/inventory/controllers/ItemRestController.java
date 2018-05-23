@@ -50,6 +50,16 @@ public class ItemRestController {
 		}
 	}
 	
+	@RequestMapping(value="/api/itemUnits/{id}", method=RequestMethod.GET, produces="application/json")
+	public String getAllItemUnit(@PathVariable Integer id) {
+		try {
+			return stringUtils.encode(itemService.retrieveItemUnitsById(id));
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	@RequestMapping(value="/api/items/{id}", method=RequestMethod.GET)
 	public String getById(@PathVariable Integer id) {
 		try {

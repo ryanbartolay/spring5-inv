@@ -29,6 +29,18 @@
 								
 								</td>
 							</tr>
+							<tr>
+								<td>
+								
+									<div class="input-group">
+										<span class="input-group-addon">Unit</span>
+										<select class="form-control" th:field="*{unit}" disabled="disabled">
+											<option value="">------</option>
+										</select>
+									</div>
+								
+								</td>
+							</tr>
 						</tbody>
 					</table>
 				
@@ -50,6 +62,11 @@
 
 <script>
 	var isLoadedModelItems = false;
+	
+	var item = $("#item");
+	var unit = $("#unit");
+	
+	
 	function addItem(label, callback) {
 		$("#itemModalLabel").text(label);
 		$('#itemFormModal').modal('toggle');
@@ -57,12 +74,31 @@
 		$("#itemFormModal").on('shown.bs.modal', function() {
 			if(!isLoadedModelItems) {
 				GET("/api/items", function(data) {
+					
+					console.log(data);
+					
 					$.each(data, function(i, obj) {
 						$('#item option:last').after('<option value="'+ obj.id +'">'+ obj.name +'</option>');
 					});
 					isLoadedModelItems = true;
 				});
 			}
+		});
+		
+		item.change(function() {
+			
+			var item_id = $(this).val();
+			
+			GET("/api/itemUnits/" + item_id, function(data) {
+				unit.removeAttr("disabled");
+				var response = JSON.parse(data);
+				
+				console.log(response.data);
+				
+				$.each(response.data, function(i, obj) {
+					unit.find('option:last').after('<option value="'+ obj['unit_id'] +'">'+ obj['unit_abbreviation'] +' (' + obj['unit_rate'] + ') '+ (obj['default'] ? '*' : '') +'</option>');
+				});
+			});
 		});
 	}
 </script>

@@ -1,7 +1,10 @@
 package com.bartolay.inventory.services.impl;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.entity.Item;
+import com.bartolay.inventory.entity.ItemUnit;
 import com.bartolay.inventory.form.ItemForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
@@ -46,6 +50,32 @@ public class ItemServiceImpl implements ItemService {
 		object.put("draw", parameter.getDraw());
 		
 		return object;
+	}
+	
+	@Override
+	public String retrieveItemUnitsById(Integer id) {
+		Item item = itemRepository.findById(id).get();
+		Set<ItemUnit> units = item.getItemUnits();
+		
+		JSONObject returnObj = new JSONObject();
+		
+		JSONArray arr = new JSONArray();	
+
+		// set the default first
+		JSONObject obj = new JSONObject();
+		
+		for(ItemUnit unit : units) {
+			
+			obj = new JSONObject();
+			obj.put("unit_id", unit.getId());
+			obj.put("unit_abbreviation", unit.getUnit().getAbbreviation());
+			obj.put("unit_rate", unit.getRate());
+			obj.put("default", unit.getUnit().getId() == item.getDefaultUnit().getId());
+			arr.put(obj);
+		}
+		returnObj.put("data", arr);
+	
+		return returnObj.toString();
 	}
 
 	@Override
@@ -92,4 +122,5 @@ public class ItemServiceImpl implements ItemService {
 		itemRepository.deleteById(id);
 		return item.get();
 	}
+
 }
