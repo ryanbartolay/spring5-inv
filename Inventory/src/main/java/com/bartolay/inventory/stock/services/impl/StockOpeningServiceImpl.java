@@ -60,6 +60,7 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 	public StockOpening create(StockOpeningForm openingStockForm) throws ParseException {
 		
 		System.err.println(openingStockForm);
+		System.err.println(openingStockForm.getItems());
 		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
@@ -68,7 +69,7 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 		opening.setDocumentNumber(openingStockForm.getDocument_number());
 		opening.setLocation(openingStockForm.getLocation());
 		opening.setTransactionDate(cal.getTime());
-		opening.setItems(openingStockForm.getItems());
+//		opening.setItems(openingStockForm.getItems());
 		opening.setYear(openingStockForm.getYear());
 		opening.setDescription(openingStockForm.getDescription());
 		opening.setCreatedBy(userCredentials.getLoggedInUser());

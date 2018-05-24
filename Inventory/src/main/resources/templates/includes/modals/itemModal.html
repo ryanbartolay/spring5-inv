@@ -1,16 +1,16 @@
 <!-- Modal Edit Brand -->
-<div class="modal fade" id="itemFormModal" tabindex="-1" role="dialog"
+<div class="modal fade" id="itemModal" tabindex="-1" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<form data-async data-target="#rating-modal"
-				id="addItemForm" th:object="${stockOpeningItemForm}"
+				id="itemModal_addItemForm" 
 				th:action="@{/api/stockOpening/item}" method="POST">
-				<input type="hidden" th:field="*{id}" />
+				
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
-					<h4 class="modal-title" id="itemModalLabel"></h4>
+					<h4 class="modal-title" id="itemModal_label"></h4>
 				</div>
 
 				<div class="panel-body">
@@ -22,7 +22,7 @@
 								
 									<div class="input-group">
 										<span class="input-group-addon">Item</span>
-										<select class="form-control" th:field="*{item}">
+										<select class="form-control" id="itemModal_item" name="itemModal_item">
 											<option value="">------</option>
 										</select>
 									</div>
@@ -34,8 +34,8 @@
 								
 									<div class="input-group">
 										<span class="input-group-addon">Unit</span>
-										<select class="form-control" th:field="*{unit}" disabled="disabled">
-											<option value="">------</option>
+										<select class="form-control" id="itemModal_unit" name="itemModal_unit" disabled="disabled">
+											
 										</select>
 										 
 									</div>
@@ -47,7 +47,7 @@
 								
 									<div class="input-group">
 										<span class="input-group-addon">Quantity</span>
-										<input class="form-control" type="number" th:field="*{quantity}" disabled="disabled"/>
+										<input class="form-control" type="number" value="0" id="itemModal_quantity" name="itemModal_quantity" disabled="disabled"/>
 									</div>
 								
 								</td>
@@ -60,7 +60,7 @@
 
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-					<button type="submit" id="addItemBtn"
+					<button type="submit" id="itemModal_addItemBtn"
 						class="btn btn-success btn-primary" disabled="disabled">Add Item</button>
 				</div>
 			</form>
@@ -74,26 +74,30 @@
 <script>
 	var isLoadedModelItems = false;
 	
-	var item = $("#item");
-	var unit = $("#unit");
-	var quantity = $("#quantity");
-	var addItemForm = $("#addItemForm");
-	var addItemBtn = $("#addItemBtn");
+	var modal = $("#itemModal");
+	var modal_label = $("#itemModal_label");
+	var item = $("#itemModal_item");
+	var unit = $("#itemModal_unit");
+	
+	var quantity = $("#itemModal_quantity");
+	var addItemForm = $("#itemModal_addItemForm");
+	var addItemBtn = $("#itemModal_addItemBtn");
 	
 	var items = {};
 	var itemUnits = {};
 	
 	function addItem(label, callback) {
-		$("#itemModalLabel").text(label);
-		$('#itemFormModal').modal('show');
+		modal_label.text(label);
+		modal.modal('show');
 
-		$("#itemFormModal").on('shown.bs.modal', function() {
+		modal.on('shown.bs.modal', function() {
+			
 			if(!isLoadedModelItems) {
 				GET("/api/items", function(data) {
 					console.log(data);
 					items = data;
 					$.each(data, function(i, obj) {
-						$('#item option:last').after('<option value="'+ i +'">'+ obj.name +'</option>');
+						$('#itemModal_item option:last').after('<option value="'+ i +'">'+ obj.name +'</option>');
 					});
 					isLoadedModelItems = true;
 				});
@@ -105,12 +109,14 @@
 			var item_id = $(this).val();
 			
 			GET("/api/itemUnits/" + items[item_id].id, function(data) {
+				unit.html(""); // clear contents
 				unit.removeAttr("disabled");
+				
 				var response = JSON.parse(data);
 				itemUnits = response.data;
 				console.log(itemUnits);
 				$.each(response.data, function(i, obj) {
-					unit.find('option:last').after('<option value="'+ i +'">'+ obj['abbreviation'] +' (' + obj['rate'] + ') '+ (obj['default'] ? '*' : '') +'</option>');
+					unit.append('<option value="'+ i +'">'+ obj['abbreviation'] +' (' + obj['rate'] + ') '+ (obj['default'] ? '*' : '') +'</option>');
 				});
 				
 			});
@@ -125,7 +131,7 @@
 		});
 		
 		addItemBtn.click(function() {
-			$('#itemFormModal').modal('hide');
+			modal.modal('hide');
 			
 			var arr = {};
 			
@@ -135,10 +141,17 @@
 				arr[obj.name] = obj.value;
 			});
 			
-			arr['item'] = items[arr['item']];
-			arr['unit'] = itemUnits[arr['unit']];
+			arr['item'] = items[arr['itemModal_item']];
+			arr['unit'] = itemUnits[arr['itemModal_unit']];
+			arr['quantity'] = arr['itemModal_quantity'];
 			
 			callback(arr);
+			
+
+			quantity.val(0);
+			quantity.attr("disabled", "disabled");
+			unit.html("");
+			unit.attr("disabled", "disabled");
 		});
 	}
 </script>
