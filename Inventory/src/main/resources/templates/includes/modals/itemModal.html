@@ -4,7 +4,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<form data-async data-target="#rating-modal"
-				id="createStockOpeningItemForm" th:object="${stockOpeningItemForm}"
+				id="addItemForm" th:object="${stockOpeningItemForm}"
 				th:action="@{/api/stockOpening/item}" method="POST">
 				<input type="hidden" th:field="*{id}" />
 				<div class="modal-header">
@@ -37,6 +37,17 @@
 										<select class="form-control" th:field="*{unit}" disabled="disabled">
 											<option value="">------</option>
 										</select>
+										 
+									</div>
+								
+								</td>
+							</tr>
+							<tr>
+								<td>
+								
+									<div class="input-group">
+										<span class="input-group-addon">Quantity</span>
+										<input class="form-control" type="number" th:field="*{quantity}" disabled="disabled"/>
 									</div>
 								
 								</td>
@@ -49,8 +60,8 @@
 
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-					<button type="submit" id="submit"
-						class="btn btn-success btn-primary">Add Item</button>
+					<button type="submit" id="addItemBtn"
+						class="btn btn-success btn-primary" disabled="disabled">Add Item</button>
 				</div>
 			</form>
 		</div>
@@ -65,20 +76,24 @@
 	
 	var item = $("#item");
 	var unit = $("#unit");
+	var quantity = $("#quantity");
+	var addItemForm = $("#addItemForm");
+	var addItemBtn = $("#addItemBtn");
 	
+	var items = {};
+	var itemUnits = {};
 	
 	function addItem(label, callback) {
 		$("#itemModalLabel").text(label);
-		$('#itemFormModal').modal('toggle');
+		$('#itemFormModal').modal('show');
 
 		$("#itemFormModal").on('shown.bs.modal', function() {
 			if(!isLoadedModelItems) {
 				GET("/api/items", function(data) {
-					
 					console.log(data);
-					
+					items = data;
 					$.each(data, function(i, obj) {
-						$('#item option:last').after('<option value="'+ obj.id +'">'+ obj.name +'</option>');
+						$('#item option:last').after('<option value="'+ i +'">'+ obj.name +'</option>');
 					});
 					isLoadedModelItems = true;
 				});
@@ -89,16 +104,41 @@
 			
 			var item_id = $(this).val();
 			
-			GET("/api/itemUnits/" + item_id, function(data) {
+			GET("/api/itemUnits/" + items[item_id].id, function(data) {
 				unit.removeAttr("disabled");
 				var response = JSON.parse(data);
-				
-				console.log(response.data);
-				
+				itemUnits = response.data;
+				console.log(itemUnits);
 				$.each(response.data, function(i, obj) {
-					unit.find('option:last').after('<option value="'+ obj['unit_id'] +'">'+ obj['unit_abbreviation'] +' (' + obj['unit_rate'] + ') '+ (obj['default'] ? '*' : '') +'</option>');
+					unit.find('option:last').after('<option value="'+ i +'">'+ obj['abbreviation'] +' (' + obj['rate'] + ') '+ (obj['default'] ? '*' : '') +'</option>');
 				});
+				
 			});
+		});
+		
+		unit.change(function() {
+			quantity.removeAttr("disabled");
+		});
+		
+		unit.change(function() {
+			addItemBtn.removeAttr("disabled");
+		});
+		
+		addItemBtn.click(function() {
+			$('#itemFormModal').modal('hide');
+			
+			var arr = {};
+			
+			var iter = addItemForm.serializeArray();
+			
+			$.each(addItemForm.serializeArray(), function(i, obj) {
+				arr[obj.name] = obj.value;
+			});
+			
+			arr['item'] = items[arr['item']];
+			arr['unit'] = itemUnits[arr['unit']];
+			
+			callback(arr);
 		});
 	}
 </script>

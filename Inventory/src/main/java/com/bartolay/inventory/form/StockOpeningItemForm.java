@@ -1,5 +1,7 @@
 package com.bartolay.inventory.form;
 
+import java.math.BigDecimal;
+
 import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.Unit;
 
@@ -10,6 +12,8 @@ public class StockOpeningItemForm {
 	private Item item;
 
 	private Unit unit;
+	
+	private BigDecimal quantity;
 	
 	public Integer getId() {
 		return id;
@@ -29,8 +33,13 @@ public class StockOpeningItemForm {
 	public void setUnit(Unit unit) {
 		this.unit = unit;
 	}
+	public BigDecimal getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(BigDecimal quantity) {
+		this.quantity = quantity;
+	}
 
-//
 //	@ManyToOne(fetch = FetchType.LAZY)
 //	@JoinColumn(nullable=false, updatable=true)
 //	private StockOpening stockOpening;

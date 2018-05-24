@@ -1,5 +1,6 @@
 package com.bartolay.inventory.handlers;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +29,18 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
+import com.bartolay.inventory.utils.StringUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @ControllerAdvice
 @Deprecated
 public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 	
+	@Autowired
+	private StringUtils stringUtils;
+	
 	@ExceptionHandler({ RestApiException.class })
-	public ResponseEntity<Object> handleRestApiException(final RestApiException ex, WebRequest request) {
+	public String handleRestApiException(final RestApiException ex, WebRequest request) {
 		logger.info(ex.getClass().getName());
 		logger.error("error", ex);
 		
@@ -50,7 +57,14 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 		}
 		//
 		final ApiResponse apiError = new ApiResponse(HttpStatus.BAD_REQUEST, errors);
-		return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
+//		return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
+		try {
+			return stringUtils.encode(apiError);
+		} catch (JsonProcessingException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
 	}
 	
 	/**

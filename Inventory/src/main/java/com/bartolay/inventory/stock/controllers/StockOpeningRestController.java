@@ -23,23 +23,20 @@ import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-public class StockOpeningRestController {
+public class StockOpeningRestController extends AbstractRestController {
 
 	@Autowired
 	private StockOpeningService openingStockService;
-	
-	@Autowired
-	private StringUtils stringUtils;
 	
 	@RequestMapping(value="/api/datatable/openingstock", method=RequestMethod.GET, produces="application/json")
 	public String datatableColor(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
 		return openingStockService.retrieveDatatableList(requestMap).toString();
 	}
 	
-	@RequestMapping(value="/api/openingstock", method=RequestMethod.POST)
+	@RequestMapping(value="/api/stock/opening", method=RequestMethod.POST)
 	public String create(@Valid StockOpeningForm openingStockForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 		ApiResponse response = null;
 		

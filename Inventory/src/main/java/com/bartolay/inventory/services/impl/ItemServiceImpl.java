@@ -67,9 +67,10 @@ public class ItemServiceImpl implements ItemService {
 		for(ItemUnit unit : units) {
 			
 			obj = new JSONObject();
-			obj.put("unit_id", unit.getId());
-			obj.put("unit_abbreviation", unit.getUnit().getAbbreviation());
-			obj.put("unit_rate", unit.getRate());
+			obj.put("id", unit.getId());
+			obj.put("abbreviation", unit.getUnit().getAbbreviation());
+			obj.put("name", unit.getUnit().getName());
+			obj.put("rate", unit.getRate());
 			obj.put("default", unit.getUnit().getId() == item.getDefaultUnit().getId());
 			arr.put(obj);
 		}

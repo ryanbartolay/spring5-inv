@@ -51,7 +51,7 @@ function ajax(type, url, data, callback){
 			data: JSON.stringify(data),
 			success: function(data, status, xhr) {
 				if(typeof callback == 'function'){
-					callback(data);
+					callback(decodeAPIResponse(data));
 				}
 		    },
 		    error: errorHandler // see function errorHandler
@@ -71,6 +71,19 @@ function ajax(type, url, data, callback){
 	}
 
 	return strReturn;
+}
+
+function displayErrors(errors, div) {
+	var index;
+	
+	var html = "<div class=\"alert alert-danger\">" +
+			"<ul>";
+	for (index = 0; index < errors.length; ++index) {
+	    html += "<li>" +errors[index]+ "</li>";
+	}
+	html += "</ul></div>";
+	
+	div.html(html);
 }
 
 /**

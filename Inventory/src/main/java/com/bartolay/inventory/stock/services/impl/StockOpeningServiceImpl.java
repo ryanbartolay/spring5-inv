@@ -59,6 +59,8 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 	@Override
 	public StockOpening create(StockOpeningForm openingStockForm) throws ParseException {
 		
+		System.err.println(openingStockForm);
+		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 		
