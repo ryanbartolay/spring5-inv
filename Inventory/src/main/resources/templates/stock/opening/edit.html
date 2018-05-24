@@ -124,10 +124,11 @@
     
     $('[name=year]').val( current_year );
 
-    
     var form = $("#stockOpeningForm");
     var grand_total = 0;
     $("#grandTotal").html(grand_total);
+    
+    var item_count = 0;
     
     $("#btnAddItem").on("click", function() {
     	addItem("Add Stock Opening Item", function(data) {
@@ -142,7 +143,10 @@
     		<tr>
 				<th>`+ item.id +`</th>
 				<td>`+ item.code +`</td>
-				<td>`+ item.name +`<input type="text" name="items[]" value="` + item.id + `:`+ unit.id +`:`+ data.quantity +`" /></td>
+				<td>`+ item.name +`
+					<input type="text" name="stockOpeningItems[`+ item_count +`].item" value="` + item.id + `" />
+					<input type="text" name="stockOpeningItems[`+ item_count +`].unit" value="` + unit.id + `" />
+				</td>
 				<td>`+ unit.abbreviation +`</td>
 				<td>`+ unit.name +`</td>
 				<td>`+ data.quantity +`</td>
@@ -155,27 +159,12 @@
 		    		</div>
 				</td>
 			</tr>`;
+			item_count++;
     		
     		$('#itemsTable tbody').append(html);
     		$("#grandTotal").html(grand_total);
     	});
     });
-    
-    /* form.on('submit', function(event) {
-		event.preventDefault();
-        var $form = $(this);
-        
-        $.ajax({
-            type: "POST",
-            url: "/api/stock/opening",
-            data: $form.serialize(),
-
-            success: function(data, status) {
-            	console.log(data);
-                
-            }
-        });
-    }); */
     
    $("#submitStockOpeningBtn").click(function() {
     	console.log(form.serialize());

@@ -20,6 +20,7 @@ import com.bartolay.inventory.form.StockOpeningForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.InventoryService;
 import com.bartolay.inventory.stock.entity.StockOpening;
+import com.bartolay.inventory.stock.entity.StockOpeningItem;
 import com.bartolay.inventory.stock.services.StockOpeningService;
 import com.bartolay.inventory.utils.UserCredentials;
 
@@ -60,7 +61,13 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 	public StockOpening create(StockOpeningForm openingStockForm) throws ParseException {
 		
 		System.err.println(openingStockForm);
-		System.err.println(openingStockForm.getItems());
+		System.err.println(openingStockForm.getStockOpeningItems().size());
+		System.err.println(openingStockForm.getStockOpeningItems());
+		
+		for(StockOpeningItem item : openingStockForm.getStockOpeningItems()) {
+			System.err.println(item.getItem());
+			System.err.println(item.getUnit());
+		}
 		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());

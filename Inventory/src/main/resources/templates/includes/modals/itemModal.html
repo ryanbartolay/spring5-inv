@@ -111,6 +111,7 @@
 			GET("/api/itemUnits/" + items[item_id].id, function(data) {
 				unit.html(""); // clear contents
 				unit.removeAttr("disabled");
+				quantity.removeAttr("disabled");
 				
 				var response = JSON.parse(data);
 				itemUnits = response.data;

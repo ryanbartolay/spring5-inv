@@ -1,5 +1,6 @@
 package com.bartolay.inventory.form;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.bartolay.inventory.entity.Location;
+import com.bartolay.inventory.stock.entity.StockOpeningItem;
 
 public class StockOpeningForm {
 	
@@ -33,9 +35,9 @@ public class StockOpeningForm {
 	private Date transaction_date;
 	
 	@NotNull(message="Needed atleast 1 item")
-//	private Set<StockOpeningItem> items = new HashSet<>();
+	private List<StockOpeningItem> stockOpeningItems = new ArrayList<>();
 	
-	private List<String> items;
+//	private List<String> items;
 
 	public String getSystem_number() {
 		return system_number;
@@ -69,12 +71,12 @@ public class StockOpeningForm {
 		this.location = location;
 	}
 
-	public List<String> getItems() {
-		return items;
+	public List<StockOpeningItem> getStockOpeningItems() {
+		return stockOpeningItems;
 	}
 
-	public void setItems(List<String> items) {
-		this.items = items;
+	public void setStockOpeningItems(List<StockOpeningItem> stockOpeningItems) {
+		this.stockOpeningItems = stockOpeningItems;
 	}
 
 	public String getYear() {
