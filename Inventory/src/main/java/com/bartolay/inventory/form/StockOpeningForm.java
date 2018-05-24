@@ -8,6 +8,8 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.stock.entity.StockOpeningItem;
 
@@ -28,6 +30,8 @@ public class StockOpeningForm {
 	@Digits(fraction = 0, integer = 4, message="Year only accepts digits.")
 	private String year;
 	
+	@NotNull(message="Transaction Date is required!")
+	@DateTimeFormat(pattern="MM/dd/YY")
 	private Date transaction_date;
 	
 	@NotNull(message="Needed atleast 1 item")

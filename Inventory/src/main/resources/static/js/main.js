@@ -4,9 +4,9 @@ $(document).on("submit", "form", function(e){
 
 function GET(url, callback, error_callback = null){
 //	return ajax("GET", url, "", function(data) {
-//		callback(decodeAPIResponse(data));
+//	callback(decodeAPIResponse(data));
 //	});
-	
+
 	$.get( {
 		url: url,
 		dataType: "text"
@@ -25,7 +25,17 @@ function DELETE(url, callback){
 	})
 }
 function POST(url, data, callback){
-	return ajax("POST", url, data, callback)
+//	return ajax("POST", url, data, callback)
+	$.ajax({
+		type: "POST",
+		url: url,
+		data: data,
+
+		success: function(data, status) {
+			console.log(data);
+			callback(decodeAPIResponse(data));
+		}
+	});
 }
 function PUT(url, data, callback){
 	return ajax("PUT", url, data, callback)
@@ -36,31 +46,31 @@ function decodeAPIResponse(data) {
 	} catch (e) {
 		return data;
 	}
-	
+
 }
 
 function ajax(type, url, data, callback){
 
 	var strReturn;
 	if(typeof callback == 'function'){
-		
+
 		$.ajax({
 			type: type,
-		    url: url,
-		    contentType : "text", // all requests are expected to be url encoded
+			url: url,
+			contentType : "text", // all requests are expected to be url encoded
 			data: JSON.stringify(data),
 			success: function(data, status, xhr) {
 				if(typeof callback == 'function'){
 					callback(decodeAPIResponse(data));
 				}
-		    },
-		    error: errorHandler // see function errorHandler
+			},
+			error: errorHandler // see function errorHandler
 		});
 	}else if(callback == true){
 		$.ajax({
 			type: type,
 			url: url,
-		    contentType : "text",
+			contentType : "text",
 			data: JSON.stringify(data),
 			async:false,
 			success : function(data) {
@@ -73,16 +83,28 @@ function ajax(type, url, data, callback){
 	return strReturn;
 }
 
-function displayErrors(errors, div) {
+function displayErrors(data, div) {
 	var index;
+	var errors = data.errors;
+	var localized_message = data.localizedMessage;
 	
-	var html = "<div class=\"alert alert-danger\">" +
-			"<ul>";
-	for (index = 0; index < errors.length; ++index) {
-	    html += "<li>" +errors[index]+ "</li>";
+	var html = "<div class=\"alert alert-danger\">";
+	if(errors != null) {
+		html += 
+		"<ul>";
+		for (index = 0; index < errors.length; ++index) {
+			html += "<li>" +errors[index]+ "</li>";
+		}
+		html += "</ul>";
+
+		div.html(html);
 	}
-	html += "</ul></div>";
 	
+	if(localized_message != null) {
+		html += localized_message;
+	}
+	
+	html += "</div>";
 	div.html(html);
 }
 
@@ -95,54 +117,54 @@ function displayErrors(errors, div) {
 function formModalAsync(modal, successCallback = null) {
 	$('form[data-async]').on('submit', function(event) {
 		event.preventDefault();
-        var $form = $(this);
-        var $target = $($form.attr('data-target'));
-        var $divError = $($form.find("#errors"));
-        var $btnSubmit = $($form.find("#submit"));
-        var $btnSubmitText = $btnSubmit.text();
-        
-        $btnSubmit.attr("disabled", "disabled");
-        $btnSubmit.html("Processing...");
+		var $form = $(this);
+		var $target = $($form.attr('data-target'));
+		var $divError = $($form.find("#errors"));
+		var $btnSubmit = $($form.find("#submit"));
+		var $btnSubmitText = $btnSubmit.text();
 
-        $.ajax({
-            type: $form.attr('method'),
-            url: $form.attr('action'),
-            data: $form.serialize(),
+		$btnSubmit.attr("disabled", "disabled");
+		$btnSubmit.html("Processing...");
 
-            success: function(data, status) {
-                $target.html(data);
-                modal.modal("toggle");
-                var obj = decodeAPIResponse(data);
-                
-                showToast(obj);
-            	
-                // calling success callback
-                if(successCallback != null) {
-                	successCallback();
-                }
-                
-                $divError.html("");
-                $form[0].reset();
-                $btnSubmit.removeAttr("disabled");
-            	$btnSubmit.html($btnSubmitText);
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-            	var index;
-            	var errors = xhr.responseJSON.errors;
-            	
-            	var html = "<div class=\"alert alert-danger\">" +
-            			"<ul>";
-            	for (index = 0; index < errors.length; ++index) {
-            	    html += "<li>" +errors[index]+ "</li>";
-            	}
-            	html += "</ul></div>";
-            	
-            	$divError.html(html);
-            	$btnSubmit.removeAttr("disabled");
-            	$btnSubmit.html($btnSubmitText);
-            }
-        });
-    });
+		$.ajax({
+			type: $form.attr('method'),
+			url: $form.attr('action'),
+			data: $form.serialize(),
+
+			success: function(data, status) {
+				$target.html(data);
+				modal.modal("toggle");
+				var obj = decodeAPIResponse(data);
+
+				showToast(obj);
+
+				// calling success callback
+				if(successCallback != null) {
+					successCallback();
+				}
+
+				$divError.html("");
+				$form[0].reset();
+				$btnSubmit.removeAttr("disabled");
+				$btnSubmit.html($btnSubmitText);
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				var index;
+				var errors = xhr.responseJSON.errors;
+
+				var html = "<div class=\"alert alert-danger\">" +
+				"<ul>";
+				for (index = 0; index < errors.length; ++index) {
+					html += "<li>" +errors[index]+ "</li>";
+				}
+				html += "</ul></div>";
+
+				$divError.html(html);
+				$btnSubmit.removeAttr("disabled");
+				$btnSubmit.html($btnSubmitText);
+			}
+		});
+	});
 }
 
 function showToast(data) {
@@ -156,17 +178,17 @@ function showToast(data) {
 }
 
 function toast(icon, message) {
-	
+
 	var heading = { success: "Success", error: "Error", info: "Information", warn: "Warning"};
-	
+
 	$.toast({
-        heading: heading[icon],
-        text: message,
-        icon: icon, // success, info, warn, error
-        position: 'top-right',
-        hideAfter: false, // auto hides after some seconds
-    });
-	
+		heading: heading[icon],
+		text: message,
+		icon: icon, // success, info, warn, error
+		position: 'top-right',
+		hideAfter: false, // auto hides after some seconds
+	});
+
 }
 
 function errorHandler(data){
@@ -196,9 +218,9 @@ function singledatetimepicker(container){
 		singleDatePicker: true,
 		locale: {
 			format: 'YYYY-MM-DD HH:mm:ss'
-	    },
-	    timePicker: true,
-	    timePicker24Hour: true,
+		},
+		timePicker: true,
+		timePicker24Hour: true,
 	});
 }
 
@@ -207,6 +229,6 @@ function singledatepicker(container){
 		singleDatePicker: true,
 		locale: {
 			format: 'YYYY-MM-DD'
-	    }
+		}
 	});
 }
