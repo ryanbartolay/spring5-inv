@@ -112,8 +112,14 @@
 <div th:include="includes/modals/itemModal"></div>
 
 <script>
+var form = $("#stockOpeningForm");
+var current_year = (new Date()).getFullYear();
+var grand_total = 0;
+
+var item_count = 0;
+
   $( function() {
-	  var current_year = (new Date()).getFullYear();
+	  
     $( "#transaction_date" ).datepicker();
     
     $('.yearselect').yearselect({
@@ -124,63 +130,81 @@
     
     $('[name=year]').val( current_year );
 
-    var form = $("#stockOpeningForm");
-    var grand_total = 0;
+   
     $("#grandTotal").html(grand_total);
     
-    var item_count = 0;
-    
-    $("#btnAddItem").on("click", function() {
-    	addItem({type: "stock_opening", label:"Add Stock Opening Item"}, function(data) {
-    		
-    		console.log(data);
-    		
-    		var item = data['item'];
-    		var unit = data['unit'];
-    		
-    		var total = unit.rate * data.unit_cost;
-    		grand_total = grand_total + total;
-    		
-    		var html = `
-    		<tr>
+  });
+  
+  $("#btnAddItem").on("click", function() {
+  	addItem({type: "stock_opening", label:"Add Stock Opening Item"}, function(data) {
+  		
+  		console.log(data);
+  		
+  		var item = data['item'];
+  		var unit = data['unit'];
+  		
+  		var total = data.quantity * data.unit_cost;
+  		grand_total = grand_total + total;
+  		
+  		
+  		console.log("checkinggsssss");
+  		console.log(unit);
+  		console.log("checkinggsssss1");
+  		var html = `
+  		<tr>
 				<th>`+ item.id +`</th>
 				<td>`+ item.code +`</td>
 				<td>`+ item.name +`
-					<input type="text" name="stockOpeningItems[`+ item_count +`].item" value="` + item.id + `" />
-					<input type="text" name="stockOpeningItems[`+ item_count +`].unit" value="` + unit.id + `" />
-					<input type="text" name="stockOpeningItems[`+ item_count +`].quantity" value="` + data.quantity + `" />
-						<input type="text" name="stockOpeningItems[`+ item_count +`].unitCost" value="` + data.unit_cost + `" />
+					<input type="hidden" name="stockOpeningItems[`+ item_count +`].item" id="item" value="` + item.id + `" />
+					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unit" id="unit" value="` + unit.id + `" />
+					<input type="hidden" name="stockOpeningItems[`+ item_count +`].quantity" id="quantity" value="` + data.quantity + `" />
+					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unitCost" id="unitCost" value="` + data.unit_cost + `" />
 				</td>
 				<td>`+ unit.abbreviation +`</td>
 				<td>`+ unit.name +`</td>
-				<td>`+ data.unit_cost +`</td>
-				<td>`+ unit.rate +`</td>
+				<td class="text-right">`+ data.quantity +`</td>
+				<td class="text-right">`+ data.unit_cost +`</td>
 				<td class="text-right">`+ total +`</td>
 				<td class="text-right">
 					<div class="btn-group" role="group">
 		        		<button class="btn btn-info fa fa-edit" id="btnView"/>
-		        		<button class="btn btn-danger fa fa-times" />
+		        		<button class="btn btn-danger fa fa-times" onClick="remove(this)" />
 		    		</div>
 				</td>
 			</tr>`;
 			item_count++;
-    		
-    		$('#itemsTable tbody').append(html);
-    		$("#grandTotal").html(grand_total);
-    	});
-    });
-    
-   $("#submitStockOpeningBtn").click(function() {
-    	console.log(form.serialize());
-    	POST("/api/stock/opening", form.serialize(), function(data) {
-    		console.log(data);
-    		
-    		if(data.status != "OK") {
-    			displayErrors(data, $("#errors"));	
-    		}
-    	});
-    });
+  		
+			console.log("checkinggsssss2");
+  		$('#itemsTable tbody').append(html);
+  		
+  		console.log("checkinggsssss3");
+  		$("#grandTotal").html(grand_total);
+  	});
   });
+  
+  $("#submitStockOpeningBtn").click(function() {
+  	console.log(form.serialize());
+  	POST("/api/stock/opening", form.serialize(), function(data) {
+  		console.log(data);
+  		
+  		if(data.status != "OK") {
+  			displayErrors(data, $("#errors"));	
+  		}
+  	});
+  });
+
+	function remove(e) {
+		var selected_row = $(e).parentsUntil("tbody"),
+		quantity = selected_row.find("#quantity"),
+		unit_cost = selected_row.find("#unitCost"),
+		total = quantity.val() * unit_cost.val();
+		
+		grand_total = grand_total - total;
+		
+		$("#grandTotal").html(grand_total);
+		$(e).parentsUntil("tbody").remove();
+	}
+  	
   </script>
 </head>
 <body>

@@ -70,12 +70,13 @@
 <!-- /.modal -->
 
 <script>
-	var isLoadedModelItems = false;
+	var itemModal_isLoadedModelItems = false;
+	var itemModal_isLoadedExtraElements = false;
 	
-	var modal = $("#itemModal");
-	var modal_label = $("#itemModal_label");
-	var item = $("#itemModal_item");
-	var unit = $("#itemModal_unit");
+	var itemModal_modal = $("#itemModal");
+	var itemModal_label = $("#itemModal_label");
+	var itemModal_item = $("#itemModal_item");
+	var itemModal_unit = $("#itemModal_unit");
 	var table = $("#itemModal_table");
 	
 	var quantity = $("#itemModal_quantity");
@@ -85,91 +86,94 @@
 	var items = {};
 	var itemUnits = {};
 	
+	var itemModal_callback = null;
+	
 	function addItem(parameters, callback) {
 		var label = parameters.label;
 		var type = parameters.type;
+		itemModal_callback = callback;
 		
 		appendInputByType(type);
 		
-		modal_label.text(label);
-		modal.modal('show');
-
-		modal.on('shown.bs.modal', function() {
-			
-			if(!isLoadedModelItems) {
-				GET("/api/items", function(data) {
-					console.log(data);
-					items = data;
-					$.each(data, function(i, obj) {
-						$('#itemModal_item option:last').after('<option value="'+ i +'">'+ obj.name +'</option>');
-					});
-					isLoadedModelItems = true;
-				});
-			}
-		});
-		
-		item.change(function() {
-			
-			var item_id = $(this).val();
-			
-			GET("/api/itemUnits/" + items[item_id].id, function(data) {
-				unit.html(""); // clear contents
-				unit.removeAttr("disabled");
-				quantity.removeAttr("disabled");
-				
-				var response = JSON.parse(data);
-				itemUnits = response.data;
-				console.log(itemUnits);
-				$.each(response.data, function(i, obj) {
-					unit.append('<option value="'+ i +'">'+ obj['abbreviation'] +' (' + obj['rate'] + ') '+ (obj['default'] ? '*' : '') +'</option>');
-				});
-				
-			});
-		});
-		
-		unit.change(function() {
-			quantity.removeAttr("disabled");
-		});
-		
-		unit.change(function() {
-			addItemBtn.removeAttr("disabled");
-		});
-		
-		addItemBtn.click(function() {
-			modal.modal('hide');
-			
-			var arr = {};
-			
-			var iter = addItemForm.serializeArray();
-			
-			$.each(addItemForm.serializeArray(), function(i, obj) {
-				arr[obj.name] = obj.value;
-			});
-			
-			arr['item'] = items[arr['itemModal_item']];
-			arr['unit'] = itemUnits[arr['itemModal_unit']];
-			arr['quantity'] = arr['itemModal_quantity'];
-			
-			callback(arr);
-			
-			quantity.val(0);
-			quantity.attr("disabled", "disabled");
-			unit.html("");
-			unit.attr("disabled", "disabled");
-		});
+		itemModal_label.text(label);
+		itemModal_modal.modal('show');
 	}
 
 	function appendInputByType(type) {
-		if(type == "stock_opening") {
-			table.find("tbody").append(
-				`<tr>
-					<td>
-						<div class="input-group">
-							<span class="input-group-addon">Unit Cost</span>
-							<input class="form-control" type="number" value="0" id="unit_cost" name="unit_cost"/>
-						</div>
-					</td>
-				</tr>`);
+		if(!itemModal_isLoadedExtraElements) {
+			if(type == "stock_opening") {
+				table.find("tbody").append(
+					`<tr>
+						<td>
+							<div class="input-group">
+								<span class="input-group-addon">Unit Cost</span>
+								<input class="form-control" type="number" value="0" id="unit_cost" name="unit_cost"/>
+							</div>
+						</td>
+					</tr>`);
+			}
+			itemModal_isLoadedExtraElements = true;
 		}
 	}
+	
+	itemModal_modal.on('shown.bs.modal', function() {
+		
+		if(!itemModal_isLoadedModelItems) {
+			GET("/api/items", function(data) {
+				console.log(data);
+				items = data;
+				$.each(data, function(i, obj) {
+					$('#itemModal_item option:last').after('<option value="'+ i +'">'+ obj.name +'</option>');
+				});
+				itemModal_isLoadedModelItems = true;
+			});
+		}
+	});
+	
+	itemModal_item.change(function() {
+		
+		var item_id = $(this).val();
+		
+		GET("/api/itemUnits/" + items[item_id].id, function(data) {
+			itemModal_unit.html(""); // clear contents
+			itemModal_unit.removeAttr("disabled");
+			quantity.removeAttr("disabled");
+			
+			var response = JSON.parse(data);
+			itemUnits = response.data;
+			console.log(itemUnits);
+			$.each(response.data, function(i, obj) {
+				itemModal_unit.append('<option value="'+ i +'">'+ obj['abbreviation'] +' (' + obj['rate'] + ') '+ (obj['default'] ? '*' : '') +'</option>');
+			});
+			
+		});
+	});
+	
+	itemModal_unit.change(function() {
+		quantity.removeAttr("disabled");
+		addItemBtn.removeAttr("disabled");
+	});
+	
+	addItemBtn.click(function() {
+		itemModal_modal.modal('hide');
+		
+		var arr = {};
+		
+		var iter = addItemForm.serializeArray();
+		
+		$.each(addItemForm.serializeArray(), function(i, obj) {
+			arr[obj.name] = obj.value;
+		});
+		
+		arr['item'] = items[arr['itemModal_item']];
+		arr['unit'] = itemUnits[arr['itemModal_unit']];
+		arr['quantity'] = arr['itemModal_quantity'];
+		
+		itemModal_callback(arr);
+		
+		quantity.val(0);
+		quantity.attr("disabled", "disabled");
+		itemModal_unit.html("");
+		itemModal_unit.attr("disabled", "disabled");
+	});
 </script>
