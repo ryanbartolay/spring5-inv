@@ -8,7 +8,7 @@
 				<div class="row ">
 					<div class="col-md-4 col-md-offset-8 btn-group"  role="group">
 						<button type="submit" id="submitStockOpeningBtn" class="btn btn-success">Save Opening Stock</button>
-						<button th:href="@{/stock/opening}" class="btn btn-default">Cancel</button>
+						<a th:href="@{/stock/opening}" class="btn btn-default">Cancel</a>
 					</div>
 				</div>
 			</div>
@@ -131,12 +131,14 @@
     var item_count = 0;
     
     $("#btnAddItem").on("click", function() {
-    	addItem("Add Stock Opening Item", function(data) {
+    	addItem({type: "stock_opening", label:"Add Stock Opening Item"}, function(data) {
+    		
+    		console.log(data);
     		
     		var item = data['item'];
     		var unit = data['unit'];
     		
-    		var total = unit.rate * data.quantity;
+    		var total = unit.rate * data.unit_cost;
     		grand_total = grand_total + total;
     		
     		var html = `
@@ -146,10 +148,12 @@
 				<td>`+ item.name +`
 					<input type="text" name="stockOpeningItems[`+ item_count +`].item" value="` + item.id + `" />
 					<input type="text" name="stockOpeningItems[`+ item_count +`].unit" value="` + unit.id + `" />
+					<input type="text" name="stockOpeningItems[`+ item_count +`].quantity" value="` + data.quantity + `" />
+						<input type="text" name="stockOpeningItems[`+ item_count +`].unitCost" value="` + data.unit_cost + `" />
 				</td>
 				<td>`+ unit.abbreviation +`</td>
 				<td>`+ unit.name +`</td>
-				<td>`+ data.quantity +`</td>
+				<td>`+ data.unit_cost +`</td>
 				<td>`+ unit.rate +`</td>
 				<td class="text-right">`+ total +`</td>
 				<td class="text-right">

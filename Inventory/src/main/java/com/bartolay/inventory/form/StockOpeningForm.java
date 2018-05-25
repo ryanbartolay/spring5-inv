@@ -35,9 +35,7 @@ public class StockOpeningForm {
 	private Date transaction_date;
 	
 	@NotNull(message="Needed atleast 1 item")
-	private List<StockOpeningItem> stockOpeningItems = new ArrayList<>();
-	
-//	private List<String> items;
+	private List<StockOpeningItem> stockOpeningItems;
 
 	public String getSystem_number() {
 		return system_number;

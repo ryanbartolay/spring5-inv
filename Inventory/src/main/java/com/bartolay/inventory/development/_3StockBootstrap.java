@@ -1,9 +1,9 @@
 package com.bartolay.inventory.development;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -65,7 +65,7 @@ public class _3StockBootstrap implements ApplicationListener<ContextRefreshedEve
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
 
-		Set<StockOpeningItem> soItems = new HashSet<>();
+		List<StockOpeningItem> soItems = new ArrayList<>();
 
 		Item item1 = itemRepository.findById(1).get();
 

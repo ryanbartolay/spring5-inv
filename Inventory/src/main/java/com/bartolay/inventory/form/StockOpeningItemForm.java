@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.Unit;
 
+@Deprecated
 public class StockOpeningItemForm {
 
 	private Integer id;

@@ -2,6 +2,7 @@ package com.bartolay.inventory.stock.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -55,7 +56,7 @@ public class StockOpening implements GeneratedSystemNumber {
 	private String description;
 
 	@OneToMany(mappedBy = "stockOpening", fetch=FetchType.LAZY)
-	private Set<StockOpeningItem> items;
+	private List<StockOpeningItem> items;
 	
 	@Column(name="total", nullable=false, precision=10, scale=5)
 	private BigDecimal total;
@@ -190,15 +191,15 @@ public class StockOpening implements GeneratedSystemNumber {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
-
-	public Set<StockOpeningItem> getItems() {
+	
+	public List<StockOpeningItem> getItems() {
 		return items;
 	}
 
-	public void setItems(Set<StockOpeningItem> items) {
+	public void setItems(List<StockOpeningItem> items) {
 		this.items = items;
 	}
-	
+
 	public Set<InventoryTransaction> getInventories() {
 		return inventories;
 	}

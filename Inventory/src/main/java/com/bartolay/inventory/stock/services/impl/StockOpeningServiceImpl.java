@@ -76,7 +76,7 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 		opening.setDocumentNumber(openingStockForm.getDocument_number());
 		opening.setLocation(openingStockForm.getLocation());
 		opening.setTransactionDate(cal.getTime());
-//		opening.setItems(openingStockForm.getItems());
+		opening.setItems(openingStockForm.getStockOpeningItems());
 		opening.setYear(openingStockForm.getYear());
 		opening.setDescription(openingStockForm.getDescription());
 		opening.setCreatedBy(userCredentials.getLoggedInUser());

@@ -15,7 +15,7 @@
 
 				<div class="panel-body">
 				
-					<table class="table table-bordered table-striped">
+					<table class="table table-bordered table-striped" id="itemModal_table">
 						<tbody>
 							<tr>
 								<td>
@@ -35,9 +35,7 @@
 									<div class="input-group">
 										<span class="input-group-addon">Unit</span>
 										<select class="form-control" id="itemModal_unit" name="itemModal_unit" disabled="disabled">
-											
 										</select>
-										 
 									</div>
 								
 								</td>
@@ -78,6 +76,7 @@
 	var modal_label = $("#itemModal_label");
 	var item = $("#itemModal_item");
 	var unit = $("#itemModal_unit");
+	var table = $("#itemModal_table");
 	
 	var quantity = $("#itemModal_quantity");
 	var addItemForm = $("#itemModal_addItemForm");
@@ -86,7 +85,12 @@
 	var items = {};
 	var itemUnits = {};
 	
-	function addItem(label, callback) {
+	function addItem(parameters, callback) {
+		var label = parameters.label;
+		var type = parameters.type;
+		
+		appendInputByType(type);
+		
 		modal_label.text(label);
 		modal.modal('show');
 
@@ -148,11 +152,24 @@
 			
 			callback(arr);
 			
-
 			quantity.val(0);
 			quantity.attr("disabled", "disabled");
 			unit.html("");
 			unit.attr("disabled", "disabled");
 		});
+	}
+
+	function appendInputByType(type) {
+		if(type == "stock_opening") {
+			table.find("tbody").append(
+				`<tr>
+					<td>
+						<div class="input-group">
+							<span class="input-group-addon">Unit Cost</span>
+							<input class="form-control" type="number" value="0" id="unit_cost" name="unit_cost"/>
+						</div>
+					</td>
+				</tr>`);
+		}
 	}
 </script>
