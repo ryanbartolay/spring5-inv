@@ -96,7 +96,9 @@
 		appendInputByType(type);
 		
 		itemModal_label.text(label);
+		addItemBtn.text("Add Item");
 		itemModal_modal.modal('show');
+		
 	}
 	
 	function updateItem(parameters, callback) {
@@ -111,6 +113,7 @@
 		$("#unit_cost").val(values.unit_cost);
 		
 		itemModal_label.text(label);
+		addItemBtn.text("Edit Item");
 		itemModal_modal.modal('show');
 		
 		// select the item
