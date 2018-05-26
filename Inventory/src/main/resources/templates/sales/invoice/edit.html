@@ -215,6 +215,9 @@ $( function() {
 $("#btnAddItem").on("click", function() {
   	addItem({type: "sales_invoice", label:"Add Sales Invoice Item"}, function(data) {
   		
+  		console.log("dddddddddddddddddddddddddddd");
+  		console.log(data);
+  		
   		var item = data['item'];
   		var unit = data['unit'];
   		
@@ -227,10 +230,10 @@ $("#btnAddItem").on("click", function() {
 				<th>`+ item.id +`</th>
 				<td>`+ item.code +`</td>
 				<td>`+ item.name +`
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].item" id="item" value="` + item.id + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unit" id="unit" value="` + unit.id + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].quantity" id="quantity" value="` + data.quantity + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unitCost" id="unitCost" value="` + data.unit_cost + `" />
+					<input type="text" name="stockOpeningItems[`+ item_count +`].item" id="item" value="` + item.id + `" />
+					<input type="text" name="stockOpeningItems[`+ item_count +`].unit" id="unit" value="` + unit.id + `" />
+					<input type="text" name="stockOpeningItems[`+ item_count +`].quantity" id="quantity" value="` + data.quantity + `" />
+					<input type="text" name="stockOpeningItems[`+ item_count +`].unitCost" id="unitCost" value="` + data.unit_cost + `" />
 				</td>
 				<td>`+ unit.abbreviation +`</td>
 				<td>`+ unit.name +`</td>
@@ -239,20 +242,36 @@ $("#btnAddItem").on("click", function() {
 				<td class="text-right">`+ total +`</td>
 				<td class="text-right">
 					<div class="btn-group" role="group">
-		        		<button class="btn btn-info fa fa-edit" id="btnView"/>
+		        		<button class="btn btn-info fa fa-edit" id="btnView" onClick="edit(this)"/>
 		        		<button class="btn btn-danger fa fa-times" onClick="remove(this)" />
 		    		</div>
 				</td>
 			</tr>`;
 			item_count++;
-  		
-			console.log("checkinggsssss2");
+
   		$('#itemsTable tbody').append(html);
-  		
-  		console.log("checkinggsssss3");
   		$("#grandTotal").html(grand_total);
   	});
 });
+
+function edit(e) {
+	var selected_row = $(e).parentsUntil("tbody"),
+	item = selected_row.find("#item"),
+	unit = selected_row.find("#unit")
+	quantity = selected_row.find("#quantity"),
+	unit_cost = selected_row.find("#unitCost");
+	
+	var values = {
+		item: item.val(),
+		unit: unit.val(),
+		quantity: quantity.val(),
+		unit_cost: unit_cost.val()
+	};
+	
+	updateItem({type: "sales_invoice", label:"Edit Sales Invoice Item", values: values}, function(data) { 
+		console.log(data);
+	});
+}
 
 function remove(e) {
 	var selected_row = $(e).parentsUntil("tbody"),

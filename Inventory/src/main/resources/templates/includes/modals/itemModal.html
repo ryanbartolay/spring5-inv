@@ -34,7 +34,7 @@
 								
 									<div class="input-group">
 										<span class="input-group-addon">Unit</span>
-										<select class="form-control" id="itemModal_unit" name="itemModal_unit" disabled="disabled">
+										<select class="form-control" id="itemModal_unit" name="itemModal_unit">
 										</select>
 									</div>
 								
@@ -45,7 +45,7 @@
 								
 									<div class="input-group">
 										<span class="input-group-addon">Quantity</span>
-										<input class="form-control" type="number" value="0" id="itemModal_quantity" name="itemModal_quantity" disabled="disabled"/>
+										<input class="form-control" type="number" value="0" id="itemModal_quantity" name="itemModal_quantity" />
 									</div>
 								
 								</td>
@@ -59,7 +59,7 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 					<button type="submit" id="itemModal_addItemBtn"
-						class="btn btn-success btn-primary" disabled="disabled">Add Item</button>
+						class="btn btn-success btn-primary">Add Item</button>
 				</div>
 			</form>
 		</div>
@@ -98,6 +98,45 @@
 		itemModal_label.text(label);
 		itemModal_modal.modal('show');
 	}
+	
+	function updateItem(parameters, callback) {
+		var label = parameters.label;
+		var values = parameters.values;
+		var type = parameters.type;
+		itemModal_callback = callback;
+		
+		appendInputByType(type);
+		
+		$("#itemModal_quantity").val(values.quantity);
+		$("#unit_cost").val(values.unit_cost);
+		
+		itemModal_label.text(label);
+		itemModal_modal.modal('show');
+		
+		// select the item
+		itemModal_item.val(values.item);
+		
+		// load units and select the unit for update
+		loadItemUnit(values.item, function(data) {
+			itemModal_unit.val(values.unit);
+		});
+	}
+	
+	function loadItemUnit(item_id, callback = null) {
+		GET("/api/itemUnits/" + items[item_id].id, function(data) {
+			itemModal_unit.html(""); // clear contents
+			
+			var response = JSON.parse(data);
+			
+			$.each(response.data, function(i, obj) {
+				itemUnits[obj['id']] = obj;
+				itemModal_unit.append('<option value="'+ obj['id'] +'">'+ obj['abbreviation'] +' (' + obj['rate'] + ') '+ (obj['default'] ? '*' : '') +'</option>');
+			});
+			if(callback != null) {
+				callback(data);	
+			}
+		});
+	}
 
 	function appendInputByType(type) {
 		if(!itemModal_isLoadedExtraElements) {
@@ -119,11 +158,10 @@
 	itemModal_modal.on('shown.bs.modal', function() {
 		
 		if(!itemModal_isLoadedModelItems) {
-			GET("/api/items", function(data) {
-				console.log(data);
-				items = data;
+			GET("/api/items", function(data) {				
 				$.each(data, function(i, obj) {
-					$('#itemModal_item option:last').after('<option value="'+ i +'">'+ obj.name +'</option>');
+					items[obj.id] = obj;
+					$('#itemModal_item option:last').after('<option value="'+ obj.id +'">'+ obj.name +'</option>');
 				});
 				itemModal_isLoadedModelItems = true;
 			});
@@ -134,24 +172,7 @@
 		
 		var item_id = $(this).val();
 		
-		GET("/api/itemUnits/" + items[item_id].id, function(data) {
-			itemModal_unit.html(""); // clear contents
-			itemModal_unit.removeAttr("disabled");
-			quantity.removeAttr("disabled");
-			
-			var response = JSON.parse(data);
-			itemUnits = response.data;
-			console.log(itemUnits);
-			$.each(response.data, function(i, obj) {
-				itemModal_unit.append('<option value="'+ i +'">'+ obj['abbreviation'] +' (' + obj['rate'] + ') '+ (obj['default'] ? '*' : '') +'</option>');
-			});
-			
-		});
-	});
-	
-	itemModal_unit.change(function() {
-		quantity.removeAttr("disabled");
-		addItemBtn.removeAttr("disabled");
+		loadItemUnit(item_id);
 	});
 	
 	addItemBtn.click(function() {
@@ -172,8 +193,6 @@
 		itemModal_callback(arr);
 		
 		quantity.val(0);
-		quantity.attr("disabled", "disabled");
 		itemModal_unit.html("");
-		itemModal_unit.attr("disabled", "disabled");
 	});
 </script>
