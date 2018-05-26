@@ -12,6 +12,7 @@ public interface UserService<E> {
 	public E create(UserForm userForm);
 	public E update(UserForm userForm);
 	
+	public Iterable<User> retrieve();
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
 	public E delete(Integer id);
 	

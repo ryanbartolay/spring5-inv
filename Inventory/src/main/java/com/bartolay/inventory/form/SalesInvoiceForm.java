@@ -119,5 +119,20 @@ public class SalesInvoiceForm {
 	public void setSalesPerson(User salesPerson) {
 		this.salesPerson = salesPerson;
 	}
-	
+
+	public User getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(User customer) {
+		this.customer = customer;
+	}
+
+	public Set<SalesInvoiceItem> getItems() {
+		return items;
+	}
+
+	public void setItems(Set<SalesInvoiceItem> items) {
+		this.items = items;
+	}
 }

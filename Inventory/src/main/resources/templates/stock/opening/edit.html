@@ -1,108 +1,114 @@
 <div class="row">
 	<div class="col-lg-12">
-	
-		<form th:object="${stockOpeningForm}" id="stockOpeningForm" th:action="@{/api/stock/opening}" method="POST">
 
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<div class="row ">
-					<div class="col-md-4 col-md-offset-8 btn-group"  role="group">
-						<button type="submit" id="submitStockOpeningBtn" class="btn btn-success">Save Opening Stock</button>
-						<a th:href="@{/stock/opening}" class="btn btn-default">Cancel</a>
-					</div>
-				</div>
-			</div>
-			<div class="panel-body">
-				
-				<div class="form-group" id="errors"></div>
-				
-				<div class="table-responsive">
-				
-					<table class="table table-bordered table-striped">
-						<tbody>
-							<tr>
-								<td class="col-md-3">
-								
-									<div class="input-group">
-										<span class="input-group-addon">Date</span>
-										<input type="text" th:field="*{transaction_date}" class="form-control">
-									</div>
-								
-								</td>
-								<td class="col-md-2">
-									<div class="input-group">
-										<span class="input-group-addon">Year</span>
-										<input type="text" class="form-control yearselect" th:field="*{year}">
-									</div>
-								</td>
-								<td class="col-md-7">
-									<div class="input-group">
-										<span class="input-group-addon">Location</span>
-										<select	class="form-control" th:field="*{location}">
-											<option th:each="location : ${locations}" th:value="${location.id}"
-												th:text="${location.name}"></option>
-										</select>
-									</div>
-								</td>
-							</tr>
-							
-							<tr>
-								<td>
-									<div class="input-group">									
-										<span class="input-group-addon">Document #</span>
-										<input type="text" th:field="*{document_number}" class="form-control">
-									</div>
-								</td>
-								<td colspan="2">
-								
-								
-									<div class="input-group col-md-12">
-										<span class="input-group-addon">Description</span>
-										<input type="text" id="datepicker" class="form-control">
-									</div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-						
-					<table class="table table-bordered table-striped" id="itemsTable">
-						<thead>
-							<tr>
-								<th>SN</th>
-								<th>Code</th>
-								<th class="col-md-3">Description</th>
-								<th>Unit</th>
-								<th>U.Desc</th>
-								<th>Quantity</th>
-								<th>Unit Cost</th>
-								<th class="col-md-2">Total</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							
-						</tbody>
-						<tfoot>
-							<tr>
-								<th colspan="6"></th>
-								<th><h3>Total</h3></th>
-								<th><h3 class="text-right" id="grandTotal"></h3></th>
-								<th></th>
-							</tr>
-						</tfoot>
-					</table>
-					
-					<div class="row">
-						<div class="col-md-4">
-							<button class="btn btn-success" id="btnAddItem">Add Item</button>
+		<form th:object="${stockOpeningForm}" id="stockOpeningForm"
+			th:action="@{/api/stock/opening}" method="POST">
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="row ">
+						<div class="col-md-4 col-md-offset-8 btn-group" role="group">
+							<button type="submit" id="submitStockOpeningBtn"
+								class="btn btn-success btn-sm">Save Opening Stock</button>
+							<a th:href="@{/stock/opening}" class="btn btn-default btn-sm">Cancel</a>
 						</div>
 					</div>
-				
 				</div>
+				<div class="panel-body">
 
+					<div class="form-group" id="errors"></div>
+
+					<div class="table-responsive">
+
+						<table class="table table-bordered table-striped">
+							<tbody>
+								<tr>
+									<td class="col-md-3">
+
+										<div class="input-group">
+											<span class="input-group-addon">Trans. Date</span> <input
+												type="text" th:field="*{transaction_date}"
+												class="form-control">
+										</div>
+
+									</td>
+									<td class="col-md-2">
+										<div class="input-group">
+											<span class="input-group-addon">Year</span> <input
+												type="text" class="form-control yearselect"
+												th:field="*{year}">
+										</div>
+									</td>
+									<td class="col-md-7">
+										<div class="input-group">
+											<span class="input-group-addon">Location</span> <select
+												class="form-control" th:field="*{location}">
+												<option th:each="location : ${locations}"
+													th:value="${location.id}" th:text="${location.name}"></option>
+											</select>
+										</div>
+									</td>
+								</tr>
+
+								<tr>
+									<td>
+										<div class="input-group">
+											<span class="input-group-addon">Document #</span> <input
+												type="text" th:field="*{document_number}"
+												class="form-control">
+										</div>
+									</td>
+									<td colspan="2">
+
+
+										<div class="input-group col-md-12">
+											<span class="input-group-addon">Description</span> <input
+												type="text" th:field="*{description}" class="form-control">
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<table class="table table-bordered table-striped" id="itemsTable">
+							<thead>
+								<tr>
+									<th>SN</th>
+									<th>Code</th>
+									<th class="col-md-3">Description</th>
+									<th>Unit</th>
+									<th>U.Desc</th>
+									<th>Quantity</th>
+									<th>Unit Cost</th>
+									<th class="col-md-2">Total</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+
+							</tbody>
+							<tfoot>
+								<tr>
+									<th colspan="6"></th>
+									<th><h3>Total</h3></th>
+									<th><h3 class="text-right" id="grandTotal"></h3></th>
+									<th></th>
+								</tr>
+							</tfoot>
+						</table>
+
+						<div class="row">
+							<div class="col-md-4">
+								<button class="btn btn-success btn-xs" id="btnAddItem">Add
+									Item</button>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
 			</div>
-		</div>
-		
+
 		</form>
 	</div>
 	<!-- /.col-lg-12 -->
@@ -112,11 +118,13 @@
 <div th:include="includes/modals/itemModal"></div>
 
 <script>
+/*<![CDATA[*/
 var form = $("#stockOpeningForm");
 var current_year = (new Date()).getFullYear();
 var grand_total = 0;
 
 var item_count = 0;
+var submitStockOpeningBtn = $("#submitStockOpeningBtn");
 
   $( function() {
 	  
@@ -146,10 +154,6 @@ var item_count = 0;
   		var total = data.quantity * data.unit_cost;
   		grand_total = grand_total + total;
   		
-  		
-  		console.log("checkinggsssss");
-  		console.log(unit);
-  		console.log("checkinggsssss1");
   		var html = `
   		<tr>
 				<th>`+ item.id +`</th>
@@ -173,25 +177,30 @@ var item_count = 0;
 				</td>
 			</tr>`;
 			item_count++;
-  		
-			console.log("checkinggsssss2");
   		$('#itemsTable tbody').append(html);
-  		
-  		console.log("checkinggsssss3");
   		$("#grandTotal").html(grand_total);
   	});
   });
   
-  $("#submitStockOpeningBtn").click(function() {
-  	console.log(form.serialize());
+  submitStockOpeningBtn.click(function() {
+	  
+  	var original_text = submitStockOpeningBtn.text();
+  	submitStockOpeningBtn.attr("disabled", "disabled");
+  	submitStockOpeningBtn.text("Processing....");
+  	
   	POST("/api/stock/opening", form.serialize(), function(data) {
   		console.log(data);
   		
   		if(data.status != "OK") {
-  			displayErrors(data, $("#errors"));	
+  			displayErrors(data, $("#errors"));
+  			submitStockOpeningBtn.removeAttr("disabled");
+  			submitStockOpeningBtn.text(original_text);
+  		} else {
+  			window.location.replace('/stock/opening')
   		}
   	});
   });
+
 
 	function remove(e) {
 		var selected_row = $(e).parentsUntil("tbody"),
@@ -204,8 +213,7 @@ var item_count = 0;
 		$("#grandTotal").html(grand_total);
 		$(e).parentsUntil("tbody").remove();
 	}
-  	
+	/*]]>*/
   </script>
 </head>
 <body>
- 

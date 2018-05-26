@@ -10,7 +10,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,14 +39,14 @@ public class UserRestController {
 	private StringUtils stringUtils;
 	
 	@RequestMapping(value="/api/users", method=RequestMethod.GET)
-	public ResponseEntity<List<User>> getList() {
+	public String getList() throws JsonProcessingException, UnsupportedEncodingException {
 		List<User> users = new ArrayList<>();
 
 		for(User user : userRepository.apiFindAll()) {
 			users.add(user);
 		}
 		
-		return ResponseEntity.ok(users);
+		return stringUtils.encode(users);
 	}
 	
 	@RequestMapping(value="/api/users/{id}", method=RequestMethod.GET)

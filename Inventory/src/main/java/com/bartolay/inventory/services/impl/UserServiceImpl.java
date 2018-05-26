@@ -95,5 +95,10 @@ public class UserServiceImpl implements UserService<User> {
 		return userRepository.findAllByAccountType(AccountType.USER);
 	}
 
+	@Override
+	public Iterable<User> retrieve() {
+		return userRepository.findAll();
+	}
+
 	
 }
