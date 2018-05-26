@@ -101,7 +101,7 @@
 
 	function appendInputByType(type) {
 		if(!itemModal_isLoadedExtraElements) {
-			if(type == "stock_opening") {
+			if(type == "stock_opening" || type == "sales_invoice") {
 				table.find("tbody").append(
 					`<tr>
 						<td>

@@ -85,17 +85,18 @@
 						</tbody>
 					</table>
 						
-					<table class="table table-bordered table-striped">
+					<table class="table table-bordered table-striped" id="itemsTable">
 						<thead>
 							<tr>
 								<th>SN</th>
 								<th>Code</th>
-								<th>Description</th>
+								<th class="col-md-3">Description</th>
 								<th>Unit</th>
 								<th>U.Desc</th>
 								<th>Quantity</th>
 								<th>Unit Price</th>
-								<th>Amount</th>
+								<th  class="col-md-2">Amount</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -105,6 +106,7 @@
 							<tr>
 								<th colspan="6"></th>
 								<th><h3>Total<h3></h3></th>
+								<th><h3 class="text-right" id="grandTotal"></h3></th>
 								<th></th>
 							</tr>
 						</tfoot>
@@ -191,11 +193,12 @@
 <div th:include="includes/modals/itemModal"></div>
 
 <script>
+/*<![CDATA[*/
 var form = $("#salesInvoiceForm");
 var grand_total = 0;
 
+var item_count = 0;
 var current_year = (new Date()).getFullYear();
-
 
 $( function() {
 	$( "#transactionDate" ).datepicker();
@@ -250,4 +253,17 @@ $("#btnAddItem").on("click", function() {
   		$("#grandTotal").html(grand_total);
   	});
 });
+
+function remove(e) {
+	var selected_row = $(e).parentsUntil("tbody"),
+	quantity = selected_row.find("#quantity"),
+	unit_cost = selected_row.find("#unitCost"),
+	total = quantity.val() * unit_cost.val();
+	
+	grand_total = grand_total - total;
+	
+	$("#grandTotal").html(grand_total);
+	$(e).parentsUntil("tbody").remove();
+}
+/*]]>*/
 </script>
