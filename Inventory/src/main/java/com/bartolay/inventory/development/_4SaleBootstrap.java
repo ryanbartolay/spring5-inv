@@ -68,16 +68,14 @@ public class _4SaleBootstrap implements ApplicationListener<ContextRefreshedEven
 		ccDetails = new CreditCardDetails();
 		ccDetails.setCardNumber("12315-51882-0932");
 		ccDetails.setHoldersName("RYAN KRISTOFFER BARTOLAY");
-		ccDetails.setMonthExpiry(2);
-		ccDetails.setYearExpiry(2023);
+		ccDetails.setDateExpiry("02/2023");
 		ccDetails.setCreatedBy(user);
 		creditCardDetailsRepository.save(ccDetails);
 		
 		ccDetails2 = new CreditCardDetails();
 		ccDetails2.setCardNumber("12315-51882-0932");
 		ccDetails2.setHoldersName("RYAN KRISTOFFER BARTOLAY");
-		ccDetails2.setMonthExpiry(2);
-		ccDetails2.setYearExpiry(2023);
+		ccDetails2.setDateExpiry("02/2023");
 		ccDetails2.setCreatedBy(user);
 		creditCardDetailsRepository.save(ccDetails2);
 		

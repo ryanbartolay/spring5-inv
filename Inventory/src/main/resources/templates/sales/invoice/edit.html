@@ -168,13 +168,13 @@
 			    <div class="panel-heading">
 			        Payment Method
 			        
-			        <button type="button" class="btn btn-success btn-xs pull-right">Choose Payment Method </button>
+			        <button type="button" class="btn btn-success btn-xs pull-right" id="updatePaymentMethodBtn">Update Payment Method </button>
 			    </div>
 			    <div class="panel-body">
-			        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-			    </div>
-			    <div class="panel-footer">
-			        Panel Footer
+			    	<div id="paymentMethod">
+			    		<p>There are no payment method selected</p>
+			    	</div>
+			        
 			    </div>
 			</div>
 		</div>
@@ -183,6 +183,19 @@
 	<!-- /.col-lg-12 -->
 </div>
 
+<script type="text/javascript">
+$( function() {
+	$( "#transactionDate" ).datepicker();
+	
+    $('.yearselect').yearselect({
+    	order: 'desc',	
+ 		start: current_year - 5,
+ 		end: current_year + 5
+    });
+    
+    $('[name=year]').val( current_year );
+});
+</script>
 
 <!-- Item Modal -->
 <div th:include="includes/modals/itemModal"></div>
@@ -195,18 +208,6 @@ var grand_total = 0;
 var item_count = 0;
 var current_year = (new Date()).getFullYear();
 var submitSalesInvoiceBtn = $("#submitSalesInvoiceBtn");
-
-$( function() {
-	$( "#transactionDate" ).datepicker();
-	
-    $('.yearselect').yearselect({
-    	order: 'desc',	
- 		start: current_year - 5,
- 		end: current_year + 5
-    });
-    
-    $('[name=year]').val( current_year );
-});
 
 $("#btnAddItem").on("click", function() {
   	addItem({type: "sales_invoice", label:"Add Sales Invoice Item"}, function(data) {
@@ -318,4 +319,62 @@ function computeGrandTotal(quantity, unit_cost) {
 	$("#grandTotal").html(grand_total);
 }
 /*]]>*/
+</script>
+
+<!-- Payment Method Modal -->
+<div th:include="includes/modals/paymentMethodModal"></div>
+
+<script>
+var updatePaymentMethodBtn = $("#updatePaymentMethodBtn");
+
+updatePaymentMethodBtn.click(function() {
+	
+	updatePaymentMethod(function(data) { 
+		
+		console.log(data);
+		
+		var html = `
+			<p class="text-center">`+ data.paymentMethod +`</p>
+			<input type="hidden" name="paymentMethod" value="`+ data.paymentMethod +`" />
+		`;
+			
+		if(data.paymentMethod == "CREDITCARD") {
+			html = `
+				<input type="hidden" name="paymentMethod" value="`+ data.paymentMethod +`" />
+				<input type="hidden" name="creditCardDetails.holdersName" value="`+ data.creditCardHoldersName +`" />
+				<input type="hidden" name="creditCardDetails.cardNumber" value="`+ data.creditCardNumber +`" />
+				<input type="hidden" name="creditCardDetails.dateExpiry" value="`+ data.creditCardExpiry +`" />
+				
+			<div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label for="cardExpiry">CARD HOLDERS NAME</label>
+                        <span class="form-control">` + data.creditCardHoldersName + `</span>
+                    </div>
+                </div>
+            </div>
+			<div class="row">
+				<div class="col-xs-12">
+		            <div class="form-group">
+		                <label for="cardNumber">CARD NUMBER</label>
+		                <div class="input-group">
+		                    <span class="form-control">` + data.creditCardNumber + `</span>
+		                    <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
+		                </div>
+		            </div>                            
+		        </div>
+		    </div>
+		    <div class="row">
+		        <div class="col-xs-7 col-md-7">
+		            <div class="form-group">
+		                <label for="cardExpiry"><span class="hidden-xs">EXPIRATION</span><span class="visible-xs-inline">EXP</span> DATE</label>
+		                <span class="form-control">`+ data.creditCardExpiry +`</span>
+		            </div>
+		        </div>
+		    </div>`;
+		}
+		
+		$("#paymentMethod").html(html);
+	});
+});
 </script>

@@ -1,0 +1,99 @@
+<!-- Modal Edit Brand -->
+<div class="modal fade" id="paymentMethodModal" tabindex="-1" role="dialog"
+	aria-labelledby="paymentMethodModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+		
+			<form data-async data-target="#rating-modal"
+				id="paymentMethodModal_addItemForm" method="POST">
+				
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="itemModal_label">Payment Method</h4>
+				</div>
+
+				<div class="panel-body">
+					
+						<!--Radio butons-->
+						<div class="btn-group" data-toggle="buttons">
+						
+							<label class="btn btn-default btn-rounded btn-md form-check-label" id="paymentMethodModal_codRadio">
+						        <input class="form-check-input" type="radio" name="paymentMethod" value="CASH" autocomplete="off"> CASH
+						    </label>
+						
+						    <label class="btn btn-default btn-rounded active btn-md form-check-label" id="paymentMethodModal_checkRadio">
+						        <input class="form-check-input" type="radio" name="paymentMethod" value="CHECK" checked autocomplete="off"> Check
+						    </label>
+						
+						    <label class="btn btn-default btn-rounded btn-md form-check-label" id="paymentMethodModal_creditCardRadio">
+						        <input class="form-check-input" type="radio" name="paymentMethod" value="CREDITCARD" autocomplete="off"> Credit Card
+						    </label>
+						
+						    
+						
+						</div>
+						<!--Radio butons-->
+
+					<br>
+					
+					<div th:include="includes/modals/creditCardDetails"></div>
+					
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button type="submit" id="paymentMethodModal_updatePaymentBtn"
+						class="btn btn-success btn-primary">Update Payment Method</button>
+				</div>
+			</form>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<script>
+	var paymentMethodModal_modal = $("#paymentMethodModal");
+	var addPaymentMethodForm = $("#paymentMethodModal_addItemForm");
+	var paymentMethodModal_updatePaymentBtn = $("#paymentMethodModal_updatePaymentBtn");
+	
+	var checkRadio = $("#paymentMethodModal_checkRadio");
+	var creditCardRadio = $("#paymentMethodModal_creditCardRadio");
+	var codRadio = $("#paymentMethodModal_codRadio");
+	
+	var paymentMethodModal_callback = null;
+	
+	function updatePaymentMethod(callback) {
+		paymentMethodModal_callback = callback;
+		
+		paymentMethodModal_updatePaymentBtn.text("Update Payment Method");
+		paymentMethodModal_modal.modal('show');	
+	}
+	
+	creditCardRadio.focusin(function(event) {
+		 $("#creditCardPaymentContainer").show();
+	});
+	
+	$("#paymentMethodModal_checkRadio").focusin(function(event) {
+		 $("#creditCardPaymentContainer").hide();
+	});
+	
+	$("#paymentMethodModal_codRadio").focusin(function(event) {
+		 $("#creditCardPaymentContainer").hide();
+	});
+	
+	paymentMethodModal_updatePaymentBtn.click(function(){
+		paymentMethodModal_modal.modal('hide');
+		
+		var arr = {};
+		
+		$.each(addPaymentMethodForm.serializeArray(), function(i, obj) {
+			arr[obj.name] = obj.value;
+		});		
+		
+		paymentMethodModal_callback(arr);
+	});	 
+	
+</script>

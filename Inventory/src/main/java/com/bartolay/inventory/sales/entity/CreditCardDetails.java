@@ -34,11 +34,8 @@ public class CreditCardDetails {
 	@Column(name="card_number", length=25, nullable=false)
 	private String cardNumber;
 	
-	@Column(name="month_expiry", length=2, nullable=false)
-	private int monthExpiry;
-	
-	@Column(name="year_expiry", length=4, nullable=false)
-	private int yearExpiry;
+	@Column(name="date_expiry", length=7, nullable=false)
+	private String dateExpiry;
 	
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
@@ -80,20 +77,12 @@ public class CreditCardDetails {
 		this.cardNumber = cardNumber;
 	}
 
-	public int getMonthExpiry() {
-		return monthExpiry;
+	public String getDateExpiry() {
+		return dateExpiry;
 	}
 
-	public void setMonthExpiry(int monthExpiry) {
-		this.monthExpiry = monthExpiry;
-	}
-
-	public int getYearExpiry() {
-		return yearExpiry;
-	}
-
-	public void setYearExpiry(int yearExpiry) {
-		this.yearExpiry = yearExpiry;
+	public void setDateExpiry(String dateExpiry) {
+		this.dateExpiry = dateExpiry;
 	}
 
 	public Date getCreatedDate() {
