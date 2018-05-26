@@ -24,7 +24,6 @@ import com.bartolay.inventory.repositories.UserRepository;
 import com.bartolay.inventory.sales.entity.CreditCardDetails;
 import com.bartolay.inventory.sales.repositories.CreditCardDetailsRepository;
 import com.bartolay.inventory.sales.services.SalesInvoiceService;
-import com.bartolay.inventory.utils.CalendarUtils;
 
 @Component
 public class _4SaleBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered  {
@@ -120,7 +119,7 @@ public class _4SaleBootstrap implements ApplicationListener<ContextRefreshedEven
 		salesForm.setCreditCardDetails(ccDetails);
 		salesForm.setDocumentNumber("Sales#12344");
 		salesForm.setYear("2018");
-		salesForm.setTransactionDate(CalendarUtils.dateToString(cal.getTime()));
+		salesForm.setTransactionDate(new Date());
 		salesForm.setSalesPerson(sales1);
 		salesForm.setLocation(locationRepository.findById(1).get());
 		
@@ -132,7 +131,7 @@ public class _4SaleBootstrap implements ApplicationListener<ContextRefreshedEven
 		salesForm2.setPaymentMethod(PaymentMethod.CASH);
 		salesForm2.setDocumentNumber("Sales#12aas34");
 		salesForm2.setYear("2018");
-		salesForm2.setTransactionDate(CalendarUtils.dateToString(cal.getTime()));
+		salesForm2.setTransactionDate(new Date());
 		salesForm2.setSalesPerson(sales2);
 
 		salesForm2.setLocation(locationRepository.findById(2).get());

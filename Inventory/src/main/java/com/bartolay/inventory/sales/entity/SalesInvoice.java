@@ -2,7 +2,7 @@ package com.bartolay.inventory.sales.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -94,7 +94,7 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	private User updatedBy;
 	
 	@OneToMany(mappedBy = "salesInvoice", fetch=FetchType.LAZY)
-	private Set<SalesInvoiceItem> salesInvoiceItems;
+	private List<SalesInvoiceItem> salesInvoiceItems;
 
 	public String getSystemNumber() {
 		return systemNumber;
@@ -200,10 +200,10 @@ public class SalesInvoice implements GeneratedSystemNumber {
 		this.year = year;
 	}
 	
-	public Set<SalesInvoiceItem> getSalesInvoiceItems() {
+	public List<SalesInvoiceItem> getSalesInvoiceItems() {
 		return salesInvoiceItems;
 	}
-	public void setSalesInvoiceItems(Set<SalesInvoiceItem> salesInvoiceItems) {
+	public void setSalesInvoiceItems(List<SalesInvoiceItem> salesInvoiceItems) {
 		this.salesInvoiceItems = salesInvoiceItems;
 	}
 	@Override

@@ -1,5 +1,6 @@
 package com.bartolay.inventory.form;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.Digits;
@@ -25,8 +26,9 @@ public class SalesInvoiceForm {
 	
 	@NotNull(message="Transaction Date is required!")
 	@DateTimeFormat(pattern="MM/dd/YY")
-	private String transactionDate;
+	private Date transactionDate;
 	
+	@Size(min=4, max=20, message="Document Number is Required. Length between 4-20 characters.")
 	@NotNull(message="Stock Opening document number is required!")
 	private String documentNumber;
 	
@@ -35,10 +37,9 @@ public class SalesInvoiceForm {
 	@NotNull(message="Stock Opening location is required!")
 	private Location location;
 	
-	@NotNull
+	@NotNull(message="You must choose a payment method")
 	private PaymentMethod paymentMethod;
 	
-	@NotNull
 	private CreditCardDetails creditCardDetails;
 
 	@NotNull
@@ -67,11 +68,11 @@ public class SalesInvoiceForm {
 		this.year = year;
 	}
 
-	public String getTransactionDate() {
+	public Date getTransactionDate() {
 		return transactionDate;
 	}
 
-	public void setTransactionDate(String transactionDate) {
+	public void setTransactionDate(Date transactionDate) {
 		this.transactionDate = transactionDate;
 	}
 

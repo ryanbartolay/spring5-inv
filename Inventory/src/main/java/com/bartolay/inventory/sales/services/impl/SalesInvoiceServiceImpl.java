@@ -52,18 +52,14 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 		salesInvoice.setPaymentMethod(salesInvoiceForm.getPaymentMethod());
 		salesInvoice.setDocumentNumber(salesInvoiceForm.getDocumentNumber());
 		salesInvoice.setSalesPerson(salesInvoiceForm.getSalesPerson());
-		try {
-			salesInvoice.setTransactionDate(CalendarUtils.toDate(salesInvoiceForm.getTransactionDate()));
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		salesInvoice.setTransactionDate(salesInvoiceForm.getTransactionDate());
 		salesInvoice.setLocation(salesInvoiceForm.getLocation());
 		salesInvoice.setYear(salesInvoiceForm.getYear());
-		salesInvoice.setSalesInvoiceItems(new HashSet<>());
+		salesInvoice.setSalesInvoiceItems(salesInvoiceForm.getSalesInvoiceItems());
+		salesInvoice.setCustomer(salesInvoiceForm.getCustomer());
 	
 		inventoryService.createSalesInvoice(salesInvoice);
 
-		
 		return salesInvoice;
 	}
 

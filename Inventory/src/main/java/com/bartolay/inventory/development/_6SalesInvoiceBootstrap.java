@@ -1,8 +1,10 @@
 package com.bartolay.inventory.development;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -62,7 +64,7 @@ public class _6SalesInvoiceBootstrap implements ApplicationListener<ContextRefre
 		
 		Item item = itemRepository.findById(1).get();
 		
-		Set<SalesInvoiceItem> salesInvoiceItems = new HashSet<>();
+		List<SalesInvoiceItem> salesInvoiceItems = new ArrayList<>();
 		
 		SalesInvoiceItem salesInvoiceItem = new SalesInvoiceItem();
 		salesInvoiceItem.setCreatedBy(user);

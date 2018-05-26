@@ -185,7 +185,7 @@ public class InventoryService {
 		List<Inventory> inventoriesForSave = new ArrayList<>(); // just a placeholder for one commit only
 
 		salesInvoice.getSalesInvoiceItems().forEach(salesInvoiceItem -> {
-
+			salesInvoiceItem.setCreatedBy(userCredentials.getLoggedInUser());
 			salesInvoiceItem.setSalesInvoice(salesInvoice);
 
 			Inventory inventory = new Inventory();
@@ -250,6 +250,8 @@ public class InventoryService {
 			inventoryTransactions.add(inventoryTransaction);
 		});
 
+		
+		System.err.println(salesInvoice);
 		salesInvoiceRepository.save(salesInvoice);
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
 		inventoryRepository.saveAll(inventoriesForSave);
