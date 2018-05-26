@@ -14,15 +14,15 @@
 				</div>
 			</div>
 			<div class="panel-body">
+			
+				<div class="form-group" id="errors"></div>
 
 				<div class="table-responsive">
 				
 					<table class="table table-bordered table-striped">
 						<tbody>
 							<tr>
-								
 								<td>
-								
 									<div class="input-group">
 										<span class="input-group-addon">Trans. Date</span>
 										<input type="text" th:field="*{transactionDate}" class="form-control">
@@ -31,14 +31,9 @@
 								<td class="col-md-2">
 									<div class="input-group">
 										<span class="input-group-addon">Year</span>
-										 <input
-												type="text" class="form-control yearselect"
-												th:field="*{year}">
+										 <input type="text" class="form-control yearselect" th:field="*{year}" />
 									</div>
 								</td>
-								
-								
-								
 								<td class="col-md-4">
 									<div class="input-group">
 										<span class="input-group-addon">Sales Person</span>
@@ -199,6 +194,7 @@ var grand_total = 0;
 
 var item_count = 0;
 var current_year = (new Date()).getFullYear();
+var submitSalesInvoiceBtn = $("#submitSalesInvoiceBtn");
 
 $( function() {
 	$( "#transactionDate" ).datepicker();
@@ -249,6 +245,25 @@ $("#btnAddItem").on("click", function() {
   		$("#grandTotal").html(grand_total);
   	});
 });
+
+submitSalesInvoiceBtn.click(function() {
+	  
+  	var original_text = submitSalesInvoiceBtn.text();
+  	submitSalesInvoiceBtn.attr("disabled", "disabled");
+  	submitSalesInvoiceBtn.text("Processing....");
+  	
+  	POST("/api/sales/invoice", form.serialize(), function(data) {
+  		console.log(data);
+  		
+  		if(data.status != "OK") {
+  			displayErrors(data, $("#errors"));
+  			submitSalesInvoiceBtn.removeAttr("disabled");
+  			submitSalesInvoiceBtn.text(original_text);
+  		} else {
+  			window.location.replace('/sales/invoice')
+  		}
+  	});
+  });
 
 function edit(e) {
 	var selected_row = $(e).parentsUntil("tbody");

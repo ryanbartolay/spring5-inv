@@ -7,31 +7,27 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bartolay.inventory.entity.Brand;
-import com.bartolay.inventory.form.BrandForm;
 import com.bartolay.inventory.form.SalesInvoiceForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.services.SalesInvoiceService;
 import com.bartolay.inventory.services.LocationService;
-import com.bartolay.inventory.services.UserService;
+import com.bartolay.inventory.stock.controllers.AbstractRestController;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @RestController
 @RequestMapping(value="/api")
-public class SalesInvoiceController {
+public class SalesInvoiceRestController extends AbstractRestController {
 
 	@Autowired
 	private SalesInvoiceService salesInvoiceService;
@@ -50,11 +46,11 @@ public class SalesInvoiceController {
 		return locationService.findAllWithPage(query);
 	}
 	
-	@RequestMapping(value="/sales/invoices", method=RequestMethod.POST)
+	@RequestMapping(value="/sales/invoice", method=RequestMethod.POST)
 	public String create(@Valid SalesInvoiceForm salesInvoiceForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 
 		ApiResponse response = null;
