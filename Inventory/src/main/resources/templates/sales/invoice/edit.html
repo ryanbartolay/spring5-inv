@@ -228,10 +228,10 @@ $("#btnAddItem").on("click", function() {
 				<td class="text-right" id="lblUnitCost">`+ data.unit_cost +`</td>
 				<td class="text-right" id="lblTotal">`+ total +`</td>
 				<td class="text-right">
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].item" id="txtItem" value="` + item.id + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unit" id="txtUnit" value="` + unit.id + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].quantity" id="txtQuantity" value="` + data.quantity + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unitCost" id="txtUnitCost" value="` + data.unit_cost + `" />
+					<input type="hidden" name="salesInvoiceItems[`+ item_count +`].item" id="txtItem" value="` + item.id + `" />
+					<input type="hidden" name="salesInvoiceItems[`+ item_count +`].unit" id="txtUnit" value="` + unit.id + `" />
+					<input type="hidden" name="salesInvoiceItems[`+ item_count +`].quantity" id="txtQuantity" value="` + data.quantity + `" />
+					<input type="hidden" name="salesInvoiceItems[`+ item_count +`].unitCost" id="txtUnitCost" value="` + data.unit_cost + `" />
 					<div class="btn-group" role="group">
 		        		<button class="btn btn-info fa fa-edit" id="btnView" onClick="edit(this)"/>
 		        		<button class="btn btn-danger fa fa-times" onClick="remove(this)" />

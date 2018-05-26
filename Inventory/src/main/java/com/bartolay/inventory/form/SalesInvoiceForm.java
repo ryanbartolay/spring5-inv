@@ -1,11 +1,12 @@
 package com.bartolay.inventory.form;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
@@ -16,20 +17,22 @@ import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
 public class SalesInvoiceForm {
 	
 	private String system_number;
-	
-	@NotNull
+
+	@NotNull(message="Stock Opening year date is required!")
 	@Size(min=4, max=4, message="Incorrect Year format")
 	@Digits(fraction = 0, integer = 4, message="Year only accepts digits.")
 	private String year;
 	
-	@NotNull(message="Transaction Date is required")
+	@NotNull(message="Transaction Date is required!")
+	@DateTimeFormat(pattern="MM/dd/YY")
 	private String transactionDate;
 	
+	@NotNull(message="Stock Opening document number is required!")
 	private String documentNumber;
 	
 	private String description;
 	
-	@NotNull
+	@NotNull(message="Stock Opening location is required!")
 	private Location location;
 	
 	@NotNull
@@ -45,7 +48,7 @@ public class SalesInvoiceForm {
 	private User salesPerson;
 	
 	@NotNull(message="Needed atleast 1 item")
-	private Set<SalesInvoiceItem> items = new HashSet<>();
+	private List<SalesInvoiceItem> salesInvoiceItems;
 
 	
 	public String getSystem_number() {
@@ -128,11 +131,11 @@ public class SalesInvoiceForm {
 		this.customer = customer;
 	}
 
-	public Set<SalesInvoiceItem> getItems() {
-		return items;
+	public List<SalesInvoiceItem> getSalesInvoiceItems() {
+		return salesInvoiceItems;
 	}
 
-	public void setItems(Set<SalesInvoiceItem> items) {
-		this.items = items;
+	public void setSalesInvoiceItems(List<SalesInvoiceItem> salesInvoiceItems) {
+		this.salesInvoiceItems = salesInvoiceItems;
 	}
 }
