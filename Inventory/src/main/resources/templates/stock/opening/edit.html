@@ -156,22 +156,21 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
   		
   		var html = `
   		<tr>
-				<th>`+ item.id +`</th>
-				<td>`+ item.code +`</td>
-				<td>`+ item.name +`
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].item" id="item" value="` + item.id + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unit" id="unit" value="` + unit.id + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].quantity" id="quantity" value="` + data.quantity + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unitCost" id="unitCost" value="` + data.unit_cost + `" />
-				</td>
-				<td>`+ unit.abbreviation +`</td>
-				<td>`+ unit.name +`</td>
-				<td class="text-right">`+ data.quantity +`</td>
-				<td class="text-right">`+ data.unit_cost +`</td>
-				<td class="text-right">`+ total +`</td>
+				<th id="lblItemId">`+ item.id +`</th>
+				<td id="lblItemCode">`+ item.code +`</td>
+				<td id="lblItemName">`+ item.name +`</td>
+				<td id="lblAbbreviation">`+ unit.abbreviation +`</td>
+				<td id="lblUnitName">`+ unit.name +`</td>
+				<td class="text-right" id="lblQuantity">`+ data.quantity +`</td>
+				<td class="text-right" id="lblUnitCost">`+ data.unit_cost +`</td>
+				<td class="text-right" id="lblTotal">`+ total +`</td>
 				<td class="text-right">
+					<input type="hidden" name="stockOpeningItems[`+ item_count +`].item" id="txtItem" value="` + item.id + `" />
+					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unit" id="txtUnit" value="` + unit.id + `" />
+					<input type="hidden" name="stockOpeningItems[`+ item_count +`].quantity" id="txtQuantity" value="` + data.quantity + `" />
+					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unitCost" id="txtUnitCost" value="` + data.unit_cost + `" />
 					<div class="btn-group" role="group">
-		        		<button class="btn btn-info fa fa-edit" id="btnView"/>
+		        		<button class="btn btn-info fa fa-edit" id="btnView" onClick="edit(this)"/>
 		        		<button class="btn btn-danger fa fa-times" onClick="remove(this)" />
 		    		</div>
 				</td>
@@ -182,37 +181,78 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
   	});
   });
   
-  submitStockOpeningBtn.click(function() {
-	  
-  	var original_text = submitStockOpeningBtn.text();
-  	submitStockOpeningBtn.attr("disabled", "disabled");
-  	submitStockOpeningBtn.text("Processing....");
-  	
-  	POST("/api/stock/opening", form.serialize(), function(data) {
-  		console.log(data);
-  		
-  		if(data.status != "OK") {
-  			displayErrors(data, $("#errors"));
-  			submitStockOpeningBtn.removeAttr("disabled");
-  			submitStockOpeningBtn.text(original_text);
-  		} else {
-  			window.location.replace('/stock/opening')
-  		}
-  	});
-  });
-
-
-	function remove(e) {
-		var selected_row = $(e).parentsUntil("tbody"),
-		quantity = selected_row.find("#quantity"),
-		unit_cost = selected_row.find("#unitCost"),
-		total = quantity.val() * unit_cost.val();
+submitStockOpeningBtn.click(function() {
+  
+ 	var original_text = submitStockOpeningBtn.text();
+ 	submitStockOpeningBtn.attr("disabled", "disabled");
+ 	submitStockOpeningBtn.text("Processing....");
+ 	
+ 	POST("/api/stock/opening", form.serialize(), function(data) {
+ 		console.log(data);
+ 		
+ 		if(data.status != "OK") {
+ 			displayErrors(data, $("#errors"));
+ 			submitStockOpeningBtn.removeAttr("disabled");
+ 			submitStockOpeningBtn.text(original_text);
+ 		} else {
+ 			window.location.replace('/stock/opening')
+ 		}
+ 	});
+});
+  
+function edit(e) {
+	var selected_row = $(e).parentsUntil("tbody");
+	
+	var values = {
+		item: selected_row.find("#txtItem").val(),
+		unit: selected_row.find("#txtUnit").val(),
+		quantity: selected_row.find("#txtQuantity").val(),
+		unit_cost: selected_row.find("#txtUnitCost").val()
+	};
+	
+	var total = values.quantity * values.unit_cost;
+	
+	grand_total = grand_total - total;
+	
+	updateItem({type: "stock_opening", label:"Edit Stock Opening Item", values: values}, function(data) { 
 		
-		grand_total = grand_total - total;
+		var item = data['item'];
+		var unit = data['unit'];
 		
-		$("#grandTotal").html(grand_total);
-		$(e).parentsUntil("tbody").remove();
-	}
+		selected_row.find("#lblItemId").html(item.id);
+		selected_row.find("#lblItemCode").html(item.code);
+		selected_row.find("#lblItemName").html(item.name);
+		selected_row.find("#lblUnitName").html(item.name);
+		selected_row.find("#lblAbbreviation").html(item.name);
+		
+		selected_row.find("#txtItem").val(item.id);
+		selected_row.find("#txtUnit").val(unit.id);
+		selected_row.find("#txtQuantity").val(data.quantity);
+		selected_row.find("#txtUnitCost").val(data.unit_cost);
+		
+		selected_row.find("#lblQuantity").html(data.quantity);
+		selected_row.find("#lblUnitCost").html(data.unit_cost);
+		selected_row.find("#lblTotal").html(data.quantity * data.unit_cost);
+		
+		computeGrandTotal(data.quantity, data.unit_cost); 
+	});
+}
+
+function remove(e) {
+	var selected_row = $(e).parentsUntil("tbody");
+	var total = selected_row.find("#txtQuantity").val() * selected_row.find("#txtUnitCost").val();
+	
+	grand_total = grand_total - total;
+	
+	$("#grandTotal").html(grand_total);
+	$(e).parentsUntil("tbody").remove();
+}
+
+function computeGrandTotal(quantity, unit_cost) {
+	var total = quantity * unit_cost;
+	grand_total = grand_total + total;
+	$("#grandTotal").html(grand_total);
+}
 	/*]]>*/
   </script>
 </head>
