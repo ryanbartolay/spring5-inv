@@ -38,10 +38,6 @@
 <script
 	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
 <script>
-	$('.datepicker').datepicker({
-	  
-	});
-	
 	var table = $('#openingStock-datatable');
 	var datatable = customFixedDatatable(table, '/api/datatable/openingstock', 
 		[

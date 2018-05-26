@@ -66,7 +66,7 @@
 						</thead>
 						<tbody>
 						
-							<tr:block th:each="stockOpeningItem : ${stockOpening.items}">
+							<tr th:each="stockOpeningItem : ${stockOpening.items}">
 								<th th:text="${stockOpeningItem.item.id}"></th>
 								<td th:text="${stockOpeningItem.item.code}"></td>
 								<td th:text="${stockOpeningItem.item.name}"></td>
@@ -75,7 +75,7 @@
 								<td th:text="${stockOpeningItem.rateQuantity}"></td>
 								<td th:text="${stockOpeningItem.unitCost}"></td>
 								<th class="text-right" th:text="${stockOpeningItem.unitCostTotal}"></th>
-							</tr:block>
+							</tr>
 
 						</tbody>
 						<tfoot>

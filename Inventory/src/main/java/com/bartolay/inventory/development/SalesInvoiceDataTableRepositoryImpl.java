@@ -43,18 +43,19 @@ public class SalesInvoiceDataTableRepositoryImpl extends RepositoryComponent imp
 
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT * FROM sales_invoice ";
+			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t1.description, t2.name as location_name FROM sales_invoice as t1 "
+					+ "inner join location as t2 on t1.location_id = t2.id";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
 			if(datatableParameter.getSearch() != null) {
-				SQL += " WHERE b.system_number like ?";
+				SQL += " WHERE t1.system_number like ?";
 				SQL_PARAMS.add(datatableParameter.getSearch() + PERCENT);
 			}
 
 			// sort order by column
 			if(sortColumn != null && datatableParameter.getSortOrder() != null) {
-				SQL += " ORDER BY "+sortColumn.getData()+ " " + datatableParameter.getSortOrder().name();	
+				SQL += " ORDER BY t1."+sortColumn.getData()+ " " + datatableParameter.getSortOrder().name();	
 			}
 
 			if(datatableParameter.getLength() > 0) {
@@ -71,22 +72,10 @@ public class SalesInvoiceDataTableRepositoryImpl extends RepositoryComponent imp
 					System.err.println(rs.getString("system_number"));
 					JSONObject obj = new JSONObject();
 					obj.put("system_number", rs.getString("system_number"));
-					obj.put("description", rs.getString("description") == null ? EMPTY : rs.getString("description"));
-					obj.put("created_date", rs.getString("created_date"));
-					obj.put("code", rs.getString("created_date"));
-					obj.put("unit", rs.getString("created_date"));
-					obj.put("quantity", rs.getString("created_date"));
-					obj.put("unit_price", rs.getString("created_date"));
-					obj.put("amount", rs.getString("created_date"));
 					obj.put("document_number", rs.getString("document_number"));
-					obj.put("payment_method", rs.getString("payment_method"));
-					obj.put("sales_person_id", rs.getString("sales_person_id"));
+					obj.put("description", rs.getString("description"));
+					obj.put("location_name", rs.getString("location_name"));
 					obj.put("transaction_date", rs.getString("transaction_date"));
-					obj.put("year", rs.getString("year"));
-					obj.put("created_by_id", rs.getString("created_by_id"));
-					obj.put("credit_card_details_id", rs.getString("credit_card_details_id"));
-					obj.put("location_id", rs.getString("location_id"));
-					obj.put("updated_by_id", rs.getString("updated_by_id"));
 					return obj;
 				}
 			});
