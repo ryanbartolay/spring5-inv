@@ -15,7 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -30,9 +29,6 @@ import com.bartolay.inventory.repositories.GeneratedSystemNumber;
 @Entity
 @Table(name="sales_invoice")
 public class SalesInvoice implements GeneratedSystemNumber {
-
-	@Transient
-	public static final String TABLE_NAME = "sales_invoice";
 
 	@Id
 	@GeneratedValue(generator = "SalesInvoice-UniqueIdGenerator")
@@ -62,7 +58,7 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	@Column(name="status", nullable=false, updatable=true, length=10)
 	private Status status;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "credit_card_details_id", nullable=true, updatable=true)
 	private CreditCardDetails creditCardDetails;
 	
@@ -208,7 +204,7 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	}
 	@Override
 	public String getTableName() {
-		return TABLE_NAME;
+		return "sales_invoice";
 	}
 	
 	@Override

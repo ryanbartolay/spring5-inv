@@ -57,6 +57,7 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 		salesInvoice.setYear(salesInvoiceForm.getYear());
 		salesInvoice.setSalesInvoiceItems(salesInvoiceForm.getSalesInvoiceItems());
 		salesInvoice.setCustomer(salesInvoiceForm.getCustomer());
+		salesInvoice.setCreditCardDetails(salesInvoiceForm.getCreditCardDetails());
 	
 		inventoryService.createSalesInvoice(salesInvoice);
 

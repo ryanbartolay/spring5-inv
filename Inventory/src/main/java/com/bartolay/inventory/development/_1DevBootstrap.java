@@ -277,6 +277,8 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		root.setAccountType(AccountType.ROOT);
 		root.setEmail("bartolay.ryan@gmail.com");
 		root.setAuthority(AccountType.ROOT.toString());
+		root.setAddress("Manila, Philippines");
+		root.setPhone("09178049704");		
 		userRepository.save(root);
 		
 		User user = new User();
@@ -298,6 +300,8 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		user.setLastName("Bartolay");
 		user.setAccountType(AccountType.CUSTOMER);
 		user.setEmail("bartolay.ryann@gmail.com");
+		user.setAddress("84 Molave st. Dona Manuela Phase 4-G, Pamplona Tres, Las Pinas City");
+		user.setPhone("09178049704");
 		user.setAuthority(AccountType.CUSTOMER.toString());
 		userRepository.save(user);
 	}

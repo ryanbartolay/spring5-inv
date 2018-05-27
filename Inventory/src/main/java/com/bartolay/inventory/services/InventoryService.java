@@ -14,13 +14,16 @@ import org.springframework.stereotype.Service;
 import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.entity.InventoryTransaction;
 import com.bartolay.inventory.entity.ItemUnit;
+import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.enums.Status;
 import com.bartolay.inventory.enums.TransactionType;
 import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.InventoryTransactionRepository;
 import com.bartolay.inventory.repositories.ItemUnitRepository;
+import com.bartolay.inventory.sales.entity.CreditCardDetails;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
+import com.bartolay.inventory.sales.repositories.CreditCardDetailsRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.stock.entity.StockOpening;
@@ -35,6 +38,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class InventoryService {
 
+	@Autowired
+	private CreditCardDetailsRepository creditCardDetailsRepository;
+	
 	@Autowired 
 	private UserCredentials userCredentials;
 
@@ -65,8 +71,6 @@ public class InventoryService {
 	@Autowired
 	private StockTransferItemRepository stockTransferItemRepository;
 
-	@Autowired
-	private ObjectMapper objectMapper;
 
 	/**
 	 * Creates the Stock Opening
@@ -176,6 +180,13 @@ public class InventoryService {
 		salesInvoice.setCreatedBy(userCredentials.getLoggedInUser());
 		salesInvoice.setStatus(Status.SUCCESS);
 		salesInvoice.setTotal(new BigDecimal("0"));
+		
+		if(salesInvoice.getPaymentMethod().equals(PaymentMethod.CREDITCARD)) {
+			salesInvoice.getCreditCardDetails().setCreatedBy(userCredentials.getLoggedInUser());
+			CreditCardDetails ccDetails = creditCardDetailsRepository.save(salesInvoice.getCreditCardDetails());
+			salesInvoice.setCreditCardDetails(ccDetails);
+		}
+		
 		salesInvoiceRepository.save(salesInvoice);
 
 		// we get the inventories by location
@@ -249,9 +260,7 @@ public class InventoryService {
 			inventoriesForSave.add(inventory);
 			inventoryTransactions.add(inventoryTransaction);
 		});
-
 		
-		System.err.println(salesInvoice);
 		salesInvoiceRepository.save(salesInvoice);
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
 		inventoryRepository.saveAll(inventoriesForSave);
