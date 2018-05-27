@@ -22,7 +22,7 @@ import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.sales.services.SalesInvoiceService;
-import com.bartolay.inventory.services.InventoryService;
+import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.utils.CalendarUtils;
 import com.bartolay.inventory.utils.UserCredentials;
 
@@ -36,7 +36,7 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 	@Autowired
 	private SalesInvoiceRepository salesInvoiceRepository;
 	@Autowired
-	private InventoryService inventoryService;
+	private InventoryCoreService inventoryService;
 	@Autowired
 	@Qualifier("salesInvoiceDataTableRepository")
 	private DatatableRepository salesInvoiceDataTableRepository;

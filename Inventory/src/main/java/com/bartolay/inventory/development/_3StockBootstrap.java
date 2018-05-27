@@ -20,7 +20,7 @@ import com.bartolay.inventory.repositories.ItemUnitRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.UnitRepository;
 import com.bartolay.inventory.repositories.UserRepository;
-import com.bartolay.inventory.services.InventoryService;
+import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.entity.StockOpeningItem;
 import com.bartolay.inventory.stock.repositories.StockOpeningItemRepository;
@@ -44,7 +44,7 @@ public class _3StockBootstrap implements ApplicationListener<ContextRefreshedEve
 	private UserRepository userRepository;
 
 	@Autowired
-	private InventoryService inventoryService;
+	private InventoryCoreService inventoryService;
 
 	@Autowired
 	private ItemRepository itemRepository;

@@ -36,7 +36,7 @@ import com.bartolay.inventory.utils.UserCredentials;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class InventoryService {
+public class InventoryCoreService {
 
 	@Autowired
 	private CreditCardDetailsRepository creditCardDetailsRepository;

@@ -19,6 +19,7 @@ import com.bartolay.inventory.model.RestApiException;
 import com.bartolay.inventory.stock.entity.StockTransfer;
 import com.bartolay.inventory.stock.services.StockTransferService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @RestController
 @RequestMapping(value="/api")
@@ -46,7 +47,6 @@ public class StockTransferRestController extends AbstractRestController {
 		} catch(Exception e) {
 			e.printStackTrace();
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-//			throw new RestApiException(e);
 		}
 
 		return stringUtils.encode(response);

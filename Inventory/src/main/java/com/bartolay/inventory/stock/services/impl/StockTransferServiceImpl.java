@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.form.StockTransferForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
-import com.bartolay.inventory.services.InventoryService;
+import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockTransfer;
 import com.bartolay.inventory.stock.entity.StockTransferItem;
 import com.bartolay.inventory.stock.services.StockTransferService;
@@ -25,7 +25,7 @@ public class StockTransferServiceImpl implements StockTransferService {
 	private DatatableRepository stockTransferDatatableRepository;
 	
 	@Autowired
-	private InventoryService inventoryService;
+	private InventoryCoreService inventoryService;
 	
 	@Override
 	public Object retrieveDatatableList(Map<String, String> requestMap) {

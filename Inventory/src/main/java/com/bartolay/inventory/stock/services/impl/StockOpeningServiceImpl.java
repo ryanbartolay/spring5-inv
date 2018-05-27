@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.form.StockOpeningForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
-import com.bartolay.inventory.services.InventoryService;
+import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.services.StockOpeningService;
 import com.bartolay.inventory.utils.UserCredentials;
@@ -33,7 +33,7 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 	@Autowired
 	private UserCredentials userCredentials;
 	@Autowired
-	private InventoryService inventoryService;
+	private InventoryCoreService inventoryService;
 	
 	@Override
 	public List<StockOpening> findAll() {

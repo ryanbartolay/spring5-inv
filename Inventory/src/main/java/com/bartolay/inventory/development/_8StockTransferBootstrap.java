@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.UnitRepository;
-import com.bartolay.inventory.services.InventoryService;
+import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockTransfer;
 import com.bartolay.inventory.stock.entity.StockTransferItem;
 
@@ -25,7 +25,7 @@ import com.bartolay.inventory.stock.entity.StockTransferItem;
 public class _8StockTransferBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
 
 	@Autowired
-	private InventoryService inventoryService;
+	private InventoryCoreService inventoryService;
 	
 	@Autowired
 	private ItemRepository itemRepository;

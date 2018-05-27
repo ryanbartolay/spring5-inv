@@ -25,7 +25,7 @@ import com.bartolay.inventory.sales.entity.CreditCardDetails;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
 import com.bartolay.inventory.sales.repositories.CreditCardDetailsRepository;
-import com.bartolay.inventory.services.InventoryService;
+import com.bartolay.inventory.services.InventoryCoreService;
 
 @Component
 @Transactional
@@ -35,7 +35,7 @@ public class _6SalesInvoiceBootstrap implements ApplicationListener<ContextRefre
 	private CreditCardDetailsRepository creditCardDetailsRepository;
 	
 	@Autowired
-	private InventoryService inventoryService;
+	private InventoryCoreService inventoryService;
 	
 	@Autowired
 	private ItemRepository itemRepository;

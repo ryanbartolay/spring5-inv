@@ -9,14 +9,14 @@ import org.springframework.core.PriorityOrdered;
 import org.springframework.stereotype.Component;
 
 import com.bartolay.inventory.sales.entity.SalesInvoice;
-import com.bartolay.inventory.services.InventoryService;
+import com.bartolay.inventory.services.InventoryCoreService;
 
 @Component
 @Transactional
 public class _7SalesCancelInvoiceBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
 
 	@Autowired
-	private InventoryService inventoryService;
+	private InventoryCoreService inventoryService;
 	
 	@Override
 	public int getOrder() {
