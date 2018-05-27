@@ -144,7 +144,11 @@ var submitStockTransferBtn = $("#submitStockTransferBtn");
   });
   
   $("#btnAddItem").on("click", function() {
-  	addItem({type: "stock_transfer", label: $("#fromLocation").children("option").filter(":selected").text() + " Items"}, function(data) {
+  	addItem({
+  		type: "stock_transfer", 
+  		location: $("#fromLocation").children("option").filter(":selected").val(),
+  		label: $("#fromLocation").children("option").filter(":selected").text() + " Items"
+  		}, function(data) {
   		
   		var item = data['item'];
   		var unit = data['unit'];

@@ -1,5 +1,7 @@
 package com.bartolay.inventory.services.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -13,10 +15,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
+import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.ItemUnit;
+import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.form.ItemForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
+import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.services.ItemService;
 import com.bartolay.inventory.utils.UserCredentials;
@@ -28,6 +33,9 @@ public class ItemServiceImpl implements ItemService {
 	
 	@Autowired
 	private ItemRepository itemRepository;
+	
+	@Autowired
+	private InventoryRepository inventoryRepository; 
 
 	@Autowired
 	@Qualifier("itemDatatableRepository")
@@ -121,6 +129,18 @@ public class ItemServiceImpl implements ItemService {
 		
 		itemRepository.deleteById(id);
 		return item.get();
+	}
+
+	@Override
+	public List<Item> retrieveByLocation(Location location) {
+		List<Item> items = new ArrayList<>();
+		
+		List<Inventory> inventories = inventoryRepository.findByLocation(location);
+		if(inventories.size() > 0 ) {
+			inventories.forEach(inventory -> items.add(inventory.getItem()));
+		}
+		
+		return items;
 	}
 
 }

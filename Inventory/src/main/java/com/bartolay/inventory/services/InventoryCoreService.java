@@ -33,7 +33,6 @@ import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferItemRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferRepository;
 import com.bartolay.inventory.utils.UserCredentials;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class InventoryCoreService {

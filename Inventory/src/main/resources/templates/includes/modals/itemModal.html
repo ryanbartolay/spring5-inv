@@ -88,12 +88,20 @@
 	
 	var itemModal_callback = null;
 	
+	var itemModal_type;
+	var itemModal_url = "/api/items"; 
+	
 	function addItem(parameters, callback) {
 		var label = parameters.label;
-		var type = parameters.type;
+		itemModal_type = parameters.type;
 		itemModal_callback = callback;
 		
-		appendInputByType(type);
+		// lets change the request url if stock_transfer
+		if(itemModal_type == "stock_transfer") {
+			itemModal_url = "/api/items/location/" + parameters.location;	
+		}
+		
+		appendInputByType(itemModal_type);
 		
 		itemModal_label.text(label);
 		addItemBtn.text("Add Item");
@@ -104,7 +112,7 @@
 	function updateItem(parameters, callback) {
 		var label = parameters.label;
 		var values = parameters.values;
-		var type = parameters.type;
+		itemModal_type = parameters.type;
 		itemModal_callback = callback;
 		
 		appendInputByType(type);
@@ -143,7 +151,7 @@
 
 	function appendInputByType(type) {
 		if(!itemModal_isLoadedExtraElements) {
-			if(type == "stock_opening" || type == "sales_invoice") {
+			if(itemModal_type == "stock_opening" || itemModal_type == "sales_invoice") {
 				table.find("tbody").append(
 					`<tr>
 						<td>
@@ -159,16 +167,16 @@
 	}
 	
 	itemModal_modal.on('shown.bs.modal', function() {
+		itemModal_item.html(""); // clear contents
+		itemModal_item.append('<option value="">------</option>');
 		
-		if(!itemModal_isLoadedModelItems) {
-			GET("/api/items", function(data) {				
-				$.each(data, function(i, obj) {
-					items[obj.id] = obj;
-					$('#itemModal_item option:last').after('<option value="'+ obj.id +'">'+ obj.name +'</option>');
-				});
-				itemModal_isLoadedModelItems = true;
+		GET(itemModal_url, function(data) {
+			$.each(data, function(i, obj) {
+				items[obj.id] = obj;
+				itemModal_item.append('<option value="'+ obj.id +'">'+ obj.name +'</option>');
 			});
-		}
+		});
+		
 	});
 	
 	itemModal_item.change(function() {

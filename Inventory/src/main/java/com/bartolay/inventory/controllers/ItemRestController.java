@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bartolay.inventory.entity.Item;
+import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.form.ItemForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
@@ -40,6 +41,11 @@ public class ItemRestController {
 		return itemService.retrieveDatatableList(requestMap).toString();
 	}
 
+	@RequestMapping(value="/api/items/location/{location_id}")
+	public String retrieveByLocation(@PathVariable Integer location_id) throws JsonProcessingException, UnsupportedEncodingException {
+		return stringUtils.encode(itemService.retrieveByLocation(new Location(location_id)));
+	}
+	
 	@RequestMapping(value="/api/items", method=RequestMethod.GET, produces="application/json")
 	public String getAll() {
 		try {
