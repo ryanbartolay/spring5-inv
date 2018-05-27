@@ -14,12 +14,14 @@
 			</li>
 			<li><a th:href="@{/dashboard}"><i class="fa fa-dashboard fa-fw"></i>
 					Dashboard</a></li>
-					
-			<li><a th:href="@{/companies}"><i class="fa fa-briefcase fa-fw"></i>
+					   
+			<!-- <li><a th:href="@{/companies}"><i class="fa fa-briefcase fa-fw"></i>
 					Companies</a></li>
+			 -->
+			<li><a th:href="@{/locations}"><i class="fa fa-location-arrow fa-fw"></i> Locations</a></li>
 			<li><a href="#"><i class="fa fa-tags fa-fw"></i> Sales<span class="fa arrow"></span></a>
 				<ul class="nav nav-second-level">
-					<li><a th:href="@{/sales/invoice}">Invoice</a></li>
+					<li><a th:href="@{/sales/invoice}"><i class="fa fa-exchange fa-fw"></i> Invoice</a></li>
 					<li><a th:href="@{/sales/recieve}">Recieve</a></li>
 					<li><a th:href="@{/sales/return}">Return</a></li>
 				</ul>
@@ -27,8 +29,8 @@
 			<li><a href="#"><i class="fa fa-th fa-fw"></i> Stock<span class="fa arrow"></span></a>
 				<ul class="nav nav-second-level">
 					<li><a th:href="@{/stock/adjustment}">Adjustment</a></li>
-					<li><a th:href="@{/stock/opening}">Opening Stock</a></li>
-					<li><a th:href="@{/stock/transfer}">Transfer</a></li>
+					<li><a th:href="@{/stock/opening}"><i class="fa fa-expand fa-fw"></i> Opening Stock</a></li>
+					<li><a th:href="@{/stock/transfer}"><i class="fa fa-random fa-fw"></i> Transfer</a></li>
 				</ul>
 			</li>
 			<li><a href="#"><i class="fa fa-list fa-fw"></i> Stock Attributes<span class="fa arrow"></span></a>
@@ -38,7 +40,6 @@
 					<li><a th:href="@{/colors}">Colors</a></li>
 					<li><a th:href="@{/countries}">Countries</a></li>
 					<li><a th:href="@{/items}">Items</a></li>
-					<li><a th:href="@{/locations}">Locations</a></li>
 					<li><a th:href="@{/models}">Models</a></li>
 					<li><a th:href="@{/sizes}">Sizes</a></li>
 					<li><a th:href="@{/unit}">Units</a></li>

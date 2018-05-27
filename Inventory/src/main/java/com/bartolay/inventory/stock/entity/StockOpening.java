@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -53,6 +54,8 @@ public class StockOpening implements GeneratedSystemNumber {
 	@Column(name="year", nullable=false, length=4, updatable=false)
 	private String year;
 	
+	@Lob
+	@Column
 	private String description;
 
 	@OneToMany(mappedBy = "stockOpening", fetch=FetchType.LAZY)

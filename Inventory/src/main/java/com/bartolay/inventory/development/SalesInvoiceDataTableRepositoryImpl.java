@@ -69,7 +69,7 @@ public class SalesInvoiceDataTableRepositoryImpl extends RepositoryComponent imp
 
 				@Override
 				public JSONObject mapRow(ResultSet rs, int arg1) throws SQLException {
-					System.err.println(rs.getString("system_number"));
+					
 					JSONObject obj = new JSONObject();
 					obj.put("system_number", rs.getString("system_number"));
 					obj.put("document_number", rs.getString("document_number"));

@@ -1,16 +1,16 @@
 <div class="row">
 	<div class="col-lg-12">
 
-		<form th:object="${stockOpeningForm}" id="stockOpeningForm"
-			th:action="@{/api/stock/opening}" method="POST">
+		<form th:object="${stockTransferForm}" id="stockTransferForm"
+			th:action="@{/api/stock/transfer}" method="POST">
 
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="row ">
 						<div class="col-md-4 col-md-offset-8 btn-group" role="group">
-							<button type="submit" id="submitStockOpeningBtn"
-								class="btn btn-success btn-sm">Save Opening Stock</button>
-							<a th:href="@{/stock/opening}" class="btn btn-default btn-sm">Cancel</a>
+							<button type="submit" id="submitStockTransferBtn"
+								class="btn btn-success btn-sm">Save Stock Transfer</button>
+							<a th:href="@{/stock/transfer}" class="btn btn-default btn-sm">Cancel</a>
 						</div>
 					</div>
 				</div>
@@ -23,43 +23,53 @@
 						<table class="table table-bordered table-striped">
 							<tbody>
 								<tr>
-									<td class="col-md-3">
-
-										<div class="input-group">
-											<span class="input-group-addon">Trans. Date</span> <input
-												type="text" th:field="*{transaction_date}"
-												class="form-control">
-										</div>
-
-									</td>
-									<td class="col-md-2">
-										<div class="input-group">
-											<span class="input-group-addon">Year</span> <input
-												type="text" class="form-control yearselect"
-												th:field="*{year}">
-										</div>
-									</td>
-									<td class="col-md-7">
-										<div class="input-group">
-											<span class="input-group-addon">Location</span> <select
-												class="form-control" th:field="*{location}">
+									<td colspan="3">
+										<div class="input-group col-md-12" >
+											<span class="input-group-addon">Location From</span> <select
+												class="form-control col-md-5" th:field="*{fromLocation}">
+												<option th:each="location : ${locations}"
+													th:value="${location.id}" th:text="${location.name}"></option>
+											</select>											
+											<span class="input-group-addon"><span class="fa fa-random "></span> To</span> 
+											<select	class="form-control col-md-5" th:field="*{toLocation}">
 												<option th:each="location : ${locations}"
 													th:value="${location.id}" th:text="${location.name}"></option>
 											</select>
 										</div>
 									</td>
+								
 								</tr>
-
 								<tr>
-									<td>
+								
+									<td class="col-md-5">
 										<div class="input-group">
 											<span class="input-group-addon">Document #</span> <input
 												type="text" th:field="*{document_number}"
 												class="form-control">
 										</div>
 									</td>
-									<td colspan="2">
+									<td class="col-md-4">
 
+										<div class="input-group">
+											<span class="input-group-addon">Trans. Date</span> <input
+												type="text" th:field="*{transactionDate}"
+												class="form-control">
+										</div>
+
+									</td>
+									<td class="col-md-3">
+										<div class="input-group">
+											<span class="input-group-addon">Year</span> <input
+												type="text" class="form-control yearselect"
+												th:field="*{year}">
+										</div>
+									</td>
+									
+								</tr>
+
+								<tr>
+									
+									<td colspan="3">
 
 										<div class="input-group col-md-12">
 											<span class="input-group-addon">Description</span> <input
@@ -79,22 +89,12 @@
 									<th>Unit</th>
 									<th>U.Desc</th>
 									<th>Quantity</th>
-									<th>Unit Cost</th>
-									<th class="col-md-2">Total</th>
 									<th></th>
 								</tr>
 							</thead>
 							<tbody>
 
 							</tbody>
-							<tfoot>
-								<tr>
-									<th colspan="6"></th>
-									<th><h3>Total</h3></th>
-									<th><h3 class="text-right" id="grandTotal"></h3></th>
-									<th></th>
-								</tr>
-							</tfoot>
 						</table>
 
 						<div class="row">
@@ -119,16 +119,16 @@
 
 <script>
 /*<![CDATA[*/
-var form = $("#stockOpeningForm");
+var form = $("#stockTransferForm");
 var current_year = (new Date()).getFullYear();
 var grand_total = 0;
 
 var item_count = 0;
-var submitStockOpeningBtn = $("#submitStockOpeningBtn");
+var submitStockTransferBtn = $("#submitStockTransferBtn");
 
   $( function() {
 	  
-    $( "#transaction_date" ).datepicker();
+    $( "#transactionDate" ).datepicker();
     
     $('.yearselect').yearselect({
     	order: 'desc',	
@@ -144,15 +144,10 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
   });
   
   $("#btnAddItem").on("click", function() {
-  	addItem({type: "stock_opening", label:"Add Stock Opening Item"}, function(data) {
-  		
-  		console.log(data);
+  	addItem({type: "stock_transfer", label: $("#fromLocation").children("option").filter(":selected").text() + " Items"}, function(data) {
   		
   		var item = data['item'];
   		var unit = data['unit'];
-  		
-  		var total = data.quantity * data.unit_cost;
-  		grand_total = grand_total + total;
   		
   		var html = `
   		<tr>
@@ -162,13 +157,10 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
 				<td id="lblAbbreviation">`+ unit.abbreviation +`</td>
 				<td id="lblUnitName">`+ unit.name +`</td>
 				<td class="text-right" id="lblQuantity">`+ data.quantity +`</td>
-				<td class="text-right" id="lblUnitCost">`+ data.unit_cost +`</td>
-				<td class="text-right" id="lblTotal">`+ total +`</td>
 				<td class="text-right">
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].item" id="txtItem" value="` + item.id + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unit" id="txtUnit" value="` + unit.id + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].quantity" id="txtQuantity" value="` + data.quantity + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unitCost" id="txtUnitCost" value="` + data.unit_cost + `" />
+					<input type="hidden" name="stockTransferItems[`+ item_count +`].item" id="txtItem" value="` + item.id + `" />
+					<input type="hidden" name="stockTransferItems[`+ item_count +`].unit" id="txtUnit" value="` + unit.id + `" />
+					<input type="hidden" name="stockTransferItems[`+ item_count +`].quantity" id="txtQuantity" value="` + data.quantity + `" />
 					<div class="btn-group" role="group">
 		        		<button class="btn btn-info fa fa-edit" id="btnView" onClick="edit(this)"/>
 		        		<button class="btn btn-danger fa fa-times" onClick="remove(this)" />
@@ -176,26 +168,25 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
 				</td>
 			</tr>`;
 			item_count++;
-  		$('#itemsTable tbody').append(html);
-  		$("#grandTotal").html(grand_total);
+			
+		$('#itemsTable tbody').append(html);
   	});
   });
   
-submitStockOpeningBtn.click(function() {
+submitStockTransferBtn.click(function() {
   
- 	var original_text = submitStockOpeningBtn.text();
- 	submitStockOpeningBtn.attr("disabled", "disabled");
- 	submitStockOpeningBtn.text("Processing....");
+ 	var original_text = submitStockTransferBtn.text();
+ 	submitStockTransferBtn.attr("disabled", "disabled");
+ 	submitStockTransferBtn.text("Processing....");
  	
- 	POST("/api/stock/opening", form.serialize(), function(data) {
- 		console.log(data);
+ 	POST("/api/stock/transfer", form.serialize(), function(data) {
  		
  		if(data.status != "OK") {
  			displayErrors(data, $("#errors"));
- 			submitStockOpeningBtn.removeAttr("disabled");
- 			submitStockOpeningBtn.text(original_text);
+ 			submitStockTransferBtn.removeAttr("disabled");
+ 			submitStockTransferBtn.text(original_text);
  		} else {
- 			window.location.replace('/stock/opening')
+ 			window.location.replace('/stock/transfer')
  		}
  	});
 });
@@ -216,6 +207,8 @@ function edit(e) {
 	
 	updateItem({type: "stock_opening", label:"Edit Stock Opening Item", values: values}, function(data) { 
 		
+		console.log(data);
+		
 		var item = data['item'];
 		var unit = data['unit'];
 		
@@ -233,26 +226,13 @@ function edit(e) {
 		selected_row.find("#lblQuantity").html(data.quantity);
 		selected_row.find("#lblUnitCost").html(data.unit_cost);
 		selected_row.find("#lblTotal").html(data.quantity * data.unit_cost);
-		
-		computeGrandTotal(data.quantity, data.unit_cost); 
 	});
 }
 
 function remove(e) {
-	var selected_row = $(e).parentsUntil("tbody");
-	var total = selected_row.find("#txtQuantity").val() * selected_row.find("#txtUnitCost").val();
-	
-	grand_total = grand_total - total;
-	
-	$("#grandTotal").html(grand_total);
 	$(e).parentsUntil("tbody").remove();
 }
 
-function computeGrandTotal(quantity, unit_cost) {
-	var total = quantity * unit_cost;
-	grand_total = grand_total + total;
-	$("#grandTotal").html(grand_total);
-}
 	/*]]>*/
   </script>
 </head>

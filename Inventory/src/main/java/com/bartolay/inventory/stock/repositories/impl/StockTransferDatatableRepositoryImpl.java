@@ -41,7 +41,7 @@ public class StockTransferDatatableRepositoryImpl extends RepositoryComponent im
 	public JSONArray findAllData(DatatableParameter datatableParameter) {
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t2.name as from_location_name, t3.name as to_location_name FROM stock_transfer t1 "
+			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t1.description, t2.name as from_location_name, t3.name as to_location_name FROM stock_transfer t1 "
 					+ "inner join location t2 on t1.from_location_id = t2.id "
 					+ "inner join location t3 on t1.to_location_id = t3.id ";
 			List<Object> SQL_PARAMS = new ArrayList<>();
@@ -72,14 +72,8 @@ public class StockTransferDatatableRepositoryImpl extends RepositoryComponent im
 					obj.put("document_number", rs.getString("document_number"));
 					obj.put("description", rs.getString("document_number"));
 					obj.put("transaction_date", rs.getString("transaction_date"));
-					obj.put("from_location.name", rs.getString("from_location_name"));
+					obj.put("from_location_name", rs.getString("from_location_name"));
 					obj.put("to_location_name", rs.getString("to_location_name"));
-					obj.put("code", rs.getString("to_location_name"));
-					obj.put("unit", rs.getString("to_location_name"));
-					obj.put("amount", rs.getString("to_location_name"));
-					obj.put("quantity", rs.getString("to_location_name"));
-					
-//					dummy data
 					
 					return obj;
 				}

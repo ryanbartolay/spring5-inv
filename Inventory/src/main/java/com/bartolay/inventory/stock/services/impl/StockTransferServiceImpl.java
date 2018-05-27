@@ -1,5 +1,6 @@
 package com.bartolay.inventory.stock.services.impl;
 
+import java.text.ParseException;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -9,7 +10,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
+import com.bartolay.inventory.form.StockTransferForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
+import com.bartolay.inventory.services.InventoryService;
+import com.bartolay.inventory.stock.entity.StockTransfer;
+import com.bartolay.inventory.stock.entity.StockTransferItem;
 import com.bartolay.inventory.stock.services.StockTransferService;
 
 @Service
@@ -18,6 +23,9 @@ public class StockTransferServiceImpl implements StockTransferService {
 	@Autowired
 	@Qualifier("stockTransferDatatableRepository")
 	private DatatableRepository stockTransferDatatableRepository;
+	
+	@Autowired
+	private InventoryService inventoryService;
 	
 	@Override
 	public Object retrieveDatatableList(Map<String, String> requestMap) {
@@ -32,6 +40,21 @@ public class StockTransferServiceImpl implements StockTransferService {
 		object.put("draw", parameter.getDraw());
 		
 		return object;
+	}
+
+	@Override
+	public StockTransfer create(StockTransferForm stockTransferForm) throws ParseException {
+		StockTransfer stockTransfer = new StockTransfer();
+		stockTransfer.setFromLocation(stockTransferForm.getFromLocation());
+		stockTransfer.setToLocation(stockTransferForm.getToLocation());
+		stockTransfer.setTransactionDate(stockTransferForm.getTransactionDate());
+		stockTransfer.setDocumentNumber(stockTransferForm.getDocument_number());
+		stockTransfer.setDescription(stockTransferForm.getDescription());
+		stockTransfer.setYear(stockTransferForm.getYear());
+		stockTransfer.setStockTransferItems(stockTransferForm.getStockTransferItems());
+		
+		inventoryService.createStockTransfer(stockTransfer);
+		return stockTransfer;
 	}
 
 }

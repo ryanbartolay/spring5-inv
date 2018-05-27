@@ -287,8 +287,8 @@ function edit(e) {
 		selected_row.find("#lblItemId").html(item.id);
 		selected_row.find("#lblItemCode").html(item.code);
 		selected_row.find("#lblItemName").html(item.name);
-		selected_row.find("#lblUnitName").html(item.name);
-		selected_row.find("#lblAbbreviation").html(item.name);
+		selected_row.find("#lblUnitName").html(unit.name);
+		selected_row.find("#lblAbbreviation").html(unit.abbreviation);
 		
 		selected_row.find("#txtItem").val(item.id);
 		selected_row.find("#txtUnit").val(unit.id);

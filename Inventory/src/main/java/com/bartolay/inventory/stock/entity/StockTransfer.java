@@ -1,7 +1,7 @@
 package com.bartolay.inventory.stock.entity;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -43,6 +44,9 @@ public class StockTransfer implements GeneratedStockTransferSystemNumber {
 	@Column(name="year", nullable=false, length=4, updatable=false)
 	private String year;
 	
+	@Lob
+	private String description;
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="from_location_id")
 	private Location fromLocation;
@@ -68,7 +72,7 @@ public class StockTransfer implements GeneratedStockTransferSystemNumber {
 	private User updatedBy;
 	
 	@OneToMany(mappedBy = "stockTransfer", fetch=FetchType.LAZY)
-	private Set<StockTransferItem> stockTransferItems;
+	private List<StockTransferItem> stockTransferItems;
 	
 	public StockTransfer() {
 		super();
@@ -151,12 +155,20 @@ public class StockTransfer implements GeneratedStockTransferSystemNumber {
 		this.updatedBy = updatedBy;
 	}
 	
-	public Set<StockTransferItem> getStockTransferItems() {
+	public List<StockTransferItem> getStockTransferItems() {
 		return stockTransferItems;
 	}
 
-	public void setStockTransferItems(Set<StockTransferItem> stockTransferItems) {
+	public void setStockTransferItems(List<StockTransferItem> stockTransferItems) {
 		this.stockTransferItems = stockTransferItems;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package com.bartolay.inventory.development;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -44,7 +44,7 @@ public class _8StockTransferBootstrap implements ApplicationListener<ContextRefr
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
 		
-		Set<StockTransferItem> items = new HashSet<>();
+		List<StockTransferItem> items = new ArrayList<>();
 		
 		StockTransferItem stockTransferItem1 = new StockTransferItem();
 		stockTransferItem1.setItem(itemRepository.findById(1).get());

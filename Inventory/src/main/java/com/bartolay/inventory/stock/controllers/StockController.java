@@ -52,7 +52,6 @@ public class StockController {
 		mav.addObject("method", "POST");
 		
 		mav.addObject("stockOpeningForm", new StockOpeningForm());
-		mav.addObject("stockOpeningItemForm", new StockOpeningItemForm());
 		mav.addObject("locations", locationRepository.findAll());
 		
 		return mav;
@@ -69,25 +68,25 @@ public class StockController {
 		return mav;
 	}
 	
-	@RequestMapping(value="/stock/opening/update", method=RequestMethod.GET)
-	public ModelAndView stockOpeningUpdate(ModelAndView mav) throws JsonProcessingException {
-		mav.setViewName("stock/index");
-		mav.addObject("page", "New Stock Opening");
-		mav.addObject("html", "/opening/edit");
-		mav.addObject("method", "POST");
-		
-		mav.addObject("stockOpeningForm", new StockOpeningForm());
-		mav.addObject("locations", locationRepository.findAll());
-		return mav;
-	}
-	
 	@RequestMapping(value="/stock/transfer")
 	public ModelAndView stockTransfer(ModelAndView model) {
 		model.setViewName("stock/index");
 		model.addObject("page", "Stock Transfer");
-		model.addObject("html", "../stock/transfer/list");
+		model.addObject("html", "/transfer/list");
 		model.addObject("stockTransferForm", new StockTransferForm());
 		return model;
+	}
+	
+	@RequestMapping(value="/stock/transfer/create", method=RequestMethod.GET)
+	public ModelAndView stockTransferCreate(ModelAndView mav) throws JsonProcessingException {
+		mav.setViewName("stock/index");
+		mav.addObject("page", "New Stock Transfer");
+		mav.addObject("html", "/transfer/edit");
+		mav.addObject("method", "POST");
+		mav.addObject("stockTransferForm", new StockTransferForm());
+		mav.addObject("locations", locationRepository.findAll());
+		
+		return mav;
 	}
 	
 	@RequestMapping(value="/stock/transfer/view/{system_number}", method=RequestMethod.GET)
