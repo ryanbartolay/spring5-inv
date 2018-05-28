@@ -3,28 +3,26 @@
 	xmlns:sec="http://www.thymeleaf.org">
 
 <head th:include="includes/header">
-	
+<!-- jQuery -->
 </head>
-<body>
+<body class="nav-md">
+	<div class="container body">
+		<div class="main_container">
 
+			<!-- Navigation -->
+			<div th:include="includes/navigation"></div>
 
-	<div id="wrapper">
+			<!-- page content -->
+			<div class="right_col" role="main">
 
-		<!-- Navigation -->
-		<div th:include="includes/navigation"></div>
+				<div th:include="@{'/stock/' + ${html}}" class="row"></div>
 
-		<div id="page-wrapper">
-			<div class="row">
-				<div class="col-lg-12">
-					<h3 th:text="${page}"></h3>
-				</div>
-				<!-- /.col-lg-12 -->
 			</div>
-
-			<div th:include="@{'/stock/' + ${html}}"></div>
+			<!-- /page content -->
 
 		</div>
 	</div>
-	<script th:src="@{/static/js/stock_attribute.js}"></script>
+
+	<div th:include="includes/footer"></div>
 </body>
 </html>

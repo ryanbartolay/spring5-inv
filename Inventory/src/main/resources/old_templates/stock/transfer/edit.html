@@ -1,0 +1,243 @@
+<div class="row">
+	<div class="col-lg-12">
+
+		<form th:object="${stockTransferForm}" id="stockTransferForm"
+			th:action="@{/api/stock/transfer}" method="POST">
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="row ">
+						<div class="col-md-4 col-md-offset-8 btn-group" role="group">
+							<button type="submit" id="submitStockTransferBtn"
+								class="btn btn-success btn-sm">Save Stock Transfer</button>
+							<a th:href="@{/stock/transfer}" class="btn btn-default btn-sm">Cancel</a>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body">
+
+					<div class="form-group" id="errors"></div>
+
+					<div class="table-responsive">
+
+						<table class="table table-bordered table-striped">
+							<tbody>
+								<tr>
+									<td colspan="3">
+										<div class="input-group col-md-12" >
+											<span class="input-group-addon">Location From</span> <select
+												class="form-control col-md-5" th:field="*{fromLocation}">
+												<option th:each="location : ${locations}"
+													th:value="${location.id}" th:text="${location.name}"></option>
+											</select>											
+											<span class="input-group-addon"><span class="fa fa-random "></span> To</span> 
+											<select	class="form-control col-md-5" th:field="*{toLocation}">
+												<option th:each="location : ${locations}"
+													th:value="${location.id}" th:text="${location.name}"></option>
+											</select>
+										</div>
+									</td>
+								
+								</tr>
+								<tr>
+								
+									<td class="col-md-5">
+										<div class="input-group">
+											<span class="input-group-addon">Document #</span> <input
+												type="text" th:field="*{document_number}"
+												class="form-control">
+										</div>
+									</td>
+									<td class="col-md-4">
+
+										<div class="input-group">
+											<span class="input-group-addon">Trans. Date</span> <input
+												type="text" th:field="*{transactionDate}"
+												class="form-control">
+										</div>
+
+									</td>
+									<td class="col-md-3">
+										<div class="input-group">
+											<span class="input-group-addon">Year</span> <input
+												type="text" class="form-control yearselect"
+												th:field="*{year}">
+										</div>
+									</td>
+									
+								</tr>
+
+								<tr>
+									
+									<td colspan="3">
+
+										<div class="input-group col-md-12">
+											<span class="input-group-addon">Description</span> <input
+												type="text" th:field="*{description}" class="form-control">
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<table class="table table-bordered table-striped" id="itemsTable">
+							<thead>
+								<tr>
+									<th>SN</th>
+									<th>Code</th>
+									<th class="col-md-3">Description</th>
+									<th>Unit</th>
+									<th>U.Desc</th>
+									<th>Quantity</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+
+							</tbody>
+						</table>
+
+						<div class="row">
+							<div class="col-md-4">
+								<button class="btn btn-success btn-xs" id="btnAddItem">Add
+									Item</button>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+		</form>
+	</div>
+	<!-- /.col-lg-12 -->
+</div>
+
+<!-- Item Modal -->
+<div th:include="includes/modals/itemModal"></div>
+
+<script>
+/*<![CDATA[*/
+var form = $("#stockTransferForm");
+var current_year = (new Date()).getFullYear();
+var grand_total = 0;
+
+var item_count = 0;
+var submitStockTransferBtn = $("#submitStockTransferBtn");
+
+  $( function() {
+	  
+    $( "#transactionDate" ).datepicker();
+    
+    $('.yearselect').yearselect({
+    	order: 'desc',	
+ 		start: current_year - 5,
+ 		end: current_year + 5
+    });
+    
+    $('[name=year]').val( current_year );
+
+   
+    $("#grandTotal").html(grand_total);
+    
+  });
+  
+  $("#btnAddItem").on("click", function() {
+  	addItem({
+  		type: "stock_transfer", 
+  		location: $("#fromLocation").children("option").filter(":selected").val(),
+  		label: $("#fromLocation").children("option").filter(":selected").text() + " Items"
+  		}, function(data) {
+  		
+  		var item = data['item'];
+  		var unit = data['unit'];
+  		
+  		var html = `
+  		<tr>
+				<th id="lblItemId">`+ item.id +`</th>
+				<td id="lblItemCode">`+ item.code +`</td>
+				<td id="lblItemName">`+ item.name +`</td>
+				<td id="lblAbbreviation">`+ unit.abbreviation +`</td>
+				<td id="lblUnitName">`+ unit.name +`</td>
+				<td class="text-right" id="lblQuantity">`+ data.quantity +`</td>
+				<td class="text-right">
+					<input type="hidden" name="stockTransferItems[`+ item_count +`].item" id="txtItem" value="` + item.id + `" />
+					<input type="hidden" name="stockTransferItems[`+ item_count +`].unit" id="txtUnit" value="` + unit.id + `" />
+					<input type="hidden" name="stockTransferItems[`+ item_count +`].quantity" id="txtQuantity" value="` + data.quantity + `" />
+					<div class="btn-group" role="group">
+		        		<button class="btn btn-info fa fa-edit" id="btnView" onClick="edit(this)"/>
+		        		<button class="btn btn-danger fa fa-times" onClick="remove(this)" />
+		    		</div>
+				</td>
+			</tr>`;
+			item_count++;
+			
+		$('#itemsTable tbody').append(html);
+  	});
+  });
+  
+submitStockTransferBtn.click(function() {
+  
+ 	var original_text = submitStockTransferBtn.text();
+ 	submitStockTransferBtn.attr("disabled", "disabled");
+ 	submitStockTransferBtn.text("Processing....");
+ 	
+ 	POST("/api/stock/transfer", form.serialize(), function(data) {
+ 		
+ 		if(data.status != "OK") {
+ 			displayErrors(data, $("#errors"));
+ 			submitStockTransferBtn.removeAttr("disabled");
+ 			submitStockTransferBtn.text(original_text);
+ 		} else {
+ 			window.location.replace('/stock/transfer')
+ 		}
+ 	});
+});
+  
+function edit(e) {
+	var selected_row = $(e).parentsUntil("tbody");
+	
+	var values = {
+		item: selected_row.find("#txtItem").val(),
+		unit: selected_row.find("#txtUnit").val(),
+		quantity: selected_row.find("#txtQuantity").val(),
+		unit_cost: selected_row.find("#txtUnitCost").val()
+	};
+	
+	var total = values.quantity * values.unit_cost;
+	
+	grand_total = grand_total - total;
+	
+	updateItem({type: "stock_opening", label:"Edit Stock Opening Item", values: values}, function(data) { 
+		
+		console.log(data);
+		
+		var item = data['item'];
+		var unit = data['unit'];
+		
+		selected_row.find("#lblItemId").html(item.id);
+		selected_row.find("#lblItemCode").html(item.code);
+		selected_row.find("#lblItemName").html(item.name);
+		selected_row.find("#lblUnitName").html(unit.name);
+		selected_row.find("#lblAbbreviation").html(unit.abbreviation);
+		
+		selected_row.find("#txtItem").val(item.id);
+		selected_row.find("#txtUnit").val(unit.id);
+		selected_row.find("#txtQuantity").val(data.quantity);
+		selected_row.find("#txtUnitCost").val(data.unit_cost);
+		
+		selected_row.find("#lblQuantity").html(data.quantity);
+		selected_row.find("#lblUnitCost").html(data.unit_cost);
+		selected_row.find("#lblTotal").html(data.quantity * data.unit_cost);
+	});
+}
+
+function remove(e) {
+	$(e).parentsUntil("tbody").remove();
+}
+
+	/*]]>*/
+  </script>
+</head>
+<body>

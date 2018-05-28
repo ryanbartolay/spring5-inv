@@ -311,6 +311,7 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		supplier.setName("JFC Corporation");
 		supplier.setPhone("91-100");
 		supplier.setAddress("Las Pinas");
+		supplier.setCreatedBy(userRepository.findByUsername("admin"));
 		
 		supplierRepository.save(supplier);
 	}

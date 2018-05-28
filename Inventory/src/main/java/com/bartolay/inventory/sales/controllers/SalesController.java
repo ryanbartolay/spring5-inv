@@ -73,12 +73,6 @@ public class SalesController {
 		return model;
 	}
 	
-	@RequestMapping(value="/recieve")
-	public ModelAndView recieve(ModelAndView model) {
-		model.setViewName("construction");
-		return model;
-	}
-	
 	@RequestMapping(value="/return")
 	public ModelAndView salesReturn() {
 		ModelAndView model = new ModelAndView("construction");

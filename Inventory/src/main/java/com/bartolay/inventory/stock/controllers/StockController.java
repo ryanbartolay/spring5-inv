@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.bartolay.inventory.form.BrandForm;
 import com.bartolay.inventory.form.StockOpeningForm;
-import com.bartolay.inventory.form.StockOpeningItemForm;
 import com.bartolay.inventory.form.StockTransferForm;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.services.CompanyService;
@@ -66,6 +64,12 @@ public class StockController {
 		mav.addObject("stockOpening", opening);
 	
 		return mav;
+	}
+	
+	@RequestMapping(value="/stock/recieve")
+	public ModelAndView recieve(ModelAndView model) {
+		model.setViewName("construction");
+		return model;
 	}
 	
 	@RequestMapping(value="/stock/transfer")

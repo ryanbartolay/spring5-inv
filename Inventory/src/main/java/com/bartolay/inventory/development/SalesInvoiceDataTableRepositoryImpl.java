@@ -43,8 +43,14 @@ public class SalesInvoiceDataTableRepositoryImpl extends RepositoryComponent imp
 
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t1.description, t2.name as location_name FROM sales_invoice as t1 "
-					+ "inner join location as t2 on t1.location_id = t2.id";
+			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t1.description, t1.total, t1.year, "
+					+ "t2.name as location_name, "
+					+ "t3.lastname || ', ' || t3.firstname as sales_person, "
+					+ "t4.lastname || ', ' || t4.firstname as customer "
+					+ "FROM sales_invoice as t1 "
+					+ "inner join location as t2 on t1.location_id = t2.id "
+					+ "inner join users as t3 on t1.sales_person_id = t3.id "
+					+ "inner join users as t4 on t1.customer_user_id = t4.id";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
@@ -74,8 +80,12 @@ public class SalesInvoiceDataTableRepositoryImpl extends RepositoryComponent imp
 					obj.put("system_number", rs.getString("system_number"));
 					obj.put("document_number", rs.getString("document_number"));
 					obj.put("description", rs.getString("description"));
+					obj.put("total", rs.getBigDecimal("total"));
+					obj.put("year", rs.getInt("year"));
 					obj.put("location_name", rs.getString("location_name"));
 					obj.put("transaction_date", rs.getString("transaction_date"));
+					obj.put("sales_person", rs.getString("sales_person"));
+					obj.put("customer", rs.getString("customer"));
 					return obj;
 				}
 			});
