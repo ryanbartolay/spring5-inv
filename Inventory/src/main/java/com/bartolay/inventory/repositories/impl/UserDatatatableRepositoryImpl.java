@@ -72,7 +72,8 @@ public class UserDatatatableRepositoryImpl extends RepositoryComponent implement
 					obj.put("id", rs.getLong("id"));
 					obj.put("username", rs.getString("username"));
 					obj.put("firstname", rs.getString("firstname"));
-//					obj.put("lastname", rs.getString("lastname"));
+					obj.put("lastname", rs.getString("lastname"));
+					obj.put("account_type", rs.getInt("account_type"));
 					obj.put("email", rs.getString("email"));
 					return obj;
 				}

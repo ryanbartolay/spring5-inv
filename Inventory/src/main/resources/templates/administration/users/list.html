@@ -1,11 +1,4 @@
 <div class="col-lg-12">
-<div class="row">
-<!-- Create Button -->
-	<button type="button" class="btn btn-success pull-right"
-	data-toggle="modal" data-target="#formModal" id="createButton" data-backdrop="static"
-	data-keyboard="false">Add User</button>	
-<!-- /Create Button -->
-</div>
 
 <!-- Modal Edit Brand -->
 <div class="modal fade" id="formModal" tabindex="-1" role="dialog"
@@ -81,7 +74,17 @@
 <!-- /Delete Modal -->
 
 
-	<div class="panel panel-default">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-md-12">
+				<button type="button" class="btn btn-success btn-sm pull-right"
+	data-toggle="modal" data-target="#formModal" id="createButton" data-backdrop="static"
+	data-keyboard="false">Register User</button>
+					</div>
+				</div>
+			</div>
+
 		<!-- /.panel-heading -->
 		<div class="panel-body">
 			<table width="100%"
@@ -89,10 +92,11 @@
 				id="brand-datatable">
 				<thead>
 					<tr>
-						<th>Username</th>
-						<th>Email</th>
+						<th width="10"></th>
 						<th>Name</th>
-						<th>Actions</th>
+						<th>Email</th>
+						<th>Account Type</th>
+						<!-- <th>Actions</th> -->
 					</tr>
 				</thead>
 				
@@ -123,17 +127,27 @@
 	var table = $('#brand-datatable');
 	var datatable = customDatatable(table, '/api/datatable/users', 
 			[
+				{ "data": "id" },
             	{ "data": "username" },
             	{ "data": "email" },
-            	{ "data": "firstname" },
+            	{ "data": "account_type" },
         	],
         	[ 
         		{
+        			targets: 1,
+        			render: function ( data, type, row ) {
+        				console.log(row);
+                        return '<a>' + row.lastname +', '+ row.firstname + '</a>';
+                    },
+        			
+        		},
+        		{ "visible": false,  "targets": [ 2 ] },
+        		/* {
                     "targets": 3,
                     "data": null,
                     "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Edit</button>' 
                     	+ '<button id="btnDelete" class="btn btn-default pull-right" data-toggle="modal" data-target="#confirmDeleteModal" data-backdrop="static" data-keyboard="false">Delete</button>'
-                }
+                } */
         	]
 	);
 	

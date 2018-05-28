@@ -18,7 +18,7 @@
 			<!-- <li><a th:href="@{/companies}"><i class="fa fa-briefcase fa-fw"></i>
 					Companies</a></li>
 			 -->
-			<li><a th:href="@{/locations}"><i class="fa fa-location-arrow fa-fw"></i> Locations</a></li>
+			<li><a th:href="@{/inventory}"><i class="fa fa-building fa-fw"></i> Inventory</a></li>
 			<li><a href="#"><i class="fa fa-tags fa-fw"></i> Sales<span class="fa arrow"></span></a>
 				<ul class="nav nav-second-level">
 					<li><a th:href="@{/sales/invoice}"><i class="fa fa-exchange fa-fw"></i> Invoice</a></li>
@@ -40,6 +40,7 @@
 					<li><a th:href="@{/colors}">Colors</a></li>
 					<li><a th:href="@{/countries}">Countries</a></li>
 					<li><a th:href="@{/items}">Items</a></li>
+					<li><a th:href="@{/locations}"><i class="fa fa-location-arrow fa-fw"></i> Locations</a></li>
 					<li><a th:href="@{/models}">Models</a></li>
 					<li><a th:href="@{/sizes}">Sizes</a></li>
 					<li><a th:href="@{/unit}">Units</a></li>
@@ -53,7 +54,8 @@
 			<li><a href="#"><i class="fa fa-sitemap fa-fw"></i>
 					Administration<span class="fa arrow"></span></a>
 				<ul class="nav nav-second-level">
-					<li><a th:href="@{/users}"><i class="fa fa-users fa-fw"></i> Users</a></li>
+					<li><a th:href="@{/users}"><i class="fa fa-user fa-fw"></i> User Setup</a></li>
+					<li><a th:href="@{/groups}"><i class="fa fa-users fa-fw"></i> Groups</a></li>
 				</ul> <!-- /.nav-second-level --></li>
 			<li sec:authorize="hasAuthority('ROOT')"><a href="#"><i class="fa fa-bar-chart-o fa-fw"></i>
 					Charts<span class="fa arrow"></span></a>

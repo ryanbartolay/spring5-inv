@@ -44,6 +44,12 @@ public class UserServiceImpl implements UserService<User> {
 		JSONArray array = userDatatableRepository.findAllData(parameter);
 		long recordsTotal = userDatatableRepository.findAllCount(parameter);
 		
+		
+		array.forEach(user -> {
+			JSONObject obj = (JSONObject) user;
+			obj.put("account_type", AccountType.values()[obj.getInt("account_type")]);
+		});
+		
 		JSONObject object = new JSONObject();
 		object.put("data", array);
 		object.put("recordsTotal", recordsTotal);
