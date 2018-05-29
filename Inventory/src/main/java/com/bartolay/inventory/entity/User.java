@@ -7,9 +7,12 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -43,8 +46,18 @@ public class User implements Serializable, Principal {
     private String phone;
     @Column(name = "address")
     private String address;
+    @Column(name = "address_city")
+    private String addressCity;
+    @Column(name = "address_zipcode")
+    private int addressZipcode;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "address_country_id", nullable=false, updatable=true)
+    private Country addressCountry;
+	
     @Column(name = "account_type", nullable=false, insertable = true)
-    private AccountType accountType;
+    private AccountType accountType;  
+    
     @Column(name = "enabled", nullable=false)
     private boolean enabled;
     
@@ -198,6 +211,30 @@ public class User implements Serializable, Principal {
 
 	public void setUpdatedDated(Date updatedDated) {
 		this.updatedDated = updatedDated;
+	}
+
+	public String getAddressCity() {
+		return addressCity;
+	}
+
+	public void setAddressCity(String addressCity) {
+		this.addressCity = addressCity;
+	}
+
+	public int getAddressZipcode() {
+		return addressZipcode;
+	}
+
+	public void setAddressZipcode(int addressZipcode) {
+		this.addressZipcode = addressZipcode;
+	}
+	
+	public Country getAddressCountry() {
+		return addressCountry;
+	}
+
+	public void setAddressCountry(Country addressCountry) {
+		this.addressCountry = addressCountry;
 	}
 
 	@Override

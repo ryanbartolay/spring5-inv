@@ -19,13 +19,13 @@ public class Country {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "country_generator")
 	@SequenceGenerator(name="country_generator", sequenceName = "COUNTRY_SER_SEQ")
 	@Column(name = "id", updatable = false, nullable = false)
-	private Long id;
+	private int id;
 	private String name;
 	private String code;
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getName() {

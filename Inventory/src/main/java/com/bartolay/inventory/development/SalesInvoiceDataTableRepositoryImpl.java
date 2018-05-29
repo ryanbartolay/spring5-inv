@@ -43,7 +43,7 @@ public class SalesInvoiceDataTableRepositoryImpl extends RepositoryComponent imp
 
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t1.description, t1.total, t1.year, "
+			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t1.description, t1.net_total, t1.year, "
 					+ "t2.name as location_name, "
 					+ "t3.lastname || ', ' || t3.firstname as sales_person, "
 					+ "t4.lastname || ', ' || t4.firstname as customer "
@@ -80,7 +80,7 @@ public class SalesInvoiceDataTableRepositoryImpl extends RepositoryComponent imp
 					obj.put("system_number", rs.getString("system_number"));
 					obj.put("document_number", rs.getString("document_number"));
 					obj.put("description", rs.getString("description"));
-					obj.put("total", rs.getBigDecimal("total"));
+					obj.put("net_total", rs.getBigDecimal("net_total"));
 					obj.put("year", rs.getInt("year"));
 					obj.put("location_name", rs.getString("location_name"));
 					obj.put("transaction_date", rs.getString("transaction_date"));

@@ -11,6 +11,7 @@ import org.springframework.core.PriorityOrdered;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.bartolay.inventory.entity.Country;
 import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.Location;
@@ -18,6 +19,7 @@ import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.form.SalesInvoiceForm;
+import com.bartolay.inventory.repositories.CountryRepository;
 import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.UserRepository;
@@ -30,6 +32,9 @@ public class _4SaleBootstrap implements ApplicationListener<ContextRefreshedEven
 
 	@Autowired
 	private CreditCardDetailsRepository creditCardDetailsRepository;
+	
+	@Autowired
+	private CountryRepository countryRepository;
 	
 	@Autowired
 	private SalesInvoiceService salesInvoiceService;
@@ -88,6 +93,7 @@ public class _4SaleBootstrap implements ApplicationListener<ContextRefreshedEven
 	}
 
 	private void createSalesPerson() {
+		Country country = countryRepository.findById(3).get();
 		sales1 = new User();
 		sales1.setUsername("sales1");
 		sales1.setPassword(passwordEncoder.encode(_1DevBootstrap.PASSWORD));
@@ -96,6 +102,7 @@ public class _4SaleBootstrap implements ApplicationListener<ContextRefreshedEven
 		sales1.setAccountType(AccountType.USER);
 		sales1.setEmail("sales@gmail.com");
 		sales1.setAuthority("");
+		sales1.setAddressCountry(country);
 		userRepository.save(sales1);
 		
 		sales2 = new User();
@@ -106,6 +113,7 @@ public class _4SaleBootstrap implements ApplicationListener<ContextRefreshedEven
 		sales2.setAccountType(AccountType.USER);
 		sales2.setEmail("sales2@gmail.com");
 		sales2.setAuthority("");
+		sales2.setAddressCountry(country);
 		userRepository.save(sales2);
 	}
 

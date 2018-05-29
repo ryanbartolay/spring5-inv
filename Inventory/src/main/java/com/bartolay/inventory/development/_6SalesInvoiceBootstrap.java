@@ -87,6 +87,7 @@ public class _6SalesInvoiceBootstrap implements ApplicationListener<ContextRefre
 		salesInvoice.setCustomer(customer);
 		salesInvoice.setCreatedBy(user);
 		salesInvoice.setLocation(locationRepository.findById(1).get());
+		salesInvoice.setDiscountPercentage(new BigDecimal("3.5"));
 		salesInvoice.setSalesInvoiceItems(salesInvoiceItems);
 		
 		System.err.println("creating sales invoice");

@@ -91,8 +91,8 @@
 								<th>Unit</th>
 								<th>U.Desc</th>
 								<th>Quantity</th>
-								<th>Unit Price</th>
-								<th  class="col-md-2">Amount</th>
+								<th class="text-right">Unit Price</th>
+								<th class="col-md-2 text-right">Subtotal</th>
 								<th></th>
 							</tr>
 						</thead>
@@ -102,7 +102,19 @@
 						<tfoot>
 							<tr>
 								<th colspan="6"></th>
-								<th><h3>Total<h3></h3></th>
+								<th class="text-right">Subtotal</h3></th>
+								<th><h3 class="text-right" id="subtotal"></h3></th>
+								<th></th>
+							</tr>
+							<tr>
+								<th colspan="6"></th>
+								<th class="text-right">Discount %</th>
+								<th><input type="number" min="0" max="100" th:field="*{discountPercentage}" class="form-control" /></th>
+								<th></th>
+							</tr>
+							<tr>
+								<th colspan="6"></th>
+								<th class="text-right"><h3>Total</h3></th>
 								<th><h3 class="text-right" id="grandTotal"></h3></th>
 								<th></th>
 							</tr>
@@ -211,7 +223,9 @@ var item_count = 0;
 var current_year = (new Date()).getFullYear();
 var submitSalesInvoiceBtn = $("#submitSalesInvoiceBtn");
 
-$("#btnAddItem").on("click", function() {
+$("#btnAddItem").on("click", function(event) {
+	event.preventDefault();
+	alert("hello world");
   	addItem({type: "sales_invoice", label:"Add Sales Invoice Item"}, function(data) {
   		
   		var item = data['item'];

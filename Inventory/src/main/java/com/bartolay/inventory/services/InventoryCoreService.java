@@ -178,7 +178,9 @@ public class InventoryCoreService {
 		// this will be essential in case theres a wrong data on the sales invoice
 		salesInvoice.setCreatedBy(userCredentials.getLoggedInUser());
 		salesInvoice.setStatus(Status.SUCCESS);
-		salesInvoice.setTotal(new BigDecimal("0"));
+		salesInvoice.setSubtotal(new BigDecimal("0"));
+		salesInvoice.setDiscountTotal(new BigDecimal("0"));
+		salesInvoice.setNetTotal(new BigDecimal("0"));
 		
 		if(salesInvoice.getPaymentMethod().equals(PaymentMethod.CREDITCARD)) {
 			salesInvoice.getCreditCardDetails().setCreatedBy(userCredentials.getLoggedInUser());
@@ -248,7 +250,9 @@ public class InventoryCoreService {
 			salesInvoiceItem.setUnitCostTotal(salesInvoiceItem.getUnitCost().multiply(salesInvoiceItem.getRateQuantity()));
 			salesInvoiceItem.setStatus(Status.SUCCESS);
 
-			salesInvoice.setTotal(salesInvoice.getTotal().add(salesInvoiceItem.getUnitCostTotal()));
+			salesInvoice.setSubtotal(salesInvoice.getSubtotal().add(salesInvoiceItem.getUnitCostTotal()));
+			salesInvoice.setDiscountTotal(salesInvoice.getSubtotal().multiply(salesInvoice.getDiscountPercentage().divide(new BigDecimal("100"))));
+			salesInvoice.setNetTotal(salesInvoice.getSubtotal().subtract(salesInvoice.getDiscountTotal()));
 			
 			inventoryTransaction.setQuantityAfter(inventory.getQuantity());
 

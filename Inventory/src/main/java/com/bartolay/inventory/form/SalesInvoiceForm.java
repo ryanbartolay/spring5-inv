@@ -1,9 +1,12 @@
 package com.bartolay.inventory.form;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -31,6 +34,10 @@ public class SalesInvoiceForm {
 	@Size(min=4, max=20, message="Document Number is Required. Length between 4-20 characters.")
 	@NotNull(message="Stock Opening document number is required!")
 	private String documentNumber;
+	
+	@Max(value=100, message="Discount is over the maximum value 100.")
+	@Min(value=0, message="Discount is below the minimum value 0.")
+	private BigDecimal discountPercentage;
 	
 	private String description;
 	
@@ -139,4 +146,13 @@ public class SalesInvoiceForm {
 	public void setSalesInvoiceItems(List<SalesInvoiceItem> salesInvoiceItems) {
 		this.salesInvoiceItems = salesInvoiceItems;
 	}
+
+	public BigDecimal getDiscountPercentage() {
+		return discountPercentage;
+	}
+
+	public void setDiscountPercentage(BigDecimal discountPercentage) {
+		this.discountPercentage = discountPercentage;
+	}
+
 }

@@ -87,6 +87,8 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
 		
+		createCountries();
+		
 		createEmployees();
 		createCustomers();
 		
@@ -103,9 +105,7 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		System.err.println(categoryRepository.findById((long) 1).get());
 
 		
-		createUnits();
-		
-		createCountries();
+		createUnits();	
 	}
 
 
@@ -269,6 +269,8 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 	}
 
 	private void createEmployees() {
+		Country country = countryRepository.findById(3).get();
+		
 		User root = new User();
 		root.setUsername("root");
 		root.setPassword(passwordEncoder.encode(PASSWORD));
@@ -277,8 +279,9 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		root.setAccountType(AccountType.ROOT);
 		root.setEmail("bartolay.ryan@gmail.com");
 		root.setAuthority(AccountType.ROOT.toString());
-		root.setAddress("Manila, Philippines");
-		root.setPhone("09178049704");		
+		root.setAddress("Manila");
+		root.setPhone("09178049704");
+		root.setAddressCountry(country);
 		userRepository.save(root);
 		
 		User user = new User();
@@ -289,10 +292,13 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		user.setAccountType(AccountType.ADMIN);
 		user.setEmail("bartolay.ryan@gmail.com");
 		user.setAuthority(AccountType.ADMIN.toString());
+		user.setAddressCountry(country);
 		userRepository.save(user);
 	}
 	
 	private void createCustomers() {
+		Country country = countryRepository.findById(3).get();
+		
 		User user = new User();
 		user.setUsername("customer");
 		user.setPassword(passwordEncoder.encode(PASSWORD));
@@ -300,9 +306,12 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		user.setLastName("Bartolay");
 		user.setAccountType(AccountType.CUSTOMER);
 		user.setEmail("bartolay.ryann@gmail.com");
-		user.setAddress("84 Molave st. Dona Manuela Phase 4-G, Pamplona Tres, Las Pinas City");
+		user.setAddress("84 Molave st. Dona Manuela Phase 4-G, Pamplona Tres");
+		user.setAddressCity("Las Pinas City");
+		user.setAddressZipcode(1471);
 		user.setPhone("09178049704");
 		user.setAuthority(AccountType.CUSTOMER.toString());
+		user.setAddressCountry(country);
 		userRepository.save(user);
 	}
 
@@ -340,5 +349,10 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		country2.setCode("ARE");
 		country2.setName("United Arab Emirates");
 		countryRepository.save(country2);
+		
+		Country country3 = new Country();
+		country3.setCode("PHL");
+		country3.setName("Philippines");
+		countryRepository.save(country3);
 	}
 }

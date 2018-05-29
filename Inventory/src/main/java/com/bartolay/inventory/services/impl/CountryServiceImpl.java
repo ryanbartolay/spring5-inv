@@ -70,7 +70,7 @@ public class CountryServiceImpl implements CountryService {
 	}
 
 	@Override
-	public Country delete(Long id) {
+	public Country delete(int id) {
 		Country country = countryRepository.findById(id).get();
 		countryRepository.deleteById(id);
 		return country;

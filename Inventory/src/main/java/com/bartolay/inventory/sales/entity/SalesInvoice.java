@@ -70,8 +70,17 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	@JoinColumn(name = "customer_user_id", nullable=false, updatable=true)
 	private User customer;
 	
-	@Column(name="total", nullable=false, precision=10, scale=5)
-	private BigDecimal total;
+	@Column(name="discount_percentage", nullable=false, precision=3, scale=2)
+	private BigDecimal discountPercentage;
+	
+	@Column(name="discount_total", nullable=false, precision=10, scale=5)
+	private BigDecimal discountTotal;
+	
+	@Column(name="subtotal", nullable=false, precision=10, scale=5)
+	private BigDecimal subtotal;
+	
+	@Column(name="net_total", nullable=false, precision=10, scale=5)
+	private BigDecimal netTotal;
 	
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
@@ -146,11 +155,11 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	public void setCustomer(User customer) {
 		this.customer = customer;
 	}
-	public BigDecimal getTotal() {
-		return total;
+	public BigDecimal getSubtotal() {
+		return subtotal;
 	}
-	public void setTotal(BigDecimal total) {
-		this.total = total;
+	public void setSubtotal(BigDecimal subtotal) {
+		this.subtotal = subtotal;
 	}
 	public Date getCreatedDate() {
 		return createdDate;
@@ -202,6 +211,25 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	public void setSalesInvoiceItems(List<SalesInvoiceItem> salesInvoiceItems) {
 		this.salesInvoiceItems = salesInvoiceItems;
 	}
+	
+	public BigDecimal getDiscountPercentage() {
+		return discountPercentage;
+	}
+	public void setDiscountPercentage(BigDecimal discountPercentage) {
+		this.discountPercentage = discountPercentage;
+	}
+	public BigDecimal getNetTotal() {
+		return netTotal;
+	}
+	public void setNetTotal(BigDecimal netTotal) {
+		this.netTotal = netTotal;
+	}
+	public BigDecimal getDiscountTotal() {
+		return discountTotal;
+	}
+	public void setDiscountTotal(BigDecimal discountTotal) {
+		this.discountTotal = discountTotal;
+	}
 	@Override
 	public String getTableName() {
 		return "sales_invoice";
@@ -212,7 +240,7 @@ public class SalesInvoice implements GeneratedSystemNumber {
 		return "SalesInvoice [systemNumber=" + systemNumber + ", year=" + year + ", transactionDate=" + transactionDate
 				+ ", documentNumber=" + documentNumber + ", description=" + description + ", location=" + location
 				+ ", paymentMethod=" + paymentMethod + ", status=" + status + ", creditCardDetails="
-				+ creditCardDetails + ", salesPerson=" + salesPerson + ", createdDate=" + createdDate + ", createdBy="
+				+ creditCardDetails + ", customer="+ customer +", salesPerson=" + salesPerson + ", createdDate=" + createdDate + ", createdBy="
 				+ createdBy + ", updatedDated=" + updatedDated + ", updatedBy=" + updatedBy + "]";
 	}
 	@Override

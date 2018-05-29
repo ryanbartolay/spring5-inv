@@ -1,7 +1,5 @@
 package com.bartolay.inventory.sales.services.impl;
 
-import java.text.ParseException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,14 +14,12 @@ import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.enums.PaymentMethod;
-import com.bartolay.inventory.enums.Status;
 import com.bartolay.inventory.form.SalesInvoiceForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.sales.services.SalesInvoiceService;
 import com.bartolay.inventory.services.InventoryCoreService;
-import com.bartolay.inventory.utils.CalendarUtils;
 import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
@@ -57,6 +53,7 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 		salesInvoice.setYear(salesInvoiceForm.getYear());
 		salesInvoice.setSalesInvoiceItems(salesInvoiceForm.getSalesInvoiceItems());
 		salesInvoice.setCustomer(salesInvoiceForm.getCustomer());
+		salesInvoice.setDiscountPercentage(salesInvoiceForm.getDiscountPercentage());
 		salesInvoice.setCreditCardDetails(salesInvoiceForm.getCreditCardDetails());
 	
 		inventoryService.createSalesInvoice(salesInvoice);

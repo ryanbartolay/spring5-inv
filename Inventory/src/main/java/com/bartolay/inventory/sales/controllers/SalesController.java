@@ -14,6 +14,7 @@ import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.services.LocationService;
 import com.bartolay.inventory.services.UserService;
+import com.bartolay.inventory.utils.CalendarUtils;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -34,6 +35,8 @@ public class SalesController {
 
 	@Autowired
 	private StringUtils stringUtils;
+	@Autowired
+	private CalendarUtils calendarUtils;
 	
 	@RequestMapping(value="/invoice")
 	public ModelAndView invoice(ModelAndView model) {
@@ -67,9 +70,11 @@ public class SalesController {
 		model.addObject("html", "invoice/view");
 		
 		model.addObject("StringUtils", stringUtils);
+		model.addObject("CalendarUtils", calendarUtils);
 		SalesInvoice salesInvoice = salesInvoiceRepository.findById(system_number).get();
 		
 		model.addObject("salesInvoice", salesInvoice);
+		
 		return model;
 	}
 	

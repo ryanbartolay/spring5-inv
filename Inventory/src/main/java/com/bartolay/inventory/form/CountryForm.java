@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 
 public class CountryForm {
 	
-	private Long id;
+	private int id;
 	
 	@NotNull
     @Size(min=3, max=3, message="Country code length must be 3 characters" )
@@ -15,11 +15,11 @@ public class CountryForm {
     @Size(min=2, max=30, message="Country name length minimum 2 and 30" )
     private String name;
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
