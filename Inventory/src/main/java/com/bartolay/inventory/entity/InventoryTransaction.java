@@ -54,6 +54,7 @@ public class InventoryTransaction {
 	@Column(name="quantity_before", precision=10, scale=5, updatable=false)
 	private BigDecimal quantityBefore;
 	
+	@Deprecated
 	@Column(name="quantity_rate", nullable=false, precision=10, scale=5, updatable=false)
 	private BigDecimal rateQuantity;
 	
@@ -156,10 +157,12 @@ public class InventoryTransaction {
 		this.quantityBefore = quantityBefore;
 	}
 
+	@Deprecated
 	public BigDecimal getRateQuantity() {
 		return rateQuantity;
 	}
 
+	@Deprecated
 	public void setRateQuantity(BigDecimal rateQuantity) {
 		this.rateQuantity = rateQuantity;
 	}

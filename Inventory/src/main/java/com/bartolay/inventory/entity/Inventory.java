@@ -29,6 +29,10 @@ public class Inventory {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="item_id", nullable=false, updatable=false)
 	public Item item;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="unit_id", nullable=false, updatable=false)
+	public Unit unit;
 	
 	@Column(name="quantity", updatable=true, precision=10, scale=5)
 	public BigDecimal quantity;
@@ -120,13 +124,22 @@ public class Inventory {
 	public void setUpdatedBy(User updatedBy) {
 		this.updatedBy = updatedBy;
 	}
-	
+
+	public Unit getUnit() {
+		return unit;
+	}
+
+	public void setUnit(Unit unit) {
+		this.unit = unit;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((item == null) ? 0 : item.hashCode());
 		result = prime * result + ((location == null) ? 0 : location.hashCode());
+		result = prime * result + ((unit == null) ? 0 : unit.hashCode());
 		return result;
 	}
 
@@ -148,6 +161,11 @@ public class Inventory {
 			if (other.location != null)
 				return false;
 		} else if (!location.equals(other.location))
+			return false;
+		if (unit == null) {
+			if (other.unit != null)
+				return false;
+		} else if (!unit.equals(other.unit))
 			return false;
 		return true;
 	}

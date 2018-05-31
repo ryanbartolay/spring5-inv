@@ -13,6 +13,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.PriorityOrdered;
 import org.springframework.stereotype.Component;
 
+import com.bartolay.inventory.exceptions.StockTransferException;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.UnitRepository;
@@ -48,7 +49,7 @@ public class _8StockTransferBootstrap implements ApplicationListener<ContextRefr
 		
 		StockTransferItem stockTransferItem1 = new StockTransferItem();
 		stockTransferItem1.setItem(itemRepository.findById(1).get());
-		stockTransferItem1.setUnit(unitRepository.findById(2).get());
+		stockTransferItem1.setUnit(unitRepository.findById(1).get());
 		stockTransferItem1.setQuantity(new BigDecimal("4.5"));
 		
 		items.add(stockTransferItem1);
@@ -61,7 +62,10 @@ public class _8StockTransferBootstrap implements ApplicationListener<ContextRefr
 		stockTransfer.setYear("2018");
 		stockTransfer.setStockTransferItems(items);
 		
-		inventoryService.createStockTransfer(stockTransfer);
+		try {
+			inventoryService.createStockTransfer(stockTransfer);
+		} catch (StockTransferException e) {
+			e.printStackTrace();
+		}
 	}
-
 }

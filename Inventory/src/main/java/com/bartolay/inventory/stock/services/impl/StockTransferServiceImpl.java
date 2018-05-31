@@ -10,11 +10,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
+import com.bartolay.inventory.exceptions.StockTransferException;
 import com.bartolay.inventory.form.StockTransferForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockTransfer;
-import com.bartolay.inventory.stock.entity.StockTransferItem;
 import com.bartolay.inventory.stock.services.StockTransferService;
 
 @Service
@@ -43,7 +43,7 @@ public class StockTransferServiceImpl implements StockTransferService {
 	}
 
 	@Override
-	public StockTransfer create(StockTransferForm stockTransferForm) throws ParseException {
+	public StockTransfer create(StockTransferForm stockTransferForm) throws ParseException, StockTransferException {
 		StockTransfer stockTransfer = new StockTransfer();
 		stockTransfer.setFromLocation(stockTransferForm.getFromLocation());
 		stockTransfer.setToLocation(stockTransferForm.getToLocation());
