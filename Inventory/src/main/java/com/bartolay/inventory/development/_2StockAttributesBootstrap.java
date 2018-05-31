@@ -13,6 +13,7 @@ import org.springframework.core.PriorityOrdered;
 import org.springframework.stereotype.Component;
 
 import com.bartolay.inventory.entity.Brand;
+import com.bartolay.inventory.entity.Expense;
 import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.ItemUnit;
 import com.bartolay.inventory.entity.Model;
@@ -21,6 +22,7 @@ import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CategoryRepository;
 import com.bartolay.inventory.repositories.ColorRepository;
+import com.bartolay.inventory.repositories.ExpenseRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.ItemUnitRepository;
 import com.bartolay.inventory.repositories.ModelRepository;
@@ -50,6 +52,8 @@ public class _2StockAttributesBootstrap implements ApplicationListener<ContextRe
 	private UserRepository userRepository;
 	@Autowired
 	private SizeRepository sizeRepository;
+	@Autowired
+	private ExpenseRepository expenseRepository;
 
 	private User admin;
 
@@ -76,7 +80,36 @@ public class _2StockAttributesBootstrap implements ApplicationListener<ContextRe
 		createSizes();
 
 		createItems();
+		
+		createExpenses();
+	}
+	
+	private void createExpenses() {
 
+		Expense e1 = new Expense();
+		e1.setDescription("Transportation");
+		e1.setCreatedBy(admin);
+		expenseRepository.save(e1);
+		
+		Expense e2 = new Expense();
+		e2.setDescription("Other");
+		e2.setCreatedBy(admin);
+		expenseRepository.save(e2);
+		
+		Expense e3 = new Expense();
+		e3.setDescription("Food");
+		e3.setCreatedBy(admin);
+		expenseRepository.save(e3);
+		
+		Expense e4 = new Expense();
+		e4.setDescription("Medical");
+		e4.setCreatedBy(admin);
+		expenseRepository.save(e4);
+		
+		Expense e5 = new Expense();
+		e5.setDescription("Rebate Cancelled");
+		e5.setCreatedBy(admin);
+		expenseRepository.save(e5);
 	}
 
 	private void createSizes() {
@@ -166,16 +199,16 @@ public class _2StockAttributesBootstrap implements ApplicationListener<ContextRe
 		
 		
 		Item item = new Item();
-		item.setBrand(brandRepository.findById((long) 1).get());
+		item.setBrand(brandRepository.findById(1).get());
 		item.setColor(colorRepository.findByName("red"));
-		item.setCategory(categoryRepository.findById((long) 1).get());
+		item.setCategory(categoryRepository.findById(1).get());
 		item.setCode("ryan1234");
 		item.setDefaultUnit(unitRepository.findById(1).get());
 		item.setName("HyperDunk Series X 2");
 		item.setCreatedBy(admin);
 		item.setEnabled(true);
 		item.setSize(new Size(1));
-		item.setModel(new Model(1L));
+		item.setModel(new Model(1));
 		item.setItemUnits(itemUnits);
 		item.setMinimumUnitPrice(new BigDecimal("50.75"));
 		itemRepository.save(item);
@@ -210,16 +243,16 @@ public class _2StockAttributesBootstrap implements ApplicationListener<ContextRe
 		itemUnits.add(itemUnit4);
 		
 		Item item2 = new Item();
-		item2.setBrand(brandRepository.findById((long) 1).get());
+		item2.setBrand(brandRepository.findById(1).get());
 		item2.setColor(colorRepository.findByName("black"));
-		item2.setCategory(categoryRepository.findById((long) 2).get());
+		item2.setCategory(categoryRepository.findById(2).get());
 		item2.setCode("ryan1235");
 		item2.setDefaultUnit(unitRepository.findById(2).get());
 		item2.setName("HyperDunk Series X 3");
 		item2.setCreatedBy(admin);
 		item2.setEnabled(true);
 		item2.setSize(new Size(1));
-		item2.setModel(new Model(2L));
+		item2.setModel(new Model(2));
 		item2.setItemUnits(itemUnits);
 		item2.setMinimumUnitPrice(new BigDecimal("100.75"));
 		item2.setMaximumUnitPrice(new BigDecimal("110.759"));
@@ -227,6 +260,52 @@ public class _2StockAttributesBootstrap implements ApplicationListener<ContextRe
 		
 		for(ItemUnit itemUnit : itemUnits) {
 			itemUnit.setItem(item2);
+		}
+		
+		itemUnitRepository.saveAll(itemUnits);
+		
+		
+		itemUnits.clear();
+		
+		itemUnit1 = new ItemUnit();
+		itemUnit1.setUnit(unitRepository.findById(4).get());
+		itemUnit1.setRate(new BigDecimal("9821.441"));
+		
+		itemUnit2 = new ItemUnit();
+		itemUnit2.setUnit(unitRepository.findById(3).get());
+		itemUnit2.setRate(new BigDecimal("101.9911"));
+		
+		itemUnit3 = new ItemUnit();
+		itemUnit3.setUnit(unitRepository.findById(5).get());
+		itemUnit3.setRate(new BigDecimal("0.1111"));
+		
+		itemUnit4 = new ItemUnit();
+		itemUnit4.setUnit(unitRepository.findById(6).get());
+		itemUnit4.setRate(new BigDecimal("1213.191"));
+		
+		itemUnits.add(itemUnit1);
+		itemUnits.add(itemUnit2);
+		itemUnits.add(itemUnit3);
+		itemUnits.add(itemUnit4);
+		
+		Item item3 = new Item();
+		item3.setBrand(brandRepository.findById(2).get());
+		item3.setColor(colorRepository.findByName("green"));
+		item3.setCategory(categoryRepository.findById(1).get());
+		item3.setCode("1123EW");
+		item3.setDefaultUnit(unitRepository.findById(3).get());
+		item3.setName("Jordan 1 Sneakers");
+		item3.setCreatedBy(admin);
+		item3.setEnabled(true);
+		item3.setSize(new Size(4));
+		item3.setModel(new Model(2));
+		item3.setItemUnits(itemUnits);
+		item3.setMinimumUnitPrice(new BigDecimal("10"));
+		item3.setMaximumUnitPrice(new BigDecimal("200"));
+		itemRepository.save(item3);
+		
+		for(ItemUnit itemUnit : itemUnits) {
+			itemUnit.setItem(item3);
 		}
 		
 		itemUnitRepository.saveAll(itemUnits);

@@ -102,7 +102,7 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		createColors();
 		
 		System.err.println("------------------------------------------");
-		System.err.println(categoryRepository.findById((long) 1).get());
+		System.err.println(categoryRepository.findById(1).get());
 
 		
 		createUnits();	

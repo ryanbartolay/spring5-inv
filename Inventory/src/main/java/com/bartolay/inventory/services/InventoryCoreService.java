@@ -27,6 +27,7 @@ import com.bartolay.inventory.sales.repositories.CreditCardDetailsRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.stock.entity.StockOpening;
+import com.bartolay.inventory.stock.entity.StockReceive;
 import com.bartolay.inventory.stock.entity.StockTransfer;
 import com.bartolay.inventory.stock.repositories.StockOpeningItemRepository;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
@@ -440,6 +441,12 @@ public class InventoryCoreService {
 		stockTransferItemRepository.saveAll(stockTransfer.getStockTransferItems());
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
 		inventoryRepository.saveAll(inventoriesForSave);
+	}
+
+
+	public void createStockReceive(StockReceive stockReceive) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

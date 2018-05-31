@@ -111,7 +111,7 @@ public class BrandRestController {
 	}
 
 	@RequestMapping(value="/api/brands/{id}", method=RequestMethod.DELETE)
-	public String delete(@PathVariable Long id) throws RestApiException {
+	public String delete(@PathVariable int id) throws RestApiException {
 		try {
 			Brand brand = brandService.delete(id);
 			ApiResponse response = new ApiResponse(HttpStatus.OK, "Record deleted " + brand.getName());

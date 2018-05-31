@@ -25,12 +25,12 @@ public class Brand {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "brand_generator")
 	@SequenceGenerator(name="brand_generator", sequenceName = "BRAND_SER_SEQ")
 	@Column(name = "id", updatable = false, nullable = false)
-	private Long id;
+	private int id;
 	
 	public Brand() {
 		// TODO Auto-generated constructor stub
 	}
-	public Brand(long id) {
+	public Brand(int id) {
 		this.id=id;
 	}
 	
@@ -62,10 +62,10 @@ public class Brand {
 	@Column(name="enabled", nullable=false)
 	private boolean enabled;
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public List<Model> getModels() {

@@ -74,7 +74,7 @@ public class CategoryRestController {
 	}
 	
 	@RequestMapping(value="/api/categories/{id}", method=RequestMethod.DELETE)
-	public String delete(@PathVariable Long id) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+	public String delete(@PathVariable int id) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		ApiResponse response = null;
 		try {

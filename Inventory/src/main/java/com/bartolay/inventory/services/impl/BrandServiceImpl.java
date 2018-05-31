@@ -80,7 +80,7 @@ public class BrandServiceImpl implements BrandService {
 	}
 
 	@Override
-	public Brand delete(Long id) {
+	public Brand delete(int id) {
 		Optional<Brand> brand = brandRepository.findById(id);
 		brandRepository.deleteById(id);
 		return brand.get();

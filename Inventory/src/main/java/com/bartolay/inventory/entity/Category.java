@@ -19,7 +19,7 @@ public class Category implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_generator")
 	@SequenceGenerator(name="category_generator", sequenceName = "CATEGORY_SER_SEQ")
 	@Column(name = "id", updatable = false, nullable = false)
-    private long id;
+    private int id;
     
     @Column(name = "name")
     private String name;
@@ -39,17 +39,17 @@ public class Category implements Serializable {
         this.description = description;
     }
 
-    public Category(long id, String name, String description) {
+    public Category(int id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

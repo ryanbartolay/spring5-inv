@@ -11,7 +11,7 @@ import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Company;
 
 @Repository
-public interface BrandRepository extends CrudRepository<Brand, Long> {
+public interface BrandRepository extends CrudRepository<Brand, Integer> {
 
 	@Query(value = "SELECT p FROM Brand p LEFT JOIN FETCH p.company LEFT JOIN FETCH p.createdBy")
     Iterable<Brand> apiFindAll();

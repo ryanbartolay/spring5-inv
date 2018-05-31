@@ -5,17 +5,17 @@ import javax.validation.constraints.Size;
 
 public class CategoryForm {
 
-	private Long id;
+	private int id;
     @NotNull
     @Size(min=2, max=30, message="Category type length minimum 2 and 30" )
     private String type;
     @NotNull
     @Size(min=2, max=120, message="Category description length minimum 2 and 120" )
     private String description;
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getType() {

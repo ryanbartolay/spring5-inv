@@ -13,7 +13,7 @@ public interface BrandService {
 	public Brand update(BrandForm brandForm);
 	
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
-	public Brand delete(Long id);
+	public Brand delete(int id);
 	
 	public List<Brand> findAll();
 }

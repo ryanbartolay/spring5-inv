@@ -1,4 +1,4 @@
-package com.bartolay.inventory.development;
+package com.bartolay.inventory.sales.services.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

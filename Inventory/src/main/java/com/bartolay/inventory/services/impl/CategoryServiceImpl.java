@@ -69,7 +69,7 @@ public class CategoryServiceImpl implements CategoryService{
 	}
 
 	@Override
-	public Category delete(Long id) {
+	public Category delete(int id) {
 		Optional<Category> caOptional = categoryRepository.findById(id);
 		categoryRepository.deleteById(id);
 		return caOptional.get();

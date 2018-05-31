@@ -16,7 +16,7 @@ public class Model {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "model_generator")
 	@SequenceGenerator(name="model_generator", sequenceName = "MOD_SER_SEQ")
 	@Column(name = "id", updatable = false, nullable = false)
-	private Long id;
+	private int id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id", nullable=false)
@@ -26,13 +26,13 @@ public class Model {
 	
 	public Model() {
 	}
-	public Model(Long id) {
+	public Model(int id) {
 		this.id=id;
 	}
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public Brand getBrand() {

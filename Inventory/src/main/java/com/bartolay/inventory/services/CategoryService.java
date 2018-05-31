@@ -16,6 +16,6 @@ public interface CategoryService {
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
 	public Category create(@Valid CategoryForm categoryForm);
 	public Category update(@Valid CategoryForm categoryForm);
-	public Category delete(Long id);
+	public Category delete(int id);
 	
 }
