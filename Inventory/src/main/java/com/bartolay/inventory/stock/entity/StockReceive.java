@@ -48,6 +48,9 @@ public class StockReceive implements GeneratedSystemNumber {
 	@JoinColumn(name="location_id", nullable=false, updatable=false)
 	private Location location;
 	
+	@Column(name="transaction_date", nullable=false)
+	private Date transactionDate;
+	
 	@OneToMany(mappedBy = "stockReceive", fetch=FetchType.LAZY)
 	private List<StockReceiveExpense> expenses;
 
@@ -106,6 +109,14 @@ public class StockReceive implements GeneratedSystemNumber {
 
 	public void setDocumentNumber(String documentNumber) {
 		this.documentNumber = documentNumber;
+	}
+
+	public Date getTransactionDate() {
+		return transactionDate;
+	}
+
+	public void setTransactionDate(Date transactionDate) {
+		this.transactionDate = transactionDate;
 	}
 
 	public Integer getDiscountValue() {

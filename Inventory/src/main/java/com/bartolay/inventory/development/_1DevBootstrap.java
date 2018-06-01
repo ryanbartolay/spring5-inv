@@ -323,6 +323,14 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		supplier.setCreatedBy(userRepository.findByUsername("admin"));
 		
 		supplierRepository.save(supplier);
+		
+		supplier = new Supplier();
+		supplier.setName("KFC Food, Inc");
+		supplier.setPhone("8012222");
+		supplier.setAddress("Manila");
+		supplier.setCreatedBy(userRepository.findByUsername("admin"));
+		
+		supplierRepository.save(supplier);
 	}
 
 	private void createCategories() {

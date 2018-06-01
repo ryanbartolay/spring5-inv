@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.bartolay.inventory.form.StockOpeningForm;
+import com.bartolay.inventory.form.StockReceiveForm;
 import com.bartolay.inventory.form.StockTransferForm;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.services.CompanyService;
@@ -55,7 +56,7 @@ public class StockController {
 		return mav;
 	}
 	
-	@RequestMapping(value="/stock/opening/view/{system_number}", method=RequestMethod.GET)
+	@RequestMapping(value="/stock/opening/{system_number}", method=RequestMethod.GET)
 	public ModelAndView stockOpeningView(ModelAndView mav, @PathVariable String system_number) throws JsonProcessingException {
 		mav.setViewName("stock/index");
 		mav.addObject("page", "Opening Stock");
@@ -66,9 +67,22 @@ public class StockController {
 		return mav;
 	}
 	
-	@RequestMapping(value="/stock/recieve")
+	@RequestMapping(value="/stock/received")
 	public ModelAndView recieve(ModelAndView model) {
-		model.setViewName("construction");
+		model.setViewName("stock/index");
+		model.addObject("page", "Stock Received");
+		model.addObject("html", "received/list");
+		
+		return model;
+	}
+	
+	@RequestMapping(value="/stock/received/create")
+	public ModelAndView recieveCreate(ModelAndView model) {
+		model.setViewName("stock/index");
+		model.addObject("page", "Stock Received");
+		model.addObject("html", "received/edit");
+		model.addObject("stockReceivedForm", new StockReceiveForm());
+		
 		return model;
 	}
 	

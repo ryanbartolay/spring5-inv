@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -30,10 +29,14 @@ import com.bartolay.inventory.sales.repositories.SalesInvoiceItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.entity.StockReceive;
+import com.bartolay.inventory.stock.entity.StockReceiveExpense;
+import com.bartolay.inventory.stock.entity.StockReceiveItem;
 import com.bartolay.inventory.stock.entity.StockTransfer;
 import com.bartolay.inventory.stock.entity.StockTransferItem;
 import com.bartolay.inventory.stock.repositories.StockOpeningItemRepository;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
+import com.bartolay.inventory.stock.repositories.StockReceiveExpenseRepository;
+import com.bartolay.inventory.stock.repositories.StockReceiveItemRepository;
 import com.bartolay.inventory.stock.repositories.StockReceiveRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferItemRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferRepository;
@@ -65,6 +68,10 @@ public class InventoryCoreService {
 	private StockOpeningItemRepository stockOpeningItemRepository;
 	@Autowired
 	private StockReceiveRepository stockReceiveRepository;
+	@Autowired
+	private StockReceiveItemRepository stockReceiveItemRepository;
+	@Autowired
+	private StockReceiveExpenseRepository stockReceiveExpenseRepository;
 	@Autowired
 	private StockTransferRepository stockTransferRepository;
 	@Autowired
@@ -339,6 +346,10 @@ public class InventoryCoreService {
 		List<InventoryTransaction> inventoryTransactions = new ArrayList<>(); // just a placeholder for one commit only
 		List<Inventory> inventoriesForSave = new ArrayList<>(); // just a placeholder for one commit only
 
+		if(stockTransfer.getStockTransferItems().size() <= 0) {
+			throw new StockTransferException("Atleast 1 Item is Required");
+		}
+		
 		for(StockTransferItem stockTransferItem : stockTransfer.getStockTransferItems()) {
 
 			stockTransferItem.setStockTransfer(stockTransfer);
@@ -429,6 +440,66 @@ public class InventoryCoreService {
 		// lets generate systemNumber by saving the stockreceive
 		stockReceive.setCreatedBy(userCredentials.getLoggedInUser());
 		stockReceive = stockReceiveRepository.save(stockReceive);
+		
+		// expenses
+		if(stockReceive.getExpenses() != null) {
+			for(StockReceiveExpense expense : stockReceive.getExpenses()) {
+				expense.setStockReceive(stockReceive);
+				expense.setCreatedBy(userCredentials.getLoggedInUser());
+			}
+		}
 
+		List<Inventory> inventories = inventoryRepository.findByLocation(stockReceive.getLocation());
+		List<Inventory> inventoriesForSave = new ArrayList<>();
+		List<InventoryTransaction> inventoryTransactionsForSave = new ArrayList<>();
+		
+		for(StockReceiveItem stockReceiveItem : stockReceive.getStockReceiveItems()) {
+			
+			stockReceiveItem.setStockReceive(stockReceive);
+			stockReceiveItem.setCreatedBy(userCredentials.getLoggedInUser());
+			
+			Inventory inventory = inventoryUtility.findInventoryFromList(inventories, stockReceive.getLocation(), stockReceiveItem.getItem(), stockReceiveItem.getUnit());
+			
+			if(inventory == null) {
+				inventory = new Inventory();
+				inventory.setLocation(stockReceive.getLocation());
+				inventory.setItem(stockReceiveItem.getItem());
+				inventory.setUnit(stockReceiveItem.getUnit());
+				inventory.setQuantity(new BigDecimal("0"));
+				inventory.setCreatedBy(userCredentials.getLoggedInUser());
+			} else {
+				inventory.setUpdatedBy(userCredentials.getLoggedInUser());
+			}
+			
+			// inventory transaction
+			InventoryTransaction inventoryTransaction = new InventoryTransaction();
+			inventoryTransaction.setItem(stockReceiveItem.getItem());
+			inventoryTransaction.setLocation(stockReceive.getLocation());
+			inventoryTransaction.setUnit(stockReceiveItem.getUnit());
+			inventoryTransaction.setTransactionType(TransactionType.STOCK_RECIEVE);
+			inventoryTransaction.setRawQuantity(stockReceiveItem.getQuantity());
+			inventoryTransaction.setTransactionSystemNumber(stockReceive.getSystemNumber());
+			inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
+			inventoryTransaction.setRateQuantity(stockReceiveItem.getQuantity());
+			inventoryTransaction.setInventory(inventory);
+			
+			inventoryTransaction.setQuantityBefore(inventory.getQuantity());
+			// increment quantity
+			inventory.setQuantity(inventory.getQuantity().add(stockReceiveItem.getQuantity()));
+			
+			inventoryTransaction.setQuantityAfter(inventory.getQuantity());
+			
+			inventoriesForSave.add(inventory);
+			inventoryTransactionsForSave.add(inventoryTransaction);
+		}
+		
+		if(stockReceive.getExpenses() != null && stockReceive.getExpenses().size() > 0) {
+			stockReceiveExpenseRepository.saveAll(stockReceive.getExpenses());
+		}
+		
+		inventoryRepository.saveAll(inventoriesForSave);
+		inventoryTransactionRepository.saveAll(inventoryTransactionsForSave);
+		stockReceiveItemRepository.saveAll(stockReceive.getStockReceiveItems());
+		stockReceiveRepository.save(stockReceive);
 	}
 }
