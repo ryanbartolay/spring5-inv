@@ -49,11 +49,12 @@ public class StockReceiveServiceImpl implements StockReceiveService {
 		stockReceive.setLocation(stockReceiveForm.getLocation());
 		stockReceive.setStockReceiveItems(stockReceiveForm.getStockReceiveItems());
 		stockReceive.setPaymentMethod(stockReceiveForm.getPaymentMethod());
-		stockReceive.setExpenses(stockReceiveForm.getExpenses());
+		stockReceive.setStockReceiveExpenses(stockReceiveForm.getExpenses());
 		stockReceive.setDiscountValue(stockReceiveForm.getDiscountValue());
 		stockReceive.setYear(stockReceiveForm.getYear());
 		stockReceive.setTransactionDate(stockReceiveForm.getTransactionDate());
 		stockReceive.setSupplier(stockReceiveForm.getSupplier());
+		stockReceive.setCreditCardDetails(stockReceiveForm.getCreditCardDetails());
 		
 		inventoryCoreService.createStockReceive(stockReceive);
 		

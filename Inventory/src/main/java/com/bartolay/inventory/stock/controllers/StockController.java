@@ -15,7 +15,9 @@ import com.bartolay.inventory.services.CompanyService;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.entity.StockTransfer;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
+import com.bartolay.inventory.stock.repositories.StockReceiveRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferRepository;
+import com.bartolay.inventory.utils.NumericUtility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
@@ -29,6 +31,9 @@ public class StockController {
 	
 	@Autowired
 	private StockTransferRepository stockTransferRepository;
+	
+	@Autowired 
+	private StockReceiveRepository stockReceiveRepository;
 
 	@Autowired
 	private CompanyService companyService;
@@ -76,10 +81,21 @@ public class StockController {
 		return model;
 	}
 	
+	@RequestMapping(value="/stock/received/{system_number}")
+	public ModelAndView recieveView(ModelAndView model, @PathVariable String system_number) {
+		model.setViewName("stock/index");
+		model.addObject("page", "Stock Received");
+		model.addObject("html", "received/view");
+		model.addObject("numericUtility", new NumericUtility());
+		model.addObject("stockReceive", stockReceiveRepository.findById(system_number).get());
+		
+		return model;
+	}
+	
 	@RequestMapping(value="/stock/received/create")
 	public ModelAndView recieveCreate(ModelAndView model) {
 		model.setViewName("stock/index");
-		model.addObject("page", "Stock Received");
+		model.addObject("page", "New Stock Received");
 		model.addObject("html", "received/edit");
 		model.addObject("stockReceivedForm", new StockReceiveForm());
 		

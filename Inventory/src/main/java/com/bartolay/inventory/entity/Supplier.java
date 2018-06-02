@@ -124,5 +124,10 @@ public class Supplier {
 	public void setUpdatedBy(User updatedBy) {
 		this.updatedBy = updatedBy;
 	}
-    
+
+	@Override
+	public String toString() {
+		return "Supplier [id=" + id + ", name=" + name + ", phone=" + phone + ", address=" + address + ", createdDate="
+				+ createdDate + ", updatedDated=" + updatedDated + "]";
+	}
 }

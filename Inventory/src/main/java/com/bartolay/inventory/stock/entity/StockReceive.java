@@ -1,5 +1,6 @@
 package com.bartolay.inventory.stock.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.repositories.GeneratedSystemNumber;
+import com.bartolay.inventory.sales.entity.CreditCardDetails;
 
 @Entity
 public class StockReceive implements GeneratedSystemNumber {
@@ -40,6 +42,10 @@ public class StockReceive implements GeneratedSystemNumber {
 	@Enumerated(EnumType.STRING)
 	@Column(name="payment_method", nullable=false, length=10, updatable=true)
 	private PaymentMethod paymentMethod;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "credit_card_details_id", nullable=true, updatable=true)
+	private CreditCardDetails creditCardDetails;
 
 	@Column(name="document_number", unique=true, length=25)
 	private String documentNumber;
@@ -52,7 +58,10 @@ public class StockReceive implements GeneratedSystemNumber {
 	private Date transactionDate;
 	
 	@OneToMany(mappedBy = "stockReceive", fetch=FetchType.LAZY)
-	private List<StockReceiveExpense> expenses;
+	private List<StockReceiveExpense> stockReceiveExpenses;
+	
+	@Column(name="expense_total", nullable=false, precision=10, scale=5)
+	private BigDecimal expensesTotal;
 
 	@Column(name="discount_value", nullable=false)
 	private Integer discountValue;
@@ -62,6 +71,15 @@ public class StockReceive implements GeneratedSystemNumber {
 
 	@OneToMany(mappedBy = "stockReceive", fetch=FetchType.LAZY)
 	private List<StockReceiveItem> stockReceiveItems;
+	
+	@Column(name="total", nullable=false, precision=10, scale=5)
+	private BigDecimal total;
+	
+	@Column(name="grand_total", nullable=false, precision=10, scale=5)
+	private BigDecimal grandTotal;
+	
+	@Column(name="net_total", nullable=false, precision=10, scale=5)
+	private BigDecimal netTotal;
 
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
@@ -95,12 +113,28 @@ public class StockReceive implements GeneratedSystemNumber {
 		this.supplier = supplier;
 	}
 
+	public BigDecimal getExpensesTotal() {
+		return expensesTotal;
+	}
+
+	public void setExpensesTotal(BigDecimal expensesTotal) {
+		this.expensesTotal = expensesTotal;
+	}
+
 	public PaymentMethod getPaymentMethod() {
 		return paymentMethod;
 	}
 
 	public void setPaymentMethod(PaymentMethod paymentMethod) {
 		this.paymentMethod = paymentMethod;
+	}
+
+	public CreditCardDetails getCreditCardDetails() {
+		return creditCardDetails;
+	}
+
+	public void setCreditCardDetails(CreditCardDetails creditCardDetails) {
+		this.creditCardDetails = creditCardDetails;
 	}
 
 	public String getDocumentNumber() {
@@ -133,6 +167,30 @@ public class StockReceive implements GeneratedSystemNumber {
 
 	public void setStockReceiveItems(List<StockReceiveItem> stockReceiveItems) {
 		this.stockReceiveItems = stockReceiveItems;
+	}
+
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
+	}
+
+	public BigDecimal getGrandTotal() {
+		return grandTotal;
+	}
+
+	public void setGrandTotal(BigDecimal grandTotal) {
+		this.grandTotal = grandTotal;
+	}
+	
+	public BigDecimal getNetTotal() {
+		return netTotal;
+	}
+
+	public void setNetTotal(BigDecimal netTotal) {
+		this.netTotal = netTotal;
 	}
 
 	public Date getCreatedDate() {
@@ -190,21 +248,21 @@ public class StockReceive implements GeneratedSystemNumber {
 		return "stock_receive";
 	}
 
-	public List<StockReceiveExpense> getExpenses() {
-		return expenses;
+	public List<StockReceiveExpense> getStockReceiveExpenses() {
+		return stockReceiveExpenses;
 	}
 
-	public void setExpenses(List<StockReceiveExpense> expenses) {
-		this.expenses = expenses;
+	public void setStockReceiveExpenses(List<StockReceiveExpense> stockReceiveExpenses) {
+		this.stockReceiveExpenses = stockReceiveExpenses;
 	}
 
 	@Override
 	public String toString() {
 		return "StockReceive [systemNumber=" + systemNumber + ", supplier=" + supplier + ", paymentMethod="
 				+ paymentMethod + ", documentNumber=" + documentNumber + ", location=" + location + ", expenses="
-				+ expenses + ", discountValue=" + discountValue + ", year=" + year + ", stockReceiveItems="
-				+ stockReceiveItems + ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", updatedDated="
-				+ updatedDated + ", updatedBy=" + updatedBy + "]";
+				+ stockReceiveExpenses + ", discountValue=" + discountValue + ", year=" + year + ", total=" + total 
+				+ ",createdDate=" + createdDate + ", updatedDated="
+				+ updatedDated + "]";
 	}
 
 }

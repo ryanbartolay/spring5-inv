@@ -80,6 +80,9 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 		List<StockReceiveExpense> expenses = getExpenses();
 
 		List<StockReceiveItem> items = getItems();
+		
+		List<StockReceiveItem> item2 = getItems();
+		List<StockReceiveItem> item3 = getItems();
 
 		StockReceiveForm form = new StockReceiveForm();
 		form.setPaymentMethod(PaymentMethod.CASH);
@@ -98,7 +101,7 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 		form.setLocation(locationRepository.findById(2).get());
 		form.setYear("2018");
 		form.setTransactionDate(new Date());
-		form.setStockReceiveItems(items);
+		form.setStockReceiveItems(item2);
 		form.setExpenses(null);
 		form.setDiscountValue(5);
 		form.setSupplier(supplierRepository.findById(2).get());
@@ -110,7 +113,7 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 		form.setLocation(locationRepository.findById(2).get());
 		form.setYear("2018");
 		form.setTransactionDate(new Date());
-		form.setStockReceiveItems(items);
+		form.setStockReceiveItems(item3);
 		form.setExpenses(null);
 		form.setDiscountValue(5);
 		form.setSupplier(supplierRepository.findById(1).get());

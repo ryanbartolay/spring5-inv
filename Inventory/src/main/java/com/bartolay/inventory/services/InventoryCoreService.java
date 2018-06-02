@@ -439,13 +439,18 @@ public class InventoryCoreService {
 
 		// lets generate systemNumber by saving the stockreceive
 		stockReceive.setCreatedBy(userCredentials.getLoggedInUser());
+		stockReceive.setExpensesTotal(new BigDecimal("0"));
+		stockReceive.setTotal(new BigDecimal("0"));
+		stockReceive.setGrandTotal(new BigDecimal("0"));
+		stockReceive.setNetTotal(new BigDecimal("0"));
 		stockReceive = stockReceiveRepository.save(stockReceive);
 		
 		// expenses
-		if(stockReceive.getExpenses() != null) {
-			for(StockReceiveExpense expense : stockReceive.getExpenses()) {
+		if(stockReceive.getStockReceiveExpenses() != null) {
+			for(StockReceiveExpense expense : stockReceive.getStockReceiveExpenses()) {
 				expense.setStockReceive(stockReceive);
 				expense.setCreatedBy(userCredentials.getLoggedInUser());
+				stockReceive.setExpensesTotal(stockReceive.getExpensesTotal().add(expense.getAmount()));
 			}
 		}
 
@@ -489,13 +494,20 @@ public class InventoryCoreService {
 			
 			inventoryTransaction.setQuantityAfter(inventory.getQuantity());
 			
+			stockReceiveItem.setUnitCostTotal(stockReceiveItem.getQuantity().multiply(stockReceiveItem.getUnitCost()));
+			
+			stockReceive.setTotal(stockReceive.getTotal().add(stockReceiveItem.getUnitCostTotal()));
+			
 			inventoriesForSave.add(inventory);
 			inventoryTransactionsForSave.add(inventoryTransaction);
 		}
 		
-		if(stockReceive.getExpenses() != null && stockReceive.getExpenses().size() > 0) {
-			stockReceiveExpenseRepository.saveAll(stockReceive.getExpenses());
+		if(stockReceive.getStockReceiveExpenses() != null && stockReceive.getStockReceiveExpenses().size() > 0) {
+			stockReceiveExpenseRepository.saveAll(stockReceive.getStockReceiveExpenses());
 		}
+		
+		stockReceive.setGrandTotal(stockReceive.getTotal().subtract(new BigDecimal(stockReceive.getDiscountValue())));
+		stockReceive.setNetTotal(stockReceive.getGrandTotal().add(stockReceive.getExpensesTotal()));
 		
 		inventoryRepository.saveAll(inventoriesForSave);
 		inventoryTransactionRepository.saveAll(inventoryTransactionsForSave);
