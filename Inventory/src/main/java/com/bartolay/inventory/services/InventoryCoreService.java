@@ -17,6 +17,7 @@ import com.bartolay.inventory.entity.ItemUnit;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.enums.Status;
 import com.bartolay.inventory.enums.TransactionType;
+import com.bartolay.inventory.exceptions.SalesInvoiceException;
 import com.bartolay.inventory.exceptions.StockTransferException;
 import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.InventoryTransactionRepository;
@@ -168,7 +169,7 @@ public class InventoryCoreService {
 	 * @param salesInvoice
 	 */
 	@Transactional
-	public void createSalesInvoice(SalesInvoice salesInvoice) {
+	public void createSalesInvoice(SalesInvoice salesInvoice) throws SalesInvoiceException {
 		// TODO should have sales invoice item
 
 		// Lets save the sales invoice first so we can generate a system number
@@ -193,22 +194,29 @@ public class InventoryCoreService {
 		List<InventoryTransaction> inventoryTransactions = new ArrayList<>(); // just a placeholder for one commit only
 		List<Inventory> inventoriesForSave = new ArrayList<>(); // just a placeholder for one commit only
 
-		salesInvoice.getSalesInvoiceItems().forEach(salesInvoiceItem -> {
+		for(SalesInvoiceItem salesInvoiceItem : salesInvoice.getSalesInvoiceItems()) {
+
 			salesInvoiceItem.setCreatedBy(userCredentials.getLoggedInUser());
 			salesInvoiceItem.setSalesInvoice(salesInvoice);
 
-			Inventory inventory = new Inventory();
+			Inventory inventory = inventoryUtility.findInventoryFromList(inventories, salesInvoice.getLocation(), salesInvoiceItem.getItem(), salesInvoiceItem.getUnit());
 
-			inventory.setItem(salesInvoiceItem.getItem());
-			inventory.setLocation(salesInvoice.getLocation());
-
-			// checking if the item is already existing in the inventory, if not we continue the stream
 			// we will only process what is existing in the inventory (you cannot put sales invoice with inventory not existing, lol)
-			if(!inventories.contains(inventory)) {
-				return;
+			if(inventory == null) {
+				throw new SalesInvoiceException("Item " + salesInvoiceItem.getItem().getName() + " is not found in "
+						+ "Location " + salesInvoice.getLocation().getName());
 			}
 
-			inventory = inventories.get(inventories.indexOf(inventory));
+			BigDecimal after_quantity = inventory.getQuantity().subtract(salesInvoiceItem.getQuantity());
+
+			// we cannot process the sales if more than the current inventory
+			if(after_quantity.doubleValue() <= 0) {
+				throw new SalesInvoiceException("Item "+ salesInvoiceItem.getItem().getName() +" "
+						+ "Quantity "+ salesInvoiceItem.getQuantity() +" is greater than the "
+						+ "current inventory "+ inventory.getQuantity() +".");
+			}
+
+			inventory.setQuantity(after_quantity);
 			inventory.setUpdatedBy(userCredentials.getLoggedInUser());
 
 			// we can create transaction if inventory is found
@@ -221,30 +229,12 @@ public class InventoryCoreService {
 			inventoryTransaction.setItem(salesInvoiceItem.getItem());
 			inventoryTransaction.setUnit(salesInvoiceItem.getUnit());
 			inventoryTransaction.setRawQuantity(salesInvoiceItem.getQuantity());
+			inventoryTransaction.setRateQuantity(salesInvoiceItem.getQuantity());
 			inventoryTransaction.setUnitCost(salesInvoiceItem.getUnitCost());
 			inventoryTransaction.setQuantityBefore(inventory.getQuantity());
+			inventoryTransaction.setQuantityAfter(after_quantity);
 
-			// Now lets compute for the quantity of the item
-			// if unit is the default unit of the item
-			// save the quantity as is
-			if(inventory.getItem().isDefaultUnit(salesInvoiceItem.getUnit())) { 
-				inventory.setQuantity(inventory.getQuantity().subtract(salesInvoiceItem.getQuantity()));
-				inventoryTransaction.setRateQuantity(salesInvoiceItem.getQuantity());
-			} else {
-				BigDecimal quantity = salesInvoiceItem.getQuantity(); // user input quantity
-
-				// lets get the rate of the item unit
-				ItemUnit itemUnit = itemUnitRepository.findByItemAndUnit(salesInvoiceItem.getItem(), salesInvoiceItem.getUnit());
-				BigDecimal rate = itemUnit.getRate(); // items rate
-
-				BigDecimal rateQuantity = quantity.divide(rate, 5, RoundingMode.HALF_UP);
-				inventoryTransaction.setRateQuantity(rateQuantity);
-
-				inventory.setQuantity(inventory.getQuantity().subtract(rateQuantity));
-			}
-
-			salesInvoiceItem.setRateQuantity(inventoryTransaction.getRateQuantity());
-			salesInvoiceItem.setUnitCostTotal(salesInvoiceItem.getUnitCost().multiply(salesInvoiceItem.getRateQuantity()));
+			salesInvoiceItem.setUnitCostTotal(salesInvoiceItem.getUnitCost().multiply(salesInvoiceItem.getQuantity()));
 			salesInvoiceItem.setStatus(Status.SUCCESS);
 
 			salesInvoice.setSubtotal(salesInvoice.getSubtotal().add(salesInvoiceItem.getUnitCostTotal()));
@@ -259,7 +249,7 @@ public class InventoryCoreService {
 
 			inventoriesForSave.add(inventory);
 			inventoryTransactions.add(inventoryTransaction);
-		});
+		}
 
 		salesInvoiceRepository.save(salesInvoice);
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
@@ -349,7 +339,7 @@ public class InventoryCoreService {
 		if(stockTransfer.getStockTransferItems().size() <= 0) {
 			throw new StockTransferException("Atleast 1 Item is Required");
 		}
-		
+
 		for(StockTransferItem stockTransferItem : stockTransfer.getStockTransferItems()) {
 
 			stockTransferItem.setStockTransfer(stockTransfer);
@@ -444,7 +434,7 @@ public class InventoryCoreService {
 		stockReceive.setGrandTotal(new BigDecimal("0"));
 		stockReceive.setNetTotal(new BigDecimal("0"));
 		stockReceive = stockReceiveRepository.save(stockReceive);
-		
+
 		// expenses
 		if(stockReceive.getStockReceiveExpenses() != null) {
 			for(StockReceivedExpense expense : stockReceive.getStockReceiveExpenses()) {
@@ -457,14 +447,14 @@ public class InventoryCoreService {
 		List<Inventory> inventories = inventoryRepository.findByLocation(stockReceive.getLocation());
 		List<Inventory> inventoriesForSave = new ArrayList<>();
 		List<InventoryTransaction> inventoryTransactionsForSave = new ArrayList<>();
-		
+
 		for(StockReceivedItem stockReceiveItem : stockReceive.getStockReceiveItems()) {
-			
+
 			stockReceiveItem.setStockReceive(stockReceive);
 			stockReceiveItem.setCreatedBy(userCredentials.getLoggedInUser());
-			
+
 			Inventory inventory = inventoryUtility.findInventoryFromList(inventories, stockReceive.getLocation(), stockReceiveItem.getItem(), stockReceiveItem.getUnit());
-			
+
 			if(inventory == null) {
 				inventory = new Inventory();
 				inventory.setLocation(stockReceive.getLocation());
@@ -475,7 +465,7 @@ public class InventoryCoreService {
 			} else {
 				inventory.setUpdatedBy(userCredentials.getLoggedInUser());
 			}
-			
+
 			// inventory transaction
 			InventoryTransaction inventoryTransaction = new InventoryTransaction();
 			inventoryTransaction.setItem(stockReceiveItem.getItem());
@@ -487,28 +477,28 @@ public class InventoryCoreService {
 			inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
 			inventoryTransaction.setRateQuantity(stockReceiveItem.getQuantity());
 			inventoryTransaction.setInventory(inventory);
-			
+
 			inventoryTransaction.setQuantityBefore(inventory.getQuantity());
 			// increment quantity
 			inventory.setQuantity(inventory.getQuantity().add(stockReceiveItem.getQuantity()));
-			
+
 			inventoryTransaction.setQuantityAfter(inventory.getQuantity());
-			
+
 			stockReceiveItem.setUnitCostTotal(stockReceiveItem.getQuantity().multiply(stockReceiveItem.getUnitCost()));
-			
+
 			stockReceive.setTotal(stockReceive.getTotal().add(stockReceiveItem.getUnitCostTotal()));
-			
+
 			inventoriesForSave.add(inventory);
 			inventoryTransactionsForSave.add(inventoryTransaction);
 		}
-		
+
 		if(stockReceive.getStockReceiveExpenses() != null && stockReceive.getStockReceiveExpenses().size() > 0) {
 			stockReceiveExpenseRepository.saveAll(stockReceive.getStockReceiveExpenses());
 		}
-		
+
 		stockReceive.setGrandTotal(stockReceive.getTotal().subtract(new BigDecimal(stockReceive.getDiscountValue())));
 		stockReceive.setNetTotal(stockReceive.getGrandTotal().add(stockReceive.getExpensesTotal()));
-		
+
 		inventoryRepository.saveAll(inventoriesForSave);
 		inventoryTransactionRepository.saveAll(inventoryTransactionsForSave);
 		stockReceiveItemRepository.saveAll(stockReceive.getStockReceiveItems());

@@ -3,9 +3,8 @@ package com.bartolay.inventory.development;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -18,6 +17,8 @@ import org.springframework.stereotype.Component;
 import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
+import com.bartolay.inventory.exceptions.SalesInvoiceException;
+import com.bartolay.inventory.form.SalesInvoiceForm;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.UserRepository;
@@ -25,12 +26,16 @@ import com.bartolay.inventory.sales.entity.CreditCardDetails;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
 import com.bartolay.inventory.sales.repositories.CreditCardDetailsRepository;
+import com.bartolay.inventory.sales.services.SalesInvoiceService;
 import com.bartolay.inventory.services.InventoryCoreService;
 
 @Component
 @Transactional
 public class _6SalesInvoiceBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
 
+	@Autowired
+	private SalesInvoiceService salesInvoiceService;
+	
 	@Autowired
 	private CreditCardDetailsRepository creditCardDetailsRepository;
 	
@@ -53,45 +58,35 @@ public class _6SalesInvoiceBootstrap implements ApplicationListener<ContextRefre
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
-		CreditCardDetails ccDetails = creditCardDetailsRepository.findById(1).get();
-		User user = userRepository.findByUsername("admin");
-		User salesPerson = userRepository.findByUsername("sales1");
 		
-		User customer = userRepository.findByUsername("customer");
+		SalesInvoiceForm salesInvoiceForm = new SalesInvoiceForm();
+		salesInvoiceForm.setPaymentMethod(PaymentMethod.CREDITCARD);
+		salesInvoiceForm.setCreditCardDetails(creditCardDetailsRepository.findById(1).get());
+		salesInvoiceForm.setSalesPerson(userRepository.findByUsername("sales1"));
+		salesInvoiceForm.setLocation(locationRepository.findById(1).get());
+		salesInvoiceForm.setSalesInvoiceItems(getSalesInvoiceItems());
+		salesInvoiceForm.setDiscountPercentage(new BigDecimal("3.5"));
+		salesInvoiceForm.setTransactionDate(new Date());
+		salesInvoiceForm.setYear("2018");
+		salesInvoiceForm.setCustomer(userRepository.findByUsername("customer"));
 		
-		Calendar cal = Calendar.getInstance();
-		cal.set(2018, 4, 21, 22, 33, 5);
-		
-		Item item = itemRepository.findById(1).get();
-		
+		try {
+			salesInvoiceService.create(salesInvoiceForm);
+		} catch (SalesInvoiceException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private List<SalesInvoiceItem> getSalesInvoiceItems() {
 		List<SalesInvoiceItem> salesInvoiceItems = new ArrayList<>();
 		
 		SalesInvoiceItem salesInvoiceItem = new SalesInvoiceItem();
-		salesInvoiceItem.setCreatedBy(user);
-		salesInvoiceItem.setItem(item);
+		salesInvoiceItem.setItem(itemRepository.findById(1).get());
+		salesInvoiceItem.setUnit(itemRepository.findById(1).get().getDefaultUnit());
 		salesInvoiceItem.setQuantity(new BigDecimal("2.211"));
-		salesInvoiceItem.setUnit(item.getDefaultUnit());
 		salesInvoiceItem.setUnitCost(new BigDecimal("30.33"));
 		salesInvoiceItems.add(salesInvoiceItem);
-		
-		System.err.println(locationRepository.findById(1).get());
-		
-		// sales invoice
-		SalesInvoice salesInvoice = new SalesInvoice();
-		salesInvoice.setCreditCardDetails(ccDetails);
-		salesInvoice.setPaymentMethod(PaymentMethod.CREDITCARD);
-		salesInvoice.setDocumentNumber("Sales#12344");
-		salesInvoice.setYear("2018");
-		salesInvoice.setTransactionDate(cal.getTime());
-		salesInvoice.setSalesPerson(salesPerson);
-		salesInvoice.setCustomer(customer);
-		salesInvoice.setCreatedBy(user);
-		salesInvoice.setLocation(locationRepository.findById(1).get());
-		salesInvoice.setDiscountPercentage(new BigDecimal("3.5"));
-		salesInvoice.setSalesInvoiceItems(salesInvoiceItems);
-		
-		System.err.println("creating sales invoice");
-		
-		inventoryService.createSalesInvoice(salesInvoice);
+
+		return salesInvoiceItems;
 	}
 }

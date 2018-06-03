@@ -5,16 +5,14 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import com.bartolay.inventory.exceptions.SalesInvoiceException;
 import com.bartolay.inventory.form.SalesInvoiceForm;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 
 public interface SalesInvoiceService {
-	public SalesInvoice create(SalesInvoiceForm salesInvoiceForm);
-	public SalesInvoice update(SalesInvoiceForm salesInvoiceForm);
-	
+	public SalesInvoice create(SalesInvoiceForm salesInvoiceForm) throws SalesInvoiceException;
+
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
-	public SalesInvoice delete(Long id);
-	
 	public List<SalesInvoice> findAll();
 	public SalesInvoice cancel(String systemNumber);
 }

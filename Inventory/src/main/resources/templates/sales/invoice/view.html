@@ -84,8 +84,8 @@
 											<th>Description</th>
 											<th>Unit</th>
 											<th>U.Desc</th>
-											<th>Quantity</th>
-											<th>Unit Price</th>
+											<th class="text-right">Quantity</th>
+											<th class="text-right">Unit Price</th>
 											<th class="text-right">Subtotal</th>
 										</tr>
 									</thead>
@@ -97,8 +97,8 @@
 											<td	th:text="${salesInvoiceItem.item.name} + '( '+ ${salesInvoiceItem.item.defaultUnit.abbreviation} +' )'"></td>
 											<td th:text="${salesInvoiceItem.unit.abbreviation}"></td>
 											<td th:text="${salesInvoiceItem.unit.name}"></td>
-											<td th:text="${salesInvoiceItem.rateQuantity}"></td>
-											<td th:text="${salesInvoiceItem.unitCost}"></td>
+											<td class="text-right" th:text="${salesInvoiceItem.quantity}"></td>
+											<td class="text-right" th:text="${salesInvoiceItem.unitCost}"></td>
 											<td class="text-right" th:text="${salesInvoiceItem.unitCostTotal}"></td>
 										</tr:block>
 									</tbody>
@@ -144,15 +144,15 @@
 										<tbody>
 											<tr>
 												<th style="width: 50%">Subtotal:</th>
-												<td th:text="${salesInvoice.subtotal}"></td>
+												<td class="text-right" th:text="${salesInvoice.subtotal}"></td>
 											</tr>
 											<tr>
 												<th>Discount (<span th:text="${salesInvoice.discountPercentage}"></span>%)</th>
-												<td th:text="${salesInvoice.discountTotal}"></td>
+												<td class="text-right" th:text="${salesInvoice.discountTotal}"></td>
 											</tr>
 											<tr>
 												<th>Total:</th>
-												<td th:text="${salesInvoice.netTotal}"></td>
+												<td class="text-right" th:text="${salesInvoice.netTotal}"></td>
 											</tr>
 										</tbody>
 									</table>

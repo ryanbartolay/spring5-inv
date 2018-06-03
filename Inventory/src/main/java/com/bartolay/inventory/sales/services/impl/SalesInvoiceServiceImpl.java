@@ -13,36 +13,62 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
+import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.enums.PaymentMethod;
+import com.bartolay.inventory.exceptions.SalesInvoiceException;
 import com.bartolay.inventory.form.SalesInvoiceForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
+import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.sales.services.SalesInvoiceService;
 import com.bartolay.inventory.services.InventoryCoreService;
-import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
 @Transactional
 public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 	
 	@Autowired
-	private UserCredentials userCredentials;
-	
-	@Autowired
 	private SalesInvoiceRepository salesInvoiceRepository;
 	@Autowired
-	private InventoryCoreService inventoryService;
+	private InventoryCoreService inventoryCoreService;
+	
+	@Autowired
+	private InventoryRepository inventoryRepository;
+	
 	@Autowired
 	@Qualifier("salesInvoiceDataTableRepository")
 	private DatatableRepository salesInvoiceDataTableRepository;
 
 	@Override
-	public SalesInvoice create(SalesInvoiceForm salesInvoiceForm) {
+	public SalesInvoice create(SalesInvoiceForm salesInvoiceForm) throws SalesInvoiceException {
 
 		if(salesInvoiceForm.getPaymentMethod().equals(PaymentMethod.CREDITCARD) && salesInvoiceForm.getCreditCardDetails() == null) {
-			throw new RuntimeException("Please specify Credit Card Details");
+			throw new SalesInvoiceException("Please specify Credit Card Details");
 		}
+		
+		if(salesInvoiceForm.getLocation() == null) {
+			throw new SalesInvoiceException("Location is required");
+		}
+		
+		if(salesInvoiceForm.getSalesInvoiceItems().size() <= 0) {
+			throw new SalesInvoiceException("Atleast 1 item is required");
+		}
+		
+		if(salesInvoiceForm.getPaymentMethod() == null) {
+			throw new SalesInvoiceException("You must specify payment method");
+		}
+		
+		if(salesInvoiceForm.getPaymentMethod().equals(PaymentMethod.CREDITCARD)) {
+			if(salesInvoiceForm.getCreditCardDetails() == null) {
+				throw new SalesInvoiceException("Credit card details is required for Credit Card Payment Method.");
+			}
+		} else {
+			salesInvoiceForm.setCreditCardDetails(null);
+		}
+		
+		List<Inventory> inventories = inventoryRepository.findByLocation(salesInvoiceForm.getLocation());
+		
 		
 		SalesInvoice salesInvoice = new SalesInvoice();
 		salesInvoice.setPaymentMethod(salesInvoiceForm.getPaymentMethod());
@@ -56,15 +82,9 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 		salesInvoice.setDiscountPercentage(salesInvoiceForm.getDiscountPercentage());
 		salesInvoice.setCreditCardDetails(salesInvoiceForm.getCreditCardDetails());
 	
-		inventoryService.createSalesInvoice(salesInvoice);
+		inventoryCoreService.createSalesInvoice(salesInvoice);
 
 		return salesInvoice;
-	}
-
-	@Override
-	public SalesInvoice update(SalesInvoiceForm salesInvoiceForm) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -85,12 +105,6 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 	}
 
 	@Override
-	public SalesInvoice delete(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<SalesInvoice> findAll() {
 		// TODO Auto-generated method stub
 		return null;
@@ -105,7 +119,7 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 		}
 		SalesInvoice sInvoice = salesInvoice.get();
 		try {
-			inventoryService.cancelSalesInvoice(sInvoice);
+			inventoryCoreService.cancelSalesInvoice(sInvoice);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
