@@ -67,7 +67,7 @@
 	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
 <script>
 	var table = $('#stockreceived-datatable');
-	var datatable = customFixedDatatable(table, '/api/datatable/openingstock', 
+	var datatable = customFixedDatatable(table, '/api/datatable/stockreceived', 
 		[
         	{ 
         		data: "system_number",
@@ -78,7 +78,10 @@
         	{ 
         		data: "document_number",
         		render: function ( data, type, row ) {
-                    return '<a href="/stock/received/'+ row.system_number +'">' + data + '</a>';
+        			if(data) {
+        				return '<a href="/stock/received/'+ row.system_number +'">' + data + '</a>';	
+        			}
+        			return '';
                 }
         	},
         	{ data: "transaction_date" },

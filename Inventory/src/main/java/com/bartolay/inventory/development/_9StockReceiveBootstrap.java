@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.exceptions.StockReceiveException;
-import com.bartolay.inventory.form.StockReceiveForm;
+import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.repositories.ExpenseRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
@@ -24,9 +24,9 @@ import com.bartolay.inventory.repositories.SupplierRepository;
 import com.bartolay.inventory.repositories.UnitRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 import com.bartolay.inventory.sales.repositories.CreditCardDetailsRepository;
-import com.bartolay.inventory.stock.entity.StockReceiveExpense;
-import com.bartolay.inventory.stock.entity.StockReceiveItem;
-import com.bartolay.inventory.stock.services.StockReceiveService;
+import com.bartolay.inventory.stock.entity.StockReceivedExpense;
+import com.bartolay.inventory.stock.entity.StockReceivedItem;
+import com.bartolay.inventory.stock.services.StockReceivedService;
 
 @Component
 @Transactional
@@ -50,7 +50,7 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 	private User user;
 
 	@Autowired
-	private StockReceiveService stockReceiveService;
+	private StockReceivedService stockReceiveService;
 	
 	@Autowired
 	private SupplierRepository supplierRepository;
@@ -77,14 +77,14 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 
 	private void createStockReceives() throws StockReceiveException {
 
-		List<StockReceiveExpense> expenses = getExpenses();
+		List<StockReceivedExpense> expenses = getExpenses();
 
-		List<StockReceiveItem> items = getItems();
+		List<StockReceivedItem> items = getItems();
 		
-		List<StockReceiveItem> item2 = getItems();
-		List<StockReceiveItem> item3 = getItems();
+		List<StockReceivedItem> item2 = getItems();
+		List<StockReceivedItem> item3 = getItems();
 
-		StockReceiveForm form = new StockReceiveForm();
+		StockReceivedForm form = new StockReceivedForm();
 		form.setPaymentMethod(PaymentMethod.CASH);
 		form.setLocation(locationRepository.findById(1).get());
 		form.setYear("2018");
@@ -96,7 +96,7 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 
 		stockReceiveService.create(form);
 		
-		form = new StockReceiveForm();
+		form = new StockReceivedForm();
 		form.setPaymentMethod(PaymentMethod.CHECK);
 		form.setLocation(locationRepository.findById(2).get());
 		form.setYear("2018");
@@ -108,7 +108,7 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 
 		stockReceiveService.create(form);
 		
-		form = new StockReceiveForm();
+		form = new StockReceivedForm();
 		form.setPaymentMethod(PaymentMethod.CREDITCARD);
 		form.setLocation(locationRepository.findById(2).get());
 		form.setYear("2018");
@@ -122,10 +122,10 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 		stockReceiveService.create(form);
 	}
 
-	private List<StockReceiveItem> getItems() {
-		List<StockReceiveItem> items = new ArrayList<>();
+	private List<StockReceivedItem> getItems() {
+		List<StockReceivedItem> items = new ArrayList<>();
 
-		StockReceiveItem item = new StockReceiveItem();
+		StockReceivedItem item = new StockReceivedItem();
 		item.setItem(itemRepository.findById(2).get());
 		item.setCreatedBy(user);
 		item.setQuantity(new BigDecimal("23"));
@@ -133,14 +133,14 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 		item.setUnit(unitRepository.findById(2).get());
 		items.add(item);
 
-		StockReceiveItem item2 = new StockReceiveItem();
+		StockReceivedItem item2 = new StockReceivedItem();
 		item2.setItem(itemRepository.findById(1).get());
 		item2.setQuantity(new BigDecimal("50"));
 		item2.setUnitCost(new BigDecimal("400"));
 		item2.setUnit(unitRepository.findById(2).get());
 		items.add(item2);
 
-		StockReceiveItem item3 = new StockReceiveItem();
+		StockReceivedItem item3 = new StockReceivedItem();
 		item3.setItem(itemRepository.findById(1).get());
 		item3.setQuantity(new BigDecimal("5"));
 		item3.setUnitCost(new BigDecimal("10"));
@@ -150,16 +150,16 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 		return items;
 	}
 
-	private List<StockReceiveExpense> getExpenses() {
-		List<StockReceiveExpense> expenses = new ArrayList<>();
+	private List<StockReceivedExpense> getExpenses() {
+		List<StockReceivedExpense> expenses = new ArrayList<>();
 
-		StockReceiveExpense sre1 = new StockReceiveExpense();
+		StockReceivedExpense sre1 = new StockReceivedExpense();
 		sre1.setExpense(expenseRepository.findById(1).get());
 		sre1.setAmount(new BigDecimal("60.10"));
 
 		expenses.add(sre1);
 
-		StockReceiveExpense sre2 = new StockReceiveExpense();
+		StockReceivedExpense sre2 = new StockReceivedExpense();
 		sre2.setExpense(expenseRepository.findById(2).get());
 		sre2.setAmount(new BigDecimal("100"));
 

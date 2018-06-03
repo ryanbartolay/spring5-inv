@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.bartolay.inventory.form.StockOpeningForm;
-import com.bartolay.inventory.form.StockReceiveForm;
+import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.form.StockTransferForm;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.services.CompanyService;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.entity.StockTransfer;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
-import com.bartolay.inventory.stock.repositories.StockReceiveRepository;
+import com.bartolay.inventory.stock.repositories.StockReceivedRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferRepository;
 import com.bartolay.inventory.utils.NumericUtility;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,7 +33,7 @@ public class StockController {
 	private StockTransferRepository stockTransferRepository;
 	
 	@Autowired 
-	private StockReceiveRepository stockReceiveRepository;
+	private StockReceivedRepository stockReceiveRepository;
 
 	@Autowired
 	private CompanyService companyService;
@@ -97,7 +97,7 @@ public class StockController {
 		model.setViewName("stock/index");
 		model.addObject("page", "New Stock Received");
 		model.addObject("html", "received/edit");
-		model.addObject("stockReceivedForm", new StockReceiveForm());
+		model.addObject("stockReceivedForm", new StockReceivedForm());
 		
 		return model;
 	}

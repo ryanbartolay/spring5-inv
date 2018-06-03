@@ -15,10 +15,10 @@ import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.sales.entity.CreditCardDetails;
-import com.bartolay.inventory.stock.entity.StockReceiveExpense;
-import com.bartolay.inventory.stock.entity.StockReceiveItem;
+import com.bartolay.inventory.stock.entity.StockReceivedExpense;
+import com.bartolay.inventory.stock.entity.StockReceivedItem;
 
-public class StockReceiveForm {
+public class StockReceivedForm {
 	
 	private String systemNumber;
 	
@@ -43,7 +43,7 @@ public class StockReceiveForm {
 	@Digits(fraction = 0, integer = 4, message="Year only accepts digits.")
 	private String year;
 	
-	private List<StockReceiveExpense> expenses;
+	private List<StockReceivedExpense> expenses;
 	
 	@Min(value=0, message="Minimum Discount Value is 0")
 	@Max(value=100, message="Maximum Discount value is 100")
@@ -53,7 +53,9 @@ public class StockReceiveForm {
 	private Supplier supplier;
 	
 	@NotNull(message="Atleast 1 item is required")
-	private List<StockReceiveItem> stockReceiveItems;
+	private List<StockReceivedItem> stockReceiveItems;
+	
+	private String description;
 
 	public String getSystemNumber() {
 		return systemNumber;
@@ -111,11 +113,11 @@ public class StockReceiveForm {
 		this.year = year;
 	}
 
-	public List<StockReceiveExpense> getExpenses() {
+	public List<StockReceivedExpense> getExpenses() {
 		return expenses;
 	}
 
-	public void setExpenses(List<StockReceiveExpense> expenses) {
+	public void setExpenses(List<StockReceivedExpense> expenses) {
 		this.expenses = expenses;
 	}
 
@@ -135,12 +137,20 @@ public class StockReceiveForm {
 		this.supplier = supplier;
 	}
 
-	public List<StockReceiveItem> getStockReceiveItems() {
+	public List<StockReceivedItem> getStockReceiveItems() {
 		return stockReceiveItems;
 	}
 
-	public void setStockReceiveItems(List<StockReceiveItem> stockReceiveItems) {
+	public void setStockReceiveItems(List<StockReceivedItem> stockReceiveItems) {
 		this.stockReceiveItems = stockReceiveItems;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 }

@@ -77,7 +77,10 @@
 						}, {
 							data : "document_number",
 							render: function ( data, type, row ) {
-		                        return '<a href="/sales/invoice/'+ row.system_number +'">' + data + '</a>';
+								if(data) {
+									return '<a href="/sales/invoice/'+ row.system_number +'">' + data + '</a>';	
+								}
+		                        return '';
 		                    }
 						}, {
 							data : "transaction_date"

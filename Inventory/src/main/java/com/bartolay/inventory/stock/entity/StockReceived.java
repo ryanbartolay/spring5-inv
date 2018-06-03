@@ -12,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -27,11 +28,11 @@ import com.bartolay.inventory.repositories.GeneratedSystemNumber;
 import com.bartolay.inventory.sales.entity.CreditCardDetails;
 
 @Entity
-public class StockReceive implements GeneratedSystemNumber {
+public class StockReceived implements GeneratedSystemNumber {
 
 	@Id
-	@GeneratedValue(generator = "StockReceive-UniqueIdGenerator")
-	@GenericGenerator(name = "StockReceive-UniqueIdGenerator", strategy = "com.bartolay.inventory.entity.generators.SystemNumberGenerator")
+	@GeneratedValue(generator = "StockReceived-UniqueIdGenerator")
+	@GenericGenerator(name = "StockReceived-UniqueIdGenerator", strategy = "com.bartolay.inventory.entity.generators.SystemNumberGenerator")
 	@Column(name="system_number", nullable=false, unique=true, insertable=false, updatable=false, length=10)
 	private String systemNumber;
 
@@ -49,6 +50,10 @@ public class StockReceive implements GeneratedSystemNumber {
 
 	@Column(name="document_number", unique=true, length=25)
 	private String documentNumber;
+	
+	@Lob
+	@Column
+	private String description;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="location_id", nullable=false, updatable=false)
@@ -58,7 +63,7 @@ public class StockReceive implements GeneratedSystemNumber {
 	private Date transactionDate;
 	
 	@OneToMany(mappedBy = "stockReceive", fetch=FetchType.LAZY)
-	private List<StockReceiveExpense> stockReceiveExpenses;
+	private List<StockReceivedExpense> stockReceiveExpenses;
 	
 	@Column(name="expense_total", nullable=false, precision=10, scale=5)
 	private BigDecimal expensesTotal;
@@ -70,7 +75,7 @@ public class StockReceive implements GeneratedSystemNumber {
 	private String year;
 
 	@OneToMany(mappedBy = "stockReceive", fetch=FetchType.LAZY)
-	private List<StockReceiveItem> stockReceiveItems;
+	private List<StockReceivedItem> stockReceiveItems;
 	
 	@Column(name="total", nullable=false, precision=10, scale=5)
 	private BigDecimal total;
@@ -161,11 +166,11 @@ public class StockReceive implements GeneratedSystemNumber {
 		this.discountValue = discountValue;
 	}
 
-	public List<StockReceiveItem> getStockReceiveItems() {
+	public List<StockReceivedItem> getStockReceiveItems() {
 		return stockReceiveItems;
 	}
 
-	public void setStockReceiveItems(List<StockReceiveItem> stockReceiveItems) {
+	public void setStockReceiveItems(List<StockReceivedItem> stockReceiveItems) {
 		this.stockReceiveItems = stockReceiveItems;
 	}
 
@@ -233,6 +238,14 @@ public class StockReceive implements GeneratedSystemNumber {
 		this.year = year;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	@Override
 	public String getYear() {
 		return this.year;
@@ -245,14 +258,14 @@ public class StockReceive implements GeneratedSystemNumber {
 
 	@Override
 	public String getTableName() {
-		return "stock_receive";
+		return "stock_received";
 	}
 
-	public List<StockReceiveExpense> getStockReceiveExpenses() {
+	public List<StockReceivedExpense> getStockReceiveExpenses() {
 		return stockReceiveExpenses;
 	}
 
-	public void setStockReceiveExpenses(List<StockReceiveExpense> stockReceiveExpenses) {
+	public void setStockReceiveExpenses(List<StockReceivedExpense> stockReceiveExpenses) {
 		this.stockReceiveExpenses = stockReceiveExpenses;
 	}
 

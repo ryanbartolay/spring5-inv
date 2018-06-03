@@ -28,16 +28,16 @@ import com.bartolay.inventory.sales.repositories.CreditCardDetailsRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.stock.entity.StockOpening;
-import com.bartolay.inventory.stock.entity.StockReceive;
-import com.bartolay.inventory.stock.entity.StockReceiveExpense;
-import com.bartolay.inventory.stock.entity.StockReceiveItem;
+import com.bartolay.inventory.stock.entity.StockReceived;
+import com.bartolay.inventory.stock.entity.StockReceivedExpense;
+import com.bartolay.inventory.stock.entity.StockReceivedItem;
 import com.bartolay.inventory.stock.entity.StockTransfer;
 import com.bartolay.inventory.stock.entity.StockTransferItem;
 import com.bartolay.inventory.stock.repositories.StockOpeningItemRepository;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
-import com.bartolay.inventory.stock.repositories.StockReceiveExpenseRepository;
-import com.bartolay.inventory.stock.repositories.StockReceiveItemRepository;
-import com.bartolay.inventory.stock.repositories.StockReceiveRepository;
+import com.bartolay.inventory.stock.repositories.StockReceivedExpenseRepository;
+import com.bartolay.inventory.stock.repositories.StockReceivedItemRepository;
+import com.bartolay.inventory.stock.repositories.StockReceivedRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferItemRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferRepository;
 import com.bartolay.inventory.utils.InventoryUtility;
@@ -67,11 +67,11 @@ public class InventoryCoreService {
 	@Autowired
 	private StockOpeningItemRepository stockOpeningItemRepository;
 	@Autowired
-	private StockReceiveRepository stockReceiveRepository;
+	private StockReceivedRepository stockReceiveRepository;
 	@Autowired
-	private StockReceiveItemRepository stockReceiveItemRepository;
+	private StockReceivedItemRepository stockReceiveItemRepository;
 	@Autowired
-	private StockReceiveExpenseRepository stockReceiveExpenseRepository;
+	private StockReceivedExpenseRepository stockReceiveExpenseRepository;
 	@Autowired
 	private StockTransferRepository stockTransferRepository;
 	@Autowired
@@ -435,7 +435,7 @@ public class InventoryCoreService {
 		inventoryRepository.saveAll(inventoriesForSave);
 	}
 
-	public void createStockReceive(StockReceive stockReceive) {
+	public void createStockReceive(StockReceived stockReceive) {
 
 		// lets generate systemNumber by saving the stockreceive
 		stockReceive.setCreatedBy(userCredentials.getLoggedInUser());
@@ -447,7 +447,7 @@ public class InventoryCoreService {
 		
 		// expenses
 		if(stockReceive.getStockReceiveExpenses() != null) {
-			for(StockReceiveExpense expense : stockReceive.getStockReceiveExpenses()) {
+			for(StockReceivedExpense expense : stockReceive.getStockReceiveExpenses()) {
 				expense.setStockReceive(stockReceive);
 				expense.setCreatedBy(userCredentials.getLoggedInUser());
 				stockReceive.setExpensesTotal(stockReceive.getExpensesTotal().add(expense.getAmount()));
@@ -458,7 +458,7 @@ public class InventoryCoreService {
 		List<Inventory> inventoriesForSave = new ArrayList<>();
 		List<InventoryTransaction> inventoryTransactionsForSave = new ArrayList<>();
 		
-		for(StockReceiveItem stockReceiveItem : stockReceive.getStockReceiveItems()) {
+		for(StockReceivedItem stockReceiveItem : stockReceive.getStockReceiveItems()) {
 			
 			stockReceiveItem.setStockReceive(stockReceive);
 			stockReceiveItem.setCreatedBy(userCredentials.getLoggedInUser());

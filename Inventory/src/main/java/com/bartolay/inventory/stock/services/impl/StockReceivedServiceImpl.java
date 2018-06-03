@@ -2,31 +2,48 @@ package com.bartolay.inventory.stock.services.impl;
 
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.exceptions.StockReceiveException;
-import com.bartolay.inventory.form.StockReceiveForm;
+import com.bartolay.inventory.form.StockReceivedForm;
+import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.InventoryCoreService;
-import com.bartolay.inventory.stock.entity.StockReceive;
-import com.bartolay.inventory.stock.services.StockReceiveService;
+import com.bartolay.inventory.stock.entity.StockReceived;
+import com.bartolay.inventory.stock.services.StockReceivedService;
 
 @Service
-public class StockReceiveServiceImpl implements StockReceiveService {
+public class StockReceivedServiceImpl implements StockReceivedService {
 
 	@Autowired
 	private InventoryCoreService inventoryCoreService;
 	
+	@Autowired
+	@Qualifier("stockReceivedDatatableRepository")
+	private DatatableRepository stockReceivedDatatableRepository;
+	
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
-		// TODO Auto-generated method stub
-		return null;
+		DatatableParameter parameter = new DatatableParameter(requestMap);
+		JSONArray array = stockReceivedDatatableRepository.findAllData(parameter);
+		long recordsTotal = stockReceivedDatatableRepository.findAllCount(parameter);
+		
+		JSONObject object = new JSONObject();
+		object.put("data", array);
+		object.put("recordsTotal", recordsTotal);
+		object.put("recordsFiltered", recordsTotal);
+		object.put("draw", parameter.getDraw());
+		
+		return object;
 	}
 
 	@Override
-	public StockReceive create(StockReceiveForm stockReceiveForm) throws StockReceiveException {
+	public StockReceived create(StockReceivedForm stockReceiveForm) throws StockReceiveException {
 		
 		if(stockReceiveForm.getStockReceiveItems().size() <= 0) {
 			throw new StockReceiveException("Required atleast 1 item.");
@@ -45,7 +62,7 @@ public class StockReceiveServiceImpl implements StockReceiveService {
 			throw new StockReceiveException("Supplier is required");
 		}
 		
-		StockReceive stockReceive = new StockReceive();
+		StockReceived stockReceive = new StockReceived();
 		stockReceive.setLocation(stockReceiveForm.getLocation());
 		stockReceive.setStockReceiveItems(stockReceiveForm.getStockReceiveItems());
 		stockReceive.setPaymentMethod(stockReceiveForm.getPaymentMethod());

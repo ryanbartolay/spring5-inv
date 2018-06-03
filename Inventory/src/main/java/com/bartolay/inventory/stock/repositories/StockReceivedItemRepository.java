@@ -3,9 +3,9 @@ package com.bartolay.inventory.stock.repositories;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.bartolay.inventory.stock.entity.StockReceive;
+import com.bartolay.inventory.stock.entity.StockReceivedItem;
 
 @Repository
-public interface StockReceiveRepository extends CrudRepository<StockReceive, String> {
+public interface StockReceivedItemRepository extends CrudRepository<StockReceivedItem, Integer> {
 
 }

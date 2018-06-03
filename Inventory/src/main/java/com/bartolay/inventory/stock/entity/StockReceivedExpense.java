@@ -20,7 +20,7 @@ import com.bartolay.inventory.entity.Expense;
 import com.bartolay.inventory.entity.User;
 
 @Entity
-public class StockReceiveExpense {
+public class StockReceivedExpense {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_receive_expense_generator")
@@ -29,7 +29,7 @@ public class StockReceiveExpense {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable=false, updatable=false)
-	private StockReceive stockReceive;
+	private StockReceived stockReceive;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="expense_id", nullable=false)
@@ -62,11 +62,11 @@ public class StockReceiveExpense {
 		this.id = id;
 	}
 
-	public StockReceive getStockReceive() {
+	public StockReceived getStockReceive() {
 		return stockReceive;
 	}
 
-	public void setStockReceive(StockReceive stockReceive) {
+	public void setStockReceive(StockReceived stockReceive) {
 		this.stockReceive = stockReceive;
 	}
 
