@@ -35,8 +35,6 @@ public class SalesController {
 
 	@Autowired
 	private StringUtils stringUtils;
-	@Autowired
-	private CalendarUtils calendarUtils;
 	
 	@RequestMapping(value="/invoice")
 	public ModelAndView invoice(ModelAndView model) {
@@ -70,7 +68,6 @@ public class SalesController {
 		model.addObject("html", "invoice/view");
 		
 		model.addObject("StringUtils", stringUtils);
-		model.addObject("CalendarUtils", calendarUtils);
 		SalesInvoice salesInvoice = salesInvoiceRepository.findById(system_number).get();
 		
 		model.addObject("salesInvoice", salesInvoice);

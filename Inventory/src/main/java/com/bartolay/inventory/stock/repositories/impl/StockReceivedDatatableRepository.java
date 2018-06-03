@@ -9,6 +9,7 @@ import javax.persistence.Query;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -17,10 +18,15 @@ import com.bartolay.inventory.components.RepositoryComponent;
 import com.bartolay.inventory.datatable.model.DatatableColumn;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.repositories.DatatableRepository;
+import com.bartolay.inventory.utils.CalendarUtils;
+import com.bartolay.inventory.utils.NumericUtility;
 
 @Repository
 @Qualifier("stockReceivedDatatableRepository")
 public class StockReceivedDatatableRepository extends RepositoryComponent implements DatatableRepository {
+	
+	@Autowired
+	private NumericUtility numericUtility;
 
 	@Override
 	public long findAllCount(DatatableParameter datatableParameter) {
@@ -41,7 +47,7 @@ public class StockReceivedDatatableRepository extends RepositoryComponent implem
 	public JSONArray findAllData(DatatableParameter datatableParameter) {
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t1.description, t2.name as location_name "
+			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t1.description, t1.payment_method, t1.net_total, t2.name as location_name "
 					+ "FROM stock_received t1 inner join location t2 on t1.location_id = t2.id ";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
@@ -70,9 +76,10 @@ public class StockReceivedDatatableRepository extends RepositoryComponent implem
 					obj.put("system_number", rs.getString("system_number"));
 					obj.put("document_number", rs.getString("document_number"));
 					obj.put("description", rs.getString("description"));
+					obj.put("payment_method", rs.getString("payment_method"));
 					obj.put("location_name", rs.getString("location_name"));
-					obj.put("transaction_date", rs.getString("transaction_date"));
-					
+					obj.put("transaction_date", CalendarUtils.dateToString(rs.getTimestamp("transaction_date")));
+					obj.put("net_total", numericUtility.amount(rs.getBigDecimal("net_total")));
 					return obj;
 				}
 			});

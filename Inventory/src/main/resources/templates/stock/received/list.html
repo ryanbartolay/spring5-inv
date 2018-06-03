@@ -48,8 +48,10 @@
 							<tr>
 								<th width="100px">System #</th>
 								<th width="120px">Document #</th>
-								<th>Date</th>
+								<th>Received Date</th>
 								<th>Location</th>
+								<th>Payment Method</th>
+								<th class="text-right">Net Total</th>
 							</tr>
 						</thead>
 					</table>
@@ -86,6 +88,17 @@
         	},
         	{ data: "transaction_date" },
         	{ data: "location_name" },
+        	{ data: "payment_method" },
+        	{
+        		data: "net_total",
+        		render: function ( data, type, row ) {
+        			if(data) {
+        				return data;	
+        			}
+        			return '';
+                },
+                className: "text-right"
+        	},
     	]
 	);
 	

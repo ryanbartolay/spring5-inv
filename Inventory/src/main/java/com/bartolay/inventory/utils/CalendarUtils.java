@@ -6,12 +6,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class CalendarUtils {
 
-	private static final String CALENDARFORMAT = "yyyy-MM-dd";
+	public static final String CALENDARFORMAT = "yyyy-MM-dd";
 	private static final String TIMEFORMAT = "yyyy-MM-dd HH:mm:ss";
 	private static final SimpleDateFormat caledarFormat = new SimpleDateFormat(CALENDARFORMAT);;
 	private static final SimpleDateFormat timeFormat = new SimpleDateFormat(TIMEFORMAT);

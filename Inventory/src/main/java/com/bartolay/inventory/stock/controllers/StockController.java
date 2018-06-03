@@ -37,6 +37,9 @@ public class StockController {
 
 	@Autowired
 	private CompanyService companyService;
+
+	@Autowired
+	private NumericUtility numericUtility;
 	
 	@RequestMapping(value="/stock/opening")
 	public ModelAndView stockOpeningList() {
@@ -86,7 +89,7 @@ public class StockController {
 		model.setViewName("stock/index");
 		model.addObject("page", "Stock Received");
 		model.addObject("html", "received/view");
-		model.addObject("numericUtility", new NumericUtility());
+		model.addObject("numericUtility", numericUtility);
 		model.addObject("stockReceive", stockReceiveRepository.findById(system_number).get());
 		
 		return model;

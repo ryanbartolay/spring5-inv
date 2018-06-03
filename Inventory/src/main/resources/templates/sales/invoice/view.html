@@ -29,7 +29,7 @@
 								<h1>
 									<i class="fa fa-globe"></i> Imbue 360 <small class="pull-right">Date:
 										<span
-										th:text="${CalendarUtils.transactionTimeFormat(salesInvoice.transactionDate)}"></span>
+										th:text="${T(com.bartolay.inventory.utils.CalendarUtils).transactionTimeFormat(salesInvoice.transactionDate)}"></span>
 									</small>
 								</h1>
 							</div>
@@ -137,7 +137,7 @@
 							<div class="col-xs-6">
 								<p class="lead">
 									Amount Due <span
-										th:text="${CalendarUtils.transactionTimeFormat(salesInvoice.transactionDate)}"></span>
+										th:text="${T(com.bartolay.inventory.utils.CalendarUtils).transactionTimeFormat(salesInvoice.transactionDate)}"></span>
 								</p>
 								<div class="table-responsive">
 									<table class="table">

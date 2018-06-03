@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class NumericUtility {
 	
 	DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.US);

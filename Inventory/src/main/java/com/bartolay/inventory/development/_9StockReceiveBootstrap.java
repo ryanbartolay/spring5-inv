@@ -81,7 +81,7 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 
 		List<StockReceivedItem> items = getItems();
 		
-		List<StockReceivedItem> item2 = getItems();
+		List<StockReceivedItem> item2 = getItems2();
 		List<StockReceivedItem> item3 = getItems();
 
 		StockReceivedForm form = new StockReceivedForm();
@@ -99,6 +99,7 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 		form = new StockReceivedForm();
 		form.setPaymentMethod(PaymentMethod.CHECK);
 		form.setLocation(locationRepository.findById(2).get());
+		form.setDescription("Check payment with a balance of 2.20");
 		form.setYear("2018");
 		form.setTransactionDate(new Date());
 		form.setStockReceiveItems(item2);
@@ -111,6 +112,7 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 		form = new StockReceivedForm();
 		form.setPaymentMethod(PaymentMethod.CREDITCARD);
 		form.setLocation(locationRepository.findById(2).get());
+		form.setDocument_number("DT-22123");	
 		form.setYear("2018");
 		form.setTransactionDate(new Date());
 		form.setStockReceiveItems(item3);
@@ -144,6 +146,27 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 		item3.setItem(itemRepository.findById(1).get());
 		item3.setQuantity(new BigDecimal("5"));
 		item3.setUnitCost(new BigDecimal("10"));
+		item3.setUnit(unitRepository.findById(1).get());
+		items.add(item3);
+
+		return items;
+	}
+	
+	private List<StockReceivedItem> getItems2() {
+		List<StockReceivedItem> items = new ArrayList<>();
+
+		StockReceivedItem item = new StockReceivedItem();
+		item.setItem(itemRepository.findById(3).get());
+		item.setCreatedBy(user);
+		item.setQuantity(new BigDecimal("200"));
+		item.setUnitCost(new BigDecimal("90.72"));
+		item.setUnit(unitRepository.findById(2).get());
+		items.add(item);
+
+		StockReceivedItem item3 = new StockReceivedItem();
+		item3.setItem(itemRepository.findById(1).get());
+		item3.setQuantity(new BigDecimal("50"));
+		item3.setUnitCost(new BigDecimal("100"));
 		item3.setUnit(unitRepository.findById(1).get());
 		items.add(item3);
 

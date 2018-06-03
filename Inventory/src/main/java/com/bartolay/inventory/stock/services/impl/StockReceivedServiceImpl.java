@@ -62,20 +62,22 @@ public class StockReceivedServiceImpl implements StockReceivedService {
 			throw new StockReceiveException("Supplier is required");
 		}
 		
-		StockReceived stockReceive = new StockReceived();
-		stockReceive.setLocation(stockReceiveForm.getLocation());
-		stockReceive.setStockReceiveItems(stockReceiveForm.getStockReceiveItems());
-		stockReceive.setPaymentMethod(stockReceiveForm.getPaymentMethod());
-		stockReceive.setStockReceiveExpenses(stockReceiveForm.getExpenses());
-		stockReceive.setDiscountValue(stockReceiveForm.getDiscountValue());
-		stockReceive.setYear(stockReceiveForm.getYear());
-		stockReceive.setTransactionDate(stockReceiveForm.getTransactionDate());
-		stockReceive.setSupplier(stockReceiveForm.getSupplier());
-		stockReceive.setCreditCardDetails(stockReceiveForm.getCreditCardDetails());
+		StockReceived stockReceived = new StockReceived();
+		stockReceived.setLocation(stockReceiveForm.getLocation());
+		stockReceived.setDocumentNumber(stockReceiveForm.getDocument_number());
+		stockReceived.setStockReceiveItems(stockReceiveForm.getStockReceiveItems());
+		stockReceived.setPaymentMethod(stockReceiveForm.getPaymentMethod());
+		stockReceived.setStockReceiveExpenses(stockReceiveForm.getExpenses());
+		stockReceived.setDiscountValue(stockReceiveForm.getDiscountValue());
+		stockReceived.setYear(stockReceiveForm.getYear());
+		stockReceived.setTransactionDate(stockReceiveForm.getTransactionDate());
+		stockReceived.setSupplier(stockReceiveForm.getSupplier());
+		stockReceived.setCreditCardDetails(stockReceiveForm.getCreditCardDetails());
+		stockReceived.setDescription(stockReceiveForm.getDescription());
 		
-		inventoryCoreService.createStockReceive(stockReceive);
+		inventoryCoreService.createStockReceive(stockReceived);
 		
-		return stockReceive;
+		return stockReceived;
 	}
 
 }
