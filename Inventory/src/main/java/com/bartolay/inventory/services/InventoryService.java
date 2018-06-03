@@ -1,9 +1,10 @@
 package com.bartolay.inventory.services;
 
-import java.util.List;
+import java.util.Map;
 
-import com.bartolay.inventory.entity.Inventory;
-import com.bartolay.inventory.entity.Location;
+import org.json.JSONObject;
 
 public interface InventoryService {
+
+	public JSONObject retrieveDatatableListByLocationId(Map<String, String> requestMap, Integer location_id);
 }

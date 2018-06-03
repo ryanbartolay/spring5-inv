@@ -7,10 +7,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.model.ApiResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -52,8 +54,17 @@ public class StringUtils {
 	}
 	
 	
-	public String encode(Object object) throws JsonProcessingException, UnsupportedEncodingException {
-		String msg = objectMapper.writeValueAsString(object);
+	public String encode(String str) throws JsonProcessingException, UnsupportedEncodingException {
+		String msg = objectMapper.writeValueAsString(str);
+		return URLEncoder.encode( msg == null ? "" : msg.replace(" ", "%20"), "UTF-8");
+	}
+	
+	public String encode(JSONObject object) throws JsonProcessingException, UnsupportedEncodingException {
+		return encode(object.toString());
+	}
+	
+	public String encode(Object str) throws JsonProcessingException, UnsupportedEncodingException {
+		String msg = objectMapper.writeValueAsString(str);
 		return URLEncoder.encode( msg == null ? "" : msg.replace(" ", "%20"), "UTF-8");
 	}
 	

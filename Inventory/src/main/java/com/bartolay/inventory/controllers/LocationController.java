@@ -29,6 +29,7 @@ public class LocationController {
 		ModelAndView model = new ModelAndView("locations/index");
 		model.addObject("location", locationRepository.findById(location_id).get());
 		model.addObject("html", "view");
+		model.addObject("location_id", location_id);
 		return model;
 	}
 }

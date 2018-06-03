@@ -73,13 +73,4 @@
         	{ data: "location_name" },
     	]
 	);
-	
-	// View button
-    table.find("tbody").on('click', '#btnView', function (e) {
-        e.preventDefault();
- 		
-        var data = datatable.row($(this).parent('div').parent('td')).data();
-        window.location="opening/view/" + data.system_number;
-        
-    } );
 </script>
