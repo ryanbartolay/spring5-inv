@@ -225,7 +225,7 @@ var submitSalesInvoiceBtn = $("#submitSalesInvoiceBtn");
 
 $("#btnAddItem").on("click", function(event) {
 	event.preventDefault();
-	alert("hello world");
+
   	addItem({type: "sales_invoice", label:"Add Sales Invoice Item"}, function(data) {
   		
   		var item = data['item'];

@@ -94,11 +94,11 @@
 									<td th:text="${stockReceiveItem.unit.abbreviation}"></td>
 									<td th:text="${stockReceiveItem.unit.name}"></td>
 									<td class="text-right"
-										th:text="${numericUtility.quantity(stockReceiveItem.quantity)}"></td>
+										th:text="${T(com.bartolay.inventory.utils.NumericUtility).quantity(stockReceiveItem.quantity)}"></td>
 									<td class="text-right"
-										th:text="${numericUtility.amount(stockReceiveItem.unitCost)}"></td>
+										th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceiveItem.unitCost)}"></td>
 									<td class="text-right"
-										th:text="${numericUtility.amount(stockReceiveItem.unitCostTotal)}"></td>
+										th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceiveItem.unitCostTotal)}"></td>
 								</tr>
 
 							</tbody>
@@ -173,24 +173,24 @@
 								<tbody>
 									<tr>
 										<th style="width: 50%">Total:</th>
-										<td th:text="${numericUtility.amount(stockReceive.total)}"></td>
+										<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.total)}"></td>
 									</tr>
 									<tr>
 										<th>Discount Value</th>
-										<td th:text="${numericUtility.amount(stockReceive.discountValue)}"></td>
+										<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.discountValue)}"></td>
 									</tr>
 									<tr>
 										<th>Grand Total:</th>
-										<td th:text="${numericUtility.amount(stockReceive.grandTotal)}"></td>
+										<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.grandTotal)}"></td>
 									</tr>
 									
 									<tr>
 										<th>Expenses Total:</th>
-										<td th:text="${numericUtility.amount(stockReceive.expensesTotal)}"></td>
+										<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.expensesTotal)}"></td>
 									</tr>
 									<tr>
 										<th>Net Total:</th>
-										<td th:text="${numericUtility.amount(stockReceive.netTotal)}"></td>
+										<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.netTotal)}"></td>
 									</tr>
 								</tbody>
 							</table>

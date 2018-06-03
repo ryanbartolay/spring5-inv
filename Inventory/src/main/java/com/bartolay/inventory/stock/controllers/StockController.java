@@ -17,7 +17,6 @@ import com.bartolay.inventory.stock.entity.StockTransfer;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 import com.bartolay.inventory.stock.repositories.StockReceivedRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferRepository;
-import com.bartolay.inventory.utils.NumericUtility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
@@ -37,9 +36,6 @@ public class StockController {
 
 	@Autowired
 	private CompanyService companyService;
-
-	@Autowired
-	private NumericUtility numericUtility;
 	
 	@RequestMapping(value="/stock/opening")
 	public ModelAndView stockOpeningList() {
@@ -89,7 +85,6 @@ public class StockController {
 		model.setViewName("stock/index");
 		model.addObject("page", "Stock Received");
 		model.addObject("html", "received/view");
-		model.addObject("numericUtility", numericUtility);
 		model.addObject("stockReceive", stockReceiveRepository.findById(system_number).get());
 		
 		return model;

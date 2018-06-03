@@ -97,9 +97,9 @@
 											<td	th:text="${salesInvoiceItem.item.name} + '( '+ ${salesInvoiceItem.item.defaultUnit.abbreviation} +' )'"></td>
 											<td th:text="${salesInvoiceItem.unit.abbreviation}"></td>
 											<td th:text="${salesInvoiceItem.unit.name}"></td>
-											<td class="text-right" th:text="${salesInvoiceItem.quantity}"></td>
-											<td class="text-right" th:text="${salesInvoiceItem.unitCost}"></td>
-											<td class="text-right" th:text="${salesInvoiceItem.unitCostTotal}"></td>
+											<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).quantity(salesInvoiceItem.quantity)}"></td>
+											<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoiceItem.unitCost)}"></td>
+											<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoiceItem.unitCostTotal)}"></td>
 										</tr:block>
 									</tbody>
 
@@ -144,15 +144,23 @@
 										<tbody>
 											<tr>
 												<th style="width: 50%">Subtotal:</th>
-												<td class="text-right" th:text="${salesInvoice.subtotal}"></td>
+												<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoice.subtotal)}"></td>
 											</tr>
 											<tr>
 												<th>Discount (<span th:text="${salesInvoice.discountPercentage}"></span>%)</th>
-												<td class="text-right" th:text="${salesInvoice.discountTotal}"></td>
+												<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoice.discountTotal)}"></td>
 											</tr>
 											<tr>
-												<th>Total:</th>
-												<td class="text-right" th:text="${salesInvoice.netTotal}"></td>
+												<th>Net Total:</th>
+												<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoice.netTotal)}"></td>
+											</tr>
+											<tr>
+												<th>Paid:</th>
+												<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoice.netTotal)}"></td>
+											</tr>
+											<tr>
+												<th>Balance:</th>
+												<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoice.netTotal)}"></td>
 											</tr>
 										</tbody>
 									</table>

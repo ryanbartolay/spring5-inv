@@ -9,7 +9,6 @@ import javax.persistence.Query;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -24,9 +23,6 @@ import com.bartolay.inventory.utils.NumericUtility;
 @Repository
 @Qualifier("stockReceivedDatatableRepository")
 public class StockReceivedDatatableRepository extends RepositoryComponent implements DatatableRepository {
-	
-	@Autowired
-	private NumericUtility numericUtility;
 
 	@Override
 	public long findAllCount(DatatableParameter datatableParameter) {
@@ -79,7 +75,7 @@ public class StockReceivedDatatableRepository extends RepositoryComponent implem
 					obj.put("payment_method", rs.getString("payment_method"));
 					obj.put("location_name", rs.getString("location_name"));
 					obj.put("transaction_date", CalendarUtils.dateToString(rs.getTimestamp("transaction_date")));
-					obj.put("net_total", numericUtility.amount(rs.getBigDecimal("net_total")));
+					obj.put("net_total", NumericUtility.amount(rs.getBigDecimal("net_total")));
 					return obj;
 				}
 			});
