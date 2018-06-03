@@ -1,11 +1,19 @@
 package com.bartolay.inventory.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 public class Location {
@@ -30,6 +38,41 @@ public class Location {
 	
 	@Column(name="address", length=200, updatable=true, insertable=true)
 	private String address;
+	
+    @Column(name = "email")
+    private String email;
+    
+    @Column(name = "mobile")
+    private String mobile;
+    
+    @Column(name = "website")
+    private String website;
+    
+    @Column(name = "address_city")
+    private String addressCity;
+    
+    @Column(name = "address_zipcode")
+    private int addressZipcode;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "address_country_id", nullable=false, updatable=true)
+    private Country addressCountry;
+	
+	@Column(name="created_date", nullable=false, updatable=false)
+	@CreationTimestamp
+	private Date createdDate;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", nullable=false, updatable=false)
+	private User createdBy;
+
+	@Column(name="updated_date")
+	@UpdateTimestamp
+	private Date updatedDated;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "updated_by", nullable=true, updatable=true)
+	private User updatedBy;
 	
 	@Column(name="enabled", nullable=false)
 	private boolean enabled;
@@ -99,6 +142,86 @@ public class Location {
 		this.enabled = enabled;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getAddressCity() {
+		return addressCity;
+	}
+
+	public void setAddressCity(String addressCity) {
+		this.addressCity = addressCity;
+	}
+
+	public int getAddressZipcode() {
+		return addressZipcode;
+	}
+
+	public void setAddressZipcode(int addressZipcode) {
+		this.addressZipcode = addressZipcode;
+	}
+
+	public Country getAddressCountry() {
+		return addressCountry;
+	}
+
+	public void setAddressCountry(Country addressCountry) {
+		this.addressCountry = addressCountry;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public User getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getUpdatedDated() {
+		return updatedDated;
+	}
+
+	public void setUpdatedDated(Date updatedDated) {
+		this.updatedDated = updatedDated;
+	}
+
+	public User getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(User updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public String getWebsite() {
+		return website;
+	}
+
+	public void setWebsite(String website) {
+		this.website = website;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -124,6 +247,9 @@ public class Location {
 	@Override
 	public String toString() {
 		return "Location [id=" + id + ", name=" + name + ", abbreviation=" + abbreviation + ", telephone=" + telephone
-				+ ", fax=" + fax + ", address=" + address + ", enabled=" + enabled + "]";
+				+ ", fax=" + fax + ", address=" + address + ", email=" + email + ", mobile=" + mobile + ", addressCity="
+				+ addressCity + ", addressZipcode=" + addressZipcode + ", addressCountry=" + addressCountry
+				+ ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", updatedDated=" + updatedDated
+				+ ", updatedBy=" + updatedBy + ", enabled=" + enabled + "]";
 	}
 }

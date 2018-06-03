@@ -25,6 +25,7 @@ import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.entity.Unit;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.AccountType;
+import com.bartolay.inventory.form.LocationForm;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CategoryRepository;
 import com.bartolay.inventory.repositories.ColorRepository;
@@ -34,6 +35,7 @@ import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.SupplierRepository;
 import com.bartolay.inventory.repositories.UnitRepository;
 import com.bartolay.inventory.repositories.UserRepository;
+import com.bartolay.inventory.services.LocationService;
 
 @Component
 public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
@@ -78,6 +80,9 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 	private CountryRepository countryRepository;
 	
 	private User user;
+	
+	@Autowired
+	private LocationService locationService;
 
 	@Override
 	public int getOrder() {
@@ -119,41 +124,61 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 	}
 
 	private void createLocations() {
-		Location location = new Location();
-		location.setName("51.1 Tactical Showroom");
-		location.setFax("21315 local 442");
-		location.setEnabled(true);
 		
-		locationRepository.save(location);
+		LocationForm locationForm = new LocationForm();
+		locationForm.setAbbreviation("LPB");
+		locationForm.setName("51.1 Tactical Showroom");
+		locationForm.setAddress("84 Molave st. Dona Manuela");
+		locationForm.setAddressCountry(countryRepository.findById(1).get());
+		locationForm.setTelephone("859-1222");
+		locationForm.setFax("123456789");
+		locationForm.setMobile("09178049704");
 		
-		Location location2 = new Location();
-		location2.setName("Main Store Tactical 1 Showroom");
-		location2.setAbbreviation("MSR2");
-		location2.setEnabled(true);
+		locationService.create(locationForm );
 		
-		locationRepository.save(location2);
+		locationForm = new LocationForm();
+		locationForm.setAbbreviation("MST");
+		locationForm.setName("Main Store Tactical 1 Showroom");
+		locationForm.setAddress("Pook Settlement");
+		locationForm.setAddressCountry(countryRepository.findById(2).get());
+		locationForm.setTelephone("812322");
+		locationForm.setFax("123456789");
 		
-		Location location3 = new Location();
-		location3.setName("Colonel Shroom");
-		location3.setAddress("Manila, Philippines");
-		location3.setTelephone("029011234");
-		location3.setEnabled(true);
+		locationService.create(locationForm );
 		
-		locationRepository.save(location3);
 		
-		Location location4 = new Location();
-		location4.setName("Big Colonel Tactical Show room");
-		location4.setTelephone("10022-4233220");
-		location4.setEnabled(true);
+		locationForm = new LocationForm();
+		locationForm.setAbbreviation("CS1");
+		locationForm.setName("Colonel Shroom");
+		locationForm.setAddress("233 El Fuego st. Dasmarinas Village");
+		locationForm.setAddressCountry(countryRepository.findById(2).get());
+		locationForm.setTelephone("812322");
+		locationForm.setFax("123456789");
 		
-		locationRepository.save(location4);
+		locationService.create(locationForm );
 		
-		Location location5 = new Location();
-		location5.setName("Colonel Trading");
-		location5.setAddress("Jeddah, Saudi Arabia");
-		location5.setEnabled(true);
+		locationForm = new LocationForm();
+		locationForm.setAbbreviation("BCT");
+		locationForm.setName("Big Colonel Tactical Show room");
+		locationForm.setAddress("55 Pearl Bank Center, Valero st.");
+		locationForm.setAddressCity("Las Pinas City");
+		locationForm.setAddressCountry(countryRepository.findById(3).get());
+		locationForm.setTelephone("122244000");
+		locationForm.setFax("123456789");
+		locationForm.setWebsite("http://www.imbue360.com");
+		locationForm.setMobile("09178049704");
 		
-		locationRepository.save(location5);
+		locationService.create(locationForm );
+		
+		locationForm = new LocationForm();
+		locationForm.setAbbreviation("CT22");
+		locationForm.setName("Colonel Trading");
+		locationForm.setAddress("Unit 11, 22 Floor Zuellig Bldg");
+		locationForm.setAddressCountry(countryRepository.findById(3).get());
+		locationForm.setTelephone("122244000");
+		locationForm.setFax("123456789");
+		
+		locationService.create(locationForm );
 	}
 
 

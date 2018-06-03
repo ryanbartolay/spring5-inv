@@ -1,0 +1,220 @@
+<div class="col-lg-12">
+	<div class="row">
+	<!-- Create Button -->
+		<button type="button" class="btn btn-success btn-sm pull-right"
+		data-toggle="modal" data-target="#formModal" id="createButton" data-backdrop="static"
+		data-keyboard="false">Add Location</button>	
+	<!-- /Create Button -->
+	</div>
+
+	<!-- Modal Edit Brand -->
+	<div class="modal fade" id="formModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form data-async data-target="#rating-modal" id="createLocationForm" th:object="${locationForm}"
+					th:action="@{/api/locations}" method="POST">
+					<input type="hidden" th:field="*{id}"/>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="modalLabel">Add Location</h4>
+					</div>
+	
+					<div class="panel-body">
+					
+						<div class="form-group" id="errors"></div>
+						
+						<div class="form-group">
+							<label>Abbreviation</label> 
+							<input class="form-control" th:field="*{abbreviation}" maxlength="6"></input>
+						</div>
+
+						<div class="form-group">
+							<label>Name</label>
+							<input type="text" class="form-control" th:field="*{name}" maxlength="30">
+						</div>
+
+						<div class="form-group">
+							<label>Telephone</label>
+							<input type="text" class="form-control" th:field="*{telephone}" maxlength="50">
+						</div>
+
+						<div class="form-group">
+							<label>Fax</label>
+							<input type="text" class="form-control" th:field="*{fax}" maxlength="50">
+						</div>
+
+						<div class="form-group">
+							<label>Address</label>
+							<input type="text" class="form-control" th:field="*{address}" maxlength="30">
+						</div>
+				
+						
+					</div>
+	
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button type="submit" id="submit" class="btn btn-success btn-primary">Create</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+	<!-- Delete Modal -->
+	<div class="modal fade" id="confirmDeleteModal" tabindex="-2" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+	        
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+	            </div>
+	        
+	            <div class="modal-body">
+	                <p>You are about to delete <b id="recordName"></b>, this procedure is irreversible.</p>
+	                <p>Do you want to proceed?</p>
+	                <p class="debug-url"></p>
+	            </div>
+	            
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	                <a class="btn btn-danger" id="btnConfirmDelete">Delete</a>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<!-- /Delete Modal -->
+
+
+	<div class="panel panel-default">
+		<!-- /.panel-heading -->
+		<div class="panel-body">
+			<table width="100%"
+				class="table table-striped jambo_table"
+				id="category-datatable">
+				<thead>
+					<tr>
+						<th></th>
+						<th>Name</th>
+						<th>Telephone</th>
+						<th>Fax</th>
+						<th>Address</th>
+					</tr>
+				</thead>
+				
+			</table>
+			<!-- /.table-responsive -->
+		</div>
+		<!-- /.panel-body -->
+	</div>
+	<!-- /.panel -->
+</div>
+
+<!-- DataTables JavaScript -->
+<script
+	th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
+
+<script>
+/*<![CDATA[*/
+	
+	var DOCS = $(document);
+	var formModal = $("#formModal");
+	var modalLabel = formModal.find("#modalLabel");
+	var submitButtonLabel = $("#formModal #submit");
+	var form = $("#createLocationForm");
+	var table = $('#category-datatable');
+	var datatable = customDatatable(table, '/api/datatable/locations', 
+			[
+            	{ 
+            		data: "abbreviation", 
+            		render: function ( data, type, row ) {
+						if(data) {
+							return '<a href="/locations/'+ row.id +'">' + data + '</a>';	
+						}
+                        return '';
+                    }
+            	},
+				{ 
+            		data: "name", 
+            		render: function ( data, type, row ) {
+						if(data) {
+							return '<a href="/locations/'+ row.id +'">' + data + '</a>';	
+						}
+                        return '';
+                    }	
+				},
+				{ "data": "telephone", "name" : "Telephone", "title" : "Telephone",},
+				{ "data": "fax", "name" : "Fax", "title" : "Fax",},
+				{ "data": "address", "name" : "Address", "title" : "Address",},
+        	]
+	);
+	
+	$("#createButton").on('click', function (e) {
+		form[0].reset();
+		form.attr("method", "POST"); // change to POST when editing
+		form.find('#id').val("");
+		modalLabel.text("Create new Location");
+		submitButtonLabel.text("Create");
+	});
+	
+	// Edit button
+    table.find("tbody").on('click', '#btnEdit', function (e) {
+        e.preventDefault();
+ 		
+        var data = datatable.row( $(this).parent('td') ).data();
+        
+        console.log(data)
+        
+        form.attr("method", "PUT"); // change to put when editing
+        form.find('#id').val(data['id']);
+        modalLabel.text("Update " + data['name']);
+        submitButtonLabel.text("Update");
+        
+        form.find('#name').val(data.name);
+        form.find('#abbreviation').val((data.abbreviation == "- -") ? "" : data.abbreviation);
+		form.find('#telephone').val((data.telephone == "- -") ? "" : data.telephone);
+		form.find('#fax').val((data.fax == "- -") ? "" : data.fax);
+		form.find('#address').val((data.address == "- -") ? "" : data.address);
+        
+    } );
+	
+    var confirmDeleteModal = $("#confirmDeleteModal");
+    var data = null;
+ 	// Delete button
+    table.find("tbody").on('click', '#btnDelete', function (e) {
+        /* e.preventDefault(); */
+ 		
+        data = datatable.row( $(this).parent('td') ).data();
+        
+        confirmDeleteModal.find("#recordName").text(data['name']);
+        
+    });
+ 	
+	// Confirm Delete button
+    DOCS.on('click', '#btnConfirmDelete', function(e) {
+    	$(this).attr("disabled", "disabled");
+    
+    	$(this).removeAttr("disabled");
+    	
+    	DELETE("/api/locations/" + data['id'], function(data) {
+    		showToast(data);
+    		
+    		confirmDeleteModal.modal('hide');
+    		datatable.ajax.reload( null, false ); // user paging is not reset on reload
+    	});
+    });
+	
+    formModalAsync($("#formModal"), function() {
+		datatable.ajax.reload( null, false ); // user paging is not reset on reload
+	});
+/*]]>*/
+</script>

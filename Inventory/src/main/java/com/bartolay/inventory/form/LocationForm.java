@@ -3,6 +3,8 @@ package com.bartolay.inventory.form;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.bartolay.inventory.entity.Country;
+
 public class LocationForm {
 
 	private Integer id;
@@ -26,6 +28,15 @@ public class LocationForm {
 	@NotNull
     @Size(min=3, max=200, message="Location address length must be 200 characters" )
 	private String address;
+
+	@NotNull
+	private String addressCity;
+	
+	@NotNull
+	private Country addressCountry;
+
+	private String mobile;
+	private String website;
 
 	public Integer getId() {
 		return id;
@@ -74,4 +85,36 @@ public class LocationForm {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+	
+	public String getAddressCity() {
+		return addressCity;
+	}
+
+	public void setAddressCity(String addressCity) {
+		this.addressCity = addressCity;
+	}
+
+	public Country getAddressCountry() {
+		return addressCountry;
+	}
+
+	public void setAddressCountry(Country addressCountry) {
+		this.addressCountry = addressCountry;
+	}
+	
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getWebsite() {
+		return website;
+	}
+
+	public void setWebsite(String website) {
+		this.website = website;
+	}	
 }

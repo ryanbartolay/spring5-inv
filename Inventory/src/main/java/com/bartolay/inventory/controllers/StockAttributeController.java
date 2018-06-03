@@ -111,15 +111,6 @@ public class StockAttributeController {
 		return mav;
 	}	
 	
-	@RequestMapping(value="/locations")
-	public ModelAndView locations() {
-		ModelAndView model = new ModelAndView("stock_attribute/index");
-		model.addObject("page", "Locations");
-		model.addObject("locationForm", new LocationForm());
-		model.addObject("html", "locations/list");
-		return model;
-	}
-	
 	@RequestMapping(value="/models")
 	public ModelAndView modelsList() {
 		ModelAndView model = new ModelAndView("stock_attribute/index");

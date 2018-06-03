@@ -1,1 +1,0 @@
-// stock_attribute.js

@@ -121,7 +121,7 @@ public class StockController {
 		return mav;
 	}
 	
-	@RequestMapping(value="/stock/transfer/view/{system_number}", method=RequestMethod.GET)
+	@RequestMapping(value="/stock/transfer/{system_number}", method=RequestMethod.GET)
 	public ModelAndView stockTransferView(ModelAndView mav, @PathVariable String system_number) throws JsonProcessingException {
 		mav.setViewName("stock/index");
 		mav.addObject("page", "Stock Transfer");

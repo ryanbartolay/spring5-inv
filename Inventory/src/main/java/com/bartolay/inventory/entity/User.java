@@ -65,9 +65,17 @@ public class User implements Serializable, Principal {
 	@CreationTimestamp
 	private Date createdDate;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", nullable=true, updatable=false)
+	private User createdBy;
+
 	@Column(name="updated_date")
 	@UpdateTimestamp
 	private Date updatedDated;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "updated_by", nullable=true, updatable=true)
+	private User updatedBy;
 	
     @Transient
     private List<Authority> authorities;

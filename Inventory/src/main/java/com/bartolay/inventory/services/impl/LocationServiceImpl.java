@@ -20,6 +20,7 @@ import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.services.LocationService;
 import com.bartolay.inventory.utils.ServiceUtility;
+import com.bartolay.inventory.utils.UserCredentials;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -29,6 +30,9 @@ public class LocationServiceImpl extends BeanComponent implements LocationServic
 
 	@Autowired
 	private LocationRepository locationRepository;
+	
+	@Autowired
+	private UserCredentials userCredentials;
 
 	@Autowired
 	@Qualifier("locationDatatableRepository")
@@ -38,11 +42,16 @@ public class LocationServiceImpl extends BeanComponent implements LocationServic
 	public Location create(LocationForm locationForm) {
 		Location location = new Location();
 		location.setAbbreviation(locationForm.getAbbreviation());
-		location.setAddress(locationForm.getAddress());
 		location.setEnabled(true);
 		location.setFax(locationForm.getFax());
 		location.setName(locationForm.getName());
 		location.setTelephone(locationForm.getTelephone());
+		location.setMobile(locationForm.getMobile());
+		location.setAddress(locationForm.getAddress());
+		location.setAddressCity(locationForm.getAddressCity());
+		location.setAddressCountry(locationForm.getAddressCountry());
+		location.setCreatedBy(userCredentials.getLoggedInUser());
+		location.setWebsite(locationForm.getWebsite());
 		return locationRepository.save(location);
 	}
 	
@@ -56,6 +65,9 @@ public class LocationServiceImpl extends BeanComponent implements LocationServic
 		location.setFax(locationForm.getFax());
 		location.setName(locationForm.getName());
 		location.setTelephone(locationForm.getTelephone());
+		location.setAddressCity(locationForm.getAddressCity());
+		location.setAddressCountry(locationForm.getAddressCountry());
+		location.setUpdatedBy(userCredentials.getLoggedInUser());
 		return locationRepository.save(location);
 	}
 
