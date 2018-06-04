@@ -1,7 +1,6 @@
 package com.bartolay.inventory.services;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,15 +12,17 @@ import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.entity.InventoryTransaction;
-import com.bartolay.inventory.entity.ItemUnit;
+import com.bartolay.inventory.enums.ActivityType;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.enums.Status;
 import com.bartolay.inventory.enums.TransactionType;
 import com.bartolay.inventory.exceptions.SalesInvoiceException;
 import com.bartolay.inventory.exceptions.StockTransferException;
+import com.bartolay.inventory.repositories.ActivityRepository;
 import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.InventoryTransactionRepository;
 import com.bartolay.inventory.repositories.ItemUnitRepository;
+import com.bartolay.inventory.sales.entity.Activity;
 import com.bartolay.inventory.sales.entity.CreditCardDetails;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
@@ -29,6 +30,7 @@ import com.bartolay.inventory.sales.repositories.CreditCardDetailsRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.stock.entity.StockOpening;
+import com.bartolay.inventory.stock.entity.StockOpeningItem;
 import com.bartolay.inventory.stock.entity.StockReceived;
 import com.bartolay.inventory.stock.entity.StockReceivedExpense;
 import com.bartolay.inventory.stock.entity.StockReceivedItem;
@@ -41,12 +43,16 @@ import com.bartolay.inventory.stock.repositories.StockReceivedItemRepository;
 import com.bartolay.inventory.stock.repositories.StockReceivedRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferItemRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferRepository;
+import com.bartolay.inventory.utils.ActivityUtility;
 import com.bartolay.inventory.utils.InventoryUtility;
 import com.bartolay.inventory.utils.UserCredentials;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class InventoryCoreService {
 
+	@Autowired
+	private ActivityUtility activityUtility;
 	@Autowired
 	private CreditCardDetailsRepository creditCardDetailsRepository;
 	@Autowired 
@@ -57,8 +63,6 @@ public class InventoryCoreService {
 	private InventoryRepository inventoryRepository;
 	@Autowired
 	private InventoryTransactionRepository inventoryTransactionRepository;
-	@Autowired
-	private ItemUnitRepository itemUnitRepository;
 	@Autowired
 	private SalesInvoiceRepository salesInvoiceRepository;
 	@Autowired
@@ -78,14 +82,14 @@ public class InventoryCoreService {
 	@Autowired
 	private StockTransferItemRepository stockTransferItemRepository;
 
+	@Autowired
+	private ObjectMapper objectMapper;
 	/**
 	 * Creates the Stock Opening
 	 * @param stockOpening
 	 */
 	@Transactional
-	public void createStockOpening(StockOpening stockOpening) {
-		// TODO should have stock opening items
-
+	public StockOpening createStockOpening(StockOpening stockOpening) {
 		// Lets save the stock opening first so we can generate a system number
 		stockOpening.setStatus(Status.SUCCESS);
 		stockOpening.setCreatedBy(userCredentials.getLoggedInUser());
@@ -97,7 +101,7 @@ public class InventoryCoreService {
 		List<Inventory> inventoriesForSave = new ArrayList<>();
 
 		// iterate through items and check if default unit
-		stockOpening.getItems().forEach(stockOpeningItem -> {
+		for(StockOpeningItem stockOpeningItem : stockOpening.getItems()) {
 
 			stockOpeningItem.setStockOpening(stockOpening);
 
@@ -129,7 +133,6 @@ public class InventoryCoreService {
 			inventory.setQuantity(inventory.getQuantity().add(stockOpeningItem.getQuantity()));
 			inventoryTransaction.setRateQuantity(stockOpeningItem.getQuantity());
 
-
 			inventoryTransaction.setQuantityAfter(inventory.getQuantity());
 			inventoryTransaction.setItem(stockOpeningItem.getItem());
 			inventoryTransaction.setLocation(stockOpening.getLocation());
@@ -139,25 +142,26 @@ public class InventoryCoreService {
 			inventoryTransaction.setTransactionType(TransactionType.STOCK_OPENING);
 			inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
 
-
 			stockOpeningItem.setRateQuantity(inventoryTransaction.getRateQuantity());
 			stockOpeningItem.setUnitCostTotal(stockOpeningItem.getUnitCost().multiply(stockOpeningItem.getRateQuantity()));
 			stockOpeningItem.setStatus(Status.SUCCESS);
 
 			stockOpening.setTotal(stockOpening.getTotal().add(stockOpeningItem.getUnitCostTotal()));
 
-			stockOpeningItemRepository.save(stockOpeningItem);
-
 			inventoryTransaction.setInventory(inventory);
 
 			invTransactions.add(inventoryTransaction);
 			inventoriesForSave.add(inventory);
-		});
+		}
 
-		stockOpeningRepository.save(stockOpening);
-
+		stockOpeningItemRepository.saveAll(stockOpening.getItems());
+		
 		inventoryRepository.saveAll(inventoriesForSave);
 		inventoryTransactionRepository.saveAll(invTransactions);
+		
+		stockOpening = stockOpeningRepository.save(stockOpening);
+		
+		return stockOpening;
 	}
 
 
@@ -169,7 +173,7 @@ public class InventoryCoreService {
 	 * @param salesInvoice
 	 */
 	@Transactional
-	public void createSalesInvoice(SalesInvoice salesInvoice) throws SalesInvoiceException {
+	public SalesInvoice createSalesInvoice(SalesInvoice salesInvoice) throws SalesInvoiceException {
 		// TODO should have sales invoice item
 
 		// Lets save the sales invoice first so we can generate a system number
@@ -251,9 +255,10 @@ public class InventoryCoreService {
 			inventoryTransactions.add(inventoryTransaction);
 		}
 
-		salesInvoiceRepository.save(salesInvoice);
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
 		inventoryRepository.saveAll(inventoriesForSave);
+		
+		return salesInvoiceRepository.save(salesInvoice);
 	}
 
 	@Transactional
@@ -322,7 +327,7 @@ public class InventoryCoreService {
 	}
 
 	@Transactional
-	public void createStockTransfer(StockTransfer stockTransfer) throws StockTransferException {
+	public StockTransfer createStockTransfer(StockTransfer stockTransfer) throws StockTransferException {
 
 		// lets save the stock transfer first to generate system number
 		stockTransfer.setCreatedBy(userCredentials.getLoggedInUser());
@@ -376,14 +381,14 @@ public class InventoryCoreService {
 			// we also need to check if the TO already exists
 			Inventory toInventory = inventoryUtility.findInventoryFromList(
 					toInventories, 
-					stockTransfer.getFromLocation().getId(), 
+					stockTransfer.getToLocation().getId(), 
 					stockTransferItem.getItem().getId(),
 					stockTransferItem.getUnit().getId());
 
 			if(toInventory == null) {
 				toInventory = new Inventory();
 				toInventory.setItem(stockTransferItem.getItem());
-				toInventory.setLocation(stockTransfer.getFromLocation());
+				toInventory.setLocation(stockTransfer.getToLocation());
 				toInventory.setUnit(stockTransferItem.getUnit());
 				toInventory.setQuantity(new BigDecimal("0"));
 				toInventory.setCreatedBy(userCredentials.getLoggedInUser());
@@ -423,9 +428,11 @@ public class InventoryCoreService {
 		stockTransferItemRepository.saveAll(stockTransfer.getStockTransferItems());
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
 		inventoryRepository.saveAll(inventoriesForSave);
+		
+		return stockTransfer;
 	}
 
-	public void createStockReceive(StockReceived stockReceive) {
+	public StockReceived createStockReceive(StockReceived stockReceive) {
 
 		// lets generate systemNumber by saving the stockreceive
 		stockReceive.setCreatedBy(userCredentials.getLoggedInUser());
@@ -502,6 +509,6 @@ public class InventoryCoreService {
 		inventoryRepository.saveAll(inventoriesForSave);
 		inventoryTransactionRepository.saveAll(inventoryTransactionsForSave);
 		stockReceiveItemRepository.saveAll(stockReceive.getStockReceiveItems());
-		stockReceiveRepository.save(stockReceive);
+		return stockReceiveRepository.save(stockReceive);
 	}
 }

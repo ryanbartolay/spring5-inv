@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
+import com.bartolay.inventory.enums.ActivityType;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.exceptions.StockReceiveException;
 import com.bartolay.inventory.form.StockReceivedForm;
@@ -16,12 +17,16 @@ import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockReceived;
 import com.bartolay.inventory.stock.services.StockReceivedService;
+import com.bartolay.inventory.utils.ActivityUtility;
 
 @Service
 public class StockReceivedServiceImpl implements StockReceivedService {
 
 	@Autowired
 	private InventoryCoreService inventoryCoreService;
+	
+	@Autowired
+	private ActivityUtility activityUtility;
 	
 	@Autowired
 	@Qualifier("stockReceivedDatatableRepository")
@@ -75,7 +80,8 @@ public class StockReceivedServiceImpl implements StockReceivedService {
 		stockReceived.setCreditCardDetails(stockReceiveForm.getCreditCardDetails());
 		stockReceived.setDescription(stockReceiveForm.getDescription());
 		
-		inventoryCoreService.createStockReceive(stockReceived);
+		stockReceived = inventoryCoreService.createStockReceive(stockReceived);
+		activityUtility.log(ActivityType.STOCK_RECEIVED, stockReceived);
 		
 		return stockReceived;
 	}

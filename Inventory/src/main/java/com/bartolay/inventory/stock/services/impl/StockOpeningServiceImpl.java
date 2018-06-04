@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.json.JSONArray;
@@ -16,15 +15,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
+import com.bartolay.inventory.enums.ActivityType;
 import com.bartolay.inventory.form.StockOpeningForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.services.StockOpeningService;
+import com.bartolay.inventory.utils.ActivityUtility;
 import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
-@Transactional
 public class StockOpeningServiceImpl implements StockOpeningService {
 
 	@Autowired
@@ -34,6 +34,9 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 	private UserCredentials userCredentials;
 	@Autowired
 	private InventoryCoreService inventoryService;
+	
+	@Autowired
+	private ActivityUtility activityUtility;
 	
 	@Override
 	public List<StockOpening> findAll() {
@@ -70,7 +73,10 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 		opening.setYear(openingStockForm.getYear());
 		opening.setDescription(openingStockForm.getDescription());
 		opening.setCreatedBy(userCredentials.getLoggedInUser());
-		inventoryService.createStockOpening(opening);
+		opening = inventoryService.createStockOpening(opening);
+		
+		activityUtility.log(ActivityType.STOCK_OPENING, opening);
+		
 		return opening;
 	}
 

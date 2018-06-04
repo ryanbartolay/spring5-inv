@@ -25,7 +25,7 @@ public class InventoryDatatableRepository extends RepositoryComponent {
 
 	public JSONArray findAllDataByLocationId(DatatableParameter datatableParameter, Integer location_id) {
 		
-		String sql = "select t1.*, t2.name as item_name, t3.abbreviation, t3.name as unit_name "
+		String sql = "select t1.*, t2.code as item_code, t2.name as item_name, t3.abbreviation, t3.name as unit_name "
 				+ "from inventory as t1 inner join item as t2 on t1.item_id = t2.id " 
 				+ "inner join unit as t3 on t1.unit_id = t3.id " 
 				+ "where t1.location_id = ? order by item_name asc";
@@ -38,6 +38,7 @@ public class InventoryDatatableRepository extends RepositoryComponent {
 			public JSONObject mapRow(ResultSet rs, int arg1) throws SQLException {
 				JSONObject obj = new JSONObject();
 				obj.put("item_id", rs.getInt("item_id"));
+				obj.put("item_code", rs.getString("item_code"));
 				obj.put("item_name", rs.getString("item_name"));
 				obj.put("unit_id", rs.getInt("unit_id"));
 				obj.put("unit_name", rs.getString("unit_name"));

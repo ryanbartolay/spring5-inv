@@ -1,0 +1,19 @@
+package com.bartolay.inventory.enums;
+
+public enum ActivityType {
+
+	CREATE_USER,
+	UPDATE_USER,
+	
+	CREATE_LOCATION,
+	UPDATE_LOCATION,
+	
+	SALES_INVOICE,
+	SALES_RETURN,
+	
+	STOCK_ADJUSTMENT,
+	STOCK_OPENING,
+	STOCK_RECEIVED,
+	STOCK_TRANSFER;
+	
+}

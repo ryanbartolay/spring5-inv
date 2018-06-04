@@ -18,6 +18,7 @@ import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import com.google.gson.Gson;
 
 @Component
 public class BeansConfig {
@@ -32,6 +33,11 @@ public class BeansConfig {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new Hibernate5Module());
 		return objectMapper;
+	}
+	
+	@Bean
+	public Gson gson() {
+		return new Gson();
 	}
 	
 	@Bean

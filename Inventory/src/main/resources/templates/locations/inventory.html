@@ -10,6 +10,7 @@
 		<thead>
 			<tr>
 				<th>#</th>
+				<th>Code</th>
 				<th>Item</th>
 				<th>Unit</th>
 				<th class="text-right">On Hand</th>
@@ -32,6 +33,9 @@ var datatable = customFixedDatatable(table, '/api/inventory/location/' + /*[[${l
     		render: function ( data, type, row ) {
                 return '<a href="/stock/opening/'+ data +'">' + data + '</a>';
             }
+    	},
+    	{ 
+    		data: "item_code",
     	},
     	{ 
     		data: "item_name",

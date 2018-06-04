@@ -1,4 +1,10 @@
-
+<script>
+$(function(){
+	GET("/api/activities/location/1", function(data) {
+		console.log(data);
+	});
+});
+</script>
 	<div class="x_title">
 		<h2>
 			Recent Activities <small>Transactions</small>

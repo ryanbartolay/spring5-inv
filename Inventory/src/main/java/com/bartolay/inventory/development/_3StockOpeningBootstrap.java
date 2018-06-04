@@ -1,6 +1,7 @@
 package com.bartolay.inventory.development;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.form.StockOpeningForm;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.ItemUnitRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
@@ -25,6 +27,7 @@ import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.entity.StockOpeningItem;
 import com.bartolay.inventory.stock.repositories.StockOpeningItemRepository;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
+import com.bartolay.inventory.stock.services.StockOpeningService;
 
 @Component
 @Transactional
@@ -33,6 +36,9 @@ public class _3StockOpeningBootstrap implements ApplicationListener<ContextRefre
 	@Autowired
 	private LocationRepository locationRepository;
 
+	@Autowired
+	private StockOpeningService stockOpeningService;
+	
 	@Autowired
 	private StockOpeningRepository stockOpeningRepository;
 
@@ -65,6 +71,8 @@ public class _3StockOpeningBootstrap implements ApplicationListener<ContextRefre
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
 
+		System.err.println("bakit two times");
+		
 		List<StockOpeningItem> soItems = new ArrayList<>();
 
 		Item item1 = itemRepository.findById(1).get();
@@ -76,23 +84,25 @@ public class _3StockOpeningBootstrap implements ApplicationListener<ContextRefre
 		soItem.setUnitCost(new BigDecimal("1.50"));
 
 		admin = userRepository.findByUsername("admin");
-
-		StockOpening stockOpening = new StockOpening();
-		stockOpening.setDocumentNumber("XVMill221");
-		stockOpening.setYear("2018");
-		stockOpening.setLocation(locationRepository.findById(1).get());
-		stockOpening.setTransactionDate(new Date());
-		stockOpening.setCreatedBy(admin);
-		stockOpening.setItems(soItems);
-
-		soItem.setStockOpening(stockOpening);
+		
 		soItems.add(soItem);
 
-		System.err.println("stockOpening");
-		System.err.println(stockOpening);
-
-		inventoryService.createStockOpening(stockOpening);
-
+		
+		StockOpeningForm form = new StockOpeningForm();
+		
+		form.setDocument_number("XVMill221");
+		form.setYear("2018");
+		form.setLocation(locationRepository.findById(1).get());
+		form.setTransaction_date(new Date());
+		form.setStockOpeningItems(soItems);
+		form.setDescription("Sample description");
+		
+		try {
+			stockOpeningService.create(form);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 

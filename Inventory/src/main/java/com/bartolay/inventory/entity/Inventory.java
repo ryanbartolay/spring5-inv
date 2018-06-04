@@ -13,18 +13,23 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(name="inventory")
+@Table(name="inventory", uniqueConstraints = @UniqueConstraint(columnNames = { "location_id", "item_id", "unit_id" }))
 public class Inventory {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "inventory_generator")
 	@SequenceGenerator(name="inventory_generator", sequenceName = "INVENTORY_SER_SEQ")
 	public int id;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="location_id", nullable=false, updatable=false)
+	private Location location;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="item_id", nullable=false, updatable=false)
@@ -36,10 +41,6 @@ public class Inventory {
 	
 	@Column(name="quantity", updatable=true, precision=10, scale=5)
 	public BigDecimal quantity;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="location_id", nullable=false, updatable=false)
-	private Location location;
 
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
@@ -172,6 +173,6 @@ public class Inventory {
 
 	@Override
 	public String toString() {
-		return "Inventory [item=" + item + ", location=" + location + "]";
+		return "Inventory [item=" + item.getId() + ", location=" + location.getId() + ", unit="+ unit.getId() +"]";
 	}
 }
