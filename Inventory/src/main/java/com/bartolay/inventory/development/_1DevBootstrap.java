@@ -312,8 +312,8 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		User user = new User();
 		user.setUsername("admin");
 		user.setPassword(passwordEncoder.encode(PASSWORD));
-		user.setFirstName("Admin");
-		user.setLastName("Admin");
+		user.setFirstName("Miguel");
+		user.setLastName("Alejandro");
 		user.setAccountType(AccountType.ADMIN);
 		user.setEmail("bartolay.ryan@gmail.com");
 		user.setAuthority(AccountType.ADMIN.toString());
@@ -346,6 +346,7 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		supplier.setPhone("91-100");
 		supplier.setAddress("Las Pinas");
 		supplier.setCreatedBy(userRepository.findByUsername("admin"));
+		supplier.setAddressCountry(countryRepository.findById(1).get());
 		
 		supplierRepository.save(supplier);
 		
@@ -354,6 +355,7 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		supplier.setPhone("8012222");
 		supplier.setAddress("Manila");
 		supplier.setCreatedBy(userRepository.findByUsername("admin"));
+		supplier.setAddressCountry(countryRepository.findById(2).get());
 		
 		supplierRepository.save(supplier);
 	}

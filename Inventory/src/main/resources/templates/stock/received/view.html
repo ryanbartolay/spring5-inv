@@ -25,6 +25,29 @@
 				</div>
 				<div class="x_content">
 					<div class="table-responsive">
+						<div class="col-sm-4 invoice-col">
+							<span th:text="${stockReceive.supplier}"></span>
+							Supplier
+							<address>
+								<strong th:text="${stockReceive.supplier.name}"></strong> <br> 
+								<span th:text="${stockReceive.supplier.address}"></span><br> 
+								Phone: <span th:text="${stockReceive.supplier.p	hone}"></span> <br>
+								Email: ryan.bartolay@imbue360.com
+							</address>
+						</div>
+						<div class="col-sm-4 invoice-col">
+							To
+							<address>
+								<strong><span>Ryan Bartolay</span></strong>
+								<br>
+								<span>84 Molave st. Dona Manuela Phase 4-G, Pamplona Tres</span> <br>
+								<span>Las Pinas City</span>, <span>Philippines</span>
+								<span>1471</span>
+								<br> Phone: <span>09178049704</span>
+								<br> Email: <span>bartolay.ryann@gmail.com</span>
+							</address>
+						</div>
+					
 
 						<table class="table table-bordered table-striped">
 							<tbody>

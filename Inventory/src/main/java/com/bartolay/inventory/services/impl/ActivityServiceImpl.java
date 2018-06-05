@@ -17,16 +17,28 @@ public class ActivityServiceImpl implements ActivityService {
 	private ActivityRepository activityRepository;
 	
 	@Override
-	public List<Activity> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+	public Iterable<Activity> findAll() {
+		return activityRepository.findAll();
 	}
 
 	@Override
 	public List<Activity> findAllByLocation(Location location) {
-		return activityRepository.findByLocation(location);
+		List<Activity> acts = activityRepository.findByLocationOrderByCreatedDateAsc(location);
+		
+		
+		
+		acts.sort((a, b) -> {
+			if(a.getCreatedDate().after(b.getCreatedDate())) {
+				System.err.println("ssss");
+				return 1;
+			} else if(a.getCreatedDate().before(b.getCreatedDate())) {
+				System.err.println("aaaaaa");
+				return -1;
+			}
+			System.err.println("dddd");
+			return 0;
+		});
+	
+		return acts;
 	}
-	
-	
-
 }

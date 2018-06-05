@@ -24,10 +24,24 @@ public class Supplier {
     private int id;
     @Column(name = "name")
     private String name;
+    
     @Column(name = "phone")
     private String phone;
+    
+    @Column(name = "mobile")
+    private String mobile;
+
+    
     @Column(name = "address")
     private String address;
+    @Column(name = "address_city")
+    private String addressCity;
+    @Column(name = "address_zipcode")
+    private int addressZipcode;
+    
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "address_country_id", nullable=false, updatable=true)
+    private Country addressCountry;
     
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
@@ -125,9 +139,43 @@ public class Supplier {
 		this.updatedBy = updatedBy;
 	}
 
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getAddressCity() {
+		return addressCity;
+	}
+
+	public void setAddressCity(String addressCity) {
+		this.addressCity = addressCity;
+	}
+
+	public int getAddressZipcode() {
+		return addressZipcode;
+	}
+
+	public void setAddressZipcode(int addressZipcode) {
+		this.addressZipcode = addressZipcode;
+	}
+
+	public Country getAddressCountry() {
+		return addressCountry;
+	}
+
+	public void setAddressCountry(Country addressCountry) {
+		this.addressCountry = addressCountry;
+	}
+
 	@Override
 	public String toString() {
-		return "Supplier [id=" + id + ", name=" + name + ", phone=" + phone + ", address=" + address + ", createdDate="
-				+ createdDate + ", updatedDated=" + updatedDated + "]";
+		return "Supplier [id=" + id + ", name=" + name + ", phone=" + phone + ", mobile=" + mobile + ", address="
+				+ address + ", addressCity=" + addressCity + ", addressZipcode=" + addressZipcode + ", addressCountry="
+				+ addressCountry + ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", updatedDated="
+				+ updatedDated + ", updatedBy=" + updatedBy + "]";
 	}
 }

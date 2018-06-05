@@ -3,9 +3,8 @@ package com.bartolay.inventory.utils;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.enums.ActivityType;
@@ -13,13 +12,10 @@ import com.bartolay.inventory.repositories.ActivityRepository;
 import com.bartolay.inventory.sales.entity.Activity;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.entity.StockReceived;
-import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
-@Component
+@Service
 public class ActivityUtility {
 	@Autowired
 	private ActivityRepository activityRepository;
@@ -29,9 +25,6 @@ public class ActivityUtility {
 	
 	@Autowired
 	private ObjectMapper objectMapper;
-	
-	@Autowired
-	private Gson gson;
 	
 	private Activity stripObject(ActivityType activityType, Object obj) {
 		

@@ -54,7 +54,6 @@ public class StockOpening implements GeneratedSystemNumber {
 	@Column(name="year", nullable=false, length=4, updatable=false)
 	private String year;
 	
-	@Lob
 	@Column
 	private String description;
 

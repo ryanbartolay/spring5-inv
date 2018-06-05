@@ -22,7 +22,12 @@ public class InventoryUtility {
 	}
 
 	public Inventory findInventoryFromList(List<Inventory> inventories, Location location, Item item, Unit unit) {
-		return findInventoryFromList(inventories, location.getId(), item.getId(), unit.getId());
+		try {
+			return findInventoryFromList(inventories, location.getId(), item.getId(), unit.getId());
+		} catch(Exception e) {
+			return null;
+		}
+		
 	}
 	
 }

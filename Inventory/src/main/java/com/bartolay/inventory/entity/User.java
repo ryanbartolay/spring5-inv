@@ -22,6 +22,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.model.Authority;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users")
@@ -38,6 +39,7 @@ public class User implements Serializable, Principal {
     private String lastName;
     @Column(name = "username", nullable=false, unique=true)
     private String username;
+    @JsonIgnore
     @Column(name = "password", nullable=false)
     private String password;
     @Column(name = "email")

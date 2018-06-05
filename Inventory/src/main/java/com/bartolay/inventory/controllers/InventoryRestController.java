@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bartolay.inventory.services.InventoryService;
-import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
@@ -20,9 +19,6 @@ public class InventoryRestController {
 	
 	@Autowired
 	private InventoryService inventoryService;
-	
-	@Autowired
-	private StringUtils stringUtils;
 	
 	@RequestMapping(value="/location/{location_id}", method=RequestMethod.GET, produces="application/json")
 	public String getAllByLocation(@RequestParam Map<String, String> requestMap, @PathVariable Integer location_id) throws JsonProcessingException, UnsupportedEncodingException {		

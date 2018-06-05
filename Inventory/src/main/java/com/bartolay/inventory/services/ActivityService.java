@@ -7,7 +7,7 @@ import com.bartolay.inventory.sales.entity.Activity;
 
 public interface ActivityService {
 	
-	public List<Activity> findAll();
+	public Iterable<Activity> findAll();
 	public List<Activity> findAllByLocation(Location location);
 
 }

@@ -99,7 +99,11 @@ public class _3StockOpeningBootstrap implements ApplicationListener<ContextRefre
 		
 		try {
 			stockOpeningService.create(form);
+			Thread.sleep(5000);
 		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
