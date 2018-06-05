@@ -43,7 +43,7 @@ public class StockReceivedDatatableRepository extends RepositoryComponent implem
 	public JSONArray findAllData(DatatableParameter datatableParameter) {
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t1.description, t1.payment_method, t1.net_total, t2.name as location_name "
+			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t1.description, t1.payment_method, t1.net_total, t2.id as location_id, t2.name as location_name "
 					+ "FROM stock_received t1 inner join location t2 on t1.location_id = t2.id ";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
@@ -73,6 +73,7 @@ public class StockReceivedDatatableRepository extends RepositoryComponent implem
 					obj.put("document_number", rs.getString("document_number"));
 					obj.put("description", rs.getString("description"));
 					obj.put("payment_method", rs.getString("payment_method"));
+					obj.put("location_id", rs.getInt("location_id"));
 					obj.put("location_name", rs.getString("location_name"));
 					obj.put("transaction_date", CalendarUtils.dateToString(rs.getTimestamp("transaction_date")));
 					obj.put("net_total", NumericUtility.amount(rs.getBigDecimal("net_total")));

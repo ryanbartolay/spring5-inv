@@ -87,7 +87,12 @@
                 }
         	},
         	{ data: "transaction_date" },
-        	{ data: "location_name" },
+        	{ 
+        		data: "location_name",
+        		render: function ( data, type, row ) {
+                    return '<a href="/locations/'+ row.location_id +'">' + data + '</a>';
+                }
+        	},
         	{ data: "payment_method" },
         	{
         		data: "net_total",

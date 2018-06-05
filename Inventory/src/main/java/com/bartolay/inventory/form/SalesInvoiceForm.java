@@ -29,7 +29,7 @@ public class SalesInvoiceForm {
 	
 	@NotNull(message="Transaction Date is required!")
 	@DateTimeFormat(pattern="MM/dd/YY")
-	private Date transactionDate;
+	private Date transactionDate = new Date();
 	
 	@Size(min=4, max=20, message="Document Number is Required. Length between 4-20 characters.")
 	@NotNull(message="Stock Opening document number is required!")

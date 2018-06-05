@@ -31,6 +31,11 @@ public class Supplier {
     @Column(name = "mobile")
     private String mobile;
 
+    @Column(name = "fax")
+    private String fax;
+    
+    @Column(name = "website")
+    private String website;
     
     @Column(name = "address")
     private String address;
@@ -99,7 +104,15 @@ public class Supplier {
         this.phone = phone;
     }
 
-    public String getAddress() {
+    public String getFax() {
+		return fax;
+	}
+
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+
+	public String getAddress() {
         return address;
     }
 
@@ -169,6 +182,14 @@ public class Supplier {
 
 	public void setAddressCountry(Country addressCountry) {
 		this.addressCountry = addressCountry;
+	}
+	
+	public String getWebsite() {
+		return website;
+	}
+
+	public void setWebsite(String website) {
+		this.website = website;
 	}
 
 	@Override

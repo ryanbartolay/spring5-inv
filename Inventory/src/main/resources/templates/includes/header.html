@@ -25,6 +25,9 @@
     <link th:href="@{/static/vendor/jqvmap/dist/jqvmap.min.css}" rel="stylesheet"/>
     <!-- bootstrap-daterangepicker -->
     <link th:href="@{/static/vendor/bootstrap-daterangepicker/daterangepicker.css}" rel="stylesheet">
+    
+     <!-- bootstrap-datetimepicker -->
+    <link th:href="@{/static/vendor/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css}" rel="stylesheet">
 
     <!-- Custom Theme Style -->
     <link th:href="@{/static/css/custom.min.css}" rel="stylesheet">
@@ -71,6 +74,9 @@
     <!-- bootstrap-daterangepicker -->
     <script th:src="@{/static/vendor/moment/min/moment.min.js}"></script>
     <script th:src="@{/static/vendor/bootstrap-daterangepicker/daterangepicker.js}"></script>
+    
+        <!-- bootstrap-datetimepicker -->    
+    <script th:src="@{/static/vendor/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js}"></script>
 
 		
 	<!-- Custom Theme JavaScript -->
@@ -80,3 +86,10 @@
 	
 	<script th:src="@{/static/vendor/year-select.js}"></script>
 	
+	
+<style type="text/css">
+	select:focus,
+	input:focus { 
+	    background-color: yellow;
+	}
+</style>

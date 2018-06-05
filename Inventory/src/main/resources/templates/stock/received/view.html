@@ -3,13 +3,14 @@
 		<div class="title_left">
 			<h3>Stock Received</h3>
 		</div>
-		
+
 		<div class="title_right">
 			<div class="pull-right btn-group  btn-group-sm">
-				<a th:href="@{/stock/received/create}" class="btn btn-success btn-sm"><span
-					class="fa fa-plus"></span> New Stock Received</a> <a
-					th:href="@{/stock/received}" class="btn btn-default btn-sm"><span
-					class="fa fa-mail-reply"></span> Back to List of Received Stocks</a>
+				<a th:href="@{/stock/received/create}"
+					class="btn btn-success btn-sm"><span class="fa fa-plus"></span>
+					New Stock Received</a> <a th:href="@{/stock/received}"
+					class="btn btn-default btn-sm"><span class="fa fa-mail-reply"></span>
+					Back to List of Received Stocks</a>
 			</div>
 		</div>
 	</div>
@@ -19,81 +20,13 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="x_panel">
-				<div class="x_title">
-					<h2 th:text="${stockReceive.systemNumber}"></h2>
-					<div class="clearfix"></div>
-				</div>
 				<div class="x_content">
 					<div class="table-responsive">
-						<div class="col-sm-4 invoice-col">
-							<span th:text="${stockReceive.supplier}"></span>
-							Supplier
-							<address>
-								<strong th:text="${stockReceive.supplier.name}"></strong> <br> 
-								<span th:text="${stockReceive.supplier.address}"></span><br> 
-								Phone: <span th:text="${stockReceive.supplier.p	hone}"></span> <br>
-								Email: ryan.bartolay@imbue360.com
-							</address>
-						</div>
-						<div class="col-sm-4 invoice-col">
-							To
-							<address>
-								<strong><span>Ryan Bartolay</span></strong>
-								<br>
-								<span>84 Molave st. Dona Manuela Phase 4-G, Pamplona Tres</span> <br>
-								<span>Las Pinas City</span>, <span>Philippines</span>
-								<span>1471</span>
-								<br> Phone: <span>09178049704</span>
-								<br> Email: <span>bartolay.ryann@gmail.com</span>
-							</address>
-						</div>
 					
-
-						<table class="table table-bordered table-striped">
-							<tbody>
-								<tr>
-									<td class="col-md-3">
-
-										<div class="input-group">
-											<span class="input-group-addon">Trans.Date</span> <span
-												class="form-control"
-												th:text="${stockReceive.transactionDate}"></span>
-										</div>
-
-									</td>
-									<td class="col-md-3">
-
-										<div class="input-group">
-											<span class="input-group-addon">year</span> <span
-												class="form-control" th:text="${stockReceive.year}"></span>
-										</div>
-									</td>
-									<td class="col-md-6">
-										<div class="input-group">
-											<span class="input-group-addon">Location</span> <span
-												class="form-control" th:text="${stockReceive.location.name}"></span>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2">
-										<div class="input-group col-md-12">
-											<span class="input-group-addon">Document #</span> <span
-												class="form-control"
-												th:text="${stockReceive.documentNumber}"></span>
-										</div>
-									</td>
-
-									<td class="col-md-6">
-										<div class="input-group">
-											<span class="input-group-addon">Supplier</span> <span
-												class="form-control" th:text="${stockReceive.supplier.name}"></span>
-										</div>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-
+						<div th:replace="fragments/transactionDetails :: transaction(systemNumber=${stockReceive.systemNumber}, documentNumber=${stockReceive.documentNumber}, transactionDate=${stockReceive.transactionDate}, year=${stockReceive.year})"></div>
+						<div th:replace="fragments/transactionDetails :: supplier(supplier=${stockReceive.supplier})"></div>
+						<div th:replace="fragments/transactionDetails :: location(location=${stockReceive.location})"></div>
+						
 						<table class="table table-striped">
 							<thead>
 								<tr>
@@ -159,15 +92,17 @@
 									th:text="${stockReceive.creditCardDetails.dateExpiry}"></span>
 							</p>
 						</div>
-						
+
 						<!-- Expenses -->
 						<p class="lead">Expenses:</p>
-						
+
 						<p class="text-muted well well-sm no-shadow"
-								style="margin-top: 10px;" th:if="${stockReceive.stockReceiveExpenses.size() <= 0}">No Expenses</p>
+							style="margin-top: 10px;"
+							th:if="${stockReceive.stockReceiveExpenses.size() <= 0}">No
+							Expenses</p>
 
 						<table class="table table-striped"
-								th:if="${stockReceive.stockReceiveExpenses.size() > 0}">
+							th:if="${stockReceive.stockReceiveExpenses.size() > 0}">
 							<thead>
 								<tr>
 									<th>ID</th>
@@ -186,7 +121,7 @@
 
 							</tbody>
 						</table>
-						
+
 					</div>
 					<!-- /.col -->
 					<div class="col-xs-6">
@@ -196,24 +131,29 @@
 								<tbody>
 									<tr>
 										<th style="width: 50%">Total:</th>
-										<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.total)}"></td>
+										<td class="text-right"
+											th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.total)}"></td>
 									</tr>
 									<tr>
 										<th>Discount Value</th>
-										<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.discountValue)}"></td>
+										<td class="text-right"
+											th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.discountValue)}"></td>
 									</tr>
 									<tr>
 										<th>Grand Total:</th>
-										<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.grandTotal)}"></td>
+										<td class="text-right"
+											th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.grandTotal)}"></td>
 									</tr>
-									
+
 									<tr>
 										<th>Expenses Total:</th>
-										<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.expensesTotal)}"></td>
+										<td class="text-right"
+											th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.expensesTotal)}"></td>
 									</tr>
 									<tr>
 										<th>Net Total:</th>
-										<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.netTotal)}"></td>
+										<td class="text-right"
+											th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.netTotal)}"></td>
 									</tr>
 								</tbody>
 							</table>
