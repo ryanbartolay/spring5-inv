@@ -2,7 +2,17 @@
 	class="form-horizontal form-label-left"
 	th:action="@{/api/sales/invoice}" method="POST">
 
-	<div th:replace="fragments/form/transaction :: basic"></div>
+	<div class="x_panel">
+		<div class="row">
+			<div th:replace="fragments/form/transaction :: basic"></div>
+		</div>
+		<div class="row clear-fix"></div>
+		<div class="row">
+			<div class="col-xs-12 table">
+				<div th:replace="fragments/form/itemsTable :: basic"></div>
+			</div>
+		</div>
+	</div>
 
 	<div class="row">
 		<div class="col-lg-12">
@@ -26,62 +36,6 @@
 
 					<div class="table-responsive">
 
-						<table class="table table-striped">
-							<tbody>
-								<tr>
-									<td>
-										<div class="form-group">
-											<label class="control-label col-md-3 col-sm-3 col-xs-12">Read-Only
-												Input</label>
-											
-										</div>
-
-										<div class="input-group">
-											<span class="input-group-addon">Trans. Date</span> <input
-												type="text" class="form-control">
-										</div>
-									</td>
-									<td class="col-md-2">
-										<div class="input-group">
-											<span class="input-group-addon">Year</span> <input
-												type="text" class="form-control yearselect"
-												th:field="*{year}" />
-										</div>
-									</td>
-									<td class="col-md-4">
-										<div class="input-group">
-											<span class="input-group-addon">Sales Person</span> 
-										</div>
-									</td>
-								</tr>
-
-								<tr>
-									<td class="col-md-4">
-
-										<div class="input-group col-md-12">
-											<span class="input-group-addon">Document #</span> <input
-												type="text" th:field="*{documentNumber}"
-												class="form-control">
-										</div>
-									</td>
-
-									<td colspan="2">
-										<div class="input-group col-md-12">
-											<span class="input-group-addon">Location</span> 
-										</div>
-									</td>
-								</tr>
-
-								<tr>
-									<td colspan="3">
-										<div class="input-group col-md-12">
-											<span class="input-group-addon">Description</span> <input
-												type="text"  class="form-control">
-										</div>
-									</td>
-								</tr>
-							</tbody>
-						</table>
 
 						<table class="table table-bordered table-striped" id="itemsTable">
 							<thead>
@@ -152,7 +106,7 @@
 								<tr>
 									<th>
 										<div class="input-group">
-											<span class="input-group-addon">Customer</span> 
+											<span class="input-group-addon">Customer</span>
 										</div>
 									</th>
 								</tr>
