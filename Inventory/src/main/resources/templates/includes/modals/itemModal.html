@@ -71,7 +71,7 @@
 
 <script>
 	var itemModal_isLoadedModelItems = false;
-	var itemModal_isLoadedExtraElements = false;
+	var itemModal_isLoadedExtraElements = false;	
 	
 	var itemModal_modal = $("#itemModal");
 	var itemModal_label = $("#itemModal_label");
@@ -118,7 +118,7 @@
 		appendInputByType(type);
 		
 		$("#itemModal_quantity").val(values.quantity);
-		$("#unit_cost").val(values.unit_cost);
+		$("#itemModal_unit_price").val(values.unit_price);
 		
 		itemModal_label.text(label);
 		addItemBtn.text("Edit Item");
@@ -156,8 +156,8 @@
 					`<tr>
 						<td>
 							<div class="input-group">
-								<span class="input-group-addon">Unit Cost</span>
-								<input class="form-control" type="number" value="0" id="unit_cost" name="unit_cost"/>
+								<span class="input-group-addon">Unit Price</span>
+								<input class="form-control" type="number" value="0" id="itemModal_unit_price" name="itemModal_unit_price"/>
 							</div>
 						</td>
 					</tr>`);
@@ -186,24 +186,78 @@
 		loadItemUnit(item_id);
 	});
 	
+
+	
 	addItemBtn.click(function() {
-		itemModal_modal.modal('hide');
+		//itemModal_modal.modal('hide');
 		
 		var arr = {};
 		
 		var iter = addItemForm.serializeArray();
 		
+		console.log(iter);
+		
 		$.each(addItemForm.serializeArray(), function(i, obj) {
 			arr[obj.name] = obj.value;
 		});
 		
+		
+		
+		//itemModal_items_placeholder
+		
 		arr['item'] = items[arr['itemModal_item']];
 		arr['unit'] = itemUnits[arr['itemModal_unit']];
 		arr['quantity'] = arr['itemModal_quantity'];
+		arr['unit_price'] = arr['itemModal_unit_price'];
+		
+		/* setInPlaceholder(arr['item'], arr['unit'], arr['quantity'], arr['unit_price'])
+		
+		console.log("placeholder");
+	
+		
+		for(var i = 0; i < itemModal_items_placeholder.length; i++) {
+			for(var n = 0; n < itemModal_items_placeholder[i].length; n++) {
+				console.log(itemModal_items_placeholder[i][n]);
+			}
+		} */
+		
+		var obj = {};
+		
+		obj[arr['item']] = "aaa";
+		
+		 /* {
+				arr['unit'] : { 
+					arr['quantity'],
+					arr['unit_price']
+				}
+			} */
+		
+		console.log(obj);
+		
 		
 		itemModal_callback(arr);
 		
 		quantity.val(0);
 		itemModal_unit.html("");
 	});
+	
+	var itemModal_items_placeholder = [];
+	
+	
+	function setInPlaceholder(item, unit, quantity, unit_price) {
+		
+		if(typeof itemModal_items_placeholder[item] === 'undefined') {
+			itemModal_items_placeholder[item] = new Array();
+		}
+		
+		itemModal_items_placeholder[item][unit] = [quantity, unit_price];
+	}
+	
+	function getInPlaceholder(item, unit) {
+		return itemModal_items_placeholder[item][unit];
+	}
+	
+	function removeInPlaceholder(item, unit) {
+		itemModal_items_placeholder.splice($.inArray(unit, itemModal_items_placeholder[item]), 1);
+	}
 </script>

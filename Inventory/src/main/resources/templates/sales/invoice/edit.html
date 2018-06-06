@@ -1,214 +1,209 @@
-<form th:object="${salesInvoiceForm}" id="salesInvoiceForm"
-	class="form-horizontal form-label-left"
-	th:action="@{/api/sales/invoice}" method="POST">
-
-	<div th:replace="fragments/form/transaction :: basic"></div>
-
-	<div class="row">
-		<div class="col-lg-12">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<div class="row ">
-						<div class="col-md-12">
-							<div class="btn-group pull-right" role="group">
-								<button type="submit" id="submitSalesInvoiceBtn"
-									class="btn btn-success btn-sm">Save Sales Invoice</button>
-								<a th:href="@{/sales/invoice}" class="btn btn-default btn-sm">Cancel</a>
-							</div>
+<div class="row">
+	<div class="col-lg-12">
+	<form th:object="${salesInvoiceForm}" id="salesInvoiceForm"
+			th:action="@{/api/sales/invoice}" method="POST">
+	
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row ">
+					<div class="col-md-12">
+						<div class="btn-group pull-right" role="group">
+							<button type="submit" id="submitSalesInvoiceBtn"
+								class="btn btn-success btn-sm">Save Sales Invoice</button>
+							<a th:href="@{/sales/invoice}" class="btn btn-default btn-sm">Cancel</a>
 						</div>
 					</div>
 				</div>
+			</div>
+			<div class="panel-body">
+			
+				<div class="form-group" id="errors"></div>
 
-
-				<div class="panel-body">
-
-					<div class="form-group" id="errors"></div>
-
-					<div class="table-responsive">
-
-						<table class="table table-striped">
-							<tbody>
-								<tr>
-									<td>
-										<div class="form-group">
-											<label class="control-label col-md-3 col-sm-3 col-xs-12">Read-Only
-												Input</label>
-											
-										</div>
-
-										<div class="input-group">
-											<span class="input-group-addon">Trans. Date</span> <input
-												type="text" class="form-control">
-										</div>
-									</td>
-									<td class="col-md-2">
-										<div class="input-group">
-											<span class="input-group-addon">Year</span> <input
-												type="text" class="form-control yearselect"
-												th:field="*{year}" />
-										</div>
-									</td>
-									<td class="col-md-4">
-										<div class="input-group">
-											<span class="input-group-addon">Sales Person</span> 
-										</div>
-									</td>
-								</tr>
-
-								<tr>
-									<td class="col-md-4">
-
-										<div class="input-group col-md-12">
-											<span class="input-group-addon">Document #</span> <input
-												type="text" th:field="*{documentNumber}"
+				<div class="table-responsive">
+				
+					<table class="table table-striped">
+						<tbody>
+							<tr>
+								<td>
+									<div class="input-group">
+										<span class="input-group-addon">Trans. Date</span>
+										<input type="text" th:field="*{transactionDate}" class="form-control">
+									</div>
+								</td>
+								<td class="col-md-2">
+									<div class="input-group">
+										<span class="input-group-addon">Year</span>
+										 <input type="text" class="form-control yearselect" th:field="*{year}" />
+									</div>
+								</td>
+								<td class="col-md-4">
+									<div class="input-group">
+										<span class="input-group-addon">Sales Person</span>
+										<select
+												class="form-control" th:field="*{salesPerson}">
+												<option th:each="user : ${users}"
+													th:value="${user.id}" th:text="${user.lastName} + ', ' + ${user.firstName}"></option>
+											</select>
+									</div>
+								</td>
+							</tr>
+							
+							<tr>
+								<td class="col-md-4">
+								
+									<div class="input-group col-md-12">
+										<span class="input-group-addon">Document #</span>
+										 <input	type="text" th:field="*{documentNumber}"
 												class="form-control">
-										</div>
-									</td>
-
-									<td colspan="2">
-										<div class="input-group col-md-12">
-											<span class="input-group-addon">Location</span> 
-										</div>
-									</td>
-								</tr>
-
-								<tr>
-									<td colspan="3">
-										<div class="input-group col-md-12">
-											<span class="input-group-addon">Description</span> <input
-												type="text"  class="form-control">
-										</div>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-
-						<table class="table table-bordered table-striped" id="itemsTable">
-							<thead>
-								<tr>
-									<th>SN</th>
-									<th>Code</th>
-									<th class="col-md-3">Description</th>
-									<th>Unit</th>
-									<th>U.Desc</th>
-									<th>Quantity</th>
-									<th class="text-right">Unit Price</th>
-									<th class="col-md-2 text-right">Subtotal</th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
-
-							</tbody>
-							<tfoot>
-								<tr>
-									<th colspan="6"></th>
-									<th class="text-right">Subtotal
-										</h3>
-									</th>
-									<th><h3 class="text-right" id="subtotal"></h3></th>
-									<th></th>
-								</tr>
-								<tr>
-									<th colspan="6"></th>
-									<th class="text-right">Discount %</th>
-									<th><input type="number" min="0" max="100"
-										th:field="*{discountPercentage}" class="form-control" /></th>
-									<th></th>
-								</tr>
-								<tr>
-									<th colspan="6"></th>
-									<th class="text-right"><h3>Total</h3></th>
-									<th><h3 class="text-right" id="grandTotal"></h3></th>
-									<th></th>
-								</tr>
-							</tfoot>
-						</table>
-
-					</div>
-
-					<div class="row">
-						<div class="col-md-4">
-							<button class="btn btn-success btn-sm" id="btnAddItem">Add
-								Item</button>
-						</div>
-					</div>
-
+									</div>
+								</td>
+								
+								<td colspan="2">
+									<div class="input-group col-md-12">
+										<span class="input-group-addon">Location</span>
+										<select
+												class="form-control" th:field="*{location}">
+												<option th:each="location : ${locations}"
+													th:value="${location.id}" th:text="${location.name}"></option>
+											</select>
+									</div>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="3">
+									<div class="input-group col-md-12">
+										<span class="input-group-addon">Description</span>
+										<input
+												type="text" th:field="*{description}" class="form-control">
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+						
+					<table class="table table-bordered table-striped" id="itemsTable">
+						<thead>
+							<tr>
+								<th>SN</th>
+								<th>Code</th>
+								<th class="col-md-3">Description</th>
+								<th>Unit</th>
+								<th>U.Desc</th>
+								<th>Quantity</th>
+								<th class="text-right">Unit Price</th>
+								<th class="col-md-2 text-right">Subtotal</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+						<tfoot>
+							<tr>
+								<th colspan="6"></th>
+								<th class="text-right">Subtotal</h3></th>
+								<th><h3 class="text-right" id="subtotal"></h3></th>
+								<th></th>
+							</tr>
+							<tr>
+								<th colspan="6"></th>
+								<th class="text-right">Discount %</th>
+								<th><input type="number" min="0" max="100" th:field="*{discountPercentage}" class="form-control" /></th>
+								<th></th>
+							</tr>
+							<tr>
+								<th colspan="6"></th>
+								<th class="text-right"><h3>Total</h3></th>
+								<th><h3 class="text-right" id="grandTotal"></h3></th>
+								<th></th>
+							</tr>
+						</tfoot>
+					</table>
+					
 				</div>
-			</div>
-
-			<div class="col-lg-6">
-				<div class="panel panel-info">
-					<div class="panel-heading">
-						Customer Information
-
-						<button type="button" class="btn btn-success btn-xs pull-right">Add
-							Customer</button>
-					</div>
-					<div class="panel-body">
-
-						<table class="table table-bordered table-striped">
-							<tbody>
-								<tr>
-									<th>
-										<div class="input-group">
-											<span class="input-group-addon">Customer</span> 
-										</div>
-									</th>
-								</tr>
-								<tr>
-									<th>
-										<div class="input-group">
-											<span class="input-group-addon">Address</span>
-
-										</div>
-									</th>
-								</tr>
-								<tr>
-									<th>
-										<div class="input-group">
-											<span class="input-group-addon">Phone</span>
-
-										</div>
-									</th>
-								</tr>
-							</tbody>
-						</table>
+				
+				<div class="row">
+					<div class="col-md-4">
+						<button class="btn btn-success btn-sm" id="btnAddItem">Add
+							Item</button>
 					</div>
 				</div>
-			</div>
-			<div class="col-lg-6">
-				<div class="panel panel-warning">
-					<div class="panel-heading">
-						Payment Method
 
-						<button type="button" class="btn btn-success btn-xs pull-right"
-							id="updatePaymentMethodBtn">Update Payment Method</button>
-					</div>
-					<div class="panel-body">
-						<div id="paymentMethod">
-							<p>There are no payment method selected</p>
-						</div>
-
-					</div>
-				</div>
 			</div>
 		</div>
-		<!-- /.col-lg-12 -->
+		
+		<div class="col-lg-6">
+			<div class="panel panel-info">
+			    <div class="panel-heading">
+			    	Customer Information
+			    	
+			    	<button type="button" class="btn btn-success btn-xs pull-right">Add Customer</button>
+			    </div>
+			    <div class="panel-body">
+			    
+			    	<table class="table table-bordered table-striped">
+						<tbody>
+							<tr>
+								<th>
+									<div class="input-group">
+										<span class="input-group-addon">Customer</span>
+										<select
+												class="form-control" th:field="*{customer}">
+												<option th:each="user : ${users}"
+													th:value="${user.id}" th:text="${user.lastName} + ', ' + ${user.firstName}"></option>
+											</select>
+									</div>
+								</th>
+							</tr>
+							<tr>
+								<th>
+									<div class="input-group">
+										<span class="input-group-addon">Address</span>
+										
+									</div>
+								</th>
+							</tr>
+							<tr>
+								<th>
+									<div class="input-group">
+										<span class="input-group-addon">Phone</span>
+										
+									</div>
+								</th>
+							</tr>
+						</tbody>
+					</table>
+			    </div>
+			</div>
+		</div>
+		<div class="col-lg-6">
+			<div class="panel panel-warning">
+			    <div class="panel-heading">
+			        Payment Method
+			        
+			        <button type="button" class="btn btn-success btn-xs pull-right" id="updatePaymentMethodBtn">Update Payment Method </button>
+			    </div>
+			    <div class="panel-body">
+			    	<div id="paymentMethod">
+			    		<p>There are no payment method selected</p>
+			    	</div>
+			        
+			    </div>
+			</div>
+		</div>
+		</form>
 	</div>
-
-</form>
+	<!-- /.col-lg-12 -->
+</div>
 
 <script type="text/javascript">
 $( function() {
-	/* 
-	$( "#transactionDate" ).datepicker();
-     */
-    $('#transactionDate').datetimepicker({
-        format: 'DD/MM/YYYY'
-    });
+	var current_year = (new Date()).getFullYear();
 	
-    $('#year').yearselect({
+	$( "#transactionDate" ).datepicker();
+	
+    $('.yearselect').yearselect({
     	order: 'desc',	
  		start: current_year - 5,
  		end: current_year + 5
@@ -227,7 +222,6 @@ var form = $("#salesInvoiceForm");
 var grand_total = 0;
 
 var item_count = 0;
-var current_year = (new Date()).getFullYear();
 var submitSalesInvoiceBtn = $("#submitSalesInvoiceBtn");
 
 $("#btnAddItem").on("click", function(event) {
@@ -238,7 +232,7 @@ $("#btnAddItem").on("click", function(event) {
   		var item = data['item'];
   		var unit = data['unit'];
   		
-  		var total = data.quantity * data.unit_cost;
+  		var total = data.quantity * data.unit_price;
   		grand_total = grand_total + total;
   		
   		var html = `
@@ -249,13 +243,13 @@ $("#btnAddItem").on("click", function(event) {
 				<td id="lblAbbreviation">`+ unit.abbreviation +`</td>
 				<td id-"lblUnitName">`+ unit.name +`</td>
 				<td class="text-right" id="lblQuantity">`+ data.quantity +`</td>
-				<td class="text-right" id="lblUnitCost">`+ data.unit_cost +`</td>
+				<td class="text-right" id="lblUnitCost">`+ data.unit_price +`</td>
 				<td class="text-right" id="lblTotal">`+ total +`</td>
 				<td class="text-right">
 					<input type="hidden" name="salesInvoiceItems[`+ item_count +`].item" id="txtItem" value="` + item.id + `" />
 					<input type="hidden" name="salesInvoiceItems[`+ item_count +`].unit" id="txtUnit" value="` + unit.id + `" />
 					<input type="hidden" name="salesInvoiceItems[`+ item_count +`].quantity" id="txtQuantity" value="` + data.quantity + `" />
-					<input type="hidden" name="salesInvoiceItems[`+ item_count +`].unitCost" id="txtUnitCost" value="` + data.unit_cost + `" />
+					<input type="hidden" name="salesInvoiceItems[`+ item_count +`].unitCost" id="txtUnitCost" value="` + data.unit_price + `" />
 					<div class="btn-group" role="group">
 		        		<button class="btn btn-info fa fa-edit" id="btnView" onClick="edit(this)"/>
 		        		<button class="btn btn-danger fa fa-times" onClick="remove(this)" />
@@ -295,10 +289,10 @@ function edit(e) {
 		item: selected_row.find("#txtItem").val(),
 		unit: selected_row.find("#txtUnit").val(),
 		quantity: selected_row.find("#txtQuantity").val(),
-		unit_cost: selected_row.find("#txtUnitCost").val()
+		unit_price: selected_row.find("#txtUnitCost").val()
 	};
 	
-	var total = values.quantity * values.unit_cost;
+	var total = values.quantity * values.unit_price;
 	
 	grand_total = grand_total - total;
 	
@@ -316,13 +310,13 @@ function edit(e) {
 		selected_row.find("#txtItem").val(item.id);
 		selected_row.find("#txtUnit").val(unit.id);
 		selected_row.find("#txtQuantity").val(data.quantity);
-		selected_row.find("#txtUnitCost").val(data.unit_cost);
+		selected_row.find("#txtUnitCost").val(data.unit_price);
 		
 		selected_row.find("#lblQuantity").html(data.quantity);
-		selected_row.find("#lblUnitCost").html(data.unit_cost);
-		selected_row.find("#lblTotal").html(data.quantity * data.unit_cost);
+		selected_row.find("#lblUnitCost").html(data.unit_price);
+		selected_row.find("#lblTotal").html(data.quantity * data.unit_price);
 		
-		computeGrandTotal(data.quantity, data.unit_cost); 
+		computeGrandTotal(data.quantity, data.unit_price); 
 	});
 }
 
@@ -345,7 +339,7 @@ function computeGrandTotal(quantity, unit_cost) {
 </script>
 
 <!-- Payment Method Modal -->
-<!-- <div th:include="includes/modals/paymentMethodModal"></div> -->
+<div th:include="includes/modals/paymentMethodModal"></div>
 
 <script>
 var updatePaymentMethodBtn = $("#updatePaymentMethodBtn");
