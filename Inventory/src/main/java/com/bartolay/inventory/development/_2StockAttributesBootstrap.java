@@ -68,12 +68,12 @@ public class _2StockAttributesBootstrap implements ApplicationListener<ContextRe
 		admin = userRepository.findByUsername("admin");
 
 		Model m = new Model();
-		m.setDescription("Test Model");
+		m.setName("Test Model");
 		m.setBrand(new Brand(1));
 		modelRepository.save(m);
 
 		Model m2 = new Model();
-		m2.setDescription("Test Model 2");
+		m2.setName("Test Model 2");
 		m2.setBrand(new Brand(2));
 		modelRepository.save(m2);
 
