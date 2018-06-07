@@ -27,13 +27,13 @@ public class CountryDataTableRepositoryImpl extends RepositoryComponent implemen
 		String SQL = "SELECT COUNT(b.id) FROM Country b";
 
 		if(datatableParameter.getSearch() != null) {
-			SQL += " WHERE b.name like :name OR b.code like :code ";
+			SQL += " WHERE b.name like :name OR b.abbreviation like :abbreviation ";
 		}
 
 		Query query = em.createQuery( SQL);
 		if(datatableParameter.getSearch() != null) {
 			query.setParameter("name", PERCENT + datatableParameter.getSearch() + PERCENT);
-			query.setParameter("code", PERCENT + datatableParameter.getSearch() + PERCENT);
+			query.setParameter("abbreviation", PERCENT + datatableParameter.getSearch() + PERCENT);
 		}
 
 		return (long) query.getSingleResult();
@@ -49,7 +49,7 @@ public class CountryDataTableRepositoryImpl extends RepositoryComponent implemen
 			
 			
 			if(datatableParameter.getSearch() != null) {
-				SQL += " WHERE b.name like ? OR b.code like ?";
+				SQL += " WHERE b.name like ? OR b.abbreviation like ?";
 				SQL_PARAMS.add(datatableParameter.getSearch() + PERCENT);
 				SQL_PARAMS.add(datatableParameter.getSearch() + PERCENT);
 			}
@@ -74,7 +74,7 @@ public class CountryDataTableRepositoryImpl extends RepositoryComponent implemen
 					JSONObject obj = new JSONObject();
 					obj.put("id", rs.getLong("id"));
 					obj.put("name", rs.getString("name"));
-					obj.put("code", rs.getString("code"));
+					obj.put("abbreviation", rs.getString("abbreviation"));
 					return obj;
 				}
 			});

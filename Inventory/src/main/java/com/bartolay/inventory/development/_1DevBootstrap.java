@@ -376,17 +376,17 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 
 	private void createCountries() {
 		Country country1 = new Country();
-		country1.setCode("SYR");
+		country1.setAbbreviation("SYR");
 		country1.setName("Syria");
 		countryRepository.save(country1);
 		
 		Country country2 = new Country();
-		country2.setCode("ARE");
+		country2.setAbbreviation("ARE");
 		country2.setName("United Arab Emirates");
 		countryRepository.save(country2);
 		
 		Country country3 = new Country();
-		country3.setCode("PHL");
+		country3.setAbbreviation("PHL");
 		country3.setName("Philippines");
 		countryRepository.save(country3);
 	}

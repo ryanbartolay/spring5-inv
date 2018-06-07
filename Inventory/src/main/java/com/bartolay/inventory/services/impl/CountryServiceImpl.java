@@ -51,7 +51,7 @@ public class CountryServiceImpl implements CountryService {
 	@Override
 	public Country create(@Valid CountryForm countryForm) {
 		Country country = new Country();
-		country.setCode(countryForm.getCode());
+		country.setAbbreviation(countryForm.getAbbreviation());
 		country.setName(countryForm.getName());
 		return countryRepository.save(country);
 	}
@@ -62,7 +62,7 @@ public class CountryServiceImpl implements CountryService {
 
 		System.err.println(country);
 		if(country != null) {
-			country.setCode(countryForm.getCode());
+			country.setAbbreviation(countryForm.getAbbreviation());
 			country.setName(countryForm.getName());
 			countryRepository.save(country);
 		}

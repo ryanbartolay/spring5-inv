@@ -38,7 +38,7 @@ public class Country {
 	public String getAbbreviation() {
 		return abbreviation;
 	}
-	public void setCode(String code) {
+	public void setAbbreviation(String code) {
 		this.abbreviation = code;
 	}
 	

@@ -19,11 +19,12 @@ import com.bartolay.inventory.form.CountryForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
 import com.bartolay.inventory.services.CountryService;
+import com.bartolay.inventory.stock.controllers.AbstractRestController;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-public class CountryRestController {
+public class CountryRestController extends AbstractRestController{
 
 	@Autowired
 	private CountryService countryService;
@@ -38,7 +39,7 @@ public class CountryRestController {
 	@RequestMapping(value="/api/countries", method=RequestMethod.POST)
 	public String create(@Valid CountryForm countryForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 		ApiResponse response = null;
 		
@@ -60,7 +61,7 @@ public class CountryRestController {
 		ApiResponse response = null;
 		
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 
 		try {

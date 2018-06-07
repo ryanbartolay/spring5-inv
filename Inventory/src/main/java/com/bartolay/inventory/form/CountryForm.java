@@ -5,30 +5,30 @@ import javax.validation.constraints.Size;
 
 public class CountryForm {
 	
-	private int id;
+	private Integer id;
 	
 	@NotNull
-    @Size(min=3, max=3, message="Country code length must be 3 characters" )
-    private String code;
+    @Size(min=3, max=3, message="Country abbreviation length must be 3 characters" )
+    private String abbreviation;
 	
 	@NotNull
     @Size(min=2, max=30, message="Country name length minimum 2 and 30" )
     private String name;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public String getCode() {
-		return code;
+	public String getAbbreviation() {
+		return abbreviation;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setAbbreviation(String abbreviation) {
+		this.abbreviation = abbreviation;
 	}
 
 	public String getName() {
@@ -41,6 +41,8 @@ public class CountryForm {
 
 	@Override
 	public String toString() {
-		return "CountryForm [id=" + id + ", code=" + code + ", name=" + name + "]";
+		return "CountryForm [id=" + id + ", abbreviation=" + abbreviation + ", name=" + name + "]";
 	}
+
+	
 }
