@@ -23,6 +23,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
+import com.bartolay.inventory.enums.SalesInvoiceStatus;
 import com.bartolay.inventory.enums.Status;
 import com.bartolay.inventory.repositories.GeneratedSystemNumber;
 
@@ -54,9 +55,6 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	@Enumerated(EnumType.STRING)
 	@Column(name="payment_method", nullable=false, length=10, updatable=true)
 	private PaymentMethod paymentMethod;
-	
-	@Column(name="status", nullable=false, updatable=true, length=10)
-	private Status status;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "credit_card_details_id", nullable=true, updatable=true)
@@ -101,6 +99,9 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	@OneToMany(mappedBy = "salesInvoice", fetch=FetchType.LAZY)
 	private List<SalesInvoiceItem> salesInvoiceItems;
 
+	@Column(name="status", nullable=false, updatable=true, length=10)
+	private SalesInvoiceStatus salesInvoiceStatus;
+	
 	public String getSystemNumber() {
 		return systemNumber;
 	}
@@ -189,13 +190,6 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	public void setUpdatedBy(User updatedBy) {
 		this.updatedBy = updatedBy;
 	}
-
-	public Status getStatus() {
-		return status;
-	}
-	public void setStatus(Status status) {
-		this.status = status;
-	}
 	@Override
 	public String getYear() {
 		return this.year;
@@ -234,12 +228,17 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	public String getTableName() {
 		return "sales_invoice";
 	}
-	
+	public SalesInvoiceStatus getSalesInvoiceStatus() {
+		return salesInvoiceStatus;
+	}
+	public void setSalesInvoiceStatus(SalesInvoiceStatus salesInvoiceStatus) {
+		this.salesInvoiceStatus = salesInvoiceStatus;
+	}
 	@Override
 	public String toString() {
 		return "SalesInvoice [systemNumber=" + systemNumber + ", year=" + year + ", transactionDate=" + transactionDate
 				+ ", documentNumber=" + documentNumber + ", description=" + description + ", location=" + location
-				+ ", paymentMethod=" + paymentMethod + ", status=" + status + ", creditCardDetails="
+				+ ", paymentMethod=" + paymentMethod + ", status=" + salesInvoiceStatus + ", creditCardDetails="
 				+ creditCardDetails + ", customer="+ customer +", salesPerson=" + salesPerson + ", createdDate=" + createdDate + ", createdBy="
 				+ createdBy + ", updatedDated=" + updatedDated + ", updatedBy=" + updatedBy + "]";
 	}

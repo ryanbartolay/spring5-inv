@@ -13,6 +13,7 @@
 			<li><a th:href="@{/locations}"><i class="fa fa-map-marker fa-fw"></i> Locations</a></li>
 			<li><a href="#"><i class="fa fa-tags fa-fw"></i> Sales<span class="fa fa-chevron-down"></span></a>
 				<ul class="nav child_menu">
+					<li><a th:href="@{/users}">Customers</a></li>
 					<li><a th:href="@{/sales/invoice}">Invoice</a></li>
 					<li><a th:href="@{/sales/return}">Return</a></li>
 				</ul>
@@ -22,6 +23,7 @@
 					<li><a th:href="@{/stock/expenses}">Expenses</a></li>
 					<li><a th:href="@{/stock/opening}">Purchase Orders</a></li>
 					<li><a th:href="@{/stock/received}">Stock Recieved</a></li>
+					<li><a th:href="@{/suppliers}">Suppliers</a></li>
 				</ul>
 			</li>
 			<li><a href="#"><i class="fa fa-th fa-fw"></i> Stock<span class="fa fa-chevron-down"></span></a>
@@ -51,8 +53,6 @@
 			<li><a href="#"><i class="fa fa-sitemap fa-fw"></i>
 					Administration <span class="fa fa-chevron-down"></span></a>
 				<ul class="nav child_menu">
-					<li><a th:href="@{/users}"><i class="fa fa-user fa-fw"></i> Customers</a></li>
-					<li><a th:href="@{/users}"><i class="fa fa-user fa-fw"></i> Suppliers</a></li>
 					<li><a th:href="@{/users}"><i class="fa fa-user fa-fw"></i> User Setup</a></li>
 					<li><a th:href="@{/groups}"><i class="fa fa-users fa-fw"></i> User Groups</a></li>
 				</ul> <!-- /.nav-second-level --></li>

@@ -14,6 +14,7 @@ import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.entity.InventoryTransaction;
 import com.bartolay.inventory.enums.ActivityType;
 import com.bartolay.inventory.enums.PaymentMethod;
+import com.bartolay.inventory.enums.SalesInvoiceStatus;
 import com.bartolay.inventory.enums.Status;
 import com.bartolay.inventory.enums.TransactionType;
 import com.bartolay.inventory.exceptions.SalesInvoiceException;
@@ -179,10 +180,10 @@ public class InventoryCoreService {
 		// Lets save the sales invoice first so we can generate a system number
 		// this will be essential in case theres a wrong data on the sales invoice
 		salesInvoice.setCreatedBy(userCredentials.getLoggedInUser());
-		salesInvoice.setStatus(Status.SUCCESS);
 		salesInvoice.setSubtotal(new BigDecimal("0"));
 		salesInvoice.setDiscountTotal(new BigDecimal("0"));
 		salesInvoice.setNetTotal(new BigDecimal("0"));
+		salesInvoice.setSalesInvoiceStatus(SalesInvoiceStatus.DRAFT);
 
 		if(salesInvoice.getPaymentMethod().equals(PaymentMethod.CREDITCARD)) {
 			salesInvoice.getCreditCardDetails().setCreatedBy(userCredentials.getLoggedInUser());
@@ -271,7 +272,6 @@ public class InventoryCoreService {
 		List<Inventory> inventories = new ArrayList<>(); 
 		List<InventoryTransaction> inventoryTransactions = inventoryTransactionRepository.findByTransactionSystemNumberAndTransactionType(updatedSalesInvoice.getSystemNumber(), TransactionType.SALES_INVOICE); 
 
-		updatedSalesInvoice.setStatus(Status.CANCELLED);
 		updatedSalesInvoice.setUpdatedBy(userCredentials.getLoggedInUser());
 
 		salesInvoiceItems.forEach(salesInvoiceItem -> {
@@ -318,6 +318,8 @@ public class InventoryCoreService {
 			}
 
 		});
+		
+		updatedSalesInvoice.setSalesInvoiceStatus(SalesInvoiceStatus.CANCELLED);
 
 		salesInvoiceRepository.save(updatedSalesInvoice);
 		salesInvoiceItemRepository.saveAll(salesInvoiceItems);
