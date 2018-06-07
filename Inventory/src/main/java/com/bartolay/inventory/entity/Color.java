@@ -16,7 +16,9 @@ public class Color {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "color_generator")
 	@SequenceGenerator(name="color_generator", sequenceName = "color_seq")
 	@Column(name = "id", updatable = false, nullable = false)
-	private long id;
+	private int id;
+	
+	@Column(name="name", nullable=false, unique=true)
 	private String name;
 	
 	public String getName() {
@@ -25,16 +27,14 @@ public class Color {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	@Override
 	public String toString() {
 		return "Color [id=" + id + ", name=" + name + "]";
 	}
-
-	
 }

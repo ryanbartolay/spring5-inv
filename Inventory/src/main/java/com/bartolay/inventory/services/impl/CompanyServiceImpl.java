@@ -70,7 +70,7 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 	
 	@Override
-	public Company delete(Long id) {
+	public Company delete(int id) {
 
 		Optional<Company> company = companyRepository.findById(id);
 		List<Brand> brands = brandRepository.findByCompany(company.get());

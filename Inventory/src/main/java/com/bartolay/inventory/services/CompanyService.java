@@ -13,5 +13,5 @@ public interface CompanyService {
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
 	public Company create(CompanyForm companyForm);
 	public Company update(CompanyForm companyForm);
-	public Company delete(Long id);
+	public Company delete(int id);
 }

@@ -73,7 +73,7 @@ public class ColorRestController {
 	}
 	
 	@RequestMapping(value="/api/colors/{id}", method=RequestMethod.DELETE)
-	public String delete(@PathVariable Long id) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+	public String delete(@PathVariable Integer id) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		ApiResponse response = null;
 		try {

@@ -19,7 +19,7 @@ public class Company {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "company_generator")
 	@SequenceGenerator(name="company_generator", sequenceName = "COMPANY_SER_SEQ")
 	@Column(name = "id", updatable = false, nullable = false)
-	private Long id;
+	private int id;
 	
 	@Column(unique=true, length=100)
 	private String nameArabic;
@@ -71,11 +71,11 @@ public class Company {
 	@JoinColumn(name = "created_by", nullable=false, updatable=false)
 	private User createdBy;
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

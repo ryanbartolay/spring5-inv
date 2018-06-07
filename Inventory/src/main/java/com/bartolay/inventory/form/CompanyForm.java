@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 
 public class CompanyForm {
 	
-	private Long id;
+	private int id;
 	
 	@NotNull
 	@Size(min=5, max=100, message="Name length minimum 5 and 100")
@@ -120,10 +120,10 @@ public class CompanyForm {
 	public void setSite(String site) {
 		this.site = site;
 	}
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getName() {

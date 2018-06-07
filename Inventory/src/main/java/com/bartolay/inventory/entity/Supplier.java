@@ -10,19 +10,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(name = "suppliers")
 public class Supplier {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "supplier_generator")
+	@SequenceGenerator(name="supplier_generator", sequenceName = "SUPPLIER_SER_SEQ")
     private int id;
-    @Column(name = "name")
+	
+    @Column(name = "name", unique=true, nullable=false)
     private String name;
     
     @Column(name = "phone")

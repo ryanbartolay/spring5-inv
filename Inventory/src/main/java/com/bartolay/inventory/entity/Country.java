@@ -7,12 +7,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name="country", uniqueConstraints={
-	    @UniqueConstraint(columnNames = {"code"})
-	})
+@Table(name="country")
 public class Country {
 
 	@Id
@@ -20,8 +17,12 @@ public class Country {
 	@SequenceGenerator(name="country_generator", sequenceName = "COUNTRY_SER_SEQ")
 	@Column(name = "id", updatable = false, nullable = false)
 	private int id;
+	
+	@Column(name="name", nullable=false, unique=true)
 	private String name;
-	private String code;
+	
+	@Column(name="abbreviation", nullable=false, unique=true)
+	private String abbreviation;
 	public int getId() {
 		return id;
 	}
@@ -34,15 +35,15 @@ public class Country {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getCode() {
-		return code;
+	public String getAbbreviation() {
+		return abbreviation;
 	}
 	public void setCode(String code) {
-		this.code = code;
+		this.abbreviation = code;
 	}
 	
 	@Override
 	public String toString() {
-		return "Country [id=" + id + ", name=" + name + ", code=" + code + "]";
+		return "Country [id=" + id + ", name=" + name + ", code=" + abbreviation + "]";
 	}
 }

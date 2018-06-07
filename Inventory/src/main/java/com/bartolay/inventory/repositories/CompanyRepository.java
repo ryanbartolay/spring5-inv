@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import com.bartolay.inventory.entity.Company;
 
 @Repository
-public interface CompanyRepository extends CrudRepository<Company, Long> {
+public interface CompanyRepository extends CrudRepository<Company, Integer> {
 
 	@Query(value = "SELECT p FROM Company p LEFT JOIN FETCH p.createdBy where p.id = :id")
-    Company apiFindById(@Param("id") Long id);
+    Company apiFindById(@Param("id") int id);
 }

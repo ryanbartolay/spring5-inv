@@ -60,7 +60,7 @@ public class BrandRestController {
 	}
 
 	@RequestMapping(value="/api/brands/{id}", method=RequestMethod.GET)
-	public String getById(@PathVariable Long id) {
+	public String getById(@PathVariable Integer id) {
 		try {
 			Brand brand = brandRepository.apiFindById(id);
 

@@ -18,6 +18,9 @@ public class Model {
 	@Column(name = "id", updatable = false, nullable = false)
 	private int id;
 	
+	@Column(name="name", unique=true, nullable=false)
+	private String name;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id", nullable=false)
     private Brand brand;
@@ -34,6 +37,13 @@ public class Model {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	public Brand getBrand() {
 		return brand;

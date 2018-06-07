@@ -40,7 +40,7 @@ public class Brand {
 	@Column(nullable=true, length=50)
 	private String nameArabic;
 
-	@Column(nullable=false, length=50)
+	@Column(nullable=false, length=50, unique=true)
 	private String name;
 
 	@ManyToOne(fetch = FetchType.LAZY)

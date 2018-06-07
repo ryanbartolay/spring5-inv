@@ -17,7 +17,7 @@ public interface BrandRepository extends CrudRepository<Brand, Integer> {
     Iterable<Brand> apiFindAll();
 	
 	@Query(value = "SELECT p FROM Brand p LEFT JOIN FETCH p.company LEFT JOIN FETCH p.createdBy where p.id = :id")
-    Brand apiFindById(@Param("id") Long id);
+    Brand apiFindById(@Param("id") Integer id);
 	
 	List<Brand> findByCompany(Company company);
 	

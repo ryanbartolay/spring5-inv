@@ -5,17 +5,17 @@ import javax.validation.constraints.Size;
 
 public class ColorForm {
 
-	private Long id;
+	private int id;
 	
 	@NotNull
     @Size(min=2, max=30, message="Color name length minimum 2 and 30" )
     private String name;
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

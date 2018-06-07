@@ -16,6 +16,6 @@ public interface ColorService {
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
 	public Color create(@Valid ColorForm colorForm);
 	public Color update(@Valid ColorForm colorForm);
-	public Color delete(Long id);
+	public Color delete(int id);
 	
 }

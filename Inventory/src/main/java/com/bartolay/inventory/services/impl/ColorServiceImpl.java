@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
-import com.bartolay.inventory.datatable.model.SortOrder;
 import com.bartolay.inventory.entity.Color;
 import com.bartolay.inventory.form.ColorForm;
 import com.bartolay.inventory.repositories.ColorRepository;
@@ -68,7 +67,7 @@ public class ColorServiceImpl implements ColorService{
 	}
 
 	@Override
-	public Color delete(Long id) {
+	public Color delete(int id) {
 		Optional<Color> color = colorRepository.findById(id);
 		colorRepository.deleteById(id);
 		return color.get();
