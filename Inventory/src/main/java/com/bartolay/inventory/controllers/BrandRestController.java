@@ -25,11 +25,12 @@ import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.services.BrandService;
+import com.bartolay.inventory.stock.controllers.AbstractRestController;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-public class BrandRestController {
+public class BrandRestController extends AbstractRestController{
 
 	@Autowired
 	private BrandService brandService;
@@ -75,7 +76,7 @@ public class BrandRestController {
 	public String create(@Valid BrandForm brandForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 
 		ApiResponse response = null;
@@ -95,7 +96,7 @@ public class BrandRestController {
 	public String update(@Valid BrandForm brandForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 
 		ApiResponse response = null;
@@ -106,18 +107,19 @@ public class BrandRestController {
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
-		
 		return stringUtils.encode(response);
 	}
 
 	@RequestMapping(value="/api/brands/{id}", method=RequestMethod.DELETE)
-	public String delete(@PathVariable int id) throws RestApiException {
+	public String delete(@PathVariable int id) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+		ApiResponse response;
 		try {
 			Brand brand = brandService.delete(id);
-			ApiResponse response = new ApiResponse(HttpStatus.OK, "Record deleted " + brand.getName());
-			return stringUtils.encode(response);
+			response = new ApiResponse(HttpStatus.OK, "Record deleted " + brand.getName());
+			
 		} catch(Exception e) {
-			throw new RestApiException(e);
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
+		return stringUtils.encode(response);
 	}
 }

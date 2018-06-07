@@ -6,7 +6,9 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +21,12 @@ import com.bartolay.inventory.form.CategoryForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
 import com.bartolay.inventory.services.CategoryService;
+import com.bartolay.inventory.stock.controllers.AbstractRestController;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-public class CategoryRestController {
+public class CategoryRestController extends AbstractRestController{
 	
 	@Autowired
 	private CategoryService categoryService;
@@ -38,19 +41,15 @@ public class CategoryRestController {
 	@RequestMapping(value="/api/categories", method=RequestMethod.POST)
 	public String create(@Valid CategoryForm categoryForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 		ApiResponse response = null;
-		
 		try {
 			Category category = categoryService.create(categoryForm);
-
 			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + category.getName());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-//			throw new RestApiException(e);
 		}
-
 		return stringUtils.encode(response);
 	}
 	
@@ -60,7 +59,7 @@ public class CategoryRestController {
 		ApiResponse response = null;
 		
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 
 		try {
@@ -69,7 +68,6 @@ public class CategoryRestController {
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
-		
 		return stringUtils.encode(response);
 	}
 	

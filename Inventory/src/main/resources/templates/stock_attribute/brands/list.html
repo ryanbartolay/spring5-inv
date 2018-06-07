@@ -1,16 +1,12 @@
 <div class="">
-	<!-- Title and action -->
 	<div class="page-title">
 		<div class="title_left">
-			<h3>Brands</h3>
+			<h3 th:text="${page}"></h3>
 		</div>
-
 		<div class="title_right">
 			<div class="pull-right">
 				<div class="input-group ">
-					<button type="button" class="btn btn-success btn-sm"
-						data-toggle="modal" data-target="#formModal" id="createButton"
-						data-backdrop="static" data-keyboard="false">Add Brand</button>
+					<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#formModal" id="createButton"	data-backdrop="static" data-keyboard="false">Add Brand</button>
 				</div>
 			</div>
 		</div>
@@ -52,7 +48,7 @@
 <div class="col-lg-12">
 
 	<!-- Modal Edit Brand -->
-	<div class="modal fade" id="formModal" tabindex="-1" role="dialog"
+	<div class="modal fade modal-entity-from" id="formModal" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">

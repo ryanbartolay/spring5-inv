@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 
 public class BrandForm {
 	
-	private int id;
+	private Integer id;
 	
 	@NotNull
     @Size(min=2, max=30, message="Name length minimum 2 and 30" )
@@ -14,10 +14,10 @@ public class BrandForm {
 //    @NotNull (message="Company is Required")
     private int company_id;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getName() {

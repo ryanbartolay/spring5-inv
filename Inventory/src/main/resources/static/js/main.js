@@ -115,6 +115,13 @@ function displayErrors(data, div) {
  * @returns
  */
 function formModalAsync(modal, successCallback = null) {
+	
+	$('.modal').on('hidden.bs.modal', function () {
+		var $target = $(this).find("#errors");
+		$target.empty()
+		$(this).find("#submit").removeAttr("disabled");
+	})
+	
 	$('form[data-async]').on('submit', function(event) {
 		event.preventDefault();
 		var $form = $(this);
@@ -132,21 +139,37 @@ function formModalAsync(modal, successCallback = null) {
 			data: $form.serialize(),
 
 			success: function(data, status) {
-				$target.html(data);
-				modal.modal("toggle");
-				var obj = decodeAPIResponse(data);
+				data = JSON.parse(decodeURIComponent(data));
+				if(data.status == "OK"){
+					$target.html(data);
+					modal.modal("toggle");
+					var obj = decodeAPIResponse(data);
 
-				showToast(obj);
+					showToast(obj);
 
-				// calling success callback
-				if(successCallback != null) {
-					successCallback();
+					// calling success callback
+					if(successCallback != null) {
+						successCallback();
+					}
+
+					$divError.html("");
+					$form[0].reset();
+					$btnSubmit.removeAttr("disabled");
+					$btnSubmit.html($btnSubmitText);
+				}else{
+					var index;
+					var errors = data.errors;
+	
+					var html = "<div class=\"alert alert-danger\">" +
+					"<ul>";
+					for (index = 0; index < errors.length; ++index) {
+						html += "<li>" +errors[index].split("%20").join(" ")+ "</li>";
+					}
+					html += "</ul></div>";
+					$divError.html(html);
+					$btnSubmit.removeAttr("disabled");
+					$btnSubmit.html($btnSubmitText);
 				}
-
-				$divError.html("");
-				$form[0].reset();
-				$btnSubmit.removeAttr("disabled");
-				$btnSubmit.html($btnSubmitText);
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 				var index;
@@ -169,11 +192,11 @@ function formModalAsync(modal, successCallback = null) {
 
 function showToast(data) {
 	if(data.status == 'OK') {
-		toast("success", data.localizedMessage);
+		toast("success", data.localizedMessage.split("%20").join(" "));
 	} else if(data.status == 'ACCEPTED') { 
-		toast("info", data.localizedMessage);
+		toast("info", data.localizedMessage.split("%20").join(" "));
 	} else {
-		toast("error", data.localizedMessage);
+		toast("error", data.localizedMessage.split("%20").join(" "));
 	}
 }
 
@@ -232,3 +255,4 @@ function singledatepicker(container){
 		}
 	});
 }
+
