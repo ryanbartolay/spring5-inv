@@ -31,7 +31,7 @@
 						<div class="form-group" id="errors"></div>
 						
 						<div class="form-group">
-							<label>Name</label> <input class="form-control" th:field="*{type}" maxlength="30">
+							<label>Name</label> <input class="form-control" th:field="*{name}" maxlength="30">
 						</div>
 						
 						<div class="form-group">
@@ -159,7 +159,7 @@
         modalLabel.text("Update " + data['name']);
         submitButtonLabel.text("Update");
         
-        form.find('#type').val(data.name);
+        form.find('#name').val(data.name);
         form.find('#description').val(data.description);
         
     } );

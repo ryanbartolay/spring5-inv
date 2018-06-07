@@ -8,9 +8,9 @@ public class CategoryForm {
 	private Integer id;
     @NotNull
     @Size(min=2, max=30, message="Category type length minimum 2 and 30" )
-    private String type;
-    @NotNull
-    @Size(min=2, max=120, message="Category description length minimum 2 and 120" )
+    private String name;
+//    @NotNull
+//    @Size(min=2, max=120, message="Category description length minimum 2 and 120" )
     private String description;
 	public Integer getId() {
 		return id;
@@ -18,11 +18,12 @@ public class CategoryForm {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getType() {
-		return type;
+	
+	public String getName() {
+		return name;
 	}
-	public void setType(String type) {
-		this.type = type;
+	public void setName(String name) {
+		this.name = name;
 	}
 	public String getDescription() {
 		return description;
@@ -32,6 +33,6 @@ public class CategoryForm {
 	}
 	@Override
 	public String toString() {
-		return "CategoryForm [id=" + id + ", type=" + type + ", description=" + description + "]";
+		return "CategoryForm [id=" + id + ", name=" + name + ", description=" + description + "]";
 	}
 }

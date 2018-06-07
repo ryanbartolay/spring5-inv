@@ -52,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService{
 	@Override
 	public Category create(@Valid CategoryForm categoryForm) {
 		Category category = new Category();
-		category.setName(categoryForm.getType());
+		category.setName(categoryForm.getName());
 		category.setDescription(categoryForm.getDescription());
 		return categoryRepository.save(category);
 	}
@@ -61,7 +61,7 @@ public class CategoryServiceImpl implements CategoryService{
 	public Category update(@Valid CategoryForm categoryForm) {
 		Category category = categoryRepository.findById(categoryForm.getId()).get();
 		if(category != null) {
-			category.setName(categoryForm.getType());
+			category.setName(categoryForm.getName());
 			category.setDescription(categoryForm.getDescription());
 			category = categoryRepository.save(category);
 		}

@@ -19,11 +19,12 @@ import com.bartolay.inventory.form.ColorForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
 import com.bartolay.inventory.services.ColorService;
+import com.bartolay.inventory.stock.controllers.AbstractRestController;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-public class ColorRestController {
+public class ColorRestController extends AbstractRestController{
 
 	@Autowired
 	private ColorService colorService;
@@ -37,7 +38,7 @@ public class ColorRestController {
 	@RequestMapping(value="/api/colors", method=RequestMethod.POST)
 	public String create(@Valid ColorForm colorForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 		ApiResponse response = null;
 		
@@ -47,7 +48,6 @@ public class ColorRestController {
 			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + color.getName());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-//			throw new RestApiException(e);
 		}
 
 		return stringUtils.encode(response);
@@ -59,7 +59,7 @@ public class ColorRestController {
 		ApiResponse response = null;
 		
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 
 		try {
