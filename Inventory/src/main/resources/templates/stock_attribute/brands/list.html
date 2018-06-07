@@ -33,13 +33,9 @@
 						id="brand-datatable">
 						<thead>
 							<tr class="headings">
-								<th class="column-title">Id</th>
+								<th class="column-title">Code</th>
 								<th class="column-title">Name</th>
-								<th class="column-title">Company</th>
-								<th class="column-title">Date</th>
-								<th class="column-title">Created by</th>
 								<th class="column-title"></th>
-
 							</tr>
 						</thead>
 
@@ -73,13 +69,13 @@
 
 						<div class="form-group" id="errors"></div>
 
-						<div class="form-group">
+						<!-- <div class="form-group">
 							<label>Company</label> <select class="form-control"
 								th:field="*{company_id}" id="ddCompany">
 								<option th:each="company : ${companies}"
 									th:value="${company.id}" th:text="${company.name}"></option>
 							</select>
-						</div>
+						</div> -->
 
 						<div class="form-group">
 							<label>Name</label> <input class="form-control"
@@ -161,13 +157,10 @@
 		start: 0,
         columns: [
         	   { "data": "id" },
-               { "data": "name" },
-               { "data": "company_name" },
-               { "data": "created_date" },
-               { "data": "created_by" },
+               { "data": "name" }
            ],
            "columnDefs": [ {
-               "targets": 5,
+               "targets": 2,
                "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Edit</button>' 
                	+ '<button id="btnDelete" class="btn btn-default pull-right" data-toggle="modal" data-target="#confirmDeleteModal" data-backdrop="static" data-keyboard="false">Delete</button>'
            } ]

@@ -11,7 +11,7 @@ public class BrandForm {
     @Size(min=2, max=30, message="Name length minimum 2 and 30" )
     private String name;
 
-    @NotNull (message="Company is Required")
+//    @NotNull (message="Company is Required")
     private int company_id;
 
 	public int getId() {

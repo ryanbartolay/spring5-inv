@@ -43,8 +43,8 @@ public class BrandDataTableRepositoryImpl extends RepositoryComponent implements
 
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT b.*, c.name as company_name, concat_ws(' ', u.firstName, u.lastName) as created_by FROM Brand b "
-					+ "inner join Company c on b.company_id = c.id "
+			String SQL = "SELECT b.*, concat_ws(' ', u.firstName, u.lastName) as created_by FROM Brand b "
+//					+ "left join Company c on b.company_id = c.id "
 					+ "inner join Users u on b.created_by = u.id";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
@@ -73,7 +73,7 @@ public class BrandDataTableRepositoryImpl extends RepositoryComponent implements
 					JSONObject obj = new JSONObject();
 					obj.put("id", rs.getLong("id"));
 					obj.put("name", rs.getString("name"));
-					obj.put("company_name", rs.getString("company_name"));
+//					obj.put("company_name", rs.getString("company_name"));
 					obj.put("created_date", rs.getDate("created_date"));
 					obj.put("created_by", rs.getString("created_by"));
 					return obj;
