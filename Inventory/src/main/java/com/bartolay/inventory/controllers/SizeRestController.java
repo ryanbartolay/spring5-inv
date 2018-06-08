@@ -19,11 +19,12 @@ import com.bartolay.inventory.form.SizeForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
 import com.bartolay.inventory.services.SizeService;
+import com.bartolay.inventory.stock.controllers.AbstractRestController;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-public class SizeRestController {
+public class SizeRestController extends AbstractRestController{
 
 	@Autowired
 	private SizeService sizeService;
@@ -39,7 +40,7 @@ public class SizeRestController {
 	public String create(@Valid SizeForm sizeForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 
 		ApiResponse response = null;
@@ -59,7 +60,7 @@ public class SizeRestController {
 	public String update(@Valid SizeForm sizeForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 
 		ApiResponse response = null;
@@ -75,13 +76,13 @@ public class SizeRestController {
 	}
 
 	@RequestMapping(value="/api/sizes/{id}", method=RequestMethod.DELETE)
-	public String delete(@PathVariable Integer id) throws RestApiException {
+	public String delete(@PathVariable Integer id) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 		try {
 			Size size = sizeService.delete(id);
 			ApiResponse response = new ApiResponse(HttpStatus.OK, "Record deleted " + size.getName());
 			return stringUtils.encode(response);
 		} catch(Exception e) {
-			throw new RestApiException(e);
+			return stringUtils.encode(new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
 		}
 	}
 }
