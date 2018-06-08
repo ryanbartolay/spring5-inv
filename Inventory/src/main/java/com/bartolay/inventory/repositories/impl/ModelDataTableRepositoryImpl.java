@@ -25,10 +25,10 @@ public class ModelDataTableRepositoryImpl extends RepositoryComponent implements
 	
 	@Override
 	public long findAllCount(DatatableParameter datatableParameter) {
-		String SQL = "SELECT COUNT(m.id) FROM model m inner join brand b on b.id = m.brand_id";
+		String SQL = "SELECT COUNT(m.id) FROM model m left join brand b on b.id = m.brand_id";
 
 		if(datatableParameter.getSearch() != null) {
-			SQL += " WHERE b.name like :name ";
+			SQL += " WHERE m.name like :name ";
 		}
 
 		Query query = em.createNativeQuery(SQL);
@@ -43,13 +43,13 @@ public class ModelDataTableRepositoryImpl extends RepositoryComponent implements
 
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT m.*, b.name as brand_name, b.id as brand_id FROM model m inner join brand b on b.id = m.brand_id ";
+			String SQL = "SELECT m.*, b.name as brand_name, b.id as brand_id FROM model m left join brand b on b.id = m.brand_id ";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
 			if(datatableParameter.getSearch() != null) {
-				SQL += " WHERE b.name like ?";
-				SQL_PARAMS.add(datatableParameter.getSearch() + PERCENT);
+				SQL += " WHERE m.name like ?";
+				SQL_PARAMS.add(PERCENT + datatableParameter.getSearch() + PERCENT);
 			}
 
 			// sort order by column
@@ -70,7 +70,7 @@ public class ModelDataTableRepositoryImpl extends RepositoryComponent implements
 					JSONObject obj = new JSONObject();
 					obj.put("id", rs.getLong("id"));
 					obj.put("brand_id", rs.getString("brand_id"));
-					obj.put("name", rs.getString("brand_name"));
+					obj.put("name", rs.getString("name"));
 					obj.put("description", rs.getString("description"));
 					return obj;
 				}

@@ -54,6 +54,7 @@ public class ModelServiceImpl implements ModelService{
 		Model model = new Model();
 		model.setBrand(modelForm.getBrand());
 		model.setDescription(modelForm.getDescription());
+		model.setName(modelForm.getName());
 		System.err.println(model);
 		return modelRepository.save(model);
 	}
@@ -67,6 +68,7 @@ public class ModelServiceImpl implements ModelService{
 		if(model != null) {
 			model.setBrand(modelForm.getBrand());
 			model.setDescription(modelForm.getDescription());
+			model.setName(modelForm.getName());
 			model = modelRepository.save(model);
 		}
 		return model;

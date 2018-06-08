@@ -21,11 +21,12 @@ import com.bartolay.inventory.form.ModelForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
 import com.bartolay.inventory.services.ModelService;
+import com.bartolay.inventory.stock.controllers.AbstractRestController;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-public class ModelRestController {
+public class ModelRestController extends AbstractRestController{
 
 	@Autowired
 	private ModelService modelService;
@@ -40,16 +41,12 @@ public class ModelRestController {
 	@RequestMapping(value="/api/models", method=RequestMethod.POST)
 	public String create(@Valid ModelForm modelForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 		ApiResponse response = null;
-		
-		System.err.println(modelForm);
-		
 		try {
 			Model model = modelService.create(modelForm);
-
-			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + model.getBrand().getName());
+			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + model.getName());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 //			throw new RestApiException(e);
@@ -64,13 +61,14 @@ public class ModelRestController {
 		ApiResponse response = null;
 		
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 
 		try {
 			Model model = modelService.update(modelForm);
-			response = new ApiResponse(HttpStatus.OK, "Succesfully updated " + model.getBrand().getName());
+			response = new ApiResponse(HttpStatus.OK, "Succesfully updated " + model.getName());
 		} catch(Exception e) {
+			e.printStackTrace();
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
 		
@@ -84,7 +82,7 @@ public class ModelRestController {
 		try {
 			Model model = modelService.delete(id);
 
-			response = new ApiResponse(HttpStatus.ACCEPTED, "Record deleted " + model.getBrand().getName());
+			response = new ApiResponse(HttpStatus.ACCEPTED, "Record deleted " + model.getName());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 			
