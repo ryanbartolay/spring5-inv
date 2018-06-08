@@ -1,0 +1,81 @@
+<div class="">
+	<!-- Title and action -->
+	<div class="page-title">
+		<div class="title_left">
+			<h3 th:text="${page}"></h3>
+		</div>
+
+		<div class="title_right">
+			<div class="pull-right">
+				<div class="input-group ">
+					<a th:href="@{/stock/opening/create}"
+						class="btn btn-success btn-sm"><span class="fa fa-plus"></span>
+						This should be filter</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+	<!-- //Title and action -->
+
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		<div class="x_panel">
+			<div class="x_title">
+				<h2>List of Inventories</h2>
+				<div class="clearfix"></div>
+			</div>
+
+			<div class="x_content">
+
+				<div class="table-responsive">
+					<table class="table table-striped"
+						id="openingStock-datatable" style="width: 100%">
+						<thead>
+							<tr>
+								<th width="200px">Item code</th>
+								<!-- <th>Name</th> -->
+								<th>Unit</th>
+								<th>On Hand</th>
+								<th>On Order</th>
+							</tr>
+						</thead>
+
+					</table>
+					
+					
+					
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- DataTables JavaScript -->
+<script
+	th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
+	
+<script
+	th:src="@{https://cdn.datatables.net/rowgroup/1.0.2/js/dataTables.rowGroup.min.js}"></script>
+
+<script>
+	var table = $('#openingStock-datatable');
+	var datatable = customFixedDatatableWithGroup(table, '/api/datatable/inventory/location/1', 
+		[
+    	    { "visible": false },
+    	    { "orderable": true },
+    	    { "orderable": true },
+    	    { "orderable": true },
+   	    ],
+	   	 [
+	         {
+	            'targets': [0,1, 2, 3],
+	         }
+	      ]
+	); 
+	
+</script>

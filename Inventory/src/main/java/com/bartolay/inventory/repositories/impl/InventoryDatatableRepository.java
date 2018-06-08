@@ -32,18 +32,23 @@ public class InventoryDatatableRepository extends RepositoryComponent {
 		
 		JSONArray jsonArray = new JSONArray();
 		
-		List<JSONObject> data = jdbcTemplate.query(sql, new Object[] { location_id }, new RowMapper<JSONObject>() {
+		List<String[]> data = jdbcTemplate.query(sql, new Object[] { location_id }, new RowMapper<String[]>() {
 
 			@Override
-			public JSONObject mapRow(ResultSet rs, int arg1) throws SQLException {
-				JSONObject obj = new JSONObject();
-				obj.put("item_id", rs.getInt("item_id"));
-				obj.put("item_code", rs.getString("item_code"));
-				obj.put("item_name", rs.getString("item_name"));
-				obj.put("unit_id", rs.getInt("unit_id"));
-				obj.put("unit_name", rs.getString("unit_name"));
-				obj.put("on_hand", NumericUtility.quantity(rs.getBigDecimal("quantity")));
-				return obj;
+			public String[] mapRow(ResultSet rs, int arg1) throws SQLException {
+				String[] data = { rs.getString("item_id") + " : " + rs.getString("item_name"),rs.getString("unit_name"),NumericUtility.quantity(rs.getBigDecimal("quantity")), "- -"};
+				
+				
+				return data;
+//				JSONObject obj = new JSONObject();
+//				obj.put("item_id", rs.getInt("item_id"));
+//				obj.put("item_code", rs.getString("item_code"));
+//				obj.put("item_name", rs.getString("item_name"));
+//				obj.put("unit_id", rs.getInt("unit_id"));
+//				obj.put("unit_name", rs.getString("unit_name"));
+//				obj.put("on_hand", NumericUtility.quantity(rs.getBigDecimal("quantity")));
+//				obj.put("on_order", "- -");
+//				return obj;
 			}
 		});
 		
