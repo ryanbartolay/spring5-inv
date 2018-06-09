@@ -6,5 +6,6 @@ import org.json.JSONObject;
 
 public interface InventoryService {
 
-	public JSONObject retrieveDatatableListByLocationId(Map<String, String> requestMap, Integer location_id);
+	JSONObject retrieveDatatableListByLocationId(Map<String, String> requestMap, Integer location_id);
+	JSONObject retrieveDatatableListByLocationIdWithLimi(Map<String, String> requestMap, Integer location_id, Integer limit);
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
+import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.impl.InventoryDatatableRepository;
 import com.bartolay.inventory.services.InventoryService;
 
@@ -36,5 +37,11 @@ public class InventoryServiceImpl implements InventoryService {
 		return object;
 	}
 
-
+	@Override
+	public JSONObject retrieveDatatableListByLocationIdWithLimi(Map<String, String> requestMap, Integer location_id, Integer limit) {
+		JSONArray array = inventoryJdbcRepository.findAllDataByLocationId(location_id, limit);
+		JSONObject object = new JSONObject();
+		object.put("data", array);
+		return object;
+	}
 }

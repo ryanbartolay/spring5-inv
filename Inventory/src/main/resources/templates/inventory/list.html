@@ -64,25 +64,38 @@
 <script>
 	var table = $('#openingStock-datatable');
 	var locationObj = $("#location");
-	var datatable = customFixedDatatableWithGroup(table, '/api/datatable/inventory/location', 
-		[
-	  	    { "visible": false },
-	  	    { "orderable": true },
-	  	    { "orderable": true },
-	  	    { "orderable": true },
-	 	    ],
-		[
-	        {
-	           'targets': [0,1, 2, 3],
-	        }
-		],
-		function ( d ) {
-	        d.location = $('#location').val();
-	    }
-	);
-	locationObj.unbind("change").change(function(e){
-		datatable.ajax.reload();
-	})
+	
+	$(document).ready(function(e){
+		var locationId = getParameterByName("location");
+		if(locationId){
+			locationObj.val(locationId)
+		}
+		if(locationObj.val()==null){
+			locationObj.val(0)
+		}
+		
+		var datatable = customFixedDatatableWithGroup(table, '/api/datatable/inventory/location', 
+			[
+		  	    { "visible": false },
+		  	    { "orderable": true },
+		  	    { "orderable": true },
+		  	    { "orderable": true },
+		 	    ],
+			[
+		        {
+		           'targets': [0,1, 2, 3],
+		        }
+			],
+			function ( d ) {
+		        d.location = $('#location').val();
+		    }
+		);
+		locationObj.unbind("change").change(function(e){
+			datatable.ajax.reload();
+		})
+	});
+	
+	
 	
 	
 </script>

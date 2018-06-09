@@ -18,7 +18,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 	@Query(value = "SELECT u FROM User u")
     Iterable<User> apiFindAll();
 
-	public List<User> findAllByAccountType(AccountType user);
+	public List<User> findAllByAccountType(AccountType accountType);
 	@Query(value = "SELECT u FROM User u WHERE accountType = :accountType AND (lastname like %:filter% or firstname like %:filter% or username like %:filter%) ") 
 	List<User> findAllByTypeAndFilter(@Param("accountType") AccountType accountType, @Param("filter") String filter);
 }
