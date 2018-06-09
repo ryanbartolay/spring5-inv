@@ -12,6 +12,7 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.bartolay.inventory.entity.Client;
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
@@ -50,7 +51,7 @@ public class SalesInvoiceForm {
 	private CreditCardDetails creditCardDetails;
 
 	@NotNull
-	private User customer;
+	private Client customer;
 	
 	@NotNull
 	private User salesPerson;
@@ -131,11 +132,11 @@ public class SalesInvoiceForm {
 		this.salesPerson = salesPerson;
 	}
 
-	public User getCustomer() {
+	public Client getCustomer() {
 		return customer;
 	}
 
-	public void setCustomer(User customer) {
+	public void setCustomer(Client customer) {
 		this.customer = customer;
 	}
 

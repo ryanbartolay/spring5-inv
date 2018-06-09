@@ -150,8 +150,8 @@
 										<span class="input-group-addon">Customer</span>
 										<select
 												class="form-control" th:field="*{customer}">
-												<option th:each="user : ${users}"
-													th:value="${user.id}" th:text="${user.lastName} + ', ' + ${user.firstName}"></option>
+												<option th:each="customer : ${customers}"
+													th:value="${customer.id}" th:text="${customer.name}"></option>
 											</select>
 									</div>
 								</th>

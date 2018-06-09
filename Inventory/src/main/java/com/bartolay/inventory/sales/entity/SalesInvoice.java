@@ -20,11 +20,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.bartolay.inventory.entity.Client;
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.enums.SalesInvoiceStatus;
-import com.bartolay.inventory.enums.Status;
 import com.bartolay.inventory.repositories.GeneratedSystemNumber;
 
 @Entity
@@ -36,50 +36,50 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	@GenericGenerator(name = "SalesInvoice-UniqueIdGenerator", strategy = "com.bartolay.inventory.entity.generators.SystemNumberGenerator")
 	@Column(name="system_number", nullable=false, unique=true, insertable=false, updatable=false, length=10)
 	private String systemNumber;
-	
+
 	@Column(name="year", nullable=false, length=4, updatable=false)
 	private String year;
-	
+
 	@Column(name="transaction_date", nullable=false)
 	private Date transactionDate;
-	
+
 	@Column(name="document_number", unique=true, length=25)
 	private String documentNumber;
-	
+
 	private String description;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="location_id", nullable=false, updatable=false)
 	private Location location;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name="payment_method", nullable=false, length=10, updatable=true)
 	private PaymentMethod paymentMethod;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "credit_card_details_id", nullable=true, updatable=true)
 	private CreditCardDetails creditCardDetails;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sales_person_id", nullable=true, updatable=true)
 	private User salesPerson;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "customer_user_id", nullable=false, updatable=true)
-	private User customer;
-	
+	@JoinColumn(name = "customer_id", nullable=false, updatable=true)
+	private Client customer;
+
 	@Column(name="discount_percentage", nullable=false, precision=3, scale=2)
 	private BigDecimal discountPercentage;
-	
+
 	@Column(name="discount_total", nullable=false, precision=10, scale=5)
 	private BigDecimal discountTotal;
-	
+
 	@Column(name="subtotal", nullable=false, precision=10, scale=5)
 	private BigDecimal subtotal;
-	
+
 	@Column(name="net_total", nullable=false, precision=10, scale=5)
 	private BigDecimal netTotal;
-	
+
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
 	private Date createdDate;
@@ -95,13 +95,13 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "updated_by_id", nullable=true, updatable=true)
 	private User updatedBy;
-	
+
 	@OneToMany(mappedBy = "salesInvoice", fetch=FetchType.LAZY)
 	private List<SalesInvoiceItem> salesInvoiceItems;
 
 	@Column(name="status", nullable=false, updatable=true, length=10)
 	private SalesInvoiceStatus salesInvoiceStatus;
-	
+
 	public String getSystemNumber() {
 		return systemNumber;
 	}
@@ -150,10 +150,10 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	public void setSalesPerson(User salesPerson) {
 		this.salesPerson = salesPerson;
 	}
-	public User getCustomer() {
+	public Client getCustomer() {
 		return customer;
 	}
-	public void setCustomer(User customer) {
+	public void setCustomer(Client customer) {
 		this.customer = customer;
 	}
 	public BigDecimal getSubtotal() {
@@ -198,14 +198,14 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	public void setYear(String year) {
 		this.year = year;
 	}
-	
+
 	public List<SalesInvoiceItem> getSalesInvoiceItems() {
 		return salesInvoiceItems;
 	}
 	public void setSalesInvoiceItems(List<SalesInvoiceItem> salesInvoiceItems) {
 		this.salesInvoiceItems = salesInvoiceItems;
 	}
-	
+
 	public BigDecimal getDiscountPercentage() {
 		return discountPercentage;
 	}
@@ -265,5 +265,5 @@ public class SalesInvoice implements GeneratedSystemNumber {
 			return false;
 		return true;
 	}
-	
+
 }

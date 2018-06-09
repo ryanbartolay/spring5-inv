@@ -9,18 +9,21 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.form.SalesInvoiceForm;
+import com.bartolay.inventory.repositories.ClientRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.services.LocationService;
 import com.bartolay.inventory.services.UserService;
-import com.bartolay.inventory.utils.CalendarUtils;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
 @RequestMapping(value="/sales")
 public class SalesController {
+	
+	@Autowired
+	private ClientRepository clientRepository;
 	
 	@Autowired
 	private LocationRepository locationRepository;
@@ -71,7 +74,7 @@ public class SalesController {
 		mav.addObject("users", userService.retrieve());
 		mav.addObject("salesInvoiceForm", new SalesInvoiceForm());
 		mav.addObject("locations", locationRepository.findAll());
-		
+		mav.addObject("customers", clientRepository.findAll());
 		return mav;
 	}
 	

@@ -3,6 +3,7 @@ package com.bartolay.inventory.entity;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,9 +15,7 @@ import javax.persistence.SequenceGenerator;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.bartolay.inventory.enums.AccountType;
-import com.bartolay.inventory.enums.ClientType;
-
+@Entity
 public class Client {
 
 	@Id
@@ -41,6 +40,10 @@ public class Client {
     
     @Column(name = "client_type", nullable=false, insertable = true)
     private String clientType; 
+    
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sales_person_id", nullable=false, updatable=true)
+	private User salesPerson;
     
     @Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
@@ -161,4 +164,13 @@ public class Client {
 	public void setUpdatedBy(User updatedBy) {
 		this.updatedBy = updatedBy;
 	}
+
+	public User getSalesPerson() {
+		return salesPerson;
+	}
+
+	public void setSalesPerson(User salesPerson) {
+		this.salesPerson = salesPerson;
+	}
+	
 }
