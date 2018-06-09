@@ -18,7 +18,15 @@ function customDatatable(table, url, columns, columnDefs) {
 
 /* custom datatable */
 function customFixedDatatable(table, url, columns, columnDefs) {
-	
+	return dTables(table, url, columns, columnDefs, true);
+}
+
+/* custom datatable */
+function customFixedDatatableNotServerSide(table, url, columns, columnDefs){
+	return dTables(table, url, columns, columnDefs, false);
+}
+
+function dTables(table, url, columns, columnDefs, serverSide){
 	return table.DataTable({
 		responsive : true,
 		searching: false, 
@@ -27,12 +35,11 @@ function customFixedDatatable(table, url, columns, columnDefs) {
 		ajax: {
 			url: url
 		},
-		processing: true,
-        serverSide: true,
+		processing: serverSide,
+        serverSide: serverSide,
         columns: columns,
         columnDefs: columnDefs
 	});
-	
 }
 
 /* custom datatable */

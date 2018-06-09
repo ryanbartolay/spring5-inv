@@ -6,6 +6,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.form.UserForm;
 
 public interface UserService<E> {
@@ -17,5 +18,5 @@ public interface UserService<E> {
 	public E delete(Integer id);
 	
 	List<User> findAllSales();
-	
+	List<User> retrieveUserByTypeDatatableList(AccountType accountType, Map<String, String> requestMap);
 }
