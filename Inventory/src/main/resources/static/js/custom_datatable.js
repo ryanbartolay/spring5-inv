@@ -36,19 +36,19 @@ function customFixedDatatable(table, url, columns, columnDefs) {
 }
 
 /* custom datatable */
-function customFixedDatatableWithGroup(table, url, columns, columnDefs) {
+function customFixedDatatableWithGroup(table, url, columns, columnDefs, params) {
 	var table = table.DataTable({
-	      'ajax': url,
-	      'columnDefs': columnDefs,
-	      "columns": columns,
-	      //responsive : true,
+			ajax: {
+				url: url,
+				data: params
+			},
+	      columnDefs: columnDefs,
+	      columns: columns,
 		  searching: false, 
 		  paging: true,
 		  bInfo: false,
 	      processing: true,
           serverSide: true,
-	      //rowGroup: true,
-	      //rowsGroup: [0],
 	      rowGroup: {
 	            //startRender: null,
 	    	  startRender: function ( rows, group ) {
@@ -68,13 +68,14 @@ function customFixedDatatableWithGroup(table, url, columns, columnDefs) {
 	                    }, 0) / rows.count();
 	 
 	                return $('<tr style="background: #e4e4e4;"/>')
-	                    .append( '<td colspan="4">'+group+'</td>' )
+	                    .append( '<td colspan="'+columns.length+'">'+group+'</td>' )
 	                    //.append( '<td>'+ageAvg.toFixed(0)+'</td>' )
 //	                    .append( '<td/>' )
 	                    //.append( '<td>'+salaryAvg+'</td>' );
 	            }, 
 	    	  dataSrc: 0
 	       },
-	       'rowsGroup': [0],
+	       //'rowsGroup': [0],
 	   }); 
+	return table;
 }
