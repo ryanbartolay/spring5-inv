@@ -1,14 +1,12 @@
 package com.bartolay.inventory.enums;
 
-public enum AccountType {
-	ROOT("Super Administrator"),
-	ADMIN("Administrator"),
-	USER("User"),
-	SALES("Sales");
+public enum ClientType {
+	CUSTOMER("Customer"),
+	SUPPLIER("Supplier");
 	
 	private String name;
 	
-	private AccountType(String name) {
+	private ClientType(String name) {
 		this.name = name;
 	}
 	public String getName() {

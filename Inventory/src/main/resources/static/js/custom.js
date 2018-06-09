@@ -263,12 +263,14 @@ function countChecked() {
     var checkCount = $(".bulk_action input[name='table_records']:checked").length;
 
     if (checkCount) {
-        $('.column-title').hide();
-        $('.bulk-actions').show();
-        $('.action-cnt').html(checkCount + ' Records Selected');
+//        $('.column-title').hide();
+//        $('.bulk-actions').show();
+//        $('.action-cnt').html(checkCount + ' Records Selected');
+    	$('#itemSelectedStatus').html(checkCount + " Records Selected");
     } else {
-        $('.column-title').show();
-        $('.bulk-actions').hide();
+    	$('#itemSelectedStatus').html("");
+//        $('.column-title').show();
+//        $('.bulk-actions').hide();
     }
 }
 

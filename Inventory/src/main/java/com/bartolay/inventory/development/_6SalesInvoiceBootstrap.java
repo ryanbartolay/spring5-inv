@@ -19,6 +19,7 @@ import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.exceptions.SalesInvoiceException;
 import com.bartolay.inventory.form.SalesInvoiceForm;
+import com.bartolay.inventory.repositories.ClientRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.UserRepository;
@@ -41,6 +42,9 @@ public class _6SalesInvoiceBootstrap implements ApplicationListener<ContextRefre
 	
 	@Autowired
 	private InventoryCoreService inventoryService;
+	
+	@Autowired
+	private ClientRepository clientRepository;
 	
 	@Autowired
 	private ItemRepository itemRepository;
@@ -68,7 +72,7 @@ public class _6SalesInvoiceBootstrap implements ApplicationListener<ContextRefre
 		salesInvoiceForm.setDiscountPercentage(new BigDecimal("3.5"));
 		salesInvoiceForm.setTransactionDate(new Date());
 		salesInvoiceForm.setYear("2018");
-		salesInvoiceForm.setCustomer(userRepository.findByUsername("customer"));
+		salesInvoiceForm.setCustomer(clientRepository.findById(1).get());
 		
 		try {
 			salesInvoiceService.create(salesInvoiceForm);

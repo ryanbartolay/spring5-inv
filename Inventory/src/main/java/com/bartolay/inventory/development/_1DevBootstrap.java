@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Category;
+import com.bartolay.inventory.entity.Client;
 import com.bartolay.inventory.entity.Color;
 import com.bartolay.inventory.entity.Company;
 import com.bartolay.inventory.entity.Country;
@@ -25,9 +26,11 @@ import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.entity.Unit;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.AccountType;
+import com.bartolay.inventory.enums.ClientType;
 import com.bartolay.inventory.form.LocationForm;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CategoryRepository;
+import com.bartolay.inventory.repositories.ClientRepository;
 import com.bartolay.inventory.repositories.ColorRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
 import com.bartolay.inventory.repositories.CountryRepository;
@@ -56,6 +59,9 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 
 	@Autowired
 	private CategoryRepository categoryRepository;
+	
+	@Autowired
+	private ClientRepository clientRepository;
 	
 	@Autowired
 	private ColorRepository colorRepository;
@@ -323,21 +329,31 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 	
 	private void createCustomers() {
 		Country country = countryRepository.findById(3).get();
+		User admin = userRepository.findByUsername("admin");
 		
-		User user = new User();
-		user.setUsername("customer");
-		user.setPassword(passwordEncoder.encode(PASSWORD));
-		user.setFirstName("Ryan");
-		user.setLastName("Bartolay");
-		user.setAccountType(AccountType.CUSTOMER);
-		user.setEmail("bartolay.ryann@gmail.com");
-		user.setAddress("84 Molave st. Dona Manuela Phase 4-G, Pamplona Tres");
-		user.setAddressCity("Las Pinas City");
-		user.setAddressZipcode(1471);
-		user.setPhone("09178049704");
-		user.setAuthority(AccountType.CUSTOMER.toString());
-		user.setAddressCountry(country);
-		userRepository.save(user);
+		Client client = new Client();
+		client.setClientType(ClientType.CUSTOMER.name());
+		client.setName("HP Global Resources");
+		client.setAddressCountry(country);
+		client.setCreatedBy(admin);
+		client.setSalesPerson(admin);
+		
+		clientRepository.save(client);
+		
+//		User user = new User();
+//		user.setUsername("customer");
+//		user.setPassword(passwordEncoder.encode(PASSWORD));
+//		user.setFirstName("Ryan");
+//		user.setLastName("Bartolay");
+//		user.setAccountType(AccountType.USER);
+//		user.setEmail("bartolay.ryann@gmail.com");
+//		user.setAddress("84 Molave st. Dona Manuela Phase 4-G, Pamplona Tres");
+//		user.setAddressCity("Las Pinas City");
+//		user.setAddressZipcode(1471);
+//		user.setPhone("09178049704");
+//		user.setAuthority(AccountType.USER.toString());
+//		user.setAddressCountry(country);
+//		userRepository.save(user);
 	}
 
 	private void createSuppliers() {

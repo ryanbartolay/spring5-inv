@@ -10,18 +10,21 @@ import org.springframework.web.servlet.ModelAndView;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.form.SalesInvoiceForm;
+import com.bartolay.inventory.repositories.ClientRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.services.LocationService;
 import com.bartolay.inventory.services.UserService;
-import com.bartolay.inventory.utils.CalendarUtils;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
 @RequestMapping(value="/sales")
 public class SalesController {
+	
+	@Autowired
+	private ClientRepository clientRepository;
 	
 	@Autowired
 	private LocationRepository locationRepository;
@@ -47,13 +50,20 @@ public class SalesController {
 		model.addObject("html", "invoice/list");
 		return model;
 	}
-	
+
+	@RequestMapping(value="/customers")
+	public ModelAndView customers(ModelAndView model) {
+		model.setViewName("sales/index");
+		model.addObject("html", "customers/list");
+		model.addObject("type", AccountType.USER);
+		return model;
+	}
 	
 	@RequestMapping(value="/persons")
-	public ModelAndView contacts(ModelAndView model) {
+	public ModelAndView persons(ModelAndView model) {
 		model.setViewName("sales/index");
 		model.addObject("html", "persons/list");
-		model.addObject("type", AccountType.USER);
+		model.addObject("type", AccountType.SALES);
 		return model;
 	}
 	
@@ -67,7 +77,7 @@ public class SalesController {
 		mav.addObject("users", userService.retrieve());
 		mav.addObject("salesInvoiceForm", new SalesInvoiceForm());
 		mav.addObject("locations", locationRepository.findAll());
-		
+		mav.addObject("customers", clientRepository.findAll());
 		return mav;
 	}
 	
