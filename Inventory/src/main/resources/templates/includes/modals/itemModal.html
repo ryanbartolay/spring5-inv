@@ -4,9 +4,9 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<form data-async data-target="#rating-modal"
-				id="itemModal_addItemForm" 
-				th:action="@{/api/stockOpening/item}" method="POST">
-				
+				id="itemModal_addItemForm" th:action="@{/api/stockOpening/item}"
+				method="POST">
+
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
@@ -14,46 +14,61 @@
 				</div>
 
 				<div class="panel-body">
-				
-					<table class="table table-bordered table-striped" id="itemModal_table">
+					<input type="text" id="itemModal_itemPlaceholder" size="200" />
+					<table class="table table-bordered table-striped"
+						id="itemModal_table">
 						<tbody>
 							<tr>
 								<td>
-								
+
 									<div class="input-group">
-										<span class="input-group-addon">Item</span>
-										<select class="form-control" id="itemModal_item" name="itemModal_item">
+										<span class="input-group-addon">Item</span> <select
+											class="form-control" id="itemModal_item"
+											name="itemModal_item">
 											<option value="">------</option>
 										</select>
 									</div>
-								
+
 								</td>
 							</tr>
 							<tr>
 								<td>
-								
+
 									<div class="input-group">
-										<span class="input-group-addon">Unit</span>
-										<select class="form-control" id="itemModal_unit" name="itemModal_unit">
+										<span class="input-group-addon">Unit</span> <select
+											class="form-control" id="itemModal_unit"
+											name="itemModal_unit">
 										</select>
 									</div>
-								
+
 								</td>
 							</tr>
 							<tr>
 								<td>
-								
+
 									<div class="input-group">
-										<span class="input-group-addon">Quantity</span>
-										<input class="form-control" type="number" value="0" id="itemModal_quantity" name="itemModal_quantity" />
+										<span class="input-group-addon">On Hand</span> <input
+											class="form-control" type="number" value="0"
+											id="itemModal_quantity" name="itemModal_quantity" />
 									</div>
-								
+
+								</td>
+							</tr>
+							<tr>
+								<td>
+
+									<div class="input-group">
+										<span class="input-group-addon">Reorder Point</span> <input
+											class="form-control" type="number" value="0"
+											id="itemModal_reorderPoint" name="itemModal_reorderPoint" />
+									</div>
+
 								</td>
 							</tr>
 						</tbody>
 					</table>
-				
-					
+
+
 				</div>
 
 				<div class="modal-footer">
@@ -61,6 +76,8 @@
 					<button type="submit" id="itemModal_addItemBtn"
 						class="btn btn-success btn-primary">Add Item</button>
 				</div>
+
+				<div id="input_placeholder"></div>
 			</form>
 		</div>
 		<!-- /.modal-content -->
@@ -186,11 +203,11 @@
 		loadItemUnit(item_id);
 	});
 	
-
 	
 	addItemBtn.click(function() {
 		//itemModal_modal.modal('hide');
 		
+		console.log("xxxxxxxxxxx");
 		var arr = {};
 		
 		var iter = addItemForm.serializeArray();
@@ -201,63 +218,108 @@
 			arr[obj.name] = obj.value;
 		});
 		
-		
+		console.log("yyyyyyyyyyyy");
 		
 		//itemModal_items_placeholder
-		
 		arr['item'] = items[arr['itemModal_item']];
 		arr['unit'] = itemUnits[arr['itemModal_unit']];
 		arr['quantity'] = arr['itemModal_quantity'];
 		arr['unit_price'] = arr['itemModal_unit_price'];
 		
-		/* setInPlaceholder(arr['item'], arr['unit'], arr['quantity'], arr['unit_price'])
 		
-		console.log("placeholder");
-	
+		console.log("yyyyyyyyyyyy2222");
+		var items_ph = addInPlaceholder(arr['itemModal_item'], arr['itemModal_unit'], arr['itemModal_quantity'], arr['itemModal_unit_price']);
+			
+		console.log("zzzzzzzzzzzzzz");
 		
-		for(var i = 0; i < itemModal_items_placeholder.length; i++) {
-			for(var n = 0; n < itemModal_items_placeholder[i].length; n++) {
-				console.log(itemModal_items_placeholder[i][n]);
-			}
-		} */
+		itemModal_itemPlaceholder.value = JSON.stringify(items_ph);
 		
-		var obj = {};
+		var callbackItems = [];
 		
-		obj[arr['item']] = "aaa";
+		console.log("11111111111111111111111");
 		
-		 /* {
-				arr['unit'] : { 
-					arr['quantity'],
-					arr['unit_price']
-				}
-			} */
+		for(var i = 0; i < items_ph.length; i++) {
+			
+			for(var n = 0; n < items_ph[i][1].length; n++) {
+				callbackItems.push(
+					[
+						items[items_ph[i][0]], // item
+						itemUnits[items_ph[i][1][0]], // unit
+						//items_ph[i][1][1][0], // quantity
+						//items_ph[i][1][1][1] // amount
+					]
+				);
+			}			
+		}
+		console.log("3333333333333333333333333");
 		
-		console.log(obj);
+		console.log(JSON.stringify(items_ph));
 		
-		
-		itemModal_callback(arr);
+		itemModal_callback(callbackItems);
 		
 		quantity.val(0);
-		itemModal_unit.html("");
+		itemModal_unit.html(""); 
 	});
 	
+	// Algorithm for reserving items in input
 	var itemModal_items_placeholder = [];
 	
-	
-	function setInPlaceholder(item, unit, quantity, unit_price) {
+	function addInPlaceholder(item, unit, quantity, unit_price) {
 		
-		if(typeof itemModal_items_placeholder[item] === 'undefined') {
-			itemModal_items_placeholder[item] = new Array();
+		console.log("111111111111");
+		var extractedItem = extractItemPlaceholder(item);
+		console.log("222222222222");
+		console.log("------------------");
+		console.log(extractedItem);
+		console.log("------------------");
+		
+		if(extractedItem == null) {
+			itemModal_items_placeholder.push(
+				[
+					item,
+					[
+						[
+							unit, 
+							[
+								quantity, unit_price 
+							]
+						]
+					]
+				]
+			);
+		} else {
+			var extractedUnit = extractUnit(extractedItem[1], unit);
+			extractedItem[1].push(
+				[
+					unit, 
+					[
+						quantity, unit_price 
+					]
+				]
+			);
+			
+			itemModal_items_placeholder.push(extractedItem);
 		}
 		
-		itemModal_items_placeholder[item][unit] = [quantity, unit_price];
+		return itemModal_items_placeholder;
 	}
 	
-	function getInPlaceholder(item, unit) {
-		return itemModal_items_placeholder[item][unit];
+	function extractItemPlaceholder(item) {
+		return extractItem(itemModal_items_placeholder, item);
+	}
+	function extractUnit(obj, unit) {
+		return extractItem(obj, unit);
+	}
+	function extractItem(obj, index) {
+		var o = null;
+		for(var i = 0; i < obj.length; i++) {
+			if(obj[i][0] == index) {
+				o = obj[i];
+				obj.splice(i, 1);
+				return o;
+			}
+		}
+		return o;
 	}
 	
-	function removeInPlaceholder(item, unit) {
-		itemModal_items_placeholder.splice($.inArray(unit, itemModal_items_placeholder[item]), 1);
-	}
 </script>
