@@ -68,14 +68,14 @@ function customFixedDatatableWithGroup(table, url, columns, columnDefs, params) 
 	                    }, 0) / rows.count();
 	 
 	                return $('<tr style="background: #e4e4e4;"/>')
-	                    .append( '<td colspan="4">'+group+'</td>' )
+	                    .append( '<td colspan="'+columns.length+'">'+group+'</td>' )
 	                    //.append( '<td>'+ageAvg.toFixed(0)+'</td>' )
 //	                    .append( '<td/>' )
 	                    //.append( '<td>'+salaryAvg+'</td>' );
 	            }, 
 	    	  dataSrc: 0
 	       },
-	       'rowsGroup': [0],
+	       //'rowsGroup': [0],
 	   }); 
 	return table;
 }
