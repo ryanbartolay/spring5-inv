@@ -14,13 +14,13 @@ import com.bartolay.inventory.services.InventoryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-@RequestMapping(value="/api/inventory")
+@RequestMapping(value="/api/datatable")
 public class InventoryRestController {
 	
 	@Autowired
 	private InventoryService inventoryService;
 	
-	@RequestMapping(value="/location/{location_id}", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value="/inventory/location/{location_id}", method=RequestMethod.GET, produces="application/json")
 	public String getAllByLocation(@RequestParam Map<String, String> requestMap, @PathVariable Integer location_id) throws JsonProcessingException, UnsupportedEncodingException {		
 		return inventoryService.retrieveDatatableListByLocationId(requestMap, location_id).toString();
 	}

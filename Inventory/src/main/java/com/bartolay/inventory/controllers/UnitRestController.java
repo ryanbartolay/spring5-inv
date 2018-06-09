@@ -20,11 +20,12 @@ import com.bartolay.inventory.form.UnitForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
 import com.bartolay.inventory.services.UnitService;
+import com.bartolay.inventory.stock.controllers.AbstractRestController;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-public class UnitRestController {
+public class UnitRestController extends AbstractRestController{
 
 
 	@Autowired
@@ -54,7 +55,7 @@ public class UnitRestController {
 	public String create(@Valid UnitForm unitForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 
 		ApiResponse response = null;
@@ -74,7 +75,7 @@ public class UnitRestController {
 	public String update(@Valid UnitForm unitForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		if (bindingResult.hasErrors()) {
-			throw new RestApiException(bindingResult);
+			return handleRestApiException(bindingResult);
 		}
 
 		ApiResponse response = null;
@@ -90,14 +91,14 @@ public class UnitRestController {
 	}
 
 	@RequestMapping(value="/api/units/{id}", method=RequestMethod.DELETE)
-	public String delete(@PathVariable Integer id) throws RestApiException {
+	public String delete(@PathVariable Integer id) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 		System.err.println("id " + id);
 		try {
 			Unit unit = unitService.delete(id);
 			ApiResponse response = new ApiResponse(HttpStatus.OK, "Record deleted " + unit.getName());
 			return stringUtils.encode(response);
 		} catch(Exception e) {
-			throw new RestApiException(e);
+			return stringUtils.encode(new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
 		}
 	}
 }
