@@ -7,14 +7,21 @@ import org.springframework.web.servlet.ModelAndView;
 import com.bartolay.inventory.form.UserForm;
 
 @Controller
+@RequestMapping(value="/administration")
 public class AdministrationController {
 
 	@RequestMapping(value="/users")
 	public ModelAndView employeesList() {
-		ModelAndView mav = new ModelAndView("generic");
+		ModelAndView mav = new ModelAndView("administration/index");
 		mav.addObject("title", "Users");
 		mav.addObject("userForm", new UserForm());
-		mav.addObject("html", "/administration/users/list");
+		mav.addObject("html", "users/list");
+		return mav;
+	}
+	@RequestMapping(value="/groups")
+	public ModelAndView groupList() {
+		ModelAndView mav = new ModelAndView("administration/index");
+		mav.addObject("html", "groups/list");
 		return mav;
 	}
 }

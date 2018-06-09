@@ -57,8 +57,13 @@ public class User implements Serializable, Principal {
 	@JoinColumn(name = "address_country_id", nullable=false, updatable=true)
     private Country addressCountry;
 	
+	@Deprecated
     @Column(name = "account_type", nullable=false, insertable = true)
     private AccountType accountType;  
+    
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="user_group_id", nullable=true, updatable=true)
+	private UserGroup userGroup;
     
     @Column(name = "enabled", nullable=false)
     private boolean enabled;
@@ -184,10 +189,12 @@ public class User implements Serializable, Principal {
         this.address = address;
     }
     
+    @Deprecated
 	public AccountType getAccountType() {
 		return accountType;
 	}
 
+    @Deprecated
 	public void setAccountType(AccountType accountType) {
 		this.accountType = accountType;
 	}
@@ -267,4 +274,11 @@ public class User implements Serializable, Principal {
 		return this.username;
 	}
 
+	public UserGroup getUserGroup() {
+		return userGroup;
+	}
+
+	public void setUserGroup(UserGroup userGroup) {
+		this.userGroup = userGroup;
+	}
 }
