@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.form.SalesInvoiceForm;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
@@ -52,6 +53,7 @@ public class SalesController {
 	public ModelAndView contacts(ModelAndView model) {
 		model.setViewName("sales/index");
 		model.addObject("html", "persons/list");
+		model.addObject("type", AccountType.USER);
 		return model;
 	}
 	

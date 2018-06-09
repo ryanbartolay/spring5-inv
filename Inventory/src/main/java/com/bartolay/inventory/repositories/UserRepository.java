@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bartolay.inventory.entity.User;
@@ -18,4 +19,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     Iterable<User> apiFindAll();
 
 	public List<User> findAllByAccountType(AccountType user);
+	@Query(value = "SELECT u FROM User u WHERE accountType = :accountType AND (lastname like %:filter% or firstname like %:filter% or username like %:filter%) ") 
+	List<User> findAllByTypeAndFilter(@Param("accountType") AccountType accountType, @Param("filter") String filter);
 }

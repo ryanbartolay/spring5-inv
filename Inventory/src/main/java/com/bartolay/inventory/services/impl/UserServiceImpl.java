@@ -106,5 +106,14 @@ public class UserServiceImpl implements UserService<User> {
 		return userRepository.findAll();
 	}
 
+	@Override
+	public List<User> retrieveUserByTypeDatatableList(AccountType accountType, Map<String, String> requestMap) {
+		System.err.println(requestMap.get("filter"));
+		if(requestMap.get("filter") != null && !requestMap.get("filter").trim().isEmpty()) {
+			return userRepository.findAllByTypeAndFilter(accountType, requestMap.get("filter"));
+		}
+		return userRepository.findAllByAccountType(accountType);
+	}
+
 	
 }
