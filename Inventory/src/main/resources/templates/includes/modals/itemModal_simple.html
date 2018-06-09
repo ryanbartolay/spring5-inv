@@ -1,5 +1,5 @@
 <form id="itemModel_form">
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
+<div class="modal fade bs-example-modal-lg" id="itemModalSimple" tabindex="-1" role="dialog"
 	aria-hidden="true" style="display: none;">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
@@ -8,13 +8,13 @@
 				<button type="button" class="close" data-dismiss="modal">
 					<span aria-hidden="true">×</span>
 				</button>
-				<h4 class="modal-title" id="myModalLabel">Add Items</h4>
+				<h4 class="modal-title" id="myModalLabel">Item List</h4>
 			</div>
 			<div class="modal-body">
 
 
 				<div class="table-responsive">
-					<table class="table table-striped bulk_action">
+					<table class="table table-striped bulk_action" id="itemModalSimple-datatable">
 						<thead>
 							<tr class="headings">
 								<th>
@@ -48,7 +48,7 @@
 						</thead>
 
 						<tbody>
-							<tr class="even pointer">
+							<tr>
 								<td class="a-center ">
 									<div class="icheckbox_flat-green" style="position: relative;">
 										<input type="checkbox" class="flat" name="table_records"
@@ -214,14 +214,70 @@
 			</div>
 			<div class="modal-footer">
 				<span id="itemSelectedStatus"></span>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary">Save changes</button>
+				<button type="button" class="btn btn-success" id="itemModalAddItem">Add Items</button>
 			</div>
 
 		</div>
 	</div>
 </div>
 </form>
+
+<script>
+
+var itemModalSimple_modal = $("#itemModalSimple");
+var itemModalSimple_callback;
+var itemModalSimple_url = "/api/items";
+
+function addItem(parameters, callback) {
+	var label = parameters.label;
+
+	itemModalSimple_callback = callback;
+	
+	// lets change the request url if stock_transfer
+	if(parameters.type == "stock_transfer") {
+		itemModalSimple_url = "/api/items/location/" + parameters.location;	
+	}
+	
+	itemModalSimple_modal.modal('show');
+}
+
+itemModalSimple_modal.on('shown.bs.modal', function() {
+	
+	var datatable = $('#itemModalSimple-datatable').DataTable({
+		responsive : true,
+		ajax: {
+			url: itemModalSimple_url
+		},
+		processing: true,
+        serverSide: true,
+		length: 5,
+		start: 0,
+        columns: [
+        	{ 
+        		data: "system_number",
+        		render: function ( data, type, row ) {
+                    return '<a href="/stock/opening/'+ data +'">' + data + '</a>';
+                }
+        	},
+        	{ 
+        		data: "document_number",
+        		render: function ( data, type, row ) {
+                    return '<a href="/stock/opening/">' + data + '</a>';
+                }
+        	},
+        	{ data: "transaction_date" },
+        	{ 
+        		data: "location_name",
+        		render: function ( data, type, row ) {
+                    return '<a href="/locations/">' + data + '</a>';
+                }
+        	},
+    	]
+	});
+	
+});
+
+</script>
 
 <!-- Modal Edit Brand -->
 <div class="modal fade" id="itemModal" tabindex="-1" role="dialog"
@@ -333,7 +389,7 @@
 	var itemModal_type;
 	var itemModal_url = "/api/items"; 
 	
-	function addItem(parameters, callback) {
+/* 	function addItem(parameters, callback) {
 		var label = parameters.label;
 		itemModal_type = parameters.type;
 		itemModal_callback = callback;
@@ -349,7 +405,7 @@
 		addItemBtn.text("Add Item");
 		itemModal_modal.modal('show');
 		
-	}
+	} */
 	
 	function updateItem(parameters, callback) {
 		var label = parameters.label;
