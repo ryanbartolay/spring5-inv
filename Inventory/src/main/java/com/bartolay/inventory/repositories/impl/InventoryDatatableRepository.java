@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -25,15 +24,22 @@ public class InventoryDatatableRepository extends RepositoryComponent {
 
 	public JSONArray findAllDataByLocationId(DatatableParameter datatableParameter, Integer location_id) {
 		String filter = "";
+		String sql = "";
 		Object[] params = null;
 		if(location_id != null && location_id != 0) {
 			filter = "where t1.location_id = ?";
 			params = new Object[] { location_id };
+			sql = "select t1.*, t2.code as item_code, t2.name as item_name, t3.abbreviation, t3.name as unit_name "
+					+ "from inventory as t1 inner join item as t2 on t1.item_id = t2.id " 
+					+ "inner join unit as t3 on t1.unit_id = t3.id " + filter
+					+ " order by item_name asc";
+		}else {
+			sql = "select SUM(t1.quantity) as quantity, t1.item_id, t2.code as item_code, t2.name as item_name, t3.abbreviation, t3.name as unit_name " + 
+					"from inventory as t1 inner join item as t2 on t1.item_id = t2.id " + 
+					"inner join unit as t3 on t1.unit_id = t3.id GROUP BY t2.code,t2.name, t3.abbreviation, t3.name, t1.item_id " + 
+					"order by item_name asc";
 		}
-		String sql = "select t1.*, t2.code as item_code, t2.name as item_name, t3.abbreviation, t3.name as unit_name "
-				+ "from inventory as t1 inner join item as t2 on t1.item_id = t2.id " 
-				+ "inner join unit as t3 on t1.unit_id = t3.id " + filter
-				+ " order by item_name asc";
+		
 		
 		JSONArray jsonArray = new JSONArray();
 		

@@ -16,7 +16,7 @@
 				<div class="pull-right">
 					<div class="form-group ">
 						<select class="form-control" name="location" id="location">
-							<!-- <option value="0">-- All Locations --</option> -->
+							<option value="0">-- All Locations --</option>
 							<option th:each="location : ${locations}" th:value="${location.id}" th:utext="${location.name}"/>
 						</select>
 					</div>
