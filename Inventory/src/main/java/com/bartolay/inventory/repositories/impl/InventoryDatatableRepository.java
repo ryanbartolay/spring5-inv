@@ -24,15 +24,20 @@ public class InventoryDatatableRepository extends RepositoryComponent {
 	}
 
 	public JSONArray findAllDataByLocationId(DatatableParameter datatableParameter, Integer location_id) {
-		
+		String filter = "";
+		Object[] params = null;
+		if(location_id != null && location_id != 0) {
+			filter = "where t1.location_id = ?";
+			params = new Object[] { location_id };
+		}
 		String sql = "select t1.*, t2.code as item_code, t2.name as item_name, t3.abbreviation, t3.name as unit_name "
 				+ "from inventory as t1 inner join item as t2 on t1.item_id = t2.id " 
-				+ "inner join unit as t3 on t1.unit_id = t3.id " 
-				+ "where t1.location_id = ? order by item_name asc";
+				+ "inner join unit as t3 on t1.unit_id = t3.id " + filter
+				+ " order by item_name asc";
 		
 		JSONArray jsonArray = new JSONArray();
 		
-		List<String[]> data = jdbcTemplate.query(sql, new Object[] { location_id }, new RowMapper<String[]>() {
+		List<String[]> data = jdbcTemplate.query(sql, params, new RowMapper<String[]>() {
 
 			@Override
 			public String[] mapRow(ResultSet rs, int arg1) throws SQLException {

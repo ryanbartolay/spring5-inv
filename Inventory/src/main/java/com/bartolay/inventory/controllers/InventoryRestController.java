@@ -20,8 +20,9 @@ public class InventoryRestController {
 	@Autowired
 	private InventoryService inventoryService;
 	
-	@RequestMapping(value="/inventory/location/{location_id}", method=RequestMethod.GET, produces="application/json")
-	public String getAllByLocation(@RequestParam Map<String, String> requestMap, @PathVariable Integer location_id) throws JsonProcessingException, UnsupportedEncodingException {		
+	@RequestMapping(value="/inventory/location", method=RequestMethod.GET, produces="application/json")
+	public String getAllByLocation(@RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {		
+		Integer location_id = Integer.parseInt(requestMap.get("location"));
 		return inventoryService.retrieveDatatableListByLocationId(requestMap, location_id).toString();
 	}
 }

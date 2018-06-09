@@ -36,19 +36,19 @@ function customFixedDatatable(table, url, columns, columnDefs) {
 }
 
 /* custom datatable */
-function customFixedDatatableWithGroup(table, url, columns, columnDefs) {
+function customFixedDatatableWithGroup(table, url, columns, columnDefs, params) {
 	var table = table.DataTable({
-	      'ajax': url,
-	      'columnDefs': columnDefs,
-	      "columns": columns,
-	      //responsive : true,
+			ajax: {
+				url: url,
+				data: params
+			},
+	      columnDefs: columnDefs,
+	      columns: columns,
 		  searching: false, 
 		  paging: true,
 		  bInfo: false,
 	      processing: true,
           serverSide: true,
-	      //rowGroup: true,
-	      //rowsGroup: [0],
 	      rowGroup: {
 	            //startRender: null,
 	    	  startRender: function ( rows, group ) {
@@ -77,4 +77,5 @@ function customFixedDatatableWithGroup(table, url, columns, columnDefs) {
 	       },
 	       'rowsGroup': [0],
 	   }); 
+	return table;
 }
