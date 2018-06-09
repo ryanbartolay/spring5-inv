@@ -47,6 +47,14 @@ public class SalesController {
 		return model;
 	}
 	
+	
+	@RequestMapping(value="/persons")
+	public ModelAndView contacts(ModelAndView model) {
+		model.setViewName("sales/index");
+		model.addObject("html", "persons/list");
+		return model;
+	}
+	
 	@RequestMapping(value="/invoice/create", method=RequestMethod.GET)
 	public ModelAndView salesInvoiceCreate(ModelAndView mav) throws JsonProcessingException {
 		mav.setViewName("sales/index");

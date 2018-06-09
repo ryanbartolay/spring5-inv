@@ -151,7 +151,7 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
   	addItem({type: "stock_opening", label:"Add Stock Opening Item"}, function(data) {
   		
   		console.log(data);
-  		
+  		console.log("callback");
   		var item = data['item'];
   		var unit = data['unit'];
   		
