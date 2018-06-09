@@ -99,7 +99,7 @@ public class _4SaleBootstrap implements ApplicationListener<ContextRefreshedEven
 		sales1.setPassword(passwordEncoder.encode(_1DevBootstrap.PASSWORD));
 		sales1.setFirstName("Sales");
 		sales1.setLastName("Sales");
-		sales1.setAccountType(AccountType.USER);
+		sales1.setAccountType(AccountType.SALES);
 		sales1.setEmail("sales@gmail.com");
 		sales1.setAuthority("");
 		sales1.setAddressCountry(country);
@@ -110,7 +110,7 @@ public class _4SaleBootstrap implements ApplicationListener<ContextRefreshedEven
 		sales2.setPassword(passwordEncoder.encode(_1DevBootstrap.PASSWORD));
 		sales2.setFirstName("Sales2");
 		sales2.setLastName("Sales2");
-		sales2.setAccountType(AccountType.USER);
+		sales2.setAccountType(AccountType.SALES);
 		sales2.setEmail("sales2@gmail.com");
 		sales2.setAuthority("");
 		sales2.setAddressCountry(country);

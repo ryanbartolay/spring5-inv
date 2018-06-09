@@ -329,13 +329,13 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		user.setPassword(passwordEncoder.encode(PASSWORD));
 		user.setFirstName("Ryan");
 		user.setLastName("Bartolay");
-		user.setAccountType(AccountType.CUSTOMER);
+		user.setAccountType(AccountType.USER);
 		user.setEmail("bartolay.ryann@gmail.com");
 		user.setAddress("84 Molave st. Dona Manuela Phase 4-G, Pamplona Tres");
 		user.setAddressCity("Las Pinas City");
 		user.setAddressZipcode(1471);
 		user.setPhone("09178049704");
-		user.setAuthority(AccountType.CUSTOMER.toString());
+		user.setAuthority(AccountType.USER.toString());
 		user.setAddressCountry(country);
 		userRepository.save(user);
 	}

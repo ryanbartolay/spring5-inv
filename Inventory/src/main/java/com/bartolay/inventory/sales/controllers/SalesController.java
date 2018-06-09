@@ -46,10 +46,16 @@ public class SalesController {
 		model.addObject("html", "invoice/list");
 		return model;
 	}
-	
+
+	@RequestMapping(value="/customers")
+	public ModelAndView customers(ModelAndView model) {
+		model.setViewName("sales/index");
+		model.addObject("html", "customers/list");
+		return model;
+	}
 	
 	@RequestMapping(value="/persons")
-	public ModelAndView contacts(ModelAndView model) {
+	public ModelAndView persons(ModelAndView model) {
 		model.setViewName("sales/index");
 		model.addObject("html", "persons/list");
 		return model;
