@@ -42,9 +42,7 @@ public class ItemDatatableRepositoryImpl extends RepositoryComponent implements 
 	public JSONArray findAllData(DatatableParameter datatableParameter) {
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT i.*, b.name as brand_name FROM Item i inner join Brand b on b.id = i.brand_id"
-					+ " left join Category c on c.id = i.category_id"
-					+ " left join Color co on co.id = i.color_id";
+			String SQL = "SELECT i.*, b.name as brand_name FROM Item i inner join Brand b on b.id = i.brand_id";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
@@ -64,6 +62,11 @@ public class ItemDatatableRepositoryImpl extends RepositoryComponent implements 
 			System.err.println(SQL);
 			List<JSONObject> domains = new ArrayList<>();
 
+//			select array_agg(t3.id) as available_units_id, array_agg(t3.abbreviation) as available_units_abbr, array_agg(t3.name) as available_units_name from item as t1 
+//			left join item_units as t2 on t1.id = t2.item_id
+//			inner join unit as t3 on t2.unit_id = t3.id
+//			where t1.id = 1
+//			group by t2.item_id
 
 			domains = jdbcTemplate.query(SQL, SQL_PARAMS.toArray(), new RowMapper<JSONObject>() {
 

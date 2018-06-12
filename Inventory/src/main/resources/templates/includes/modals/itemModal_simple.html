@@ -19,10 +19,11 @@
 							<tr class="headings">
 								<th></th>
 								<th class="column-title" style="display: table-cell;">SN</th>
-								<th class="column-title" style="display: table-cell;">Item
-								</th>
-								<th class="column-title" style="display: table-cell;">Minimum S. Price</th>
-								<th class="column-title" style="display: table-cell;">Maximum S. Price
+								<th class="column-title" style="display: table-cell;">Code</th>
+								<th class="column-title" style="display: table-cell;">Item</th>
+								<th class="column-title" style="display: table-cell;">Brand</th>
+								<th class="column-title text-right" style="display: table-cell;">Min S. Price</th>
+								<th class="column-title text-right" style="display: table-cell;">Max S. Price
 								</th>
 							</tr>
 						</thead>
@@ -49,7 +50,8 @@
 var itemModalSimple_modal = $("#itemModalSimple");
 var itemModalAddItem_btn = $("#itemModalAddItem_btn");
 var itemModelAddItem_form = $("#itemModelAddItem_form");
-var itemModelAddItem_table = $('#itemModalSimple-datatable')
+var itemModelAddItem_table = $('#itemModalSimple-datatable');
+var itemModelAddItem_table_instance;
 var itemModalSimple_callback;
 var itemModalSimple_url = "/api/datatable/items";
 
@@ -68,7 +70,7 @@ function addItem(parameters, callback) {
 
 itemModalSimple_modal.on('shown.bs.modal', function() {
 	
-	itemModelAddItem_table.DataTable({
+	itemModelAddItem_table_instance = itemModelAddItem_table.DataTable({
 		responsive : true,
 		ajax: {
 			url: itemModalSimple_url
@@ -82,17 +84,28 @@ itemModalSimple_modal.on('shown.bs.modal', function() {
         		data: "id",
         		orderable: false,
         		render: function(data, type, row) {
+        			
+        			var min_price = row.minimum_item_price ? row.minimum_item_price : "";
+        			var max_price = row.maximum_item_price ? row.maximum_item_price : "";
         			return `<div style="position: relative;">
 							<input type="checkbox" name="table_records" id="selected_item" value="`+ data +`" onClick="countCheckedSingle(this)">
 							<input type="hidden" name="id" value="`+data+`">
+							<input type="hidden" name="code" value="`+row.code+`">
 							<input type="hidden" name="name" value="`+row.name+`">
-							<input type="hidden" name="minimum_item_price" value="`+row.minimum_item_price+`">
-							<input type="hidden" name="maximum_item_price" value="`+row.maximum_item_price+`">
+							<input type="hidden" name="brand_name" value="`+row.brand_name+`">
+							<input type="hidden" name="minimum_item_price" value="`+ min_price +`">
+							<input type="hidden" name="maximum_item_price" value="`+ max_price +`">
 					</div>`;
         		}
         	},
         	{ 
         		data: "id",
+        		render: function ( data, type, row ) {
+                    return '<a href="/stock/opening/'+ data +'">' + data + '</a>';
+                }
+        	},
+        	{ 
+        		data: "code",
         		render: function ( data, type, row ) {
                     return '<a href="/stock/opening/'+ data +'">' + data + '</a>';
                 }
@@ -105,13 +118,21 @@ itemModalSimple_modal.on('shown.bs.modal', function() {
                 }
         	},
         	{ 
+        		data: "brand_name",
+        		render: function ( data, type, row ) {
+        			
+                    return '<a href="/stock/opening/">' + data + '</a>';
+                }
+        	},
+        	{ 
         		data: "minimum_item_price",
         		render: function(data,type, row) {
         			if(data) {
         				return data;
         			}
                     return "";
-        		}
+        		},
+        		className: "text-right"
         	},
         	{ 
         		data: "maximum_item_price",
@@ -120,7 +141,8 @@ itemModalSimple_modal.on('shown.bs.modal', function() {
         				return data;
         			}
                     return "";
-                }
+                },
+                className: "text-right"
         	},
     	]
 	});
@@ -143,7 +165,8 @@ itemModalAddItem_btn.click(function() {
 		$("#itemSelectedStatus").html("<span style='color:red'>Select atleast 1 Item</span>");
 	} else {
 		itemModalSimple_callback(selected_items);
-		itemModalSimple_modal.toggle("hide");
+		itemModalSimple_modal.modal("hide");
+		itemModelAddItem_table_instance.destroy();
 	}
 	
 });

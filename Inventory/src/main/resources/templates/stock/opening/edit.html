@@ -32,7 +32,7 @@
 										<div class="input-group">
 											<span class="input-group-addon">Trans. Date</span> <input
 												type="text" th:field="*{transaction_date}"
-												class="form-control">
+												class="form-control" autocomplete="off">
 										</div>
 
 									</td>
@@ -74,14 +74,14 @@
 							</tbody>
 						</table>
 
-						<table class="table table-bordered table-striped" id="itemsTable">
+						<table class="table table-striped" id="itemsTable">
 							<thead>
 								<tr>
 									<th>SN</th>
 									<th>Code</th>
 									<th class="col-md-3">Description</th>
+									<th>Brand</th>
 									<th>Unit</th>
-									<th>U.Desc</th>
 									<th>Quantity</th>
 									<th>Unit Cost</th>
 									<th class="col-md-2">Total</th>
@@ -121,6 +121,14 @@
 <!-- Item Modal -->
 <div th:include="includes/modals/itemModal_simple"></div>
 
+<!-- DataTables JavaScript -->
+<script
+	th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
+
 <script>
 /*<![CDATA[*/
 var form = $("#stockOpeningForm");
@@ -150,35 +158,36 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
   $("#btnAddItem").on("click", function() {
   	addItem({type: "stock_opening", label:"Add Stock Opening Item"}, function(data) {
   		
-  		console.log(data);
+  		var html = ``;
+  		for(var i = 0; i < data.length; i++) {
+  			var item = data[i];
+  			console.log(data[i]);
+  			
+  			html += `<tr>
+				<th id="lblItemId">`+ item.id +`</th>
+				<td id="lblItemName">`+ item.code +`</td>
+				<td id="lblItemName">`+ item.name +`</td>
+				<td id="lblItemName">`+ item.brand_name +`</td>
+				<td id="lblItemName">
+					<select class="form-control">
+						<option>sample</option>
+					</select>
+				</td>
+				<td id="lblItemName"><input type="number" name="quantity" class="form-control" value="0" /></td>
+				<td id="lblItemName"><input type="number" name="amount" class="form-control" value="0" /></td>
+			</tr>`;
+  		}
+  		
+  		/* console.log(data);
   		console.log("callback");
   		var item = data['item'];
-  		var unit = data['unit'];
+  		var unit = data['unit']; */
   		
   		var total = data.quantity * data.unit_cost;
   		grand_total = grand_total + total;
   		
-  		var html = `
-  		<tr>
-				<th id="lblItemId">`+ item.id +`</th>
-				<td id="lblItemCode">`+ item.code +`</td>
-				<td id="lblItemName">`+ item.name +`</td>
-				<td id="lblAbbreviation">`+ unit.abbreviation +`</td>
-				<td id="lblUnitName">`+ unit.name +`</td>
-				<td class="text-right" id="lblQuantity">`+ data.quantity +`</td>
-				<td class="text-right" id="lblUnitCost">`+ data.unit_cost +`</td>
-				<td class="text-right" id="lblTotal">`+ total +`</td>
-				<td class="text-right">
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].item" id="txtItem" value="` + item.id + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unit" id="txtUnit" value="` + unit.id + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].quantity" id="txtQuantity" value="` + data.quantity + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unitCost" id="txtUnitCost" value="` + data.unit_cost + `" />
-					<div class="btn-group" role="group">
-		        		<button class="btn btn-info fa fa-edit" id="btnView" onClick="edit(this)"/>
-		        		<button class="btn btn-danger fa fa-times" onClick="remove(this)" />
-		    		</div>
-				</td>
-			</tr>`;
+  		
+  		
 			item_count++;
   		$('#itemsTable tbody').append(html);
   		$("#grandTotal").html(grand_total);
