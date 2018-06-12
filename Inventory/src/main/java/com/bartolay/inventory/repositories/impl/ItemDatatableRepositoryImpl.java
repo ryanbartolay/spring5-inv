@@ -74,6 +74,8 @@ public class ItemDatatableRepositoryImpl extends RepositoryComponent implements 
 					obj.put("code", rs.getString("code"));
 					obj.put("name", rs.getString("name"));
 					obj.put("brand_name", rs.getString("brand_name"));
+					obj.put("minimum_item_price", rs.getBigDecimal("minimum_item_price"));
+					obj.put("maximum_item_price", rs.getBigDecimal("maximum_item_price"));
 					return obj;
 				}
 			});

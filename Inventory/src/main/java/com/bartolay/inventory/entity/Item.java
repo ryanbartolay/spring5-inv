@@ -37,11 +37,11 @@ public class Item {
 	@Column(nullable=false, length=150)
     private String name;
 	
-	@Column(name="minimum_unit_price",  nullable=false, precision=10, scale=5)
-	private BigDecimal minimumUnitPrice;
+	@Column(name="minimum_item_price",  nullable=false, precision=10, scale=5)
+	private BigDecimal minimumItemPrice;
 	
-	@Column(name="maximum_unit_price",  nullable=true, precision=10, scale=5)
-	private BigDecimal maximumUnitPrice;
+	@Column(name="maximum_item_price",  nullable=true, precision=10, scale=5)
+	private BigDecimal maximumItemPrice;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id", nullable=true)
@@ -243,22 +243,22 @@ public class Item {
 		this.supplier = supplier;
 	}
 
-	public BigDecimal getMinimumUnitPrice() {
-		return minimumUnitPrice;
+	public BigDecimal getMinimumItemPrice() {
+		return minimumItemPrice;
 	}
 
-	public void setMinimumUnitPrice(BigDecimal minimumUnitPrice) {
-		this.minimumUnitPrice = minimumUnitPrice;
+	public void setMinimumItemPrice(BigDecimal minimumItemPrice) {
+		this.minimumItemPrice = minimumItemPrice;
 	}
 
-	public BigDecimal getMaximumUnitPrice() {
-		return maximumUnitPrice;
+	public BigDecimal getMaximumItemPrice() {
+		return maximumItemPrice;
 	}
 
-	public void setMaximumUnitPrice(BigDecimal maximumUnitPrice) {
-		this.maximumUnitPrice = maximumUnitPrice;
+	public void setMaximumItemPrice(BigDecimal maximumItemPrice) {
+		this.maximumItemPrice = maximumItemPrice;
 	}
-	
+
 	public boolean isDefaultUnit(Unit unit) {
 		return this.defaultUnit.equals(unit);
 	}

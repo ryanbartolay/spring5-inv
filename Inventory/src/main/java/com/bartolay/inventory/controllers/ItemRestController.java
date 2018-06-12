@@ -23,6 +23,7 @@ import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.services.ItemService;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 public class ItemRestController {
@@ -36,8 +37,11 @@ public class ItemRestController {
 	@Autowired
 	private StringUtils stringUtils;
 	
+	@Autowired
+	private ObjectMapper objectMapper;
+	
 	@RequestMapping(value="/api/datatable/items", method=RequestMethod.GET, produces="application/json")
-	public String datatableBrand(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
+	public String datatableItem(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
 		return itemService.retrieveDatatableList(requestMap).toString();
 	}
 
@@ -49,7 +53,8 @@ public class ItemRestController {
 	@RequestMapping(value="/api/items", method=RequestMethod.GET, produces="application/json")
 	public String getAll() {
 		try {
-			return stringUtils.encode(itemRepository.findAll());
+			//return stringUtils.encode(itemRepository.findAll());
+			return objectMapper.writeValueAsString(itemRepository.findAll());
 		} catch(Exception e) {
 			e.printStackTrace();
 			return null;
