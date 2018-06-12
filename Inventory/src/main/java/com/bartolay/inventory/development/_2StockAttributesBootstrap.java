@@ -210,7 +210,7 @@ public class _2StockAttributesBootstrap implements ApplicationListener<ContextRe
 		item.setSize(new Size(1));
 		item.setModel(new Model(1L));
 		item.setItemUnits(itemUnits);
-		item.setMinimumUnitPrice(new BigDecimal("50.75"));
+		item.setMinimumItemPrice(new BigDecimal("50.75"));
 		itemRepository.save(item);
 		
 		for(ItemUnit itemUnit : itemUnits) {
@@ -254,8 +254,8 @@ public class _2StockAttributesBootstrap implements ApplicationListener<ContextRe
 		item2.setSize(new Size(1));
 		item2.setModel(new Model(2L));
 		item2.setItemUnits(itemUnits);
-		item2.setMinimumUnitPrice(new BigDecimal("100.75"));
-		item2.setMaximumUnitPrice(new BigDecimal("110.759"));
+		item2.setMinimumItemPrice(new BigDecimal("100.75"));
+		item2.setMaximumItemPrice(new BigDecimal("110.759"));
 		itemRepository.save(item2);
 		
 		for(ItemUnit itemUnit : itemUnits) {
@@ -300,8 +300,8 @@ public class _2StockAttributesBootstrap implements ApplicationListener<ContextRe
 		item3.setSize(new Size(4));
 		item3.setModel(new Model(2L));
 		item3.setItemUnits(itemUnits);
-		item3.setMinimumUnitPrice(new BigDecimal("10"));
-		item3.setMaximumUnitPrice(new BigDecimal("200"));
+		item3.setMinimumItemPrice(new BigDecimal("10"));
+		item3.setMaximumItemPrice(new BigDecimal("200"));
 		itemRepository.save(item3);
 		
 		for(ItemUnit itemUnit : itemUnits) {
