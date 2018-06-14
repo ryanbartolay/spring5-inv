@@ -42,14 +42,22 @@ public class ItemDatatableRepositoryImpl extends RepositoryComponent implements 
 	public JSONArray findAllData(DatatableParameter datatableParameter) {
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT i.*, b.name as brand_name FROM Item i inner join Brand b on b.id = i.brand_id";
+			String SQL = "SELECT t1.*, b.name as brand_name, t4.name as default_unit_name, " + 
+					"array_agg(t3.id) as available_units_id, array_agg(t3.abbreviation) as available_units_abbr, array_agg(t3.name) as available_units_name " + 
+					"FROM Item as t1 inner join Brand b on b.id = t1.brand_id " + 
+					"left join item_units as t2 on t1.id = t2.item_id " + 
+					"inner join unit as t3 on t2.unit_id = t3.id " +
+					"inner join unit as t4 on t1.default_unit_id = t4.id";
+			
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
 			if(datatableParameter.getSearch() != null) {
-				SQL += " WHERE i.name like ?";
+				SQL += " WHERE t1.name like ?";
 				SQL_PARAMS.add(datatableParameter.getSearch() + "%");
 			}
+			
+			SQL += " group by t1.id, b.name, t2.item_id, t4.name";
 
 			// sort order by column
 			if(sortColumn != null && datatableParameter.getSortOrder() != null) {
@@ -59,6 +67,7 @@ public class ItemDatatableRepositoryImpl extends RepositoryComponent implements 
 			if(datatableParameter.getLength() > 0) {
 				SQL += " LIMIT " + datatableParameter.getLength() + " OFFSET " + datatableParameter.getStart();
 			}
+			
 			System.err.println(SQL);
 			List<JSONObject> domains = new ArrayList<>();
 
@@ -77,6 +86,11 @@ public class ItemDatatableRepositoryImpl extends RepositoryComponent implements 
 					obj.put("code", rs.getString("code"));
 					obj.put("name", rs.getString("name"));
 					obj.put("brand_name", rs.getString("brand_name"));
+					obj.put("default_unit_id", rs.getString("default_unit_id"));
+					obj.put("default_unit_name", rs.getString("default_unit_name"));
+					obj.put("available_units_id", rs.getString("available_units_id"));
+					obj.put("available_units_abbr", rs.getString("available_units_abbr"));
+					obj.put("available_units_name", rs.getString("available_units_name"));
 					obj.put("minimum_item_price", rs.getBigDecimal("minimum_item_price"));
 					obj.put("maximum_item_price", rs.getBigDecimal("maximum_item_price"));
 					return obj;

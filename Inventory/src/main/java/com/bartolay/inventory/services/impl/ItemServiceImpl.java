@@ -50,6 +50,13 @@ public class ItemServiceImpl implements ItemService {
 		JSONArray array = itemDatatableRepository.findAllData(parameter);
 		long recordsTotal = itemDatatableRepository.findAllCount(parameter);
 		
+		array.forEach(obj -> {
+			JSONObject o = (JSONObject) obj;
+			o.put("available_units_id", o.get("available_units_id").toString().replaceAll("[ {}.\"]", ""));
+			o.put("available_units_abbr", o.get("available_units_abbr").toString().replaceAll("[ {}.\"]", ""));
+			o.put("available_units_name", o.get("available_units_name").toString().replaceAll("[ {}.\"]", ""));
+		});
+		
 		JSONObject object = new JSONObject();
 		object.put("data", array);
 		object.put("recordsTotal", recordsTotal);

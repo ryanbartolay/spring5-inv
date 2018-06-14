@@ -21,6 +21,8 @@
 								<th class="column-title" style="display: table-cell;">SN</th>
 								<th class="column-title" style="display: table-cell;">Code</th>
 								<th class="column-title" style="display: table-cell;">Item</th>
+								<th class="column-title" style="display: table-cell;">Default Unit</th>
+								<th class="column-title" style="display: table-cell;">Units</th>
 								<th class="column-title" style="display: table-cell;">Brand</th>
 								<th class="column-title text-right" style="display: table-cell;">Min S. Price</th>
 								<th class="column-title text-right" style="display: table-cell;">Max S. Price
@@ -85,6 +87,24 @@ itemModalSimple_modal.on('shown.bs.modal', function() {
         		orderable: false,
         		render: function(data, type, row) {
         			
+        			var item_units_map = new Object();
+        			
+        			var available_units_id = row.available_units_id.replace(/{|}/gi, "");
+        			
+        			var available_units_name = row.available_units_name.replace(/{|}/gi,"");
+        			
+        			var other_units_id = available_units_id.split(",");
+        			var other_units_name = available_units_name.split(",");
+        			
+        			item_units_map[row.default_unit_id] = row.default_unit_name;// push the default first
+        			
+        			
+        			for(var i = 0; i < other_units_id.length; i++) {
+        				item_units_map[other_units_id[i]] = other_units_name[i];
+        			}
+        			
+        			var item_units_string = JSON.stringify(item_units_map);
+        			
         			var min_price = row.minimum_item_price ? row.minimum_item_price : "";
         			var max_price = row.maximum_item_price ? row.maximum_item_price : "";
         			return `<div style="position: relative;">
@@ -92,6 +112,7 @@ itemModalSimple_modal.on('shown.bs.modal', function() {
 							<input type="hidden" name="id" value="`+data+`">
 							<input type="hidden" name="code" value="`+row.code+`">
 							<input type="hidden" name="name" value="`+row.name+`">
+							<input type="hidden" name="units" value='`+ item_units_string +`'>
 							<input type="hidden" name="brand_name" value="`+row.brand_name+`">
 							<input type="hidden" name="minimum_item_price" value="`+ min_price +`">
 							<input type="hidden" name="maximum_item_price" value="`+ max_price +`">
@@ -116,6 +137,11 @@ itemModalSimple_modal.on('shown.bs.modal', function() {
         			
                     return '<a href="/stock/opening/">' + data + '</a>';
                 }
+        	},{
+        		data: "default_unit_name"	
+        	},
+        	{
+        		data: "available_units_name"	
         	},
         	{ 
         		data: "brand_name",
