@@ -20,6 +20,7 @@ import com.bartolay.inventory.form.StockOpeningForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockOpening;
+import com.bartolay.inventory.stock.entity.StockOpeningItem;
 import com.bartolay.inventory.stock.services.StockOpeningService;
 import com.bartolay.inventory.utils.ActivityUtility;
 import com.bartolay.inventory.utils.UserCredentials;
@@ -64,6 +65,10 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
+		
+		for(StockOpeningItem item :openingStockForm.getStockOpeningItems()) {
+			System.err.println(item);
+		}
 		
 		StockOpening opening = new StockOpening();
 		opening.setDocumentNumber(openingStockForm.getDocument_number());

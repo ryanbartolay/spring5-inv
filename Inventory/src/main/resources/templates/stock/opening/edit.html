@@ -137,6 +137,8 @@ var current_year = (new Date()).getFullYear();
 var item_count = 0;
 var submitStockOpeningBtn = $("#submitStockOpeningBtn");
 
+var form_items = [];
+
   $( function() {
 	  
     $( "#transaction_date" ).datepicker();
@@ -152,24 +154,39 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
    	computeGrandTotal();
   });
   
+  function formAddItems(data) {
+	  for(var i = 0; i < data.length; i++) {
+			var item = data[i];
+			form_items[item.id] = item;
+		}
+		
+		console.log(form_items);
+		
+  }
+  
   $("#btnAddItem").on("click", function() {
   	addItem({type: "stock_opening", label:"Add Stock Opening Item"}, function(data) {
   		
-  		var html = ``;
   		for(var i = 0; i < data.length; i++) {
-  			var item = data[i];
+  			form_items.push(data[i]);
+  		}
+  		
+  		var html = ``;
+  		for(var i = 0; i < form_items.length; i++) {
+  		
+  			var item = form_items[i];
   			
   			var units = JSON.parse(data[i].units);
   			
   			html += `<tr>
-				<th id="lblItemId">`+ item.id +`</th>
+				<th id="lblItemId">`+ item.id +`<input type="hidden" name="stockOpeningItems[`+i+`].item" value="`+item.id+`" /></th>
 				<td id="lblItemName">`+ item.code +`</td>
 				<td id="lblItemName">`+ item.name +`</td>
 				<td id="lblItemName">`+ item.brand_name +`</td>`;
 				
 			html += `
 			<td id="lblItemName">
-				<select class="form-control" name="unit" onChange="computeValues(this)">`;	
+				<select class="form-control" name="stockOpeningItems[`+i+`].unit" id="unit" onChange="computeValues(this)">`;	
 			for (var key in units) {
 			    if (units.hasOwnProperty(key)) {
 			    	html += `<option value="`+ key +`">`+ units[key] +`</option>`;
@@ -179,8 +196,8 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
 			</td>`; 
 				
 			html +=	`
-				<td id="lblItemName"><input type="number" name="quantity" onChange="computeValues(this)" class="form-control" value="0" /></td>
-				<td id="lblItemName"><input type="number" name="amount" onChange="computeValues(this)" class="form-control" value="0" /></td>
+				<td id="lblItemName"><input type="number" name="stockOpeningItems[`+i+`].quantity" id="quantity" onChange="computeValues(this)" class="form-control" value="0" /></td>
+				<td id="lblItemName"><input type="number" name="stockOpeningItems[`+i+`].unitCost" id="unitCost" onChange="computeValues(this)" class="form-control" value="0" /></td>
 				<td id="lblItemName" class="text-right"><span id="subtotal">0.00</span></td>
 				<td id="lblItemName"></td>
 			</tr>`;
@@ -202,7 +219,6 @@ submitStockOpeningBtn.click(function() {
  	submitStockOpeningBtn.text("Processing....");
  	
  	POST("/api/stock/opening", form.serialize(), function(data) {
- 		console.log(data);
  		
  		if(data.status != "OK") {
  			displayErrors(data, $("#errors"));
@@ -216,19 +232,18 @@ submitStockOpeningBtn.click(function() {
 
 function computeValues(element) {
 	
-	console.log(element);
 	var each = [];
 	var subtotal = 0.00;
 	
 	$.each($(element).closest("tr"), function() {
 		
 		$(this).find("select, input").each(function() {
-			each[$(this).attr("name")] = $(this).val();
+			each[$(this).attr("id")] = $(this).val();
 		});
-		
+
 	});
-	
-	subtotal = each.quantity * each.amount;
+
+	subtotal = each.quantity * each.unitCost;
 	
 	$(element).closest("tr").find("#subtotal").html(round2DecimalPlaces(subtotal));
 	computeGrandTotal();
@@ -251,12 +266,8 @@ function computeGrandTotal() {
 	$('#itemsTable > tbody  > tr').each(function() {
 		grand_total = (parseFloat(grand_total) + parseFloat($(this).find("#subtotal").text())).toFixed(2);
 	});
-	alert(grand_total);
-	$("#grandTotal").html(round2DecimalPlaces(grand_total));
 	
-	/* var total = quantity * unit_cost;
-	grand_total = grand_total + total;
-	 */
+	$("#grandTotal").html(round2DecimalPlaces(grand_total));
 }
 	/*]]>*/
   </script>

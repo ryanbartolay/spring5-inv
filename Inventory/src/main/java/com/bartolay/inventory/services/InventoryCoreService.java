@@ -91,11 +91,14 @@ public class InventoryCoreService {
 	 */
 	@Transactional
 	public StockOpening createStockOpening(StockOpening stockOpening) {
+		
+		System.err.println(stockOpening.getItems());
+		
 		// Lets save the stock opening first so we can generate a system number
 		stockOpening.setStatus(Status.SUCCESS);
 		stockOpening.setCreatedBy(userCredentials.getLoggedInUser());
 		stockOpening.setTotal(new BigDecimal("0"));
-		stockOpeningRepository.save(stockOpening);
+		stockOpening = stockOpeningRepository.save(stockOpening);
 
 		List<Inventory> inventories = inventoryRepository.findByLocation(stockOpening.getLocation());
 		List<InventoryTransaction> invTransactions = new ArrayList<>();
@@ -103,6 +106,9 @@ public class InventoryCoreService {
 
 		// iterate through items and check if default unit
 		for(StockOpeningItem stockOpeningItem : stockOpening.getItems()) {
+			
+			System.err.println("xxxxxxxxxxxxxxxxxxx");
+			System.err.println(stockOpeningItem);
 
 			stockOpeningItem.setStockOpening(stockOpening);
 
@@ -131,6 +137,7 @@ public class InventoryCoreService {
 			inventoryTransaction.setQuantityBefore(inventory.getQuantity());
 
 			// Now lets compute for the quantity of the item
+			System.err.println(inventory.getQuantity() + " " + stockOpeningItem.getQuantity());
 			inventory.setQuantity(inventory.getQuantity().add(stockOpeningItem.getQuantity()));
 			inventoryTransaction.setRateQuantity(stockOpeningItem.getQuantity());
 
