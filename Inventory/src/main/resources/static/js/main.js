@@ -265,3 +265,7 @@ function getParameterByName(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
+function round2DecimalPlaces(value) {
+	return parseFloat(Math.round(value * 100) / 100).toFixed(2);
+}

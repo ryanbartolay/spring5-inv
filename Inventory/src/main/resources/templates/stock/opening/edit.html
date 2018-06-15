@@ -84,7 +84,7 @@
 									<th>Unit</th>
 									<th>Quantity</th>
 									<th>Unit Cost</th>
-									<th class="col-md-2">Total</th>
+									<th class="col-md-2 text-right">Subtotal</th>
 									<th></th>
 								</tr>
 							</thead>
@@ -133,7 +133,6 @@
 /*<![CDATA[*/
 var form = $("#stockOpeningForm");
 var current_year = (new Date()).getFullYear();
-var grand_total = 0;
 
 var item_count = 0;
 var submitStockOpeningBtn = $("#submitStockOpeningBtn");
@@ -150,9 +149,7 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
     
     $('[name=year]').val( current_year );
 
-   
-    $("#grandTotal").html(grand_total);
-    
+   	computeGrandTotal();
   });
   
   $("#btnAddItem").on("click", function() {
@@ -170,17 +167,9 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
 				<td id="lblItemName">`+ item.name +`</td>
 				<td id="lblItemName">`+ item.brand_name +`</td>`;
 				
-			
-			for (var key in units) {
-			    if (units.hasOwnProperty(key)) {
-			        console.log("key =" + key);
-			        console.log("value =" + units[key]);
-			    }
-			}
-				
 			html += `
 			<td id="lblItemName">
-				<select class="form-control">`;	
+				<select class="form-control" name="unit" onChange="computeValues(this)">`;	
 			for (var key in units) {
 			    if (units.hasOwnProperty(key)) {
 			    	html += `<option value="`+ key +`">`+ units[key] +`</option>`;
@@ -189,24 +178,20 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
 			html +=	`</select>
 			</td>`; 
 				
-			html +=	`<td id="lblItemName"><input type="number" name="quantity" class="form-control" value="0" /></td>
-				<td id="lblItemName"><input type="number" name="amount" class="form-control" value="0" /></td>
+			html +=	`
+				<td id="lblItemName"><input type="number" name="quantity" onChange="computeValues(this)" class="form-control" value="0" /></td>
+				<td id="lblItemName"><input type="number" name="amount" onChange="computeValues(this)" class="form-control" value="0" /></td>
+				<td id="lblItemName" class="text-right"><span id="subtotal">0.00</span></td>
+				<td id="lblItemName"></td>
 			</tr>`;
   		}
-  		
-  		/* console.log(data);
-  		console.log("callback");
-  		var item = data['item'];
-  		var unit = data['unit']; */
-  		
+  	
   		var total = data.quantity * data.unit_cost;
-  		grand_total = grand_total + total;
   		
   		
   		
 			item_count++;
   		$('#itemsTable tbody').append(html);
-  		$("#grandTotal").html(grand_total);
   	});
   });
   
@@ -229,7 +214,27 @@ submitStockOpeningBtn.click(function() {
  	});
 });
 
-function remove(e) {
+function computeValues(element) {
+	
+	console.log(element);
+	var each = [];
+	var subtotal = 0.00;
+	
+	$.each($(element).closest("tr"), function() {
+		
+		$(this).find("select, input").each(function() {
+			each[$(this).attr("name")] = $(this).val();
+		});
+		
+	});
+	
+	subtotal = each.quantity * each.amount;
+	
+	$(element).closest("tr").find("#subtotal").html(round2DecimalPlaces(subtotal));
+	computeGrandTotal();
+}
+
+/* function remove(e) {
 	var selected_row = $(e).parentsUntil("tbody");
 	var total = selected_row.find("#txtQuantity").val() * selected_row.find("#txtUnitCost").val();
 	
@@ -237,12 +242,21 @@ function remove(e) {
 	
 	$("#grandTotal").html(grand_total);
 	$(e).parentsUntil("tbody").remove();
-}
+} */
 
-function computeGrandTotal(quantity, unit_cost) {
-	var total = quantity * unit_cost;
+function computeGrandTotal() {
+	
+	var grand_total = parseFloat(0);
+	
+	$('#itemsTable > tbody  > tr').each(function() {
+		grand_total = (parseFloat(grand_total) + parseFloat($(this).find("#subtotal").text())).toFixed(2);
+	});
+	alert(grand_total);
+	$("#grandTotal").html(round2DecimalPlaces(grand_total));
+	
+	/* var total = quantity * unit_cost;
 	grand_total = grand_total + total;
-	$("#grandTotal").html(grand_total);
+	 */
 }
 	/*]]>*/
   </script>
