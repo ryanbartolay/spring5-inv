@@ -63,8 +63,8 @@ function addItem(parameters, callback) {
 	itemModalSimple_callback = callback;
 	
 	// lets change the request url if stock_transfer
-	if(parameters.type == "stock_transfer") {
-		itemModalSimple_url = "/api/items/location/" + parameters.location;	
+	if(parameters.url) {
+		itemModalSimple_url = parameters.url;
 	}
 	
 	itemModalSimple_modal.modal('show');

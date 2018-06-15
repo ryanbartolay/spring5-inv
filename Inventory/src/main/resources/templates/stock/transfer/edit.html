@@ -4,6 +4,9 @@
 		<form th:object="${stockTransferForm}" id="stockTransferForm"
 			th:action="@{/api/stock/transfer}" method="POST">
 
+<input type="range" min="0" max="10" onChange="updateTextInput(this.value);" onInput="updateTextInput(this.value);" />
+<input type="text" id="textInput" value="">
+
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="row ">
@@ -115,19 +118,31 @@
 </div>
 
 <!-- Item Modal -->
-<div th:include="includes/modals/itemModal"></div>
+<div th:include="includes/modals/itemModal_simple"></div>
+
+<!-- DataTables JavaScript -->
+<script
+	th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
 
 <script>
+	function updateTextInput(val) {
+    	document.getElementById('textInput').value=val; 
+  	}
+
 /*<![CDATA[*/
 var form = $("#stockTransferForm");
 var current_year = (new Date()).getFullYear();
 var grand_total = 0;
-
+//itemModalSimple_url = "/api/items/location/" + parameters.location;
 var item_count = 0;
 var submitStockTransferBtn = $("#submitStockTransferBtn");
 
   $( function() {
-	  
+	   
     $( "#transactionDate" ).datepicker();
     
     $('.yearselect').yearselect({
