@@ -134,7 +134,6 @@
 var form = $("#stockOpeningForm");
 var current_year = (new Date()).getFullYear();
 
-var item_count = 0;
 var submitStockOpeningBtn = $("#submitStockOpeningBtn");
 
 var form_items = [];
@@ -176,7 +175,13 @@ var form_items = [];
   		
   			var item = form_items[i];
   			
-  			var units = JSON.parse(data[i].units);
+  			// default values
+  			var unit = (item.unit ? item.unit : "0");
+  			var quantity = (item.quantity ? item.quantity : "0");
+  			var unitCost = (item.unitCost ? item.unitCost : "0.00");
+  			var subtotal = (item.subtotal ? item.subtotal : "0.00");
+  			
+  			var units = JSON.parse(form_items[i].units);
   			
   			html += `<tr>
 				<th id="lblItemId">`+ item.id +`<input type="hidden" name="stockOpeningItems[`+i+`].item" value="`+item.id+`" /></th>
@@ -186,7 +191,7 @@ var form_items = [];
 				
 			html += `
 			<td id="lblItemName">
-				<select class="form-control" name="stockOpeningItems[`+i+`].unit" id="unit" onChange="computeValues(this)">`;	
+				<select class="form-control" name="stockOpeningItems[`+i+`].unit" id="unit" onChange="computeValues(this, `+i+`)">`;	
 			for (var key in units) {
 			    if (units.hasOwnProperty(key)) {
 			    	html += `<option value="`+ key +`">`+ units[key] +`</option>`;
@@ -196,19 +201,17 @@ var form_items = [];
 			</td>`; 
 				
 			html +=	`
-				<td id="lblItemName"><input type="number" name="stockOpeningItems[`+i+`].quantity" id="quantity" onChange="computeValues(this)" class="form-control" value="0" /></td>
-				<td id="lblItemName"><input type="number" name="stockOpeningItems[`+i+`].unitCost" id="unitCost" onChange="computeValues(this)" class="form-control" value="0" /></td>
-				<td id="lblItemName" class="text-right"><span id="subtotal">0.00</span></td>
-				<td id="lblItemName"></td>
+				<td id="lblItemName"><input type="number" name="stockOpeningItems[`+i+`].quantity" id="quantity" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ quantity +`" /></td>
+				<td id="lblItemName"><input type="number" name="stockOpeningItems[`+i+`].unitCost" id="unitCost" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ unitCost +`" /></td>
+				<td id="lblItemName" class="text-right"><input type="hidden" name="subtotal[`+i+`]" id="subtotal" value="`+subtotal+`" /><span id="html_subtotal">`+subtotal+`</span></td>
+				<td id="lblItemName"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>
 			</tr>`;
   		}
   	
   		var total = data.quantity * data.unit_cost;
   		
-  		
-  		
-			item_count++;
-  		$('#itemsTable tbody').append(html);
+  		$('#itemsTable tbody').html(html);
+  		computeGrandTotal();
   	});
   });
   
@@ -230,7 +233,7 @@ submitStockOpeningBtn.click(function() {
  	});
 });
 
-function computeValues(element) {
+function computeValues(element, index) {
 	
 	var each = [];
 	var subtotal = 0.00;
@@ -239,32 +242,34 @@ function computeValues(element) {
 		
 		$(this).find("select, input").each(function() {
 			each[$(this).attr("id")] = $(this).val();
+			form_items[index][$(this).attr("id")] = $(this).val();
+			console.log($(this).attr("id") + " = " + $(this).val());
 		});
 
 	});
 
+	console.log(form_items);
+	
 	subtotal = each.quantity * each.unitCost;
 	
-	$(element).closest("tr").find("#subtotal").html(round2DecimalPlaces(subtotal));
+	form_items[index]["subtotal"] = subtotal;
+	$(element).closest("tr").find("#subtotal").val(round2DecimalPlaces(subtotal));
+	$(element).closest("tr").find("#html_subtotal").html(round2DecimalPlaces(subtotal));
 	computeGrandTotal();
 }
 
-/* function remove(e) {
-	var selected_row = $(e).parentsUntil("tbody");
-	var total = selected_row.find("#txtQuantity").val() * selected_row.find("#txtUnitCost").val();
-	
-	grand_total = grand_total - total;
-	
-	$("#grandTotal").html(grand_total);
+function remove(e, item_index) {
+	form_items.splice(item_index, 1); // remove this element from the item array
 	$(e).parentsUntil("tbody").remove();
-} */
+	computeGrandTotal();
+}
 
 function computeGrandTotal() {
 	
 	var grand_total = parseFloat(0);
 	
 	$('#itemsTable > tbody  > tr').each(function() {
-		grand_total = (parseFloat(grand_total) + parseFloat($(this).find("#subtotal").text())).toFixed(2);
+		grand_total = (parseFloat(grand_total) + parseFloat($(this).find("#html_subtotal").text())).toFixed(2);
 	});
 	
 	$("#grandTotal").html(round2DecimalPlaces(grand_total));
