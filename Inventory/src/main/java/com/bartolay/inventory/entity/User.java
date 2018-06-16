@@ -274,9 +274,9 @@ public class User implements Serializable, Principal {
 		return this.username;
 	}
 
-	public UserGroup getUserGroup() {
-		return userGroup;
-	}
+//	public UserGroup getUserGroup() {
+//		return userGroup;
+//	}
 
 	public void setUserGroup(UserGroup userGroup) {
 		this.userGroup = userGroup;
