@@ -153,16 +153,6 @@ var form_items = [];
    	computeGrandTotal();
   });
   
-  function formAddItems(data) {
-	  for(var i = 0; i < data.length; i++) {
-			var item = data[i];
-			form_items[item.id] = item;
-		}
-		
-		console.log(form_items);
-		
-  }
-  
   $("#btnAddItem").on("click", function() {
   	addItem({type: "stock_opening", label:"Add Stock Opening Item"}, function(data) {
   		

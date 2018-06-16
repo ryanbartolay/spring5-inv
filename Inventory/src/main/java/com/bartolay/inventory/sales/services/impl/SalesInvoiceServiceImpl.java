@@ -20,6 +20,8 @@ import com.bartolay.inventory.form.SalesInvoiceForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
+import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
+import com.bartolay.inventory.sales.repositories.SalesInvoiceItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.sales.services.SalesInvoiceService;
 import com.bartolay.inventory.services.InventoryCoreService;
@@ -39,6 +41,9 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 	@Autowired
 	@Qualifier("salesInvoiceDataTableRepository")
 	private DatatableRepository salesInvoiceDataTableRepository;
+	
+	@Autowired
+	private SalesInvoiceItemRepository salesInvoiceItemRepository;
 
 	@Override
 	public SalesInvoice create(SalesInvoiceForm salesInvoiceForm) throws SalesInvoiceException {
@@ -102,6 +107,13 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 		object.put("draw", parameter.getDraw());
 		
 		return object;
+	}
+	
+	@Override
+	public List<SalesInvoiceItem> retrieveItemsList(String systemNumber) {
+		SalesInvoice salesInvoice = new SalesInvoice();
+		salesInvoice.setSystemNumber(systemNumber);
+		return salesInvoiceItemRepository.findBySalesInvoice(salesInvoice);
 	}
 
 	@Override

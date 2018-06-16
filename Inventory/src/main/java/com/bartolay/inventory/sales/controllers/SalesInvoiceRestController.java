@@ -41,6 +41,12 @@ public class SalesInvoiceRestController extends AbstractRestController {
 		return salesInvoiceService.retrieveDatatableList(requestMap).toString();
 	}
 	
+	@RequestMapping(value="/sales/invoice/{systemNumber}/items", method=RequestMethod.GET, produces="application/json")
+	public String datatableItems(@PathVariable String systemNumber) throws JsonProcessingException, UnsupportedEncodingException {
+		System.out.println(systemNumber);
+		return stringUtils.encode(salesInvoiceService.retrieveItemsList(systemNumber));
+	}
+	
 	@RequestMapping(value="/sales/locations", method=RequestMethod.GET, produces="application/json")
 	public ObjectNode loadLocations(@RequestParam(name="q", defaultValue="") String query) {
 		return locationService.findAllWithPage(query);

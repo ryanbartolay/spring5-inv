@@ -95,6 +95,24 @@ public class SalesController {
 		return model;
 	}
 	
+	@RequestMapping(value="/return/{system_number}")
+	public ModelAndView returnEdit(ModelAndView mav, @PathVariable String system_number) {
+		SalesInvoice salesInvoice = salesInvoiceRepository.findById(system_number).get();
+		
+		mav.setViewName("sales/index");
+		mav.addObject("page", "New Sales Invoice");
+		mav.addObject("html", "return/edit");
+		mav.addObject("method", "POST");
+		
+		mav.addObject("users", userService.retrieve());
+		mav.addObject("salesInvoiceForm", new SalesInvoiceForm());
+		mav.addObject("locations", locationRepository.findAll());
+		mav.addObject("customers", clientRepository.findAll());
+		
+		mav.addObject("salesInvoice", salesInvoice);
+		return mav;
+	}
+	
 	@RequestMapping(value="/return")
 	public ModelAndView salesReturn() {
 		ModelAndView model = new ModelAndView("construction");

@@ -8,8 +8,12 @@
 			<div class="pull-right btn-group  btn-group-sm">
 				<a th:href="@{/sales/invoice/create}" class="btn btn-success btn-sm"><span
 					class="fa fa-plus"></span> New Invoice</a> <a
+					th:href="@{/sales/return/} + ${salesInvoice.systemNumber}" class="btn btn-warning btn-sm"><span
+					class="fa fa-reply"></span> Sales Return</a><a
 					th:href="@{/sales/invoice}" class="btn btn-default btn-sm"><span
-					class="fa fa-mail-reply"></span> Back to List of Invoice</a>
+					class="fa fa-list"></span> Back to List of Invoice</a>
+
+
 			</div>
 		</div>
 	</div>
@@ -50,12 +54,10 @@
 							<div class="col-sm-4 invoice-col">
 								To
 								<address>
-									<strong><span
-										th:text="${salesInvoice.customer.firstName}+ ' ' + ${salesInvoice.customer.lastName}"></span></strong>
-									<br>
-									<span th:text="${salesInvoice.customer.address}"></span> <br>
-									<span th:text="${salesInvoice.customer.addressCity}"></span>, <span
-										th:text="${salesInvoice.customer.addressCountry.name}"></span>
+									<strong><span th:text="${salesInvoice.customer.name}"></span></strong>
+									<br> <span th:text="${salesInvoice.customer.address}"></span>
+									<br> <span th:text="${salesInvoice.customer.addressCity}"></span>,
+									<span th:text="${salesInvoice.customer.addressCountry.name}"></span>
 									<span th:text="${salesInvoice.customer.addressZipcode}"></span>
 									<br> Phone: <span th:text="${salesInvoice.customer.phone}"></span>
 									<br> Email: <span th:text="${salesInvoice.customer.email}"></span>
@@ -94,12 +96,16 @@
 											th:each="salesInvoiceItem : ${salesInvoice.salesInvoiceItems}">
 											<th th:text="${salesInvoiceItem.item.id}"></th>
 											<td th:text="${salesInvoiceItem.item.code}"></td>
-											<td	th:text="${salesInvoiceItem.item.name} + '( '+ ${salesInvoiceItem.item.defaultUnit.abbreviation} +' )'"></td>
+											<td
+												th:text="${salesInvoiceItem.item.name} + '( '+ ${salesInvoiceItem.item.defaultUnit.abbreviation} +' )'"></td>
 											<td th:text="${salesInvoiceItem.unit.abbreviation}"></td>
 											<td th:text="${salesInvoiceItem.unit.name}"></td>
-											<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).quantity(salesInvoiceItem.quantity)}"></td>
-											<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoiceItem.unitCost)}"></td>
-											<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoiceItem.unitCostTotal)}"></td>
+											<td class="text-right"
+												th:text="${T(com.bartolay.inventory.utils.NumericUtility).quantity(salesInvoiceItem.quantity)}"></td>
+											<td class="text-right"
+												th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoiceItem.unitCost)}"></td>
+											<td class="text-right"
+												th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoiceItem.unitCostTotal)}"></td>
 										</tr:block>
 									</tbody>
 
@@ -114,23 +120,29 @@
 						<div class="row">
 							<!-- accepted payments column -->
 							<div class="col-xs-6">
-								<p class="lead">Payment Methods: 
-								<b><span th:if="${salesInvoice.paymentMethod != T(com.bartolay.inventory.enums.PaymentMethod).CREDITCARD}" th:text="${salesInvoice.paymentMethod}"></span></b>
+								<p class="lead">
+									Payment Methods: <b><span
+										th:if="${salesInvoice.paymentMethod != T(com.bartolay.inventory.enums.PaymentMethod).CREDITCARD}"
+										th:text="${salesInvoice.paymentMethod}"></span></b>
 								</p>
-								
-								<div  th:if="${salesInvoice.paymentMethod == T(com.bartolay.inventory.enums.PaymentMethod).CREDITCARD}">
-								
-								<img th:src="@{/static/images/visa.png}" alt="Visa"> <img
-									th:src="@{/static/images/mastercard.png}" alt="Mastercard">
-								<img th:src="@{/static/images/american-express.png}"
-									alt="American Express"> <img
-									th:src="@{/static/images/paypal.png}" alt="Paypal">
-								<p class="text-muted well well-sm no-shadow"
-									style="margin-top: 10px;">
-									Name: <b><span th:text="${salesInvoice.creditCardDetails.holdersName}"></span></b><br>
-									Card Number: <span th:text="${salesInvoice.creditCardDetails.cardNumber}"></span><br>
-									Expiry Date: <span th:text="${salesInvoice.creditCardDetails.dateExpiry}"></span>
-								</p>
+
+								<div
+									th:if="${salesInvoice.paymentMethod == T(com.bartolay.inventory.enums.PaymentMethod).CREDITCARD}">
+
+									<img th:src="@{/static/images/visa.png}" alt="Visa"> <img
+										th:src="@{/static/images/mastercard.png}" alt="Mastercard">
+									<img th:src="@{/static/images/american-express.png}"
+										alt="American Express"> <img
+										th:src="@{/static/images/paypal.png}" alt="Paypal">
+									<p class="text-muted well well-sm no-shadow"
+										style="margin-top: 10px;">
+										Name: <b><span
+											th:text="${salesInvoice.creditCardDetails.holdersName}"></span></b><br>
+										Card Number: <span
+											th:text="${salesInvoice.creditCardDetails.cardNumber}"></span><br>
+										Expiry Date: <span
+											th:text="${salesInvoice.creditCardDetails.dateExpiry}"></span>
+									</p>
 								</div>
 							</div>
 							<!-- /.col -->
@@ -144,23 +156,30 @@
 										<tbody>
 											<tr>
 												<th style="width: 50%">Subtotal:</th>
-												<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoice.subtotal)}"></td>
+												<td class="text-right"
+													th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoice.subtotal)}"></td>
 											</tr>
 											<tr>
-												<th>Discount (<span th:text="${salesInvoice.discountPercentage}"></span>%)</th>
-												<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoice.discountTotal)}"></td>
+												<th>Discount (<span
+													th:text="${salesInvoice.discountPercentage}"></span>%)
+												</th>
+												<td class="text-right"
+													th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoice.discountTotal)}"></td>
 											</tr>
 											<tr>
 												<th>Net Total:</th>
-												<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoice.netTotal)}"></td>
+												<td class="text-right"
+													th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoice.netTotal)}"></td>
 											</tr>
 											<tr>
 												<th>Cash:</th>
-												<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoice.netTotal)}"></td>
+												<td class="text-right"
+													th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoice.netTotal)}"></td>
 											</tr>
 											<tr>
 												<th>Change:</th>
-												<td class="text-right" th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoice.netTotal)}"></td>
+												<td class="text-right"
+													th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoice.netTotal)}"></td>
 											</tr>
 										</tbody>
 									</table>
@@ -176,14 +195,17 @@
 								<button class="btn btn-default" onclick="window.print();">
 									<i class="fa fa-print"></i> Print
 								</button>
+								<button class="btn btn-primary"
+									style="margin-right: 5px;">
+									<i class="fa fa-download"></i> Generate PDF
+								</button>
+
+
 
 								<button class="btn btn-success pull-right">
 									<i class="fa fa-credit-card"></i> Submit Payment
 								</button>
-								<button class="btn btn-primary pull-right"
-									style="margin-right: 5px;">
-									<i class="fa fa-download"></i> Generate PDF
-								</button>
+								
 
 								<button class="btn btn-danger pull-right">
 									<i class="fa fa-remove"></i> Cancel Invoice
