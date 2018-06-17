@@ -52,7 +52,6 @@ var itemModalSimple_modal = $("#itemModalSimple");
 var itemModalAddItem_btn = $("#itemModalAddItem_btn");
 var itemModelAddItem_form = $("#itemModelAddItem_form");
 var itemModelAddItem_table = $('#itemModalSimple-datatable');
-var itemModelAddItem_table_instance;
 var itemModalSimple_callback;
 var systemNumber;
 
@@ -72,16 +71,21 @@ function addItem(parameters, callback) {
 itemModalSimple_modal.on('shown.bs.modal', function() {
 	
 	GET("/api/sales/invoice/" + systemNumber + "/items", function(data) {
-		
-		
 		var html = "";
 		for(var i = 0; i < data.length; i++) {
-			console.log(data[i]);
 			var item = data[i];
 			html += `
 			<tr>
 				<td>
-				<input type="checkbox" name="table_records" id="selected_item" value="" onClick="countCheckedSingle(this)">
+				<input type="checkbox" name="table_records" id="selected_item" value="`+ item["id"] +`" onClick="countCheckedSingle(this)">
+				<input type="hidden" name="id" value="`+item["id"]+`">
+				<input type="hidden" name="itemCode" value="`+item["item"]["code"]+`">
+				<input type="hidden" name="itemName" value="`+item["item"]["name"]+`">
+				<input type="hidden" name="unitAbbreviation" value='`+ item["unit"]["abbreviation"] +`'>
+				<input type="hidden" name="unitDescription" value="`+item["unit"]["name"]+`">
+				<input type="hidden" name="quantity" value="`+ item["quantity"] +`">
+				<input type="hidden" name="unitPrice" value="`+ item["unitCost"] +`">
+				<input type="hidden" name="unitPriceTotal" value="`+ parseFloat(item["unitCostTotal"]).toFixed(2) +`">
 				</td>
 				<td>`+ item["id"] +`</td>
 				<td>`+ item["item"]["code"] +`</td>
@@ -118,248 +122,8 @@ itemModalAddItem_btn.click(function() {
 	} else {
 		itemModalSimple_callback(selected_items);
 		itemModalSimple_modal.modal("hide");
-		itemModelAddItem_table_instance.destroy();
 	}
 	
 });
 
-</script>
-
-
-<script>
-	var itemModal_isLoadedModelItems = false;
-	var itemModal_isLoadedExtraElements = false;	
-	
-	var itemModal_modal = $("#itemModal");
-	var itemModal_label = $("#itemModal_label");
-	var itemModal_item = $("#itemModal_item");
-	var itemModal_unit = $("#itemModal_unit");
-	var table = $("#itemModal_table");
-	
-	var quantity = $("#itemModal_quantity");
-	var addItemForm = $("#itemModal_addItemForm");
-	var addItemBtn = $("#itemModal_addItemBtn");
-	
-	var items = {};
-	var itemUnits = {};
-	
-	var itemModal_callback = null;
-	
-	var itemModal_type;
-	var itemModal_url = "/api/items"; 
-	
-/* 	function addItem(parameters, callback) {
-		var label = parameters.label;
-		itemModal_type = parameters.type;
-		itemModal_callback = callback;
-		
-		// lets change the request url if stock_transfer
-		if(itemModal_type == "stock_transfer") {
-			itemModal_url = "/api/items/location/" + parameters.location;	
-		}
-		
-		appendInputByType(itemModal_type);
-		
-		itemModal_label.text(label);
-		addItemBtn.text("Add Item");
-		itemModal_modal.modal('show');
-		
-	} */
-	
-	function updateItem(parameters, callback) {
-		var label = parameters.label;
-		var values = parameters.values;
-		itemModal_type = parameters.type;
-		itemModal_callback = callback;
-		
-		appendInputByType(type);
-		
-		$("#itemModal_quantity").val(values.quantity);
-		$("#itemModal_unit_price").val(values.unit_price);
-		
-		itemModal_label.text(label);
-		addItemBtn.text("Edit Item");
-		itemModal_modal.modal('show');
-		
-		// select the item
-		itemModal_item.val(values.item);
-		
-		// load units and select the unit for update
-		loadItemUnit(values.item, function(data) {
-			itemModal_unit.val(values.unit);
-		});
-	}
-	
-	function loadItemUnit(item_id, callback = null) {
-		GET("/api/itemUnits/" + items[item_id].id, function(data) {
-			itemModal_unit.html(""); // clear contents
-			
-			var response = JSON.parse(data);
-			
-			$.each(response.data, function(i, obj) {
-				itemUnits[obj['id']] = obj;
-				itemModal_unit.append('<option value="'+ obj['id'] +'">'+ obj['abbreviation'] +' (' + obj['rate'] + ') '+ (obj['default'] ? '*' : '') +'</option>');
-			});
-			if(callback != null) {
-				callback(data);	
-			}
-		});
-	}
-
-	function appendInputByType(type) {
-		if(!itemModal_isLoadedExtraElements) {
-			if(itemModal_type == "stock_opening" || itemModal_type == "sales_invoice") {
-				table.find("tbody").append(
-					`<tr>
-						<td>
-							<div class="input-group">
-								<span class="input-group-addon">Unit Price</span>
-								<input class="form-control" type="number" value="0" id="itemModal_unit_price" name="itemModal_unit_price"/>
-							</div>
-						</td>
-					</tr>`);
-			}
-			itemModal_isLoadedExtraElements = true;
-		}
-	}
-	
-	itemModal_modal.on('shown.bs.modal', function() {
-		itemModal_item.html(""); // clear contents
-		itemModal_item.append('<option value="">------</option>');
-		
-		GET(itemModal_url, function(data) {
-			$.each(data, function(i, obj) {
-				items[obj.id] = obj;
-				itemModal_item.append('<option value="'+ obj.id +'">'+ obj.name +'</option>');
-			});
-		});
-		
-	});
-	
-	itemModal_item.change(function() {
-		
-		var item_id = $(this).val();
-		
-		loadItemUnit(item_id);
-	});
-	
-	
-	addItemBtn.click(function() {
-		//itemModal_modal.modal('hide');
-		
-		console.log("xxxxxxxxxxx");
-		var arr = {};
-		
-		var iter = addItemForm.serializeArray();
-		
-		console.log(iter);
-		
-		$.each(addItemForm.serializeArray(), function(i, obj) {
-			arr[obj.name] = obj.value;
-		});
-		
-		console.log("yyyyyyyyyyyy");
-		
-		//itemModal_items_placeholder
-		arr['item'] = items[arr['itemModal_item']];
-		arr['unit'] = itemUnits[arr['itemModal_unit']];
-		arr['quantity'] = arr['itemModal_quantity'];
-		arr['unit_price'] = arr['itemModal_unit_price'];
-		
-		
-		console.log("yyyyyyyyyyyy2222");
-		var items_ph = addInPlaceholder(arr['itemModal_item'], arr['itemModal_unit'], arr['itemModal_quantity'], arr['itemModal_unit_price']);
-			
-		console.log("zzzzzzzzzzzzzz");
-		
-		itemModal_itemPlaceholder.value = JSON.stringify(items_ph);
-		
-		var callbackItems = [];
-		
-		console.log("11111111111111111111111");
-		
-		for(var i = 0; i < items_ph.length; i++) {
-			
-			for(var n = 0; n < items_ph[i][1].length; n++) {
-				callbackItems.push(
-					[
-						items[items_ph[i][0]], // item
-						itemUnits[items_ph[i][1][0]], // unit
-						//items_ph[i][1][1][0], // quantity
-						//items_ph[i][1][1][1] // amount
-					]
-				);
-			}			
-		}
-		console.log("3333333333333333333333333");
-		
-		console.log(JSON.stringify(items_ph));
-		
-		itemModal_callback(callbackItems);
-		
-		quantity.val(0);
-		itemModal_unit.html(""); 
-	});
-	
-	// Algorithm for reserving items in input
-	var itemModal_items_placeholder = [];
-	
-	function addInPlaceholder(item, unit, quantity, unit_price) {
-		
-		console.log("111111111111");
-		var extractedItem = extractItemPlaceholder(item);
-		console.log("222222222222");
-		console.log("------------------");
-		console.log(extractedItem);
-		console.log("------------------");
-		
-		if(extractedItem == null) {
-			itemModal_items_placeholder.push(
-				[
-					item,
-					[
-						[
-							unit, 
-							[
-								quantity, unit_price 
-							]
-						]
-					]
-				]
-			);
-		} else {
-			var extractedUnit = extractUnit(extractedItem[1], unit);
-			extractedItem[1].push(
-				[
-					unit, 
-					[
-						quantity, unit_price 
-					]
-				]
-			);
-			
-			itemModal_items_placeholder.push(extractedItem);
-		}
-		
-		return itemModal_items_placeholder;
-	}
-	
-	function extractItemPlaceholder(item) {
-		return extractItem(itemModal_items_placeholder, item);
-	}
-	function extractUnit(obj, unit) {
-		return extractItem(obj, unit);
-	}
-	function extractItem(obj, index) {
-		var o = null;
-		for(var i = 0; i < obj.length; i++) {
-			if(obj[i][0] == index) {
-				o = obj[i];
-				obj.splice(i, 1);
-				return o;
-			}
-		}
-		return o;
-	}
-	
 </script>

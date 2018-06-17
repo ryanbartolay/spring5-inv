@@ -105,6 +105,8 @@
 
 var systemNumber = /*[[${salesInvoice.systemNumber}]]*/ '0';
 
+var form_items = [];
+
 $( function() {
 	var current_year = (new Date()).getFullYear();
 	
@@ -121,130 +123,37 @@ $( function() {
 
 $("#btnAddItem").on("click", function() {
 	addItem({type: "sales_return", systemNumber: systemNumber, label:"Invoice # : " + systemNumber }, function(data) {
-		console.log(data);
+		
+  		for(var i = 0; i < data.length; i++) {
+  			form_items.push(data[i]);
+  		}
+				
+		var html = ``;
+  		for(var i = 0; i < form_items.length; i++) {
+  		
+  			var item = form_items[i];
+  			
+  			html += `<tr>
+				<th id="lblItemId">`+ item.id +`<input type="hidden" name="stockOpeningItems[`+i+`].item" value="`+item["id"]+`" /></th>
+				<td id="lblItemName">`+ item["itemCode"] +`</td>
+				<td id="lblItemName">`+ item["itemName"] +`</td>
+				<td id="lblItemName">`+ item["unitAbbreviation"] +`</td>
+				<td id="lblItemName">`+ item["unitDescription"] +`</td>
+				<td id="lblItemName" class="text-right">`+ item["quantity"] +`</td>
+				<td id="lblItemName" class="text-right">`+ item["unitPrice"] +`</td>
+				<td id="lblItemName" class="text-right">`+ item["unitPriceTotal"] +`</td>
+				<td id="lblItemName"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>`;
+  			
+  		}
+  		
+  		$('#itemsTable tbody').html(html);
 	});
 });
-/*]]>*/
-</script>
 
-<script>
-/*<![CDATA[*/
-var form = $("#salesInvoiceForm");
-var grand_total = 0;
-
-var item_count = 0;
-var submitSalesInvoiceBtn = $("#submitSalesInvoiceBtn");
-
-/* $("#btnAddItem").on("click", function(event) {
-	event.preventDefault();
-
-  	addItem({type: "sales_invoice", label:"Add Sales Invoice Item"}, function(data) {
-  		
-  		var item = data['item'];
-  		var unit = data['unit'];
-  		
-  		var total = data.quantity * data.unit_price;
-  		grand_total = grand_total + total;
-  		
-  		var html = `
-  		<tr>
-				<th id="lblItemId">`+ item.id +`</th>
-				<td id="lblItemCode">`+ item.code +`</td>
-				<td id="lblItemName">`+ item.name +`</td>
-				<td id="lblAbbreviation">`+ unit.abbreviation +`</td>
-				<td id-"lblUnitName">`+ unit.name +`</td>
-				<td class="text-right" id="lblQuantity">`+ data.quantity +`</td>
-				<td class="text-right" id="lblUnitCost">`+ data.unit_price +`</td>
-				<td class="text-right" id="lblTotal">`+ total +`</td>
-				<td class="text-right">
-					<input type="hidden" name="salesInvoiceItems[`+ item_count +`].item" id="txtItem" value="` + item.id + `" />
-					<input type="hidden" name="salesInvoiceItems[`+ item_count +`].unit" id="txtUnit" value="` + unit.id + `" />
-					<input type="hidden" name="salesInvoiceItems[`+ item_count +`].quantity" id="txtQuantity" value="` + data.quantity + `" />
-					<input type="hidden" name="salesInvoiceItems[`+ item_count +`].unitCost" id="txtUnitCost" value="` + data.unit_price + `" />
-					<div class="btn-group" role="group">
-		        		<button class="btn btn-info fa fa-edit" id="btnView" onClick="edit(this)"/>
-		        		<button class="btn btn-danger fa fa-times" onClick="remove(this)" />
-		    		</div>
-				</td>
-			</tr>`;
-			item_count++;
-
-  		$('#itemsTable tbody').append(html);
-  		$("#grandTotal").html(grand_total);
-  	});
-}); */
-
-submitSalesInvoiceBtn.click(function() {
-	  
-  	var original_text = submitSalesInvoiceBtn.text();
-  	submitSalesInvoiceBtn.attr("disabled", "disabled");
-  	submitSalesInvoiceBtn.text("Processing....");
-  	
-  	POST("/api/sales/invoice", form.serialize(), function(data) {
-  		console.log(data);
-  		
-  		if(data.status != "OK") {
-  			displayErrors(data, $("#errors"));
-  			submitSalesInvoiceBtn.removeAttr("disabled");
-  			submitSalesInvoiceBtn.text(original_text);
-  		} else {
-  			window.location.replace('/sales/invoice')
-  		}
-  	});
-  });
-
-function edit(e) {
-	var selected_row = $(e).parentsUntil("tbody");
-	
-	var values = {
-		item: selected_row.find("#txtItem").val(),
-		unit: selected_row.find("#txtUnit").val(),
-		quantity: selected_row.find("#txtQuantity").val(),
-		unit_price: selected_row.find("#txtUnitCost").val()
-	};
-	
-	var total = values.quantity * values.unit_price;
-	
-	grand_total = grand_total - total;
-	
-	updateItem({type: "sales_invoice", label:"Edit Sales Invoice Item", values: values}, function(data) { 
-		
-		var item = data['item'];
-		var unit = data['unit'];
-		
-		selected_row.find("#lblItemId").html(item.id);
-		selected_row.find("#lblItemCode").html(item.code);
-		selected_row.find("#lblItemName").html(item.name);
-		selected_row.find("#lblUnitName").html(unit.name);
-		selected_row.find("#lblAbbreviation").html(unit.abbreviation);
-		
-		selected_row.find("#txtItem").val(item.id);
-		selected_row.find("#txtUnit").val(unit.id);
-		selected_row.find("#txtQuantity").val(data.quantity);
-		selected_row.find("#txtUnitCost").val(data.unit_price);
-		
-		selected_row.find("#lblQuantity").html(data.quantity);
-		selected_row.find("#lblUnitCost").html(data.unit_price);
-		selected_row.find("#lblTotal").html(data.quantity * data.unit_price);
-		
-		computeGrandTotal(data.quantity, data.unit_price); 
-	});
-}
-
-function remove(e) {
-	var selected_row = $(e).parentsUntil("tbody");
-	var total = selected_row.find("#txtQuantity").val() * selected_row.find("#txtUnitCost").val()
-	
-	grand_total = grand_total - total;
-	
+function remove(e, item_index) {
+	form_items.splice(item_index, 1); // remove this element from the item array
 	$(e).parentsUntil("tbody").remove();
-	$("#grandTotal").html(grand_total);
 }
 
-function computeGrandTotal(quantity, unit_cost) {
-	var total = quantity * unit_cost;
-	grand_total = grand_total + total;
-	$("#grandTotal").html(grand_total);
-}
 /*]]>*/
 </script>
