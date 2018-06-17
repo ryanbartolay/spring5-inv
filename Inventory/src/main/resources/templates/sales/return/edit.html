@@ -19,7 +19,9 @@
 
 					<div class="form-group" id="errors"></div>
 
+
 					<div class="col-md-3">
+					
 						<label>System Number :</label> <input type="text"
 							class="form-control" disabled="disabled"
 							th:field="${salesInvoice.systemNumber}"> <label>Document
@@ -70,35 +72,36 @@
 									<th>SN</th>
 									<th>Code</th>
 									<th class="col-md-3">Description</th>
-									<th>Unit</th>
+									<th class="text-right">Sales Quantity</th>
 									<th>U.Desc</th>
-									<th>Quantity</th>
 									<th class="text-right">Unit Price</th>
-									<th class="col-md-2 text-right">Subtotal</th>
+									<th class="text-right">Sales Price</th>
+									<th class="text-right">Return Quantity</th>
+									<th class="text-right">Sales Return</th>
 									<th></th>
 								</tr>
 							</thead>
 							<tbody>
 							</tbody>
+							<tfoot>
+								<tr>
+									<th colspan="7"></th>
+									<th><h3>Total</h3></th>
+									<th><h3 class="text-right" id="grandTotal"></h3></th>
+									<th></th>
+								</tr>
+							</tfoot>
 						</table>
 					</div>
 				</div>
 			</div>
-		</form>
+		</form>	
 	</div>
 	<!-- /.col-lg-12 -->
 </div>
 
 <!-- Item Modal -->
 <div th:include="includes/modals/itemModal_salesReturnItems"></div>
-
-<!-- DataTables JavaScript -->
-<script
-	th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
-<script
-	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
-<script
-	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
 
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
@@ -129,31 +132,110 @@ $("#btnAddItem").on("click", function() {
   		}
 				
 		var html = ``;
+		
   		for(var i = 0; i < form_items.length; i++) {
   		
   			var item = form_items[i];
+  			var subtotal = (item.subtotal ? item.subtotal : "0.00");
   			
   			html += `<tr>
-				<th id="lblItemId">`+ item.id +`<input type="hidden" name="stockOpeningItems[`+i+`].item" value="`+item["id"]+`" /></th>
+				<th id="lblItemId">`+ item.id +`
+					<input type="hidden" name="salesReturn[`+i+`].item" value="`+item["id"]+`" />
+					<input type="hidden" name="salesReturn[`+i+`].subtotal" id="subtotal" value="`+subtotal+`" />
+					<input type="hidden" name="salesReturn[`+i+`].unitPrice" id="unitPrice" value="`+item["unitPrice"]+`" />
+					<input type="hidden" name="salesReturn[`+i+`].salesQuantity" id="salesQuantity" value="`+item["quantity"]+`" />
+				</th>
 				<td id="lblItemName">`+ item["itemCode"] +`</td>
 				<td id="lblItemName">`+ item["itemName"] +`</td>
-				<td id="lblItemName">`+ item["unitAbbreviation"] +`</td>
-				<td id="lblItemName">`+ item["unitDescription"] +`</td>
 				<td id="lblItemName" class="text-right">`+ item["quantity"] +`</td>
+				<td id="lblItemName">`+ item["unitDescription"] +`</td>
 				<td id="lblItemName" class="text-right">`+ item["unitPrice"] +`</td>
 				<td id="lblItemName" class="text-right">`+ item["unitPriceTotal"] +`</td>
+				<td id="lblItemName">
+					<input type="number" data-toggle="tooltip" data-trigger="manual" title="This is my tooltip" name="salesReturn[`+i+`].quantity" id="quantity" class="form-control" value="0" max="`+item["quantity"]+`"
+					onKeyup="computeValues(this,`+i+`)"
+					onKeydown="computeValues(this,`+i+`)"
+					onBlur="computeValues(this,`+i+`)"
+					onChange="computeValues(this,`+i+`)" />
+					<span id="quantity_error"></span>
+				</td>
+				<td id="lblItemName" class="text-right"><span id="html_subtotal">`+ subtotal +`</span></td>
 				<td id="lblItemName"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>`;
-  			
   		}
   		
   		$('#itemsTable tbody').html(html);
+  		
+  		computeGrandTotal();
 	});
 });
 
 function remove(e, item_index) {
 	form_items.splice(item_index, 1); // remove this element from the item array
 	$(e).parentsUntil("tbody").remove();
+	computeGrandTotal();
 }
 
+function computeValues(element, index) {
+	
+	var each = [];
+	var subtotal = 0.00;
+
+	
+	var min = parseFloat($(element).attr("min") ? $(element).attr("min") : 0);
+	var max = parseFloat($(element).attr("max"));
+	var value = parseFloat($(element).val());
+	
+	console.log(min + " " + max + " " + value);
+	
+	if(value > max) {
+		var thisQuantity = $(element).closest("tr").find("#quantity");
+		
+		thisQuantity.val(max);
+		/* thisQuantity.attr({title:"Quantity must not be more than " + max + " sale quantity."});
+		thisQuantity.tooltip("toggle");
+		thisQuantity.focus();
+		
+		return false; */
+	} else {
+		$(element).closest("tr").find("#quantity_error").html();
+	}
+	
+	$.each($(element).closest("tr"), function() {
+		
+		$(this).find("input").each(function() {
+			each[$(this).attr("id")] = $(this).val();
+			form_items[index][$(this).attr("id")] = $(this).val();
+			console.log($(this).attr("id") + " = " + $(this).val());
+		});
+		
+	});
+
+	subtotal = each.quantity * each.unitPrice;
+	
+	form_items[index]["subtotal"] = subtotal;
+	$(element).closest("tr").find("#subtotal").val(round2DecimalPlaces(subtotal));
+	
+	if(subtotal > 0) {
+		subtotal = "-" + round2DecimalPlaces(subtotal);
+	}
+	
+	$(element).closest("tr").find("#html_subtotal").html(subtotal);
+	computeGrandTotal();
+}
+
+function computeGrandTotal() {
+	
+	var grand_total = parseFloat(0);
+	
+	$('#itemsTable > tbody  > tr').each(function() {
+		grand_total = (parseFloat(grand_total) + parseFloat($(this).find("#html_subtotal").text())).toFixed(2);
+	});
+	
+	if(grand_total > 0) {
+		grand_total = "-" + round2DecimalPlaces(grand_total);
+	}
+	
+	$("#grandTotal").html(grand_total);
+}
 /*]]>*/
 </script>
