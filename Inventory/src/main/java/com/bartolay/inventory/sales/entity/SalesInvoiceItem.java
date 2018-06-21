@@ -24,8 +24,8 @@ import com.bartolay.inventory.enums.Status;
 @Entity
 public class SalesInvoiceItem {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "unit_generator")
-	@SequenceGenerator(name="unit_generator", sequenceName = "UNIT_SER_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sales_invoice_item_generator")
+	@SequenceGenerator(name="sales_invoice_item_generator", sequenceName = "SALES_INVOICE_ITEM_SER_SEQ")
 	private int id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
