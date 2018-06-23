@@ -7,13 +7,16 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="row">
-						<div class=" col-md-12">
+						<div class="col-md-8">
+							<h4>New Stock Received</h4>
+						</div>
+						<div class=" col-md-4">
 							<div class="btn-group pull-right" role="group">
-								
+
 								<button type="submit" id="submitStockOpeningBtn"
 									class="btn btn-success btn-sm">Save Stock Received</button>
 								<a th:href="@{/stock/received}" class="btn btn-default btn-sm">Cancel</a>
-								
+
 							</div>
 						</div>
 					</div>
@@ -22,84 +25,129 @@
 
 					<div class="form-group" id="errors"></div>
 
-					<div class="table-responsive">
+					<div class="col-md-3">
+						<label>System Number :</label> <input type="text"
+							class="form-control" disabled="disabled"> <label>Document
+							Number :</label> <input type="text" class="form-control"
+							th:field="*{document_number}">
+					</div>
 
-						<table class="table table-bordered table-striped">
-							<tbody>
-								<tr>
-									<td class="col-md-3">
+					<div class="col-md-3">
+						<label>Transaction Date</label> <input type="text"
+							th:field="*{transactionDate}" class="form-control"> <label>Year</label>
+						<input type="text" class="form-control yearselect"
+							th:field="*{year}">
+					</div>
 
-										<div class="input-group">
-											<span class="input-group-addon">Trans. Date</span> <input
-												type="text" th:field="*{transactionDate}"
-												class="form-control">
-										</div>
+					<div class="col-md-6">
+						<label>Location</label> <select class="form-control"
+							th:field="*{location}">
+							<option th:each="location : ${locations}"
+								th:value="${location.id}" th:text="${location.name}"></option>
+						</select>
+					</div>
 
-									</td>
-									<td class="col-md-2">
-										<div class="input-group">
-											<span class="input-group-addon">Year</span> <input
-												type="text" class="form-control yearselect"
-												th:field="*{year}">
-										</div>
-									</td>
-									<td class="col-md-7">
-										<div class="input-group">
-											<span class="input-group-addon">Location</span> <select
-												class="form-control" th:field="*{location}">
-												<option th:each="location : ${locations}"
-													th:value="${location.id}" th:text="${location.name}"></option>
-											</select>
-										</div>
-									</td>
-								</tr>
+					<div class="col-md-12">
+						<br>
+						<div class="col-md-6">
+							<p class="lead">Items</p>
+						</div>
+						<div class="col-md-6 text-right">
+							<button class="btn btn-success btn-sm" id="btnAddItem">Add
+								Item</button>
+						</div>
+					</div>
 
-								<tr>
-									<td>
-										<div class="input-group">
-											<span class="input-group-addon">Document #</span> <input
-												type="text" th:field="*{document_number}"
-												class="form-control">
-										</div>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+					<div class="table-responsive col-md-12">
 
 						<table class="table table-bordered table-striped" id="itemsTable">
 							<thead>
 								<tr>
 									<th>SN</th>
-									<th>Code</th>
+									<th class="col-md-1">Code</th>
 									<th class="col-md-3">Description</th>
-									<th>Unit</th>
-									<th>U.Desc</th>
-									<th>Quantity</th>
-									<th>Unit Cost</th>
-									<th class="col-md-2">Total</th>
+									<th class="col-md-1">Quantity</th>
+									<th class="col-md-2">Unit</th>
+									<th class="col-md-2 text-right">Unit Cost</th>
+									<th class="col-md-2 text-right">Subtotal</th>
 									<th></th>
 								</tr>
 							</thead>
 							<tbody>
-
+								<td>SN</td>
+								<td>Code</td>
+								<td>Description
+								</td>
+								<td><input type="number" class="form-control" value="100"/></td>
+								<td><select class="form-control">
+									<option>Pcs</option>
+								</select></td>								
+								<td class="text-right"><input type="number" class="form-control" value="2.45"/></td>
+								<th class="col-md-2 text-right">245.00</td>
+								
+									<td><button class="btn btn-danger fa fa-times"
+										onClick="remove(this)" /></td>
 							</tbody>
-							<tfoot>
-								<tr>
-									<th colspan="6"></th>
-									<th><h3>Total</h3></th>
-									<th><h3 class="text-right" id="grandTotal"></h3></th>
-									<th></th>
-								</tr>
-							</tfoot>
+
 						</table>
 
-						<div class="row">
-							<div class="col-md-4">
-								<button class="btn btn-success btn-xs" id="btnAddItem">Add
-									Item</button>
-							</div>
-						</div>
+					</div>
 
+					<div class="col-md-6">
+
+						<div class="col-md-6">
+							<p class="lead">Expenses</p>
+
+						</div>
+						<div class="col-md-6 text-right">
+							<button class="btn btn-success btn-sm" id="btnAddExpense">Add
+								Expenses</button>
+						</div>
+						<table class="table table-bordered table-striped" id="itemsTable">
+							<thead>
+								<tr>
+									<th class="col-md-2">ID</th>
+									<th class="col-md-7">Description</th>
+									<th class="col-md-3 text-right">Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+								<td>1</td>
+								<td>Transportation</td>
+								<td><input type="number" class="form-control" /></td>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="col-xs-6">
+						<p class="lead">Amount</p>
+						<div class="table-responsive">
+							<table class="table">
+								<tbody>
+									<tr>
+										<th style="width: 50%">Total:</th>
+										<td class="col-md-2 text-right">22,350</td>
+									</tr>
+									<tr>
+										<th>Discount Value</th>
+										<td class="text-right"><input type="number" value="15" class="form-control"></td>
+									</tr>
+									<tr>
+										<th>Grand Total:</th>
+										<td class="text-right">22,335</td>
+									</tr>
+
+									<tr>
+										<th>Expenses Total:</th>
+										<td class="text-right">160.1</td>
+									</tr>
+									<tr>
+										<th>Net Total:</th>
+										<td class="text-right"><b>22,495.10</b></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 
 				</div>

@@ -7,13 +7,16 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="row">
-						<div class=" col-md-12">
+						<div class=" col-md-8">
+							<h4>New Stock Opening</h4>
+						</div>
+						<div class=" col-md-4">
 							<div class="btn-group pull-right" role="group">
-								
+
 								<button type="submit" id="submitStockOpeningBtn"
 									class="btn btn-success btn-sm">Save Opening Stock</button>
 								<a th:href="@{/stock/opening}" class="btn btn-default btn-sm">Cancel</a>
-								
+
 							</div>
 						</div>
 					</div>
@@ -22,57 +25,41 @@
 
 					<div class="form-group" id="errors"></div>
 
-					<div class="table-responsive">
+					<div class="col-md-3">
 
-						<table class="table table-bordered table-striped">
-							<tbody>
-								<tr>
-									<td class="col-md-3">
+						<label>System Number :</label> <input type="text"
+							class="form-control" disabled="disabled"> <label>Document
+							#</label> <input type="text" th:field="*{document_number}"
+							class="form-control" autocomplete="off">
+					</div>
 
-										<div class="input-group">
-											<span class="input-group-addon">Trans. Date</span> <input
-												type="text" th:field="*{transaction_date}"
-												class="form-control" autocomplete="off">
-										</div>
+					<div class="col-md-3">
+						<label>Transaction Date</label> <input type="text"
+							th:field="*{transaction_date}" class="form-control"
+							autocomplete="off"> <label>Year</label> <input
+							type="text" class="form-control yearselect" th:field="*{year}">
+					</div>
 
-									</td>
-									<td class="col-md-2">
-										<div class="input-group">
-											<span class="input-group-addon">Year</span> <input
-												type="text" class="form-control yearselect"
-												th:field="*{year}">
-										</div>
-									</td>
-									<td class="col-md-7">
-										<div class="input-group">
-											<span class="input-group-addon">Location</span> <select
-												class="form-control" th:field="*{location}">
-												<option th:each="location : ${locations}"
-													th:value="${location.id}" th:text="${location.name}"></option>
-											</select>
-										</div>
-									</td>
-								</tr>
+					<div class="col-md-6">
+						<label>Location</label> <select class="form-control"
+							th:field="*{location}">
+							<option th:each="location : ${locations}"
+								th:value="${location.id}" th:text="${location.name}"></option>
+						</select>
+					</div>
 
-								<tr>
-									<td>
-										<div class="input-group">
-											<span class="input-group-addon">Document #</span> <input
-												type="text" th:field="*{document_number}"
-												class="form-control">
-										</div>
-									</td>
-									<td colspan="2">
+					<div class="col-md-12">
+						<label>Description</label> <input type="text"
+							th:field="*{description}" class="form-control">
+					</div>
 
+					<div class="col-md-12">
+						<br>
+						<button class="btn btn-success btn-sm" id="btnAddItem">Add
+							Items</button>
+					</div>
 
-										<div class="input-group col-md-12">
-											<span class="input-group-addon">Description</span> <input
-												type="text" th:field="*{description}" class="form-control">
-										</div>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+					<div class="table-responsive col-md-12">
 
 						<table class="table table-striped" id="itemsTable">
 							<thead>
@@ -100,13 +87,6 @@
 								</tr>
 							</tfoot>
 						</table>
-
-						<div class="row">
-							<div class="col-md-4">
-								<button class="btn btn-success btn-sm" id="btnAddItem">Add
-									Items</button>
-							</div>
-						</div>
 
 					</div>
 
