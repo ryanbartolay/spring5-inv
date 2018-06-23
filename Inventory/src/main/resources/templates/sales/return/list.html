@@ -1,0 +1,122 @@
+<div class="">
+	<!-- Title and action -->
+	<div class="page-title">
+		<div class="title_left">
+			<h3>Sales Return</h3>
+		</div>
+
+		<div class="title_right">
+			<div class="pull-right">
+				<div class="input-group ">
+					<a th:href="@{/sales/return/create}"
+						class="btn btn-success btn-sm"><span class="fa fa-plus"></span>
+						Create Sales Return</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+	<!-- //Title and action -->
+
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		<div class="x_panel">
+			<div class="x_title">
+				<h2>
+					List of Sales Return 
+				</h2>
+				<div class="clearfix"></div>
+			</div>
+
+			<div class="x_content">
+
+				<div class="table-responsive">
+					<table class="table table-striped" id="salesReturn-datatable" style="width: 100%">
+						<thead>
+							<tr class="headings">
+								<th class="column-title">SN</th>
+								<th class="column-title">Invoice</th>
+								<th class="column-title">Invoice Date</th>
+								<th class="column-title">Location</th>
+								<th class="column-title">Sales Person</th>
+								<th class="column-title">Customer</th>
+								<th class="column-title text-right">No. of Items</th>
+								<th class="column-title last text-right">Returned Amount</th>
+								
+							</tr>
+						</thead>
+
+						<tbody>
+							
+						</tbody>
+					</table>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+</div>
+<!-- DataTables JavaScript -->
+<script
+	th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
+<script>
+				var table = $('#salesReturn-datatable');
+				var datatable = customFixedDatatable(
+						table,
+						'',
+						[ {
+							data : "system_number",
+							render: function ( data, type, row ) {
+		                        return '<a href="/sales/invoice/'+ data +'">' + data + '</a>';
+		                    }
+						}, {
+							data : "document_number",
+							render: function ( data, type, row ) {
+								if(data) {
+									return '<a href="/sales/invoice/'+ row.system_number +'">' + data + '</a>';	
+								}
+		                        return '';
+		                    }
+						}, {
+							data : "transaction_date"
+						}, {
+							data : "location_name"
+						}, {
+							data : "sales_person"
+						}, {
+							render: function ( data, type, row ) {
+		                        return 'Paid';
+		                    }
+						}, {
+							data : "customer"
+						}, {
+							data : "net_total",
+							className: "text-right"
+						}],
+						[ {
+							"targets" : 4,
+							"data" : null,
+							"defaultContent" : '<div class="btn-group" role="group">'
+									+ '<button class="btn btn-default fa fa-eye" id="btnView"/>'
+									/* + '<button class="btn btn-danger glyphicon glyphicon-remove" /> ' */
+									+ '</div>'
+						} ]);
+
+				// View button
+				table.find("tbody").on(
+						'click',
+						'#btnView',
+						function(e) {
+							e.preventDefault();
+
+							var data = datatable.row(
+									$(this).parent('div').parent('td')).data();
+							window.location = "invoice/" + data.system_number;
+
+						});
+			</script>

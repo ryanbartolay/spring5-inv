@@ -95,12 +95,26 @@ public class SalesController {
 		return model;
 	}
 	
+	@RequestMapping(value="/return")
+	public ModelAndView salesReturn(ModelAndView model) {
+		model.setViewName("sales/index");
+		model.addObject("html", "return/list");
+		return model;
+	}
+	
+	@RequestMapping(value="/return/create")
+	public ModelAndView salesReturnCreate(ModelAndView model) {
+		model.setViewName("sales/index");
+		model.addObject("html", "return/edit");
+		return model;
+	}
+
+	
 	@RequestMapping(value="/return/{system_number}")
-	public ModelAndView returnEdit(ModelAndView mav, @PathVariable String system_number) {
+	public ModelAndView salesReturnEdit(ModelAndView mav, @PathVariable String system_number) {
 		SalesInvoice salesInvoice = salesInvoiceRepository.findById(system_number).get();
 		
 		mav.setViewName("sales/index");
-		mav.addObject("page", "New Sales Invoice");
 		mav.addObject("html", "return/edit");
 		mav.addObject("method", "POST");
 		
@@ -113,10 +127,6 @@ public class SalesController {
 		return mav;
 	}
 	
-	@RequestMapping(value="/return")
-	public ModelAndView salesReturn() {
-		ModelAndView model = new ModelAndView("construction");
-		return model;
-	}
+	
 
 }
