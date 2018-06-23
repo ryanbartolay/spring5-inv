@@ -16,8 +16,7 @@
 									class="btn btn-success btn-sm">Submit Sales Return</button>
 								<a th:href="@{'/sales/invoice/' + ${salesInvoice.systemNumber}}"
 									class="btn btn-warning btn-sm"> <span class="fa fa-file-o"></span>
-									Back to Sales Invoice <span
-									th:text="${salesInvoice.systemNumber}"></span></a> <a
+									Show Sales Invoice</a> <a
 									th:href="@{/sales/return}" class="btn btn-default btn-sm"><span
 									class="fa fa-list"></span> Back to List of Sales Returns</a>
 
@@ -31,10 +30,10 @@
 
 					<div class="col-md-3">
 
-						<label>System Number :</label> <input type="text"
-							class="form-control" disabled="disabled"
+						<label><span class="text-danger">Sales Invoice</span> System Number</label> <input type="text"
+							class="form-control"
 							th:field="${salesInvoice.systemNumber}"> <label>Document
-							Number :</label> <input type="text" class="form-control"
+							Number </label> <input type="text" class="form-control"
 							disabled="disabled" th:field="${salesInvoice.documentNumber}">
 					</div>
 
