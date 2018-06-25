@@ -337,7 +337,7 @@ public class InventoryCoreService {
 
 	@Transactional
 	public StockTransfer createStockTransfer(StockTransfer stockTransfer) throws StockTransferException {
-
+		
 		// lets save the stock transfer first to generate system number
 		stockTransfer.setCreatedBy(userCredentials.getLoggedInUser());
 		stockTransferRepository.save(stockTransfer);
@@ -382,7 +382,7 @@ public class InventoryCoreService {
 					stockTransferItem.getUnit().getId());
 
 			if(fromInventory == null) {
-				throw new StockTransferException("Stock "+ fromInventory.getItem().getId() +" with unit "+ fromInventory.getUnit().getId() +" not found from source location. " + stockTransfer.getFromLocation().getId());
+				throw new StockTransferException("Stock "+ stockTransferItem.getItem().getId() +" with unit "+ stockTransferItem.getUnit().getId() +" not found from source location. " + stockTransfer.getFromLocation().getId());
 			}
 
 			inventoryTransaction.setInventory(fromInventory);

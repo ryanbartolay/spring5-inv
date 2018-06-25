@@ -32,7 +32,7 @@ public class StockTransfer implements GeneratedStockTransferSystemNumber {
 	@Id
 	@GeneratedValue(generator = "StockTransferSystemNumberGenerator")
 	@GenericGenerator(name = "StockTransferSystemNumberGenerator", strategy = "com.bartolay.inventory.entity.generators.StockTransferSystemNumberGenerator")
-	@Column(name="system_number", nullable=false, unique=true, insertable=false, updatable=false, length=10)
+	@Column(name="system_number", nullable=false, unique=true, insertable=false, updatable=false, length=15)
 	private String systemNumber;
 	
 	@Column(name="document_number", unique=true, length=25)

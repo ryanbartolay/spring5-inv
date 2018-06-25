@@ -71,107 +71,112 @@ function addItem(parameters, callback) {
 }
 
 itemModalSimple_modal.on('shown.bs.modal', function() {
+	if(itemModelAddItem_table_instance == undefined){
+		itemModelAddItem_table_instance = itemModelAddItem_table.DataTable({
+			responsive : true,
+			ajax: {
+				url: itemModalSimple_url
+			},
+			processing: true,
+	        serverSide: true,
+			length: 10,
+			start: 0,
+	        columns: [
+	        	{
+	        		data: "id",
+	        		orderable: false,
+	        		render: function(data, type, row) {
+	        			
+	        			var item_units_map = new Object();
+	        			
+	        			var available_units_id = row.available_units_id.replace(/{|}/gi, "");
+	        			
+	        			var available_units_name = row.available_units_name.replace(/{|}/gi,"");
+	        			
+	        			var other_units_id = available_units_id.split(",");
+	        			var other_units_name = available_units_name.split(",");
+	        			
+	        			item_units_map[row.default_unit_id] = row.default_unit_name;// push the default first
+	        			
+	        			
+	        			for(var i = 0; i < other_units_id.length; i++) {
+	        				item_units_map[other_units_id[i]] = other_units_name[i];
+	        			}
+	        			
+	        			var item_units_string = JSON.stringify(item_units_map);
+	        			
+	        			var min_price = row.minimum_item_price ? row.minimum_item_price : "";
+	        			var max_price = row.maximum_item_price ? row.maximum_item_price : "";
+	        			return `<div style="position: relative;">
+								<input type="checkbox" name="table_records" id="selected_item" value="`+ data +`" onClick="countCheckedSingle(this)">
+								<input type="hidden" name="id" value="`+data+`">
+								<input type="hidden" name="code" value="`+row.code+`">
+								<input type="hidden" name="name" value="`+row.name+`">
+								<input type="hidden" name="units" value='`+ item_units_string +`'>
+								<input type="hidden" name="brand_name" value="`+row.brand_name+`">
+								<input type="hidden" name="minimum_item_price" value="`+ min_price +`">
+								<input type="hidden" name="maximum_item_price" value="`+ max_price +`">
+						</div>`;
+	        		}
+	        	},
+	        	{ 
+	        		data: "id",
+	        		render: function ( data, type, row ) {
+	                    return '<a href="/stock/opening/'+ data +'">' + data + '</a>';
+	                }
+	        	},
+	        	{ 
+	        		data: "code",
+	        		render: function ( data, type, row ) {
+	                    return '<a href="/stock/opening/'+ data +'">' + data + '</a>';
+	                }
+	        	},
+	        	{ 
+	        		data: "name",
+	        		render: function ( data, type, row ) {
+	        			
+	                    return '<a href="/stock/opening/">' + data + '</a>';
+	                }
+	        	},{
+	        		data: "default_unit_name"	
+	        	},
+	        	{
+	        		data: "available_units_name"	
+	        	},
+	        	{ 
+	        		data: "brand_name",
+	        		render: function ( data, type, row ) {
+	        			
+	                    return '<a href="/stock/opening/">' + data + '</a>';
+	                }
+	        	},
+	        	{ 
+	        		data: "minimum_item_price",
+	        		render: function(data,type, row) {
+	        			if(data) {
+	        				return data;
+	        			}
+	                    return "";
+	        		},
+	        		className: "text-right"
+	        	},
+	        	{ 
+	        		data: "maximum_item_price",
+	        		render: function ( data, type, row ) {
+	        			if(data) {
+	        				return data;
+	        			}
+	                    return "";
+	                },
+	                className: "text-right"
+	        	},
+	    	]
+		});
+	}else{
+		itemModelAddItem_table_instance.ajax.reload();
+		console.log(itemModelAddItem_table_instance)
+	}
 	
-	itemModelAddItem_table_instance = itemModelAddItem_table.DataTable({
-		responsive : true,
-		ajax: {
-			url: itemModalSimple_url
-		},
-		processing: true,
-        serverSide: true,
-		length: 10,
-		start: 0,
-        columns: [
-        	{
-        		data: "id",
-        		orderable: false,
-        		render: function(data, type, row) {
-        			
-        			var item_units_map = new Object();
-        			
-        			var available_units_id = row.available_units_id.replace(/{|}/gi, "");
-        			
-        			var available_units_name = row.available_units_name.replace(/{|}/gi,"");
-        			
-        			var other_units_id = available_units_id.split(",");
-        			var other_units_name = available_units_name.split(",");
-        			
-        			item_units_map[row.default_unit_id] = row.default_unit_name;// push the default first
-        			
-        			
-        			for(var i = 0; i < other_units_id.length; i++) {
-        				item_units_map[other_units_id[i]] = other_units_name[i];
-        			}
-        			
-        			var item_units_string = JSON.stringify(item_units_map);
-        			
-        			var min_price = row.minimum_item_price ? row.minimum_item_price : "";
-        			var max_price = row.maximum_item_price ? row.maximum_item_price : "";
-        			return `<div style="position: relative;">
-							<input type="checkbox" name="table_records" id="selected_item" value="`+ data +`" onClick="countCheckedSingle(this)">
-							<input type="hidden" name="id" value="`+data+`">
-							<input type="hidden" name="code" value="`+row.code+`">
-							<input type="hidden" name="name" value="`+row.name+`">
-							<input type="hidden" name="units" value='`+ item_units_string +`'>
-							<input type="hidden" name="brand_name" value="`+row.brand_name+`">
-							<input type="hidden" name="minimum_item_price" value="`+ min_price +`">
-							<input type="hidden" name="maximum_item_price" value="`+ max_price +`">
-					</div>`;
-        		}
-        	},
-        	{ 
-        		data: "id",
-        		render: function ( data, type, row ) {
-                    return '<a href="/stock/opening/'+ data +'">' + data + '</a>';
-                }
-        	},
-        	{ 
-        		data: "code",
-        		render: function ( data, type, row ) {
-                    return '<a href="/stock/opening/'+ data +'">' + data + '</a>';
-                }
-        	},
-        	{ 
-        		data: "name",
-        		render: function ( data, type, row ) {
-        			
-                    return '<a href="/stock/opening/">' + data + '</a>';
-                }
-        	},{
-        		data: "default_unit_name"	
-        	},
-        	{
-        		data: "available_units_name"	
-        	},
-        	{ 
-        		data: "brand_name",
-        		render: function ( data, type, row ) {
-        			
-                    return '<a href="/stock/opening/">' + data + '</a>';
-                }
-        	},
-        	{ 
-        		data: "minimum_item_price",
-        		render: function(data,type, row) {
-        			if(data) {
-        				return data;
-        			}
-                    return "";
-        		},
-        		className: "text-right"
-        	},
-        	{ 
-        		data: "maximum_item_price",
-        		render: function ( data, type, row ) {
-        			if(data) {
-        				return data;
-        			}
-                    return "";
-                },
-                className: "text-right"
-        	},
-    	]
-	});
 });
 itemModalAddItem_btn.click(function() {
 	var iter = itemModelAddItem_form.serializeArray();
@@ -192,7 +197,7 @@ itemModalAddItem_btn.click(function() {
 	} else {
 		itemModalSimple_callback(selected_items);
 		itemModalSimple_modal.modal("hide");
-		itemModelAddItem_table_instance.destroy();
+		/* itemModelAddItem_table_instance.destroy(); */
 	}
 	
 });

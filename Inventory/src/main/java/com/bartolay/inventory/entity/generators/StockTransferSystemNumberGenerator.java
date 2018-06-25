@@ -37,14 +37,14 @@ public class StockTransferSystemNumberGenerator implements IdentifierGenerator {
 			if(rs.next()) {
 				String max_system_number = rs.getString("system_number");
 
+				System.err.println("max_system_number " +max_system_number);
+				
 				if(max_system_number != null) {
 
 					String[] system_number = max_system_number.split(DELIMETER);
 
-					Integer index = Integer.parseInt(system_number[1]);
-					index++;
-
-					return system_number[0] + DELIMETER + system_number[1] + DELIMETER + system_number[2] + DELIMETER + index;
+					Integer index = Integer.parseInt(system_number[3]);
+					return system_number[0] + DELIMETER + system_number[1] + DELIMETER + system_number[2] + DELIMETER + (index+1);
 				} else {
 					return obj.getYear() + DELIMETER +  obj.getFromLocation().getId() + DELIMETER + obj.getToLocation().getId() + DELIMETER + 1;
 				}

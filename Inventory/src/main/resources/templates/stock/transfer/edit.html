@@ -70,15 +70,25 @@
 									<th>SN</th>
 									<th>Code</th>
 									<th class="col-md-3">Description</th>
+									<th>Brand</th>
 									<th>Unit</th>
-									<th>U.Desc</th>
 									<th>Quantity</th>
+									<th>Unit Cost</th>
+									<th class="col-md-2 text-right">Subtotal</th>
 									<th></th>
 								</tr>
 							</thead>
 							<tbody>
 
 							</tbody>
+							<tfoot>
+								<tr>
+									<th colspan="6"></th>
+									<th><h3>Total</h3></th>
+									<th><h3 class="text-right" id="grandTotal"></h3></th>
+									<th></th>
+								</tr>
+							</tfoot>
 						</table>
 
 					</div>
@@ -103,20 +113,50 @@
 	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
 
 <script>
+	
+	
+	filterLocations();
+	
 	function updateTextInput(val) {
     	document.getElementById('textInput').value=val; 
   	}
+	
+	function filterLocations(){
+		var fromLocation 	= $("#fromLocation");
+		var toLocation 		= $("#toLocation");
+		var excluded 		= toLocation.find("option[value='"+fromLocation.val()+"']");
+		
+		excluded.attr("disabled", true);
+		excluded.hide();
+		var hasFound = false;
+		toLocation.find("option").each(function(){
+			if(!hasFound && !$(this).attr("disabled")){
+				toLocation.val($(this).val());
+				toLocation.change();
+				hasFound = true;
+			}
+		})
+		
+		fromLocation.unbind("change").change(function(e){
+			toLocation.find("option").each(function(){
+				$(this).removeAttr("disabled");
+				$(this).show();
+			})
+			filterLocations();
+		})
+	}
+	
 
 /*<![CDATA[*/
 var form = $("#stockTransferForm");
 var current_year = (new Date()).getFullYear();
-var grand_total = 0;
-//itemModalSimple_url = "/api/items/location/" + parameters.location;
-var item_count = 0;
+
 var submitStockTransferBtn = $("#submitStockTransferBtn");
 
+var form_items = [];
+
   $( function() {
-	   
+	  
     $( "#transactionDate" ).datepicker();
     
     $('.yearselect').yearselect({
@@ -127,42 +167,58 @@ var submitStockTransferBtn = $("#submitStockTransferBtn");
     
     $('[name=year]').val( current_year );
 
-   
-    $("#grandTotal").html(grand_total);
-    
+   	computeGrandTotal();
   });
   
   $("#btnAddItem").on("click", function() {
-  	addItem({
-  		type: "stock_transfer", 
-  		location: $("#fromLocation").children("option").filter(":selected").val(),
-  		label: $("#fromLocation").children("option").filter(":selected").text() + " Items"
-  		}, function(data) {
+  	addItem({type: "stock_opening", label:"Add Stock Opening Item"}, function(data) {
   		
-  		var item = data['item'];
-  		var unit = data['unit'];
+  		for(var i = 0; i < data.length; i++) {
+  			form_items.push(data[i]);
+  		}
   		
-  		var html = `
-  		<tr>
-				<th id="lblItemId">`+ item.id +`</th>
-				<td id="lblItemCode">`+ item.code +`</td>
+  		var html = ``;
+  		for(var i = 0; i < form_items.length; i++) {
+  		
+  			var item = form_items[i];
+  			
+  			// default values
+  			var unit = (item.unit ? item.unit : "0");
+  			var quantity = (item.quantity ? item.quantity : "0");
+  			var unitCost = (item.unitCost ? item.unitCost : "0.00");
+  			var subtotal = (item.subtotal ? item.subtotal : "0.00");
+  			
+  			var units = JSON.parse(form_items[i].units);
+  			
+  			html += `<tr>
+				<th id="lblItemId">`+ item.id +`<input type="hidden" name="stockTransferItems[`+i+`].item" value="`+item.id+`" /></th>
+				<td id="lblItemName">`+ item.code +`</td>
 				<td id="lblItemName">`+ item.name +`</td>
-				<td id="lblAbbreviation">`+ unit.abbreviation +`</td>
-				<td id="lblUnitName">`+ unit.name +`</td>
-				<td class="text-right" id="lblQuantity">`+ data.quantity +`</td>
-				<td class="text-right">
-					<input type="hidden" name="stockTransferItems[`+ item_count +`].item" id="txtItem" value="` + item.id + `" />
-					<input type="hidden" name="stockTransferItems[`+ item_count +`].unit" id="txtUnit" value="` + unit.id + `" />
-					<input type="hidden" name="stockTransferItems[`+ item_count +`].quantity" id="txtQuantity" value="` + data.quantity + `" />
-					<div class="btn-group" role="group">
-		        		<button class="btn btn-info fa fa-edit" id="btnView" onClick="edit(this)"/>
-		        		<button class="btn btn-danger fa fa-times" onClick="remove(this)" />
-		    		</div>
-				</td>
+				<td id="lblItemName">`+ item.brand_name +`</td>`;
+				
+			html += `
+			<td id="lblItemName">
+				<select class="form-control" name="stockTransferItems[`+i+`].unit" id="unit" onChange="computeValues(this, `+i+`)">`;	
+			for (var key in units) {
+			    if (units.hasOwnProperty(key)) {
+			    	html += `<option value="`+ key +`">`+ units[key] +`</option>`;
+			    }
+			}
+			html +=	`</select>
+			</td>`; 
+				
+			html +=	`
+				<td id="lblItemName"><input type="number" name="stockTransferItems[`+i+`].quantity" id="quantity" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ quantity +`" /></td>
+				<td id="lblItemName"><input type="number" name="stockTransferItems[`+i+`].unitCost" id="unitCost" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ unitCost +`" /></td>
+				<td id="lblItemName" class="text-right"><input type="hidden" name="subtotal[`+i+`]" id="subtotal" value="`+subtotal+`" /><span id="html_subtotal">`+subtotal+`</span></td>
+				<td id="lblItemName"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>
 			</tr>`;
-			item_count++;
-			
-		$('#itemsTable tbody').append(html);
+  		}
+  	
+  		var total = data.quantity * data.unit_cost;
+  		
+  		$('#itemsTable tbody').html(html);
+  		computeGrandTotal();
   	});
   });
   
@@ -183,47 +239,47 @@ submitStockTransferBtn.click(function() {
  		}
  	});
 });
-  
-function edit(e) {
-	var selected_row = $(e).parentsUntil("tbody");
+
+function computeValues(element, index) {
 	
-	var values = {
-		item: selected_row.find("#txtItem").val(),
-		unit: selected_row.find("#txtUnit").val(),
-		quantity: selected_row.find("#txtQuantity").val(),
-		unit_cost: selected_row.find("#txtUnitCost").val()
-	};
+	var each = [];
+	var subtotal = 0.00;
 	
-	var total = values.quantity * values.unit_cost;
-	
-	grand_total = grand_total - total;
-	
-	updateItem({type: "stock_opening", label:"Edit Stock Opening Item", values: values}, function(data) { 
+	$.each($(element).closest("tr"), function() {
 		
-		console.log(data);
-		
-		var item = data['item'];
-		var unit = data['unit'];
-		
-		selected_row.find("#lblItemId").html(item.id);
-		selected_row.find("#lblItemCode").html(item.code);
-		selected_row.find("#lblItemName").html(item.name);
-		selected_row.find("#lblUnitName").html(unit.name);
-		selected_row.find("#lblAbbreviation").html(unit.abbreviation);
-		
-		selected_row.find("#txtItem").val(item.id);
-		selected_row.find("#txtUnit").val(unit.id);
-		selected_row.find("#txtQuantity").val(data.quantity);
-		selected_row.find("#txtUnitCost").val(data.unit_cost);
-		
-		selected_row.find("#lblQuantity").html(data.quantity);
-		selected_row.find("#lblUnitCost").html(data.unit_cost);
-		selected_row.find("#lblTotal").html(data.quantity * data.unit_cost);
+		$(this).find("select, input").each(function() {
+			each[$(this).attr("id")] = $(this).val();
+			form_items[index][$(this).attr("id")] = $(this).val();
+			console.log($(this).attr("id") + " = " + $(this).val());
+		});
+
 	});
+
+	console.log(form_items);
+	
+	subtotal = each.quantity * each.unitCost;
+	
+	form_items[index]["subtotal"] = subtotal;
+	$(element).closest("tr").find("#subtotal").val(round2DecimalPlaces(subtotal));
+	$(element).closest("tr").find("#html_subtotal").html(round2DecimalPlaces(subtotal));
+	computeGrandTotal();
 }
 
-function remove(e) {
+function remove(e, item_index) {
+	form_items.splice(item_index, 1); // remove this element from the item array
 	$(e).parentsUntil("tbody").remove();
+	computeGrandTotal();
+}
+
+function computeGrandTotal() {
+	
+	var grand_total = parseFloat(0);
+	
+	$('#itemsTable > tbody  > tr').each(function() {
+		grand_total = (parseFloat(grand_total) + parseFloat($(this).find("#html_subtotal").text())).toFixed(2);
+	});
+	
+	$("#grandTotal").html(round2DecimalPlaces(grand_total));
 }
 
 	/*]]>*/
