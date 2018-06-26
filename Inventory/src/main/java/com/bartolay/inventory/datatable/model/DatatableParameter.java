@@ -1,5 +1,6 @@
 package com.bartolay.inventory.datatable.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -7,6 +8,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class DatatableParameter {
 	
@@ -25,6 +32,8 @@ public class DatatableParameter {
 	private SortOrder sortOrder;
 
 	private List<DatatableColumn> columns;
+	
+	private JsonNode form;
 
 	//	private String []data;
 	//	private String []searchable;
@@ -45,8 +54,7 @@ public class DatatableParameter {
 
 	public static final String SORT_COLUMN = "order[0][column]";
 	public static final String SORT_ORDER = "order[0][dir]";
-
-
+	
 	public DatatableParameter(Map<String, String> requestMap) {
 
 		this.requestMap = requestMap;
@@ -84,6 +92,14 @@ public class DatatableParameter {
 
 				columns.add(column);
 			} 
+		}
+		
+		if(requestMap.get("form") != null) {
+			try {
+				this.form = new ObjectMapper().readTree(requestMap.get("form").toString());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 		this.setColumns(columns);
@@ -260,6 +276,10 @@ public class DatatableParameter {
 	}
 	public void setColumns(List<DatatableColumn> columns) {
 		this.columns = columns;
+	}
+	
+	public JsonNode getForm() {
+		return form;
 	}
 
 	@Override

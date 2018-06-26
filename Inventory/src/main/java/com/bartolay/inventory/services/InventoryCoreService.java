@@ -4,26 +4,21 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.entity.InventoryTransaction;
-import com.bartolay.inventory.enums.ActivityType;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.enums.SalesInvoiceStatus;
 import com.bartolay.inventory.enums.Status;
 import com.bartolay.inventory.enums.TransactionType;
 import com.bartolay.inventory.exceptions.SalesInvoiceException;
 import com.bartolay.inventory.exceptions.StockTransferException;
-import com.bartolay.inventory.repositories.ActivityRepository;
 import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.InventoryTransactionRepository;
-import com.bartolay.inventory.repositories.ItemUnitRepository;
-import com.bartolay.inventory.sales.entity.Activity;
 import com.bartolay.inventory.sales.entity.CreditCardDetails;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
@@ -50,6 +45,7 @@ import com.bartolay.inventory.utils.UserCredentials;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
+
 public class InventoryCoreService {
 
 	@Autowired

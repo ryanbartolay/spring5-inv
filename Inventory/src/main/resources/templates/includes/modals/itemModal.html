@@ -1,90 +1,224 @@
-<!-- Modal Edit Brand -->
-<div class="modal fade" id="itemModal" tabindex="-1" role="dialog"
-	aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+<form id="itemModelAddItem_form">
+<div class="modal fade bs-example-modal-lg" id="itemModalSimple" tabindex="-1" role="dialog"
+	aria-hidden="true" style="display: none;">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
-			<form data-async data-target="#rating-modal"
-				id="itemModal_addItemForm" th:action="@{/api/stockOpening/item}"
-				method="POST">
 
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-hidden="true">&times;</button>
-					<h4 class="modal-title" id="itemModal_label"></h4>
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">×</span>
+					</button>
+				<div class="col-md-2">
+					
+					<h4 class="modal-title" id="myModalLabel">Item List</h4>
 				</div>
+					<div class="col-md-5">
+						<select	class="form-control" id="itemLocationModal">
+							<option th:each="location : ${locations}"
+								th:value="${location.id}" th:text="${location.name}"></option>
+						</select>
+					</div>
+			</div>
+			<div class="modal-body">
 
-				<div class="panel-body">
-					<input type="text" id="itemModal_itemPlaceholder" size="200" />
-					<table class="table table-bordered table-striped"
-						id="itemModal_table">
+
+				<div class="table-responsive">
+					<table class="table table-striped bulk_action" id="itemModalSimple-datatable">
+						<thead>
+							<tr class="headings">
+								<th></th>
+								<th class="column-title" style="display: table-cell;">SN</th>
+								<th class="column-title" style="display: table-cell;">Code</th>
+								<th class="column-title" style="display: table-cell;">Item</th>
+								<th class="column-title" style="display: table-cell;">Default Unit</th>
+								<th class="column-title" style="display: table-cell;">Units</th>
+								<th class="column-title" style="display: table-cell;">Brand</th>
+								<th class="column-title text-right" style="display: table-cell;">Min S. Price</th>
+								<th class="column-title text-right" style="display: table-cell;">Max S. Price
+								</th>
+							</tr>
+						</thead>
+
 						<tbody>
-							<tr>
-								<td>
-
-									<div class="input-group">
-										<span class="input-group-addon">Item</span> <select
-											class="form-control" id="itemModal_item"
-											name="itemModal_item">
-											<option value="">------</option>
-										</select>
-									</div>
-
-								</td>
-							</tr>
-							<tr>
-								<td>
-
-									<div class="input-group">
-										<span class="input-group-addon">Unit</span> <select
-											class="form-control" id="itemModal_unit"
-											name="itemModal_unit">
-										</select>
-									</div>
-
-								</td>
-							</tr>
-							<tr>
-								<td>
-
-									<div class="input-group">
-										<span class="input-group-addon">On Hand</span> <input
-											class="form-control" type="number" value="0"
-											id="itemModal_quantity" name="itemModal_quantity" />
-									</div>
-
-								</td>
-							</tr>
-							<tr>
-								<td>
-
-									<div class="input-group">
-										<span class="input-group-addon">Reorder Point</span> <input
-											class="form-control" type="number" value="0"
-											id="itemModal_reorderPoint" name="itemModal_reorderPoint" />
-									</div>
-
-								</td>
-							</tr>
 						</tbody>
 					</table>
-
-
 				</div>
 
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-					<button type="submit" id="itemModal_addItemBtn"
-						class="btn btn-success btn-primary">Add Item</button>
-				</div>
 
-				<div id="input_placeholder"></div>
-			</form>
+			</div>
+			<div class="modal-footer">
+				<span id="itemSelectedStatus"></span>&nbsp;
+				<button type="button" class="btn btn-success" id="itemModalAddItem_btn">Add Items</button>
+			</div>
+
 		</div>
-		<!-- /.modal-content -->
 	</div>
-	<!-- /.modal-dialog -->
 </div>
-<!-- /.modal -->
+</form>
+
+<script>
+
+var itemModalSimple_modal = $("#itemModalSimple");
+var itemModalAddItem_btn = $("#itemModalAddItem_btn");
+var itemModelAddItem_form = $("#itemModelAddItem_form");
+var itemModelAddItem_table = $('#itemModalSimple-datatable');
+var itemModelAddItem_table_instance;
+var itemModalSimple_callback;
+var itemModalSimple_url = "/api/datatable/items";
+
+function addItem(parameters, callback) {
+	var label = parameters.label;
+
+	itemModalSimple_callback = callback;
+	
+	// lets change the request url if stock_transfer
+	if(parameters.url) {
+		itemModalSimple_url = parameters.url;
+	}
+	
+	itemModalSimple_modal.modal('show');
+}
+
+itemModalSimple_modal.on('shown.bs.modal', function() {
+	if(itemModelAddItem_table_instance == undefined){
+		itemModelAddItem_table_instance = itemModelAddItem_table.DataTable({
+			responsive : true,
+			ajax: {
+				url: itemModalSimple_url,
+				data : function(d){
+					d.form = JSON.stringify({
+						location : $("#itemLocationModal").val()
+					})
+					
+				}
+			},
+			processing: true,
+	        serverSide: true,
+			length: 10,
+			start: 0,
+	        columns: [
+	        	{
+	        		data: "id",
+	        		orderable: false,
+	        		render: function(data, type, row) {
+	        			
+	        			var item_units_map = new Object();
+	        			
+	        			var available_units_id = row.available_units_id.replace(/{|}/gi, "");
+	        			
+	        			var available_units_name = row.available_units_name.replace(/{|}/gi,"");
+	        			
+	        			var other_units_id = available_units_id.split(",");
+	        			var other_units_name = available_units_name.split(",");
+	        			
+	        			item_units_map[row.default_unit_id] = row.default_unit_name;// push the default first
+	        			
+	        			
+	        			for(var i = 0; i < other_units_id.length; i++) {
+	        				item_units_map[other_units_id[i]] = other_units_name[i];
+	        			}
+	        			
+	        			var item_units_string = JSON.stringify(item_units_map);
+	        			
+	        			var min_price = row.minimum_item_price ? row.minimum_item_price : "";
+	        			var max_price = row.maximum_item_price ? row.maximum_item_price : "";
+	        			return `<div style="position: relative;">
+								<input type="checkbox" name="table_records" id="selected_item" value="`+ data +`" onClick="countCheckedSingle(this)">
+								<input type="hidden" name="id" value="`+data+`">
+								<input type="hidden" name="code" value="`+row.code+`">
+								<input type="hidden" name="name" value="`+row.name+`">
+								<input type="hidden" name="units" value='`+ item_units_string +`'>
+								<input type="hidden" name="brand_name" value="`+row.brand_name+`">
+								<input type="hidden" name="minimum_item_price" value="`+ min_price +`">
+								<input type="hidden" name="maximum_item_price" value="`+ max_price +`">
+						</div>`;
+	        		}
+	        	},
+	        	{ 
+	        		data: "id",
+	        		render: function ( data, type, row ) {
+	                    return '<a href="/stock/opening/'+ data +'">' + data + '</a>';
+	                }
+	        	},
+	        	{ 
+	        		data: "code",
+	        		render: function ( data, type, row ) {
+	                    return '<a href="/stock/opening/'+ data +'">' + data + '</a>';
+	                }
+	        	},
+	        	{ 
+	        		data: "name",
+	        		render: function ( data, type, row ) {
+	        			
+	                    return '<a href="/stock/opening/">' + data + '</a>';
+	                }
+	        	},{
+	        		data: "default_unit_name"	
+	        	},
+	        	{
+	        		data: "available_units_name"	
+	        	},
+	        	{ 
+	        		data: "brand_name",
+	        		render: function ( data, type, row ) {
+	        			
+	                    return '<a href="/stock/opening/">' + data + '</a>';
+	                }
+	        	},
+	        	{ 
+	        		data: "minimum_item_price",
+	        		render: function(data,type, row) {
+	        			if(data) {
+	        				return data;
+	        			}
+	                    return "";
+	        		},
+	        		className: "text-right"
+	        	},
+	        	{ 
+	        		data: "maximum_item_price",
+	        		render: function ( data, type, row ) {
+	        			if(data) {
+	        				return data;
+	        			}
+	                    return "";
+	                },
+	                className: "text-right"
+	        	},
+	    	]
+		});
+	}else{
+		itemModelAddItem_table_instance.ajax.reload();
+		console.log(itemModelAddItem_table_instance)
+	}
+	
+});
+itemModalAddItem_btn.click(function() {
+	var iter = itemModelAddItem_form.serializeArray();
+	var selected_items = [];
+ 
+	$.each($("input[name='table_records']:checked").closest("tr"), function() {
+
+		var each = []; 
+		$(this).find("input").each(function() {
+			each[$(this).attr("name")] = $(this).val();
+		});
+		
+		selected_items.push(each);
+	});
+	
+	if(selected_items.length <= 0) {
+		$("#itemSelectedStatus").html("<span style='color:red'>Select atleast 1 Item</span>");
+	} else {
+		itemModalSimple_callback(selected_items);
+		itemModalSimple_modal.modal("hide");
+		/* itemModelAddItem_table_instance.destroy(); */
+	}
+	
+});
+
+</script>
+
 
 <script>
 	var itemModal_isLoadedModelItems = false;
@@ -108,7 +242,7 @@
 	var itemModal_type;
 	var itemModal_url = "/api/items"; 
 	
-	function addItem(parameters, callback) {
+/* 	function addItem(parameters, callback) {
 		var label = parameters.label;
 		itemModal_type = parameters.type;
 		itemModal_callback = callback;
@@ -124,7 +258,7 @@
 		addItemBtn.text("Add Item");
 		itemModal_modal.modal('show');
 		
-	}
+	} */
 	
 	function updateItem(parameters, callback) {
 		var label = parameters.label;

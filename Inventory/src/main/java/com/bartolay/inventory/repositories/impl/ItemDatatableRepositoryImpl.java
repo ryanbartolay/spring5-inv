@@ -40,6 +40,9 @@ public class ItemDatatableRepositoryImpl extends RepositoryComponent implements 
 
 	@Override
 	public JSONArray findAllData(DatatableParameter datatableParameter) {
+		
+		System.err.println(datatableParameter.getForm());
+		
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
 			String SQL = "SELECT t1.*, b.name as brand_name, t4.name as default_unit_name, " + 

@@ -171,7 +171,7 @@ var form_items = [];
   });
   
   $("#btnAddItem").on("click", function() {
-  	addItem({type: "stock_opening", label:"Add Stock Opening Item"}, function(data) {
+  	addItem({type: "stock_transfer", label:"Add Stock Transfer Item"}, function(data) {
   		
   		for(var i = 0; i < data.length; i++) {
   			form_items.push(data[i]);

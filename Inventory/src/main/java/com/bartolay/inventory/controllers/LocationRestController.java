@@ -1,6 +1,7 @@
 package com.bartolay.inventory.controllers;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -40,6 +41,11 @@ public class LocationRestController {
 	@RequestMapping(value="/api/datatable/locations", method=RequestMethod.GET, produces="application/json")
 	public String datatableBrand(@RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {
 		return locationService.retrieveDatatableList(requestMap).toString();
+	}
+	
+	@RequestMapping(value="/api/locations/all", method=RequestMethod.GET, produces="application/json")
+	public List<Location> datatableBrand() throws JsonProcessingException, UnsupportedEncodingException {
+		return locationService.findAll();
 	}
 
 	@RequestMapping(value="/api/locations/{id}", method=RequestMethod.GET)
