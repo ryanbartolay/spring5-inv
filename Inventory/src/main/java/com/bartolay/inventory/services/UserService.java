@@ -17,6 +17,6 @@ public interface UserService<E> {
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
 	public E delete(Integer id);
 	
-	List<User> findAllSales();
+	List<User> findAllSales(AccountType accountType);
 	List<User> retrieveUserByTypeDatatableList(AccountType accountType, Map<String, String> requestMap);
 }

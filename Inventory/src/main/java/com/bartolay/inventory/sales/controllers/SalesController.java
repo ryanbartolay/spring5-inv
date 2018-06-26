@@ -46,7 +46,7 @@ public class SalesController {
 		model.addObject("page", "Invoice");
 		model.addObject("salesInvoiceForm", new SalesInvoiceForm());
 		model.addObject("locations", locationService.findAll());
-		model.addObject("sales", userService.findAllSales());
+		model.addObject("sales", userService.findAllSales(AccountType.SALES));
 		model.addObject("html", "invoice/list");
 		return model;
 	}
@@ -74,7 +74,7 @@ public class SalesController {
 		mav.addObject("html", "invoice/edit");
 		mav.addObject("method", "POST");
 		
-		mav.addObject("users", userService.retrieve());
+		mav.addObject("users", userService.findAllSales(AccountType.SALES));
 		mav.addObject("salesInvoiceForm", new SalesInvoiceForm());
 		mav.addObject("locations", locationRepository.findAll());
 		mav.addObject("customers", clientRepository.findAll());

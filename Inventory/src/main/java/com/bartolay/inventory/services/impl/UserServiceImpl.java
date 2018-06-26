@@ -97,8 +97,8 @@ public class UserServiceImpl implements UserService<User> {
 	}
 
 	@Override
-	public List<User> findAllSales() {
-		return userRepository.findAllByAccountType(AccountType.USER);
+	public List<User> findAllSales(AccountType accountType) {
+		return userRepository.findAllByAccountType(accountType);
 	}
 
 	@Override
