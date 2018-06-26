@@ -70,12 +70,12 @@
 									<th>SN</th>
 									<th>Code</th>
 									<th class="col-md-3">Description</th>
-									<th>Brand</th>
+									<th style="display: ;">Brand</th>
 									<th>Unit</th>
+									<th style="display: none;">Quantity</th>
+									<th style="display: none;">Unit Cost</th>
+									<th style="display: none;" class="col-md-2 text-right">Subtotal</th>
 									<th>Quantity</th>
-									<th>Unit Cost</th>
-									<th class="col-md-2 text-right">Subtotal</th>
-									<th></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -83,7 +83,7 @@
 							</tbody>
 							<tfoot>
 								<tr>
-									<th colspan="6"></th>
+									<th colspan="4"></th>
 									<th><h3>Total</h3></th>
 									<th><h3 class="text-right" id="grandTotal"></h3></th>
 									<th></th>
@@ -185,7 +185,7 @@ var form_items = [];
   			// default values
   			var unit = (item.unit ? item.unit : "0");
   			var quantity = (item.quantity ? item.quantity : "0");
-  			var unitCost = (item.unitCost ? item.unitCost : "0.00");
+  			var unitCost = (item.unitCost ? item.unitCost : "1.00");
   			var subtotal = (item.subtotal ? item.subtotal : "0.00");
   			
   			var units = JSON.parse(form_items[i].units);
@@ -209,9 +209,9 @@ var form_items = [];
 				
 			html +=	`
 				<td id="lblItemName"><input type="number" name="stockTransferItems[`+i+`].quantity" id="quantity" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ quantity +`" /></td>
-				<td id="lblItemName"><input type="number" name="stockTransferItems[`+i+`].unitCost" id="unitCost" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ unitCost +`" /></td>
-				<td id="lblItemName" class="text-right"><input type="hidden" name="subtotal[`+i+`]" id="subtotal" value="`+subtotal+`" /><span id="html_subtotal">`+subtotal+`</span></td>
-				<td id="lblItemName"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>
+				<td id="lblItemName" style="display: none;" ><input type="number" name="stockTransferItems[`+i+`].unitCost" id="unitCost" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ unitCost +`" /></td>
+				<td id="lblItemName" style="display: none;" class="text-right"><input type="hidden" name="subtotal[`+i+`]" id="subtotal" value="`+subtotal+`" /><span id="html_subtotal">`+subtotal+`</span></td>
+				<td id="lblItemName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>
 			</tr>`;
   		}
   	
