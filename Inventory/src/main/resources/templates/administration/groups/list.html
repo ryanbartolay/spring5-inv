@@ -72,7 +72,14 @@
         	},
         	{ data: "description" },
         	{ data: "created_date" , orderable:false, render : function(data, type, row){
-        		var accounts = row.account.length >= 2 ? row.account.substring(1, row.account.length-1).split(",") : [];
+        		console.log(row.account);
+        		var accounts = [];
+        		
+        		if(row.account) {
+        			accounts = row.account.length >= 2 ? row.account.substring(1, row.account.length-1).split(",") : [];
+        		}
+        		
+        		console.log(accounts);
         		var html = "";
         		for (var i = 0; i < accounts.length; i++) {
         			var account = accounts[i].split("||");

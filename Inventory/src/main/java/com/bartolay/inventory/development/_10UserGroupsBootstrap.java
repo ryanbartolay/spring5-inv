@@ -30,57 +30,86 @@ public class _10UserGroupsBootstrap implements ApplicationListener<ContextRefres
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
-		User admin = userRepository.findByUsername("admin");
-		List<User> users = new ArrayList<>();
-		
-		UserGroup userGroup = new UserGroup();
-		userGroup.setName("Root Users");
-		userGroup.setCreatedBy(admin);
-		userGroup.setUsers(users);
-		
-		User root = userRepository.findByUsername("root");
-		root.setUserGroup(userGroup);
-		
-		users.add(root);
-		
-		
-		userGroupRepository.save(userGroup);
-		userRepository.save(root);
-		
-		users.clear();
-		
-		
-		userGroup = new UserGroup();
-		userGroup.setName("Administrators");
-		userGroup.setCreatedBy(admin);
-		userGroup.setUsers(users);
-		
-		admin.setUserGroup(userGroup);
-		users.add(admin);
-		
-		
-		userGroupRepository.save(userGroup);
-		userRepository.save(admin);
-		
-		users.clear();
-		
-		userGroup = new UserGroup();
-		userGroup.setName("Sales");
-		userGroup.setCreatedBy(admin);
-		userGroup.setUsers(users);
-		
-		User sales1 = userRepository.findByUsername("sales1"); 
-		User sales2 = userRepository.findByUsername("sales2");
-		
-		sales1.setUserGroup(userGroup);
-		sales2.setUserGroup(userGroup);
-		
-		users.add(sales1);
-		users.add(sales2);
-		
-		
-		userGroupRepository.save(userGroup);
-		userRepository.saveAll(users);
+//		User admin = userRepository.findByUsername("admin");
+//		List<User> users = new ArrayList<>();
+//		User root = userRepository.findByUsername("root");
+//		
+//		UserGroup userGroup = new UserGroup();
+//		userGroup.setName("Root Users");
+//		userGroup.setCreatedBy(root);
+//		userGroup.setUsers(users);
+//		
+//		
+//		root.setUserGroup(userGroup);
+//		
+//		users.add(root);
+//		
+//		
+//		userGroupRepository.save(userGroup);
+//		userRepository.save(root);
+//		
+//		users.clear();
+//		
+//		
+//		userGroup = new UserGroup();
+//		userGroup.setName("Administrators");
+//		userGroup.setCreatedBy(root);
+//		userGroup.setUsers(users);
+//		
+//		admin.setUserGroup(userGroup);
+//		users.add(admin);
+//		
+//		
+//		userGroupRepository.save(userGroup);
+//		userRepository.save(admin);
+//		
+//		users.clear();
+//		
+//		userGroup = new UserGroup();
+//		userGroup.setName("Sales");
+//		userGroup.setCreatedBy(root);
+//		userGroup.setUsers(users);
+//		
+//		User sales1 = userRepository.findByUsername("sales1"); 
+//		User sales2 = userRepository.findByUsername("sales2");
+//		
+//		sales1.setUserGroup(userGroup);
+//		sales2.setUserGroup(userGroup);
+//		
+//		users.add(sales1);
+//		users.add(sales2);
+//		
+//		
+//		userGroupRepository.save(userGroup);
+//		userRepository.saveAll(users);
+//		
+//		users.clear();
+//		
+//		userGroup = new UserGroup();
+//		userGroup.setName("Customers");
+//		userGroup.setCreatedBy(root);
+////		userGroup.setUsers(users);
+////		
+////		User customer = userRepository.findByUsername("customer"); 
+////		
+////		customer.setUserGroup(userGroup);
+////		customer.setUserGroup(userGroup);
+////		
+////		users.add(sales1);
+////		users.add(sales2);
+////		
+////		
+//		userGroupRepository.save(userGroup);
+////		userRepository.saveAll(users);
+//		
+//		users.clear();
+//		
+//		userGroup = new UserGroup();
+//		userGroup.setName("Suppliers");
+//		userGroup.setCreatedBy(root);
+////		userGroup.setUsers(users);
+//		
+//		userGroupRepository.save(userGroup);
 	}
 
 }

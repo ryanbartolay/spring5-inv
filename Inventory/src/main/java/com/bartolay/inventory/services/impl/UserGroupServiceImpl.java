@@ -23,11 +23,11 @@ public class UserGroupServiceImpl implements UserGroupService{
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
 		DatatableParameter parameter = new DatatableParameter(requestMap);
-		JSONArray array = userGroupDatatableRepository.findAllData(parameter);
+		JSONArray data = userGroupDatatableRepository.findAllData(parameter);
 		long recordsTotal = userGroupDatatableRepository.findAllCount(parameter);
 		
 		JSONObject object = new JSONObject();
-		object.put("data", array);
+		object.put("data", data);
 		object.put("recordsTotal", recordsTotal);
 		object.put("recordsFiltered", recordsTotal);
 		object.put("draw", parameter.getDraw());

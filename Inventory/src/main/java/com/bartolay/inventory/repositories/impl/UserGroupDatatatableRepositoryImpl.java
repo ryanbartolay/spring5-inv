@@ -44,7 +44,7 @@ public class UserGroupDatatatableRepositoryImpl extends RepositoryComponent impl
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
 //			String SQL = "SELECT UG.*, U.firstname, U.lastname FROM user_group as UG INNER JOIN users U ON UG.created_by = U.ID";
 			String SQL = "SELECT UG.*, U.firstname, U.lastname, (SELECT array_agg(CONCAT(U.id, '||',U.lastname, '||',U.firstname)) "
-					+ "FROM users u where u.user_group_id=UG.id)AS account FROM user_group UG INNER JOIN users U ON UG.created_by = U.ID ";
+					+ "FROM users u where u.user_group_id=UG.id) AS account FROM user_group UG INNER JOIN users U ON UG.created_by = U.ID ";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			

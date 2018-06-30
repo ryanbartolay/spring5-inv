@@ -20,7 +20,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.bartolay.inventory.entity.Client;
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
@@ -66,7 +65,7 @@ public class SalesInvoice implements GeneratedSystemNumber {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_id", nullable=false, updatable=true)
-	private Client customer;
+	private User customer;
 
 	@Column(name="discount_percentage", nullable=false, precision=3, scale=2)
 	private BigDecimal discountPercentage;
@@ -150,10 +149,10 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	public void setSalesPerson(User salesPerson) {
 		this.salesPerson = salesPerson;
 	}
-	public Client getCustomer() {
+	public User getCustomer() {
 		return customer;
 	}
-	public void setCustomer(Client customer) {
+	public void setCustomer(User customer) {
 		this.customer = customer;
 	}
 	public BigDecimal getSubtotal() {

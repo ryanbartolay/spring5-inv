@@ -2,7 +2,6 @@ package com.bartolay.inventory.development;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -14,8 +13,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.PriorityOrdered;
 import org.springframework.stereotype.Component;
 
-import com.bartolay.inventory.entity.Item;
-import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.exceptions.SalesInvoiceException;
 import com.bartolay.inventory.form.SalesInvoiceForm;
@@ -23,8 +20,6 @@ import com.bartolay.inventory.repositories.ClientRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.UserRepository;
-import com.bartolay.inventory.sales.entity.CreditCardDetails;
-import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
 import com.bartolay.inventory.sales.repositories.CreditCardDetailsRepository;
 import com.bartolay.inventory.sales.services.SalesInvoiceService;
@@ -72,7 +67,7 @@ public class _6SalesInvoiceBootstrap implements ApplicationListener<ContextRefre
 		salesInvoiceForm.setDiscountPercentage(new BigDecimal("3.5"));
 		salesInvoiceForm.setTransactionDate(new Date());
 		salesInvoiceForm.setYear("2018");
-		salesInvoiceForm.setCustomer(clientRepository.findById(1).get());
+		salesInvoiceForm.setCustomer(userRepository.findById(1).get());
 		
 		try {
 			salesInvoiceService.create(salesInvoiceForm);
@@ -80,7 +75,7 @@ public class _6SalesInvoiceBootstrap implements ApplicationListener<ContextRefre
 			e.printStackTrace();
 		}
 	}
-
+ 
 	private List<SalesInvoiceItem> getSalesInvoiceItems() {
 		List<SalesInvoiceItem> salesInvoiceItems = new ArrayList<>();
 		
