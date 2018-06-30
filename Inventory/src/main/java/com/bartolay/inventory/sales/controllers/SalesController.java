@@ -1,5 +1,7 @@
 package com.bartolay.inventory.sales.controllers;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -104,13 +106,20 @@ public class SalesController {
 	}
 	
 	@RequestMapping(value="/return/create")
-	public ModelAndView salesReturnCreate(ModelAndView model) {
-		model.setViewName("sales/index");
-		model.addObject("salesReturnForm", new SalesReturnForm());
-		model.addObject("page", "New Sales Invoice");
-		model.addObject("html", "return/edit");
-		model.addObject("method", "POST");
-		return model;
+	public ModelAndView salesReturnCreate(ModelAndView mav) {
+		
+		SalesInvoice salesInvoice = salesInvoiceRepository.findOneLimit1();
+		
+		mav.setViewName("sales/index");
+		mav.addObject("html", "return/view");
+		mav.addObject("method", "POST");
+		
+		mav.addObject("salesInvoiceForm", new SalesInvoiceForm());
+		mav.addObject("salesInvoiceItems", salesInvoice.getSalesInvoiceItems());
+		
+		mav.addObject("salesInvoice", salesInvoice);
+		
+		return mav;
 	}
 
 	
@@ -122,10 +131,7 @@ public class SalesController {
 		mav.addObject("html", "return/view");
 		mav.addObject("method", "POST");
 		
-//		mav.addObject("users", userService.retrieve());
 		mav.addObject("salesInvoiceForm", new SalesInvoiceForm());
-//		mav.addObject("locations", locationRepository.findAll());
-//		mav.addObject("customers", clientRepository.findAll());
 		mav.addObject("salesInvoiceItems", salesInvoice.getSalesInvoiceItems());
 		
 		

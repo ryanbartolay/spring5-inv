@@ -40,4 +40,12 @@ public class SalesReturnForm {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
+
+	@Override
+	public String toString() {
+		return "SalesReturnForm [salesInvoice=" + salesInvoice + ", salesReturnItems=" + salesReturnItems + ", remarks="
+				+ remarks + "]";
+	}
+
+	
 }

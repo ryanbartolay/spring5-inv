@@ -45,7 +45,7 @@ import com.bartolay.inventory.utils.UserCredentials;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-
+@Transactional
 public class InventoryCoreService {
 
 	@Autowired

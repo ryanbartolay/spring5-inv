@@ -120,5 +120,12 @@ public class SalesReturnItem {
 	public void setUpdatedBy(User updatedBy) {
 		this.updatedBy = updatedBy;
 	}
+
+	@Override
+	public String toString() {
+		return "SalesReturnItem [id=" + id + ", salesReturn=" + salesReturn + ", salesInvoiceItem=" + salesInvoiceItem
+				+ ", quantity=" + quantity + ", createdDate=" + createdDate + ", createdBy=" + createdBy
+				+ ", updatedDated=" + updatedDated + ", updatedBy=" + updatedBy + "]";
+	}
 	
 }

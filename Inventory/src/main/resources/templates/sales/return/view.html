@@ -1,7 +1,7 @@
 <div class="row">
 
 	<div class="col-lg-12">
-		<form th:object="${salesInvoiceForm}" id="salesInvoiceForm"
+		<form th:object="${salesInvoiceForm}" id="salesReturnForm"
 			th:action="@{/api/sales/invoice}" method="POST">
 
 			<div class="panel panel-default">
@@ -31,7 +31,7 @@
 					<div class="col-md-3">
 
 						<label><span class="text-danger">Sales Invoice</span> System Number</label> 
-						<select type="text" class="form-control" th:field="${salesInvoice.systemNumber}"> 
+						<select class="form-control" name="salesInvoice.systemNumber" id="salesInvoice.systemNumber"> 
 							
 						</select>
 							<label>Document
@@ -83,12 +83,22 @@
 									<th>U.Desc</th>
 									<th class="text-right">Unit Price</th>
 									<th class="text-right">Sales Price</th>
-									<th class="text-right">Return Quantity</th>
+									<th class="text-right" width="150px">Return Quantity</th>
 									<th class="text-right">Sales Return</th>
 								</tr>
 							</thead>
-							 <tbody th:each="salesInvoiceItem : ${salesInvoiceItems}">
-							   		
+							 <tbody th:each="salesInvoiceItem : ${salesInvoiceItems}" th:remove="tag">
+							   		<tr>
+							   			<td th:text="${salesInvoiceItem.id}">
+							   			<td th:text="${salesInvoiceItem.salesInvoice.systemNumber}">
+							   			<td th:text="${salesInvoiceItem.salesInvoice.systemNumber}">
+							   			<td th:text="${salesInvoiceItem.quantity}">
+							   			<td th:text="${salesInvoiceItem.unit.name}">
+							   			<td th:text="${salesInvoiceItem.unitCost}">
+							   			<td th:text="${salesInvoiceItem.unitCostTotal}">
+							   			<td ><input class="form-control" text="" th:value="${salesInvoiceItem.quantity}"></td>
+							   			<td th:text="${salesInvoiceItem.unitCostTotal}">
+							   		</tr>
 							</tbody>
 							<tfoot>
 								<tr>
@@ -130,13 +140,14 @@ $( function() {
     
     $('[name=year]').val( current_year );
     
-    var systemNumberHtml = $("#systemNumber");
+    var systemNumberHtml = $("select[name='salesInvoice.systemNumber']");
     var html = "";
     GET('/api/sales/invoices/all', function(data){
     	if(data != null){
     		for (var i = 0; i < data.length; i++) {
     			html += '<option value="'+data[i].systemNumber+'">'+data[i].systemNumber+'</option>'
 			}
+    		console.log(systemNumberHtml)
     		systemNumberHtml.html(html);
     		systemNumberHtml.val(systemNumber);
     	}
@@ -145,6 +156,8 @@ $( function() {
     systemNumberHtml.change(function(){
     	location.href='/sales/return/'+$(this).val();
     })
+    
+    systemNumberHtml.select2()
     
 });
 
@@ -164,10 +177,10 @@ $("#btnAddItem").on("click", function() {
   			
   			html += `<tr>
 				<th id="lblItemId">`+ item.id +`
-					<input type="hidden" name="salesReturn[`+i+`].item" value="`+item["id"]+`" />
-					<input type="hidden" name="salesReturn[`+i+`].subtotal" id="subtotal" value="`+subtotal+`" />
-					<input type="hidden" name="salesReturn[`+i+`].unitPrice" id="unitPrice" value="`+item["unitPrice"]+`" />
-					<input type="hidden" name="salesReturn[`+i+`].salesQuantity" id="salesQuantity" value="`+item["quantity"]+`" />
+					<input type="hidden" name="salesReturnItems[`+i+`].salesInvoiceItem" value="`+item["id"]+`" />
+					<input type="hidden" name="salesReturnItems[`+i+`].subtotal" id="subtotal" value="`+subtotal+`" />
+					<input type="hidden" name="salesReturnItems[`+i+`].unitPrice" id="unitPrice" value="`+item["unitPrice"]+`" />
+					<input type="hidden" name="salesReturnItems[`+i+`].salesQuantity" id="salesQuantity" value="`+item["quantity"]+`" />
 				</th>
 				<td id="lblItemName">`+ item["itemCode"] +`</td>
 				<td id="lblItemName">`+ item["itemName"] +`</td>
@@ -176,7 +189,7 @@ $("#btnAddItem").on("click", function() {
 				<td id="lblItemName" class="text-right">`+ item["unitPrice"] +`</td>
 				<td id="lblItemName" class="text-right">`+ item["unitPriceTotal"] +`</td>
 				<td id="lblItemName">
-					<input type="number" data-toggle="tooltip" data-trigger="manual" title="This is my tooltip" name="salesReturn[`+i+`].quantity" id="quantity" class="form-control" value="0" max="`+item["quantity"]+`"
+					<input type="number" data-toggle="tooltip" data-trigger="manual" title="This is my tooltip" name="salesReturnItems[`+i+`].quantity" id="quantity" class="form-control" value="0" max="`+item["quantity"]+`"
 					onKeyup="computeValues(this,`+i+`)"
 					onKeydown="computeValues(this,`+i+`)"
 					onBlur="computeValues(this,`+i+`)"
@@ -254,5 +267,30 @@ function computeGrandTotal() {
 	
 	$("#grandTotal").html(grand_total);
 }
+
+
+var submitSalesReturnBtn = $("#submitSalesReturnBtn");
+var salesReturnForm = $("#salesReturnForm");
+submitSalesReturnBtn.click(function() {
+	  
+ 	var original_text = submitSalesReturnBtn.text();
+ 	submitSalesReturnBtn.attr("disabled", "disabled");
+ 	submitSalesReturnBtn.text("Processing....");
+ 	
+ 	console.log(salesReturnForm.serialize())
+ 	
+ 	POST("/api/sales/return", salesReturnForm.serialize(), function(data) {
+ 		
+ 		console.log('data : ',data)
+ 		if(data.status != "OK") {
+ 			displayErrors(data, $("#errors"));
+ 			submitSalesReturnBtn.removeAttr("disabled");
+ 			submitSalesReturnBtn.text(original_text);
+ 		} else {
+ 			window.location.replace('/sales/return')
+ 		}
+ 	});
+});
+
 /*]]>*/
 </script>
