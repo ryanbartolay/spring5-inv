@@ -82,11 +82,9 @@
 	
 	function retrieveAccount(){
 		GET('/api/users/sales/[[${type}]]?filter='+$("#accountFilter").val(), function(data){
-			console.log(data)
 			var html = "";
 			for (var i = 0; i < data.length; i++) {
 				var user = data[i];
-				console.log(user)
 				html += generateUsers(user)
 			}
 			$("#profile_details_list").html(html);
@@ -101,10 +99,10 @@
 							<h2>`+user.lastName+`, `+user.firstName+`</h2>
 							
 							<ul class="list-unstyled">
-								<li><i class="fa fa-building"></i> Email: `+((user.email != undefined) ? user.email : '')+`</li>
-								<li><i class="fa fa-building"></i> Address: `+((user.addressCity != undefined) ? user.addressCity : '')+`</li>
-								<li><i class="fa fa-phone"></i> Phone #: `+((user.phone != undefined) ? user.phone : '')+`</li>
-								<li><i class="fa fa-phone"></i> Mobile #: `+((user.mobile != undefined) ? user.mobile : '')+`</li>
+								<li><i class="fa fa-envelope"></i> `+((user.email != undefined) ? user.email : '')+`</li>
+								<li><i class="fa fa-building"></i> `+((user.addressCity != undefined) ? user.addressCity : '')+`</li>
+								<li><i class="fa fa-phone"></i> `+((user.phone != undefined) ? user.phone : '')+`</li>
+								<li><i class="fa fa-mobile"></i> `+((user.mobile != undefined) ? user.mobile : '')+`</li>
 							</ul>
 						</div>
 						<div class="right col-xs-5 text-center">
@@ -112,11 +110,11 @@
 								class="img-circle img-responsive">
 						</div>
 					</div>
-					<div class="col-xs-12 bottom text-center">
-						<div class="col-xs-12 col-sm-6 emphasis">
+					<div class="col-md-12 bottom text-center">
+						<div class="col-md-4 emphasis">
 							<label class="pull-left">`+user.username+`</label>
 						</div>
-						<div class="col-xs-12 col-sm-6 emphasis">
+						<div class="col-md-8 emphasis">
 							<button type="button" class="btn btn-success btn-xs">
 								<i class="fa fa-user"> </i> <i class="fa fa-comments-o"></i>
 							</button>

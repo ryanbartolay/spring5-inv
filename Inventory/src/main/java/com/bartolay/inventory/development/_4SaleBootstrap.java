@@ -84,7 +84,6 @@ public class _4SaleBootstrap implements ApplicationListener<ContextRefreshedEven
 		creditCardDetailsRepository.save(ccDetails2);
 		
 		
-		createSalesPerson();
 //		createSalesInvoices();
 		try {
 			createInventories();
@@ -92,30 +91,6 @@ public class _4SaleBootstrap implements ApplicationListener<ContextRefreshedEven
 		}
 	}
 
-	private void createSalesPerson() {
-		Country country = countryRepository.findById(3).get();
-		sales1 = new User();
-		sales1.setUsername("sales1");
-		sales1.setPassword(passwordEncoder.encode(_1DevBootstrap.PASSWORD));
-		sales1.setFirstName("Sales");
-		sales1.setLastName("Sales");
-		sales1.setAccountType(AccountType.SALES);
-		sales1.setEmail("sales@gmail.com");
-		sales1.setAuthority("");
-		sales1.setAddressCountry(country);
-		userRepository.save(sales1);
-		
-		sales2 = new User();
-		sales2.setUsername("sales2");
-		sales2.setPassword(passwordEncoder.encode(_1DevBootstrap.PASSWORD));
-		sales2.setFirstName("Sales2");
-		sales2.setLastName("Sales2");
-		sales2.setAccountType(AccountType.SALES);
-		sales2.setEmail("sales2@gmail.com");
-		sales2.setAuthority("");
-		sales2.setAddressCountry(country);
-		userRepository.save(sales2);
-	}
 
 	private void createSalesInvoices() {
 		

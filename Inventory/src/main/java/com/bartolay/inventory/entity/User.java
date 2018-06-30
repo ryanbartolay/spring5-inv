@@ -42,7 +42,7 @@ public class User implements Serializable, Principal {
     @JsonIgnore
     @Column(name = "password", nullable=false)
     private String password;
-    @Column(name = "email")
+    @Column(name = "email", nullable=false, unique=true)
     private String email;
     @Column(name = "phone")
     private String phone;
@@ -58,7 +58,7 @@ public class User implements Serializable, Principal {
     private Country addressCountry;
 	
 	@Deprecated
-    @Column(name = "account_type", nullable=false, insertable = true)
+    @Column(name = "account_type", nullable=true, insertable = true)
     private AccountType accountType;  
     
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -83,6 +83,9 @@ public class User implements Serializable, Principal {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "updated_by", nullable=true, updatable=true)
 	private User updatedBy;
+	
+	@Column(name="deleteable", nullable=false)
+	private boolean deletable;
 	
     @Transient
     private List<Authority> authorities;
@@ -254,6 +257,26 @@ public class User implements Serializable, Principal {
 		this.addressCountry = addressCountry;
 	}
 
+	public User getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public User getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(User updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public UserGroup getUserGroup() {
+		return userGroup;
+	}
+
 	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + username
@@ -261,6 +284,14 @@ public class User implements Serializable, Principal {
 				+ ", enabled=" + enabled + ", authority=" + authority + "]";
 	}
 	
+	public boolean isDeletable() {
+		return deletable;
+	}
+
+	public void setDeletable(boolean deletable) {
+		this.deletable = deletable;
+	}
+
 	public String getAuthority() {
 		return authority;
 	}

@@ -21,10 +21,10 @@ import com.bartolay.inventory.entity.Client;
 import com.bartolay.inventory.entity.Color;
 import com.bartolay.inventory.entity.Company;
 import com.bartolay.inventory.entity.Country;
-import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.entity.Unit;
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.entity.UserGroup;
 import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.enums.ClientType;
 import com.bartolay.inventory.form.LocationForm;
@@ -34,9 +34,9 @@ import com.bartolay.inventory.repositories.ClientRepository;
 import com.bartolay.inventory.repositories.ColorRepository;
 import com.bartolay.inventory.repositories.CompanyRepository;
 import com.bartolay.inventory.repositories.CountryRepository;
-import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.SupplierRepository;
 import com.bartolay.inventory.repositories.UnitRepository;
+import com.bartolay.inventory.repositories.UserGroupRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 import com.bartolay.inventory.services.LocationService;
 
@@ -44,7 +44,10 @@ import com.bartolay.inventory.services.LocationService;
 public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
 
 	public static final String PASSWORD = "123456a";
-	
+
+	@Autowired
+	private UserGroupRepository userGroupRepository;
+
 	@Autowired
 	private AuthenticationManager authManager;
 
@@ -59,34 +62,32 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 
 	@Autowired
 	private CategoryRepository categoryRepository;
-	
+
 	@Autowired
 	private ClientRepository clientRepository;
-	
+
 	@Autowired
 	private ColorRepository colorRepository;
-	
+
 	@Autowired
 	private CompanyRepository companyRepository;
 
-	
-	@Autowired
-	private LocationRepository locationRepository;
-	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private SupplierRepository supplierRepository;
-	
+
 	@Autowired
 	private UnitRepository unitRepository;
-	
+
 	@Autowired
 	private CountryRepository countryRepository;
-	
+
 	private User user;
 	
+	private Country country;
+
 	@Autowired
 	private LocationService locationService;
 
@@ -94,31 +95,176 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 	public int getOrder() {
 		return 1;
 	}
-	
+
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
-		
+
 		createCountries();
+		country = countryRepository.findById(3).get();
 		
-		createEmployees();
-		createCustomers();
+		createUserRoot();
+		createUserAdministrators();
+		createUserSales();
+		createUserCustomers();
+		createUserSuppliers();
 		
+		createUserGroups();		
+		
+		updateUsers();
+
 		user = userRepository.findByUsername("admin");		
-		
+
 		setAuthentication();
 		createLocations();
 		createCategories();
 		createCompaniesAndBrand();
 		createSuppliers();
 		createColors();
-		
+
 		System.err.println("------------------------------------------");
 		System.err.println(categoryRepository.findById(1).get());
 
-		
 		createUnits();	
 	}
+	
+	private User root;
+	private User admin;
+	
+	private User sales1, sales2;
+	private User customer1;
 
+	private void createUserRoot() {
+		
+		root = new User();
+		root.setUsername("root");
+		root.setPassword(passwordEncoder.encode(PASSWORD));
+		root.setFirstName("Root");
+		root.setLastName("Root");
+		root.setUserGroup(rootUserGroup);
+		root.setEmail("root@gmail.com");
+		root.setAddress("Manila");
+		root.setPhone("09178049704");
+		root.setAddressCountry(country);
+		root.setDeletable(false);
+		userRepository.save(root);
+	}
+	
+	private void createUserAdministrators() {
+		admin = new User();
+		admin.setUsername("admin");
+		admin.setPassword(passwordEncoder.encode(PASSWORD));
+		admin.setFirstName("Admin");
+		admin.setLastName("Admin");
+		admin.setUserGroup(adminUserGroup);
+		admin.setEmail("admin@gmail.com");
+		admin.setAddressCountry(country);
+		admin.setCreatedBy(root);
+		admin.setDeletable(false);
+		userRepository.save(admin);
+	}
+	
+	private void createUserSales() {
+		
+		sales1 = new User();
+		sales1.setUsername("sales1");
+		sales1.setPassword(passwordEncoder.encode(_1DevBootstrap.PASSWORD));
+		sales1.setFirstName("Sales");
+		sales1.setLastName("Sales");
+		sales1.setEmail("sales@gmail.com");
+		sales1.setAuthority("");
+		sales1.setAddressCountry(country);
+		sales1.setCreatedBy(admin);
+		userRepository.save(sales1);
+		
+		sales2 = new User();
+		sales2.setUsername("sales2");
+		sales2.setPassword(passwordEncoder.encode(_1DevBootstrap.PASSWORD));
+		sales2.setFirstName("Sales2");
+		sales2.setLastName("Sales2");
+		sales2.setEmail("sales2@gmail.com");
+		sales2.setAuthority("");
+		sales2.setAddressCountry(country);
+		sales2.setCreatedBy(admin);
+		userRepository.save(sales2);
+		
+	}
+
+	private void createUserCustomers() {
+		
+		customer1 = new User();
+		customer1.setUsername("customer");
+		customer1.setPassword(passwordEncoder.encode(PASSWORD));
+		customer1.setFirstName("Customer1");
+		customer1.setLastName("Customer1");
+		customer1.setEmail("customer1@gmail.com");
+		customer1.setUserGroup(customerUserGroup);
+		customer1.setAddressCountry(country);
+		customer1.setCreatedBy(admin);
+		userRepository.save(customer1);
+
+	}
+	
+	private void createUserSuppliers() {
+		
+	}
+
+	private UserGroup rootUserGroup;
+	private UserGroup adminUserGroup;
+	private UserGroup salesUserGroup;
+	private UserGroup customerUserGroup;
+	private UserGroup supplierUserGroup;
+
+	private void createUserGroups() {
+
+		User root = userRepository.findByUsername("root");
+
+		rootUserGroup = new UserGroup();
+		rootUserGroup.setName("Root Users");
+		rootUserGroup.setCreatedBy(root);
+
+		userGroupRepository.save(rootUserGroup);
+
+		adminUserGroup = new UserGroup();
+		adminUserGroup.setName("Administrators");
+		adminUserGroup.setCreatedBy(root);
+
+		userGroupRepository.save(adminUserGroup);
+
+		salesUserGroup = new UserGroup();
+		salesUserGroup.setName("Sales");
+		salesUserGroup.setCreatedBy(root);
+
+		userGroupRepository.save(salesUserGroup);
+
+		customerUserGroup = new UserGroup();
+		customerUserGroup.setName("Customers");
+		customerUserGroup.setCreatedBy(root);
+
+		userGroupRepository.save(customerUserGroup);
+
+		supplierUserGroup = new UserGroup();
+		supplierUserGroup.setName("Suppliers");
+		supplierUserGroup.setCreatedBy(root);
+
+		userGroupRepository.save(supplierUserGroup);
+	}
+	
+	private void updateUsers() {
+		root.setUserGroup(rootUserGroup);
+		userRepository.save(root);
+		
+		admin.setUserGroup(adminUserGroup);
+		userRepository.save(admin);
+		
+		sales1.setUserGroup(salesUserGroup);
+		userRepository.save(sales1);
+		
+		sales2.setUserGroup(salesUserGroup);
+		userRepository.save(sales2);
+		
+		customer1.setUserGroup(customerUserGroup);
+		userRepository.save(customer1);
+	}
 
 	private void setAuthentication() {
 
@@ -126,11 +272,11 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		Authentication auth = authManager.authenticate(authReq);
 		SecurityContext sc = SecurityContextHolder.getContext();
 		sc.setAuthentication(auth);
-				
+
 	}
 
 	private void createLocations() {
-		
+
 		LocationForm locationForm = new LocationForm();
 		locationForm.setAbbreviation("LPB");
 		locationForm.setName("51.1 Tactical Showroom");
@@ -139,9 +285,9 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		locationForm.setTelephone("859-1222");
 		locationForm.setFax("123456789");
 		locationForm.setMobile("09178049704");
-		
+
 		locationService.create(locationForm );
-		
+
 		locationForm = new LocationForm();
 		locationForm.setAbbreviation("MST");
 		locationForm.setName("Main Store Tactical 1 Showroom");
@@ -149,10 +295,10 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		locationForm.setAddressCountry(countryRepository.findById(2).get());
 		locationForm.setTelephone("812322");
 		locationForm.setFax("123456789");
-		
+
 		locationService.create(locationForm );
-		
-		
+
+
 		locationForm = new LocationForm();
 		locationForm.setAbbreviation("CS1");
 		locationForm.setName("Colonel Shroom");
@@ -160,9 +306,9 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		locationForm.setAddressCountry(countryRepository.findById(2).get());
 		locationForm.setTelephone("812322");
 		locationForm.setFax("123456789");
-		
+
 		locationService.create(locationForm );
-		
+
 		locationForm = new LocationForm();
 		locationForm.setAbbreviation("BCT");
 		locationForm.setName("Big Colonel Tactical Show room");
@@ -173,9 +319,9 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		locationForm.setFax("123456789");
 		locationForm.setWebsite("http://www.imbue360.com");
 		locationForm.setMobile("09178049704");
-		
+
 		locationService.create(locationForm );
-		
+
 		locationForm = new LocationForm();
 		locationForm.setAbbreviation("CT22");
 		locationForm.setName("Colonel Trading");
@@ -183,76 +329,76 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		locationForm.setAddressCountry(countryRepository.findById(3).get());
 		locationForm.setTelephone("122244000");
 		locationForm.setFax("123456789");
-		
+
 		locationService.create(locationForm );
 	}
 
 
 	private void createUnits() {
-		
+
 		List<Unit> units = new ArrayList<>();
-		
+
 		Unit unit1 = new Unit();
 		unit1.setCreatedBy(user);
 		unit1.setAbbreviation("pcs");
 		unit1.setName("Pieces");
 		units.add(unit1);
-		
+
 		Unit unit2 = new Unit();
 		unit2.setAbbreviation("pair");
 		unit2.setName("Pair");
 		unit2.setCreatedBy(user);
 		units.add(unit2);
-		
+
 		Unit unit3 = new Unit();
 		unit3.setAbbreviation("cb");
 		unit3.setName("Cubic");
 		unit3.setCreatedBy(user);
 		units.add(unit3);
-		
+
 		Unit unit4 = new Unit();
 		unit4.setAbbreviation("meter");
 		unit4.setName("Meter");
 		unit4.setCreatedBy(user);
 		units.add(unit4);
-		
+
 		Unit unit5 = new Unit();
 		unit5.setAbbreviation("ea");
 		unit5.setName("Each");
 		unit5.setCreatedBy(user);
 		units.add(unit5);
-		
+
 		Unit unit6 = new Unit();
 		unit6.setAbbreviation("box");
 		unit6.setName("Box");
 		unit6.setCreatedBy(user);
 		units.add(unit6);
-		
+
 		unitRepository.saveAll(units);
 	}
-	
+
 	private void createColors() {
 		Color red = new Color();
 		red.setName("red");	
 		colorRepository.save(red);
-		
+
 		Color blue = new Color();
 		blue.setName("blue");
-		
+
 		colorRepository.save(blue);
-		
+
 		Color green = new Color();
 		green.setName("green");
-		
+
 		colorRepository.save(green);
-		
+
 		Color black = new Color();
 		black.setName("black");
-		
+
 		colorRepository.save(black);
 	}
 
-	
+
 
 	private void createCompaniesAndBrand() {
 		// creating companies
@@ -299,62 +445,7 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		brandRepository.save(brand3);
 	}
 
-	private void createEmployees() {
-		Country country = countryRepository.findById(3).get();
-		
-		User root = new User();
-		root.setUsername("root");
-		root.setPassword(passwordEncoder.encode(PASSWORD));
-		root.setFirstName("Root");
-		root.setLastName("Root");
-		root.setAccountType(AccountType.ROOT);
-		root.setEmail("bartolay.ryan@gmail.com");
-		root.setAuthority(AccountType.ROOT.toString());
-		root.setAddress("Manila");
-		root.setPhone("09178049704");
-		root.setAddressCountry(country);
-		userRepository.save(root);
-		
-		User user = new User();
-		user.setUsername("admin");
-		user.setPassword(passwordEncoder.encode(PASSWORD));
-		user.setFirstName("Miguel");
-		user.setLastName("Alejandro");
-		user.setAccountType(AccountType.ADMIN);
-		user.setEmail("bartolay.ryan@gmail.com");
-		user.setAuthority(AccountType.ADMIN.toString());
-		user.setAddressCountry(country);
-		userRepository.save(user);
-	}
 	
-	private void createCustomers() {
-		Country country = countryRepository.findById(3).get();
-		User admin = userRepository.findByUsername("admin");
-		
-		Client client = new Client();
-		client.setClientType(ClientType.CUSTOMER.name());
-		client.setName("HP Global Resources");
-		client.setAddressCountry(country);
-		client.setCreatedBy(admin);
-		client.setSalesPerson(admin);
-		
-		clientRepository.save(client);
-		
-//		User user = new User();
-//		user.setUsername("customer");
-//		user.setPassword(passwordEncoder.encode(PASSWORD));
-//		user.setFirstName("Ryan");
-//		user.setLastName("Bartolay");
-//		user.setAccountType(AccountType.USER);
-//		user.setEmail("bartolay.ryann@gmail.com");
-//		user.setAddress("84 Molave st. Dona Manuela Phase 4-G, Pamplona Tres");
-//		user.setAddressCity("Las Pinas City");
-//		user.setAddressZipcode(1471);
-//		user.setPhone("09178049704");
-//		user.setAuthority(AccountType.USER.toString());
-//		user.setAddressCountry(country);
-//		userRepository.save(user);
-	}
 
 	private void createSuppliers() {
 		supplier = new Supplier();
@@ -363,16 +454,16 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		supplier.setAddress("Las Pinas");
 		supplier.setCreatedBy(userRepository.findByUsername("admin"));
 		supplier.setAddressCountry(countryRepository.findById(1).get());
-		
+
 		supplierRepository.save(supplier);
-		
+
 		supplier = new Supplier();
 		supplier.setName("KFC Food, Inc");
 		supplier.setPhone("8012222");
 		supplier.setAddress("Manila");
 		supplier.setCreatedBy(userRepository.findByUsername("admin"));
 		supplier.setAddressCountry(countryRepository.findById(2).get());
-		
+
 		supplierRepository.save(supplier);
 	}
 
@@ -382,7 +473,7 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		category.setDescription("IT supplies for hardware");
 		category.setEnabled(true);
 		categoryRepository.save(category);
-		
+
 		category = new Category();
 		category.setName("Computers - Software");
 		category.setDescription("Drivers and Installers");
@@ -395,12 +486,12 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		country1.setAbbreviation("SYR");
 		country1.setName("Syria");
 		countryRepository.save(country1);
-		
+
 		Country country2 = new Country();
 		country2.setAbbreviation("ARE");
 		country2.setName("United Arab Emirates");
 		countryRepository.save(country2);
-		
+
 		Country country3 = new Country();
 		country3.setAbbreviation("PHL");
 		country3.setName("Philippines");
