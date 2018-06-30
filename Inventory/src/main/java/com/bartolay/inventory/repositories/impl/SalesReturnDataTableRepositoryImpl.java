@@ -43,9 +43,22 @@ public class SalesReturnDataTableRepositoryImpl extends RepositoryComponent impl
 
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT b.*, concat_ws(' ', u.firstName, u.lastName) as created_by FROM Brand b "
-//					+ "left join Company c on b.company_id = c.id "
-					+ "inner join Users u on b.created_by = u.id";
+			String SQL = "SELECT t1.*, " + 
+					"	concat_ws(' ', u1.firstName, u1.lastName) as created_by, " + 
+					"	concat_ws(' ', u3.firstName, u3.lastName) as customer, " + 
+					"	t3.name, " + 
+					"	(SELECT COUNT(ID) FROM sales_invoice_item WHERE sales_invoice_system_number=t2.system_number )as item_count," + 
+					"	concat_ws(' ', u4.firstName, u4.lastName) as sales_person , " + 
+					"	t2.net_total as return_amount, " + 
+					"	t2.created_date as sales_invoice_created_date " + 
+					"	FROM sales_return t1 " + 
+					"	INNER JOIN users u1 on u1.id=t1.created_by_id " + 
+					"	INNER JOIN users u2 on u2.id=t1.updated_by_id " + 
+					"	INNER JOIN sales_invoice t2 on t2.system_number=t1.sales_invoice_system_number " + 
+					"	INNER JOIN location t3 on t3.id = t2.location_id " + 
+					"	INNER JOIN users u3 on u3.id = t2.customer_id " +
+					"   INNER JOIN users u4 on u4.id = t2.sales_person_id";
+					
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
@@ -53,7 +66,10 @@ public class SalesReturnDataTableRepositoryImpl extends RepositoryComponent impl
 				SQL += " WHERE b.name like ?";
 				SQL_PARAMS.add(datatableParameter.getSearch() + "%");
 			}
-
+			
+			
+			System.err.println(sortColumn);
+			
 			// sort order by column
 			if(sortColumn != null && datatableParameter.getSortOrder() != null) {
 				SQL += " ORDER BY "+sortColumn.getData()+ " " + datatableParameter.getSortOrder().name();	
@@ -72,10 +88,13 @@ public class SalesReturnDataTableRepositoryImpl extends RepositoryComponent impl
 				public JSONObject mapRow(ResultSet rs, int arg1) throws SQLException {
 					JSONObject obj = new JSONObject();
 					obj.put("id", rs.getLong("id"));
-					obj.put("name", rs.getString("name"));
-//					obj.put("company_name", rs.getString("company_name"));
-					obj.put("created_date", rs.getDate("created_date"));
-					obj.put("created_by", rs.getString("created_by"));
+					obj.put("sales_invoice_system_number", rs.getString("sales_invoice_system_number"));
+					obj.put("sales_invoice_created_date", rs.getDate("sales_invoice_created_date"));
+					obj.put("location", rs.getString("name"));
+					obj.put("sales_person", rs.getString("sales_person"));
+					obj.put("customer", rs.getString("customer"));
+					obj.put("item_count", rs.getString("item_count"));
+					obj.put("net_total", rs.getString("return_amount"));
 					return obj;
 				}
 			});
@@ -88,7 +107,8 @@ public class SalesReturnDataTableRepositoryImpl extends RepositoryComponent impl
 			return array;
 			
 		}catch(Exception e){
-			return null;
+			e.printStackTrace();
+			return new JSONArray();
 		}	
 	}
 }

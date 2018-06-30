@@ -40,8 +40,8 @@
 								<th class="column-title">Location</th>
 								<th class="column-title">Sales Person</th>
 								<th class="column-title">Customer</th>
-								<th class="column-title text-right">No. of Items</th>
-								<th class="column-title last text-right">Returned Amount</th>
+								<th class="column-title">No. of Items</th>
+								<th class="column-title">Returned Amount</th>
 								
 							</tr>
 						</thead>
@@ -70,42 +70,38 @@
 						table,
 						'/api/datatable/sales/return',
 						[ {
-							data : "system_number",
+							data : "id",
 							render: function ( data, type, row ) {
-		                        return '<a href="/sales/invoice/'+ data +'">' + data + '</a>';
+		                        return data;
 		                    }
-						}, {
-							data : "document_number",
+						}, 
+						{
+							data : "sales_invoice_system_number",
 							render: function ( data, type, row ) {
 								if(data) {
-									return '<a href="/sales/invoice/'+ row.system_number +'">' + data + '</a>';	
+									return '<a href="/sales/invoice/'+ data +'">' + data + '</a>';	
 								}
 		                        return '';
 		                    }
-						}, {
-							data : "transaction_date"
-						}, {
-							data : "location_name"
-						}, {
+						}, 
+						{
+							data : "sales_invoice_created_date", name : "sales_invoice.created_date"
+						}, 
+						{
+							data : "location"
+						}, 
+						{
 							data : "sales_person"
-						}, {
-							render: function ( data, type, row ) {
-		                        return 'Paid';
-		                    }
-						}, {
+						}, 
+						{
 							data : "customer"
+						}, {
+							data : "item_count"
 						}, {
 							data : "net_total",
 							className: "text-right"
 						}],
-						[ {
-							"targets" : 4,
-							"data" : null,
-							"defaultContent" : '<div class="btn-group" role="group">'
-									+ '<button class="btn btn-default fa fa-eye" id="btnView"/>'
-									/* + '<button class="btn btn-danger glyphicon glyphicon-remove" /> ' */
-									+ '</div>'
-						} ]);
+						);
 
 				// View button
 				table.find("tbody").on(
