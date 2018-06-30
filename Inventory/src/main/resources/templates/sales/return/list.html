@@ -71,12 +71,14 @@
 						'/api/datatable/sales/return',
 						[ {
 							data : "id",
+							name : "t1.id",
 							render: function ( data, type, row ) {
 		                        return data;
 		                    }
 						}, 
 						{
 							data : "sales_invoice_system_number",
+							name : "t2.system_number",
 							render: function ( data, type, row ) {
 								if(data) {
 									return '<a href="/sales/invoice/'+ data +'">' + data + '</a>';	
@@ -85,20 +87,32 @@
 		                    }
 						}, 
 						{
-							data : "sales_invoice_created_date", name : "sales_invoice.created_date"
+							data : "sales_invoice_created_date", name : "sales_invoice.created_date",
+							name : "t2.created_date",
+							render: function ( data, type, row ) {
+								if(data) {
+									return moment(data).format('YYYY-MM-DD HH:mm:ss');	
+								}
+		                        return '';
+		                    }
 						}, 
 						{
-							data : "location"
+							data : "location",
+							name : "t3.name",
 						}, 
 						{
-							data : "sales_person"
+							data : "sales_person",
+							name : "u4.firstName",
 						}, 
 						{
-							data : "customer"
+							data : "customer",
+							name : "u3.firstName",
 						}, {
-							data : "item_count"
+							data : "item_count",
+							name : "item_count"
 						}, {
 							data : "net_total",
+							name : "t2.net_total",
 							className: "text-right"
 						}],
 						);

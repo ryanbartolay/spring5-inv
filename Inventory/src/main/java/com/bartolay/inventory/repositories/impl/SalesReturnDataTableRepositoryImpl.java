@@ -72,7 +72,7 @@ public class SalesReturnDataTableRepositoryImpl extends RepositoryComponent impl
 			
 			// sort order by column
 			if(sortColumn != null && datatableParameter.getSortOrder() != null) {
-				SQL += " ORDER BY "+sortColumn.getData()+ " " + datatableParameter.getSortOrder().name();	
+				SQL += " ORDER BY "+sortColumn.getName()+ " " + datatableParameter.getSortOrder().name();	
 			}
 
 			if(datatableParameter.getLength() > 0) {
@@ -89,7 +89,7 @@ public class SalesReturnDataTableRepositoryImpl extends RepositoryComponent impl
 					JSONObject obj = new JSONObject();
 					obj.put("id", rs.getLong("id"));
 					obj.put("sales_invoice_system_number", rs.getString("sales_invoice_system_number"));
-					obj.put("sales_invoice_created_date", rs.getDate("sales_invoice_created_date"));
+					obj.put("sales_invoice_created_date", rs.getTimestamp("sales_invoice_created_date"));
 					obj.put("location", rs.getString("name"));
 					obj.put("sales_person", rs.getString("sales_person"));
 					obj.put("customer", rs.getString("customer"));
