@@ -87,4 +87,9 @@ public class SalesInvoiceRestController extends AbstractRestController {
 
 		return stringUtils.encode(response);
 	}
+	@RequestMapping(value="/sales/invoices/all", method=RequestMethod.GET)
+	public String allInvoice() throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+		return stringUtils.encode(salesInvoiceService.findAll()).toString();
+	}
+
 }

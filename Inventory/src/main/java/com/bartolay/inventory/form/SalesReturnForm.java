@@ -11,7 +11,7 @@ public class SalesReturnForm {
 	
 	@NotNull(message="You must specify sales invoice")
 	private SalesInvoice salesInvoice;
-		
+	
 	@NotNull(message="Needed atleast 1 item")
 	private List<SalesReturnItem> salesReturnItems;
 	

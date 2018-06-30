@@ -73,7 +73,7 @@
 							data : "id",
 							name : "t1.id",
 							render: function ( data, type, row ) {
-		                        return data;
+								return '<a href="/sales/return/'+ row.sales_invoice_system_number +'">' + data + '</a>';	
 		                    }
 						}, 
 						{

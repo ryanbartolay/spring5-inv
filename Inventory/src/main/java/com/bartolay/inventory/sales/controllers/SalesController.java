@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.form.SalesInvoiceForm;
+import com.bartolay.inventory.form.SalesReturnForm;
 import com.bartolay.inventory.repositories.ClientRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
@@ -105,6 +106,7 @@ public class SalesController {
 	@RequestMapping(value="/return/create")
 	public ModelAndView salesReturnCreate(ModelAndView model) {
 		model.setViewName("sales/index");
+		model.addObject("salesReturnForm", new SalesReturnForm());
 		model.addObject("page", "New Sales Invoice");
 		model.addObject("html", "return/edit");
 		model.addObject("method", "POST");
@@ -117,13 +119,15 @@ public class SalesController {
 		SalesInvoice salesInvoice = salesInvoiceRepository.findById(system_number).get();
 		
 		mav.setViewName("sales/index");
-		mav.addObject("html", "return/edit");
+		mav.addObject("html", "return/view");
 		mav.addObject("method", "POST");
 		
-		mav.addObject("users", userService.retrieve());
+//		mav.addObject("users", userService.retrieve());
 		mav.addObject("salesInvoiceForm", new SalesInvoiceForm());
-		mav.addObject("locations", locationRepository.findAll());
-		mav.addObject("customers", clientRepository.findAll());
+//		mav.addObject("locations", locationRepository.findAll());
+//		mav.addObject("customers", clientRepository.findAll());
+		mav.addObject("salesInvoiceItems", salesInvoice.getSalesInvoiceItems());
+		
 		
 		mav.addObject("salesInvoice", salesInvoice);
 		return mav;

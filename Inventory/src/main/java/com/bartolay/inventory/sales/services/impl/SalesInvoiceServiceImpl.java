@@ -25,6 +25,7 @@ import com.bartolay.inventory.sales.repositories.SalesInvoiceItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.sales.services.SalesInvoiceService;
 import com.bartolay.inventory.services.InventoryCoreService;
+import com.bartolay.inventory.utils.ServiceUtility;
 
 @Service
 @Transactional
@@ -118,8 +119,7 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 
 	@Override
 	public List<SalesInvoice> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return ServiceUtility.toList(salesInvoiceRepository.findAll());
 	}
 
 	@Override
