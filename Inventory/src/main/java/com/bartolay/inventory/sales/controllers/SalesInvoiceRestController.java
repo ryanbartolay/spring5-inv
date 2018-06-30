@@ -54,7 +54,7 @@ public class SalesInvoiceRestController extends AbstractRestController {
 	
 	@RequestMapping(value="/sales/invoice", method=RequestMethod.POST)
 	public String create(@Valid SalesInvoiceForm salesInvoiceForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
-
+		System.err.println(salesInvoiceForm);
 		if (bindingResult.hasErrors()) {
 			return handleRestApiException(bindingResult);
 		}

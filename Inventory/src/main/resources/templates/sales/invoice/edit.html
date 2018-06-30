@@ -61,6 +61,13 @@
 								th:each="paymentMethod : ${T(com.bartolay.inventory.enums.PaymentMethod).values()}"
 								th:value="${paymentMethod}" th:text="${paymentMethod}"></option>
 						</select>
+						
+						<label class="payment-method-cc">Card Holder</label>
+						<input type="text" class="form-control payment-method-cc" th:field="*{creditCardDetails.holdersName}" />
+						<label class="payment-method-cc">Card Number</label>
+						<input type="text" class="form-control payment-method-cc" th:field="*{creditCardDetails.cardNumber}" />
+						<label class="payment-method-cc">Expiration Date</label>
+						<input type="text" class="form-control payment-method-cc" th:field="*{creditCardDetails.dateExpiry}" placeholder="MM / YY"/>
 					</div>
 
 					<div class="col-md-12">
@@ -123,7 +130,7 @@
 				</div>
 			</div>
 
-			<div class="col-lg-6">
+			<div class="col-lg-6" style="display: none;">
 				<div class="panel panel-warning">
 					<div class="panel-heading">
 						Payment Method
@@ -282,6 +289,22 @@ function computeGrandTotal() {
 	
 	$("#grandTotal").html(round2DecimalPlaces(grand_total));
 }
+
+
+
+function createPaymentMethod(){
+	$(".payment-method-cc").hide();
+	$("#paymentMethod").unbind("change").change(function(e){
+		if($(this).val() == 'CREDITCARD'){
+			$(".payment-method-cc").show();
+		}else{
+			$(".payment-method-cc").hide();
+		}
+	})
+}
+
+createPaymentMethod();
+
 /*]]>*/
 </script>
 

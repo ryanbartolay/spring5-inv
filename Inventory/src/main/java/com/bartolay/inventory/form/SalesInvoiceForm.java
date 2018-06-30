@@ -8,6 +8,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -46,6 +47,13 @@ public class SalesInvoiceForm {
 	
 	@NotNull(message="You must choose a payment method")
 	private PaymentMethod paymentMethod;
+	
+	@Null
+	private String cardHolder;
+	@Null
+	private String cardNumber;
+	@Null
+	private String expirationDate;
 	
 	private CreditCardDetails creditCardDetails;
 
@@ -155,4 +163,38 @@ public class SalesInvoiceForm {
 		this.discountPercentage = discountPercentage;
 	}
 
+	public String getCardHolder() {
+		return cardHolder;
+	}
+
+	public void setCardHolder(String cardHolder) {
+		this.cardHolder = cardHolder;
+	}
+
+	public String getCardNumber() {
+		return cardNumber;
+	}
+
+	public void setCardNumber(String cardNumber) {
+		this.cardNumber = cardNumber;
+	}
+	public String getExpirationDate() {
+		return expirationDate;
+	}
+
+	public void setExpirationDate(String expirationDate) {
+		this.expirationDate = expirationDate;
+	}
+
+	@Override
+	public String toString() {
+		return "SalesInvoiceForm [system_number=" + system_number + ", year=" + year + ", transactionDate="
+				+ transactionDate + ", documentNumber=" + documentNumber + ", discountPercentage=" + discountPercentage
+				+ ", description=" + description + ", location=" + location + ", paymentMethod=" + paymentMethod
+				+ ", cardHolder=" + cardHolder + ", cardNumber=" + cardNumber + ", expirationDate=" + expirationDate
+				+ ", creditCardDetails=" + creditCardDetails + ", customer=" + customer + ", salesPerson=" + salesPerson
+				+ ", salesInvoiceItems=" + salesInvoiceItems + "]";
+	}
+	
+	
 }

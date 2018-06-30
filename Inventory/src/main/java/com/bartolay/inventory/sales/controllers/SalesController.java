@@ -105,7 +105,9 @@ public class SalesController {
 	@RequestMapping(value="/return/create")
 	public ModelAndView salesReturnCreate(ModelAndView model) {
 		model.setViewName("sales/index");
+		model.addObject("page", "New Sales Invoice");
 		model.addObject("html", "return/edit");
+		model.addObject("method", "POST");
 		return model;
 	}
 
