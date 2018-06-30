@@ -176,7 +176,12 @@ var item_count = 0;
 var submitSalesInvoiceBtn = $("#submitSalesInvoiceBtn");
 
 $("#btnAddItem").on("click", function(event) {
-addItem({type: "sales_invoice", label:"Add Sales Invoice Item"}, function(data) {
+	var filter = {
+		'name' : $("#location :selected").text(),
+		'id' : $("#location").val()
+	}
+	
+addItem({type: "sales_invoice", label:"Add Sales Invoice Item", filter : filter}, function(data) {
   		
   		for(var i = 0; i < data.length; i++) {
   			form_items.push(data[i]);
@@ -201,17 +206,6 @@ addItem({type: "sales_invoice", label:"Add Sales Invoice Item"}, function(data) 
 				<td id="lblItemName">`+ item.name +`</td>
 				<td id="lblItemName">`+ item.name +`</td>
 				<td id="lblItemName">`+ item.name +`</td>`;
-				
-			/* html += `
-			<td id="lblItemName">
-				<select class="form-control" name="stockTransferItems[`+i+`].unit" id="unit" onChange="computeValues(this, `+i+`)">`;	
-			for (var key in units) {
-			    if (units.hasOwnProperty(key)) {
-			    	html += `<option value="`+ key +`">`+ units[key] +`</option>`;
-			    }
-			}
-			html +=	`</select>
-			</td>`;  */
 				
 			html +=	`
 				<td id="lblItemName"><input type="number" name="salesInvoiceItems[`+i+`].quantity" id="quantity" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ quantity +`" /></td>

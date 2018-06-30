@@ -1,3 +1,13 @@
+<style>
+
+	#itemLocationModal{
+		font-size: 14px;   
+		margin-left: -49px;    
+		margin-top: 3px;
+	}
+	
+</style>
+
 <form id="itemModelAddItem_form">
 <div class="modal fade bs-example-modal-lg" id="itemModalSimple" tabindex="-1" role="dialog"
 	aria-hidden="true" style="display: none;">
@@ -13,10 +23,8 @@
 					<h4 class="modal-title" id="myModalLabel">Item List</h4>
 				</div>
 					<div class="col-md-5">
-						<select	class="form-control" id="itemLocationModal">
-							<option th:each="location : ${locations}"
-								th:value="${location.id}" th:text="${location.name}"></option>
-						</select>
+						<label id="itemLocationModal"></label>
+						<input type="text" class="hidden" id="itemLocationFilter">
 					</div>
 			</div>
 			<div class="modal-body">
@@ -75,6 +83,14 @@ function addItem(parameters, callback) {
 	if(parameters.url) {
 		itemModalSimple_url = parameters.url;
 	}
+	if(parameters.filter){
+		$("#itemLocationModal").attr("data-id", parameters.filter.id);
+		$("#itemLocationModal").attr("data-name", parameters.filter.name);
+		$("#itemLocationModal").text(parameters.filter.name);
+		
+		$("#itemLocationFilter").val(parameters.filter.id);
+	}
+	
 	
 	itemModalSimple_modal.modal('show');
 }
@@ -87,7 +103,7 @@ itemModalSimple_modal.on('shown.bs.modal', function() {
 				url: itemModalSimple_url,
 				data : function(d){
 					d.form = JSON.stringify({
-						location : $("#itemLocationModal").val()
+						location : $("#itemLocationFilter").val()
 					})
 					
 				}

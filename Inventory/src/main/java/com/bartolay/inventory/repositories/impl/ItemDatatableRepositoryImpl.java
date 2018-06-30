@@ -40,8 +40,10 @@ public class ItemDatatableRepositoryImpl extends RepositoryComponent implements 
 
 	@Override
 	public JSONArray findAllData(DatatableParameter datatableParameter) {
-		
-		System.err.println(datatableParameter.getForm());
+		String filter = "";
+		if(datatableParameter.getForm() != null) {
+			filter = "	INNER JOIN inventory as t5 on t5.item_id=t1.id	WHERE location_id = " + datatableParameter.getForm().get("location").asLong();
+		}
 		
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
@@ -50,13 +52,19 @@ public class ItemDatatableRepositoryImpl extends RepositoryComponent implements 
 					"FROM Item as t1 inner join Brand b on b.id = t1.brand_id " + 
 					"left join item_units as t2 on t1.id = t2.item_id " + 
 					"inner join unit as t3 on t2.unit_id = t3.id " +
-					"inner join unit as t4 on t1.default_unit_id = t4.id";
+					"inner join unit as t4 on t1.default_unit_id = t4.id " +
+					filter;
 			
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
 			if(datatableParameter.getSearch() != null) {
-				SQL += " WHERE t1.name like ?";
+				if(filter.trim().isEmpty()) {
+					SQL += " WHERE t1.name like ?";
+				}else {
+					SQL += " and t1.name like ?";
+				}
+				
 				SQL_PARAMS.add(datatableParameter.getSearch() + "%");
 			}
 			
