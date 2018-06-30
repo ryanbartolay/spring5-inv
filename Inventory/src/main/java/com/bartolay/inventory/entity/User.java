@@ -84,6 +84,9 @@ public class User implements Serializable, Principal {
 	@JoinColumn(name = "updated_by", nullable=true, updatable=true)
 	private User updatedBy;
 	
+	@Column(name="deleteable", nullable=false)
+	private boolean deletable;
+	
     @Transient
     private List<Authority> authorities;
     
@@ -281,6 +284,14 @@ public class User implements Serializable, Principal {
 				+ ", enabled=" + enabled + ", authority=" + authority + "]";
 	}
 	
+	public boolean isDeletable() {
+		return deletable;
+	}
+
+	public void setDeletable(boolean deletable) {
+		this.deletable = deletable;
+	}
+
 	public String getAuthority() {
 		return authority;
 	}

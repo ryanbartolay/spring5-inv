@@ -145,6 +145,7 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		root.setAddress("Manila");
 		root.setPhone("09178049704");
 		root.setAddressCountry(country);
+		root.setDeletable(false);
 		userRepository.save(root);
 	}
 	
@@ -152,12 +153,13 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		admin = new User();
 		admin.setUsername("admin");
 		admin.setPassword(passwordEncoder.encode(PASSWORD));
-		admin.setFirstName("Miguel");
-		admin.setLastName("Alejandro");
+		admin.setFirstName("Admin");
+		admin.setLastName("Admin");
 		admin.setUserGroup(adminUserGroup);
 		admin.setEmail("admin@gmail.com");
 		admin.setAddressCountry(country);
 		admin.setCreatedBy(root);
+		admin.setDeletable(false);
 		userRepository.save(admin);
 	}
 	
