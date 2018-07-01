@@ -96,6 +96,7 @@ public class StockController {
 		model.addObject("page", "New Stock Received");
 		model.addObject("html", "received/edit");
 		model.addObject("stockReceivedForm", new StockReceivedForm());
+		model.addObject("locations", locationRepository.findAll());
 		
 		return model;
 	}

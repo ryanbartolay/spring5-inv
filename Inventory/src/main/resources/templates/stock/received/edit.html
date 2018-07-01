@@ -33,17 +33,19 @@
 					</div>
 
 					<div class="col-md-3">
-						<label>Transaction Date</label> <input type="text"
-							th:field="*{transactionDate}" class="form-control"> <label>Year</label>
+						<label>Transaction Date</label> 
+						<input type="text"
+							th:field="*{transactionDate}" class="form-control"> 
+							<label>Year</label>
 						<input type="text" class="form-control yearselect"
 							th:field="*{year}">
 					</div>
 
-					<div class="col-md-6">
-						<label>Location</label> <select class="form-control"
-							th:field="*{location}">
-							<option th:each="location : ${locations}"
-								th:value="${location.id}" th:text="${location.name}"></option>
+					<div class="col-md-3">
+						<label>Location </label> 
+						<select
+							class="form-control" th:field="*{location}">
+							<option th:each="location : ${locations}" th:value="${location.id}" th:text="${location.name}"></option>
 						</select>
 					</div>
 
@@ -172,7 +174,7 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
 
   $( function() {
 	  
-    $( "#transaction_date" ).datepicker();
+    $( "#transactionDate" ).datepicker();
     
     $('.yearselect').yearselect({
     	order: 'desc',	
