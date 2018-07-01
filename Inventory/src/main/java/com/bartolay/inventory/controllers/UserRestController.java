@@ -122,7 +122,12 @@ public class UserRestController {
 	
 	@RequestMapping(value="/api/users/sales", method=RequestMethod.GET, produces="application/json")
 	public List<User> retrieveSales(@RequestParam Map<String, String> requestMap) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {		
-		return userJdbcRepository.retrieveAllSales();
+		return userService.findAllSales(requestMap);
+	}
+	
+	@RequestMapping(value="/api/users/customers", method=RequestMethod.GET, produces="application/json")
+	public List<User> retrieveCustomers(@RequestParam Map<String, String> requestMap) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {		
+		return userService.findAllCustomers(requestMap);
 	}
 	
 	@RequestMapping(value="/api/users/{id}", method=RequestMethod.DELETE)

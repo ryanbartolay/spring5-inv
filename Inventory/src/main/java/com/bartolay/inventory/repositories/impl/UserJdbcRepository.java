@@ -18,15 +18,43 @@ public class UserJdbcRepository extends RepositoryComponent {
 	@Autowired
 	private UserGroupJdbcRepository userGroupJdbcRepository;
 	
-	public List<User> retrieveAllUserByUserGroup(UserGroup userGroup) {
+	public List<User> retrieveAllUserByUserGroup(UserGroup userGroup, String filter) {
 		
 		String sql = "select * from users where user_group_id = ?";
 		
-		return jdbcTemplate.query(sql, new Object[] { userGroup.getId() }, new UserRowMapper());
+		Object[] params = new Object[5];
+		params[0] =	userGroup.getId();
+		
+		if(filter != null) {
+			sql += " and ("
+					+ "lower(username) like ? or "
+					+ "lower(firstname) like ? or "
+					+ "lower(lastname) like ? or "
+					+ "lower(email) like ?"
+					+ ")";
+			params[1] = "%" + filter.toLowerCase() + "%";
+			params[2] = "%" + filter.toLowerCase() + "%";
+			params[3] = "%" + filter.toLowerCase() + "%";
+			params[4] = "%" + filter.toLowerCase() + "%";
+		}
+		
+		return jdbcTemplate.query(sql, params, new UserRowMapper());
 	}
 	
 	public List<User> retrieveAllSales() {
-		return retrieveAllUserByUserGroup(userGroupJdbcRepository.retrieveSales());
+		return retrieveAllUserByUserGroup(userGroupJdbcRepository.retrieveSales(), null);
+	}
+	
+	public List<User> retrieveAllSales(String filter) {
+		return retrieveAllUserByUserGroup(userGroupJdbcRepository.retrieveSales(), filter);
+	}
+	
+	public List<User> retrieveAllCustomers() {
+		return retrieveAllUserByUserGroup(userGroupJdbcRepository.retrieveCustomers(), null);
+	}
+	
+	public List<User> retrieveAllCustomers(String filter) {
+		return retrieveAllUserByUserGroup(userGroupJdbcRepository.retrieveCustomers(), filter);
 	}
 
 	class UserRowMapper implements RowMapper<User> {

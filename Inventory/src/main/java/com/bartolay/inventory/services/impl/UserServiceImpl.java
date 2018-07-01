@@ -20,8 +20,8 @@ import com.bartolay.inventory.form.UserForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.repositories.UserGroupRepository;
 import com.bartolay.inventory.repositories.UserRepository;
+import com.bartolay.inventory.repositories.impl.UserJdbcRepository;
 import com.bartolay.inventory.services.UserService;
-import com.bartolay.inventory.utils.StaticVariables;
 import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
@@ -43,6 +43,9 @@ public class UserServiceImpl implements UserService<User> {
 	
 	@Autowired
 	private UserGroupRepository userGroupRepository;
+	
+	@Autowired
+	private UserJdbcRepository userJdbcRepository;
 	
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
@@ -122,10 +125,24 @@ public class UserServiceImpl implements UserService<User> {
 	}
 
 	@Override
-	public List<User> findAllSales() {
-//		UserGroup userGroup = userGroupRepository.findByName(StaticVariables.SALES);
-		//return userRepository.findByUserGroup(userGroup);
-		return null;
+	public List<User> findAllCustomers(Map<String, String> requestMap) {
+		String filter = requestMap.get("filter");
+		
+		if(filter != null) {
+			return userJdbcRepository.retrieveAllCustomers(filter);
+		}
+		return userJdbcRepository.retrieveAllCustomers();
+
+	}
+	
+	@Override
+	public List<User> findAllSales(Map<String, String> requestMap) {
+		String filter = requestMap.get("filter");
+		
+		if(filter != null) {
+			return userJdbcRepository.retrieveAllSales(filter);
+		}
+		return userJdbcRepository.retrieveAllSales();
 	}
 
 	@Override
@@ -138,6 +155,5 @@ public class UserServiceImpl implements UserService<User> {
 		
 		return null;
 	}
-
 	
 }

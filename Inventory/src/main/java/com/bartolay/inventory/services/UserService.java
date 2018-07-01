@@ -19,7 +19,9 @@ public interface UserService<E> {
 	public E delete(Integer id);
 	
 	List<User> findAllSales(AccountType accountType);
-	List<User> findAllSales();
+	List<User> findAllSales(Map<String, String> requestMap);
+	
+	List<User> findAllCustomers(Map<String, String> requestMap);
 	@Deprecated
 	List<User> retrieveUserByTypeDatatableList(AccountType accountType, Map<String, String> requestMap);
 	

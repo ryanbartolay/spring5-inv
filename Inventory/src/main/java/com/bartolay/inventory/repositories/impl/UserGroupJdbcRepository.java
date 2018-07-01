@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.bartolay.inventory.components.RepositoryComponent;
 import com.bartolay.inventory.entity.UserGroup;
+import com.bartolay.inventory.utils.StaticVariables;
 
 @Repository
 public class UserGroupJdbcRepository extends RepositoryComponent {
@@ -21,7 +22,13 @@ public class UserGroupJdbcRepository extends RepositoryComponent {
 	public UserGroup retrieveSales() {
 		String sql = "select * from user_group where lower(name) = ?";
 		
-		return jdbcTemplate.queryForObject(sql, new Object[] {"sales"}, new UserGroupRowMapper());
+		return jdbcTemplate.queryForObject(sql, new Object[] {StaticVariables.SALES.toLowerCase()}, new UserGroupRowMapper());
+	}
+	
+	public UserGroup retrieveCustomers() {
+		String sql = "select * from user_group where lower(name) = ?";
+		
+		return jdbcTemplate.queryForObject(sql, new Object[] {StaticVariables.CUSTOMERS.toLowerCase()}, new UserGroupRowMapper());
 	}
 	
 	class UserGroupRowMapper implements RowMapper<UserGroup> {
@@ -38,4 +45,5 @@ public class UserGroupJdbcRepository extends RepositoryComponent {
 		}
 		
 	}
+
 }
