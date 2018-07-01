@@ -81,7 +81,7 @@
 	})
 	
 	function retrieveAccount(){
-		GET('/api/users/sales/[[${type}]]?filter='+$("#accountFilter").val(), function(data){
+		GET('/api/users/sales?filter='+$("#accountFilter").val(), function(data){
 			var html = "";
 			for (var i = 0; i < data.length; i++) {
 				var user = data[i];

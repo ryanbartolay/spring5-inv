@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import com.bartolay.inventory.entity.Brand;
 import com.bartolay.inventory.entity.Category;
-import com.bartolay.inventory.entity.Client;
 import com.bartolay.inventory.entity.Color;
 import com.bartolay.inventory.entity.Company;
 import com.bartolay.inventory.entity.Country;
@@ -25,8 +24,6 @@ import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.entity.Unit;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.entity.UserGroup;
-import com.bartolay.inventory.enums.AccountType;
-import com.bartolay.inventory.enums.ClientType;
 import com.bartolay.inventory.form.LocationForm;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CategoryRepository;
@@ -39,6 +36,7 @@ import com.bartolay.inventory.repositories.UnitRepository;
 import com.bartolay.inventory.repositories.UserGroupRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 import com.bartolay.inventory.services.LocationService;
+import com.bartolay.inventory.utils.StaticVariables;
 
 @Component
 public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
@@ -219,31 +217,31 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 		User root = userRepository.findByUsername("root");
 
 		rootUserGroup = new UserGroup();
-		rootUserGroup.setName("Root Users");
+		rootUserGroup.setName(StaticVariables.ROOT);
 		rootUserGroup.setCreatedBy(root);
 
 		userGroupRepository.save(rootUserGroup);
 
 		adminUserGroup = new UserGroup();
-		adminUserGroup.setName("Administrators");
+		adminUserGroup.setName(StaticVariables.ADMIN);
 		adminUserGroup.setCreatedBy(root);
 
 		userGroupRepository.save(adminUserGroup);
 
 		salesUserGroup = new UserGroup();
-		salesUserGroup.setName("Sales");
+		salesUserGroup.setName(StaticVariables.SALES);
 		salesUserGroup.setCreatedBy(root);
 
 		userGroupRepository.save(salesUserGroup);
 
 		customerUserGroup = new UserGroup();
-		customerUserGroup.setName("Customers");
+		customerUserGroup.setName(StaticVariables.CUSTOMERS);
 		customerUserGroup.setCreatedBy(root);
 
 		userGroupRepository.save(customerUserGroup);
 
 		supplierUserGroup = new UserGroup();
-		supplierUserGroup.setName("Suppliers");
+		supplierUserGroup.setName(StaticVariables.SUPPLIERS);
 		supplierUserGroup.setCreatedBy(root);
 
 		userGroupRepository.save(supplierUserGroup);

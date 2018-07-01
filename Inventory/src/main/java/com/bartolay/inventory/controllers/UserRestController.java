@@ -18,12 +18,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.entity.UserGroup;
 import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.form.UserForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
+import com.bartolay.inventory.repositories.UserGroupRepository;
 import com.bartolay.inventory.repositories.UserRepository;
+import com.bartolay.inventory.repositories.impl.UserJdbcRepository;
+import com.bartolay.inventory.services.UserGroupService;
 import com.bartolay.inventory.services.UserService;
+import com.bartolay.inventory.utils.StaticVariables;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -35,6 +40,15 @@ public class UserRestController {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private UserJdbcRepository userJdbcRepository;
+	
+	@Autowired
+	private UserGroupRepository userGroupRepository;
+	
+	@Autowired
+	private UserGroupService userGroupService;
 	
 	@Autowired
 	private StringUtils stringUtils;
@@ -106,6 +120,16 @@ public class UserRestController {
 		return stringUtils.encode(response);
 	}
 	
+	@RequestMapping(value="/api/users/sales", method=RequestMethod.GET, produces="application/json")
+	public List<User> retrieveSales(@RequestParam Map<String, String> requestMap) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {		
+		return userService.findAllSales(requestMap);
+	}
+	
+	@RequestMapping(value="/api/users/customers", method=RequestMethod.GET, produces="application/json")
+	public List<User> retrieveCustomers(@RequestParam Map<String, String> requestMap) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {		
+		return userService.findAllCustomers(requestMap);
+	}
+	
 	@RequestMapping(value="/api/users/{id}", method=RequestMethod.DELETE)
 	public String delete(@PathVariable Integer id) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
@@ -121,8 +145,5 @@ public class UserRestController {
 		return stringUtils.encode(response);
 	}
 
-	@RequestMapping(value="/api/users/sales/{type}", method=RequestMethod.GET, produces="application/json")
-	public List<User> delete(@PathVariable AccountType type, @RequestParam Map<String, String> requestMap) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
-		return userService.retrieveUserByTypeDatatableList(type, requestMap);
-	}	
+		
 }

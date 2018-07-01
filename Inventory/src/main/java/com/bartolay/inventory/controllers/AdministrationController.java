@@ -24,4 +24,11 @@ public class AdministrationController {
 		mav.addObject("html", "groups/list");
 		return mav;
 	}
+	
+	@RequestMapping(value="/groups/permission/{group_id}")
+	public ModelAndView groupPermission() {
+		ModelAndView mav = new ModelAndView("administration/index");
+		mav.addObject("html", "groups/editPermission");
+		return mav;
+	}
 }

@@ -46,11 +46,11 @@ public class SalesInvoiceDataTableRepositoryImpl extends RepositoryComponent imp
 			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t1.description, t1.net_total, t1.year, "
 					+ "t2.name as location_name, "
 					+ "t3.lastname || ', ' || t3.firstname as sales_person, "
-					+ "t4.name as customer "
+					+ "t4.lastname || ', ' || t4.firstname as customer "
 					+ "FROM sales_invoice as t1 "
 					+ "inner join location as t2 on t1.location_id = t2.id "
 					+ "inner join users as t3 on t1.sales_person_id = t3.id "
-					+ "inner join client as t4 on t1.customer_id = t4.id";
+					+ "inner join users as t4 on t1.customer_id = t4.id";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
@@ -67,6 +67,8 @@ public class SalesInvoiceDataTableRepositoryImpl extends RepositoryComponent imp
 			if(datatableParameter.getLength() > 0) {
 				SQL += " LIMIT " + datatableParameter.getLength() + " OFFSET " + datatableParameter.getStart();
 			}
+			
+			System.err.println(SQL);
 			
 			List<JSONObject> domains = new ArrayList<>();
 

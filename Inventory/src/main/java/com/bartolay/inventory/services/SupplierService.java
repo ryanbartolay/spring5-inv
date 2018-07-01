@@ -1,0 +1,9 @@
+package com.bartolay.inventory.services;
+
+import java.util.Map;
+
+import org.json.JSONObject;
+
+public interface SupplierService {
+	public JSONObject findAll(Map<String, String> requestMap);
+}

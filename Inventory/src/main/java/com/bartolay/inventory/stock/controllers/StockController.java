@@ -40,8 +40,16 @@ public class StockController {
 	@RequestMapping(value="/stock/opening")
 	public ModelAndView stockOpeningList() {
 		ModelAndView model = new ModelAndView("stock/index");
-		model.addObject("page", "Opening Stock");
 		model.addObject("html", "opening/list");
+		model.addObject("stockOpeningForm", new StockOpeningForm());
+		model.addObject("companies", companyService.findAll());
+		return model;
+	}
+	
+	@RequestMapping(value="/stock/suppliers")
+	public ModelAndView stockSuppliers() {
+		ModelAndView model = new ModelAndView("stock/index");
+		model.addObject("html", "supplier/list");
 		model.addObject("stockOpeningForm", new StockOpeningForm());
 		model.addObject("companies", companyService.findAll());
 		return model;
