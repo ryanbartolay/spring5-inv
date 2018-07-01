@@ -91,7 +91,7 @@
         		return '<ul class="list-inline">'+html+'</ul>';
         	}},
         	{ data: "created_date", orderable:false, render : function(data, type, row){
-        		return `<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> Manage Permissions </a><br> 
+        		return `<a href="@{'/administration/groups/permission/"+  +"'}" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> Manage Permissions </a><br> 
         				<a href="#"	class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Manage Users</a> <br>
         				<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete Group </a>`
         	}},

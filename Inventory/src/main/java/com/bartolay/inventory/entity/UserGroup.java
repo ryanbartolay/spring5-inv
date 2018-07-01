@@ -1,7 +1,6 @@
 package com.bartolay.inventory.entity;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,8 +29,8 @@ public class UserGroup {
 	@Column(name="description", nullable=true)
 	private String description;
 	
-	@OneToMany(mappedBy = "userGroup", fetch=FetchType.LAZY)
-	private List<User> users;
+//	@OneToMany(mappedBy = "userGroup", cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+//	private List<User> users;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "created_by", nullable=false, updatable=false)
@@ -74,13 +72,13 @@ public class UserGroup {
 		this.description = description;
 	}
 
-	public List<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
+//	public List<User> getUsers() {
+//		return users;
+//	}
+//
+//	public void setUsers(List<User> users) {
+//		this.users = users;
+//	}
 
 	public User getCreatedBy() {
 		return createdBy;
@@ -114,4 +112,10 @@ public class UserGroup {
 		this.updatedDated = updatedDated;
 	}
 
+	@Override
+	public String toString() {
+		return "UserGroup [id=" + id + ", name=" + name + ", description=" + description //+ //", users=" + users
+				+ ", createdBy=" + createdBy + ", updatedBy=" + updatedBy + ", createdDate=" + createdDate
+				+ ", updatedDated=" + updatedDated + "]";
+	}
 }

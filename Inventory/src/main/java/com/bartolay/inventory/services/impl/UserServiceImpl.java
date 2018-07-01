@@ -14,11 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.entity.UserGroup;
 import com.bartolay.inventory.enums.AccountType;
 import com.bartolay.inventory.form.UserForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
+import com.bartolay.inventory.repositories.UserGroupRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 import com.bartolay.inventory.services.UserService;
+import com.bartolay.inventory.utils.StaticVariables;
 import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
@@ -37,6 +40,9 @@ public class UserServiceImpl implements UserService<User> {
 	
 	@Autowired
 	private UserCredentials userCredentials;
+	
+	@Autowired
+	private UserGroupRepository userGroupRepository;
 	
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
@@ -113,6 +119,24 @@ public class UserServiceImpl implements UserService<User> {
 			return userRepository.findAllByTypeAndFilter(accountType, requestMap.get("filter"));
 		}
 		return userRepository.findAllByAccountType(accountType);
+	}
+
+	@Override
+	public List<User> findAllSales() {
+//		UserGroup userGroup = userGroupRepository.findByName(StaticVariables.SALES);
+		//return userRepository.findByUserGroup(userGroup);
+		return null;
+	}
+
+	@Override
+	public List<User> retrieveUserByUserGroupDatatableList(UserGroup userGroup, Map<String, String> requestMap) {
+		
+//		if(requestMap.get("filter") != null && !requestMap.get("filter").trim().isEmpty()) {
+//			return userRepository.findAllByUserGroupAndFilter(userGroup, requestMap.get("filter"));
+//		}
+//		return userRepository.findByUserGroup(userGroup);
+		
+		return null;
 	}
 
 	
