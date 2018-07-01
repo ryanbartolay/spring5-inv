@@ -23,19 +23,19 @@ public class Supplier {
 	@SequenceGenerator(name="supplier_generator", sequenceName = "SUPPLIER_SER_SEQ")
     private int id;
 	
-    @Column(name = "name", unique=true, nullable=false)
+    @Column(name = "name", unique=true, nullable=false, length=50)
     private String name;
     
-    @Column(name = "phone")
+    @Column(name = "phone", length=20)
     private String phone;
     
-    @Column(name = "mobile")
+    @Column(name = "mobile", length=20)
     private String mobile;
 
-    @Column(name = "fax")
+    @Column(name = "fax", length=20)
     private String fax;
     
-    @Column(name = "website")
+    @Column(name = "website", length=50)
     private String website;
     
     @Column(name = "address")
