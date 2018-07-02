@@ -25,33 +25,6 @@
 				<div class="col-md-6">
 					<h2>List of Suppliers</h2>
 				</div>
-
-				<div class="col-md-6">
-				
-					<div class="btn-group pull-right">
-						<button data-toggle="dropdown"
-							class="btn btn-default dropdown-toggle" type="button"
-							aria-expanded="false">
-							Sort <span class="caret"></span>
-						</button>
-						<ul role="menu" class="dropdown-menu">
-							<li><a href="#">Action</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else here</a></li>
-							<li class="divider"></li>
-							<li><a href="#">Separated link</a></li>
-						</ul>
-					</div>
-				
-					<div id="reportrange" class="pull-right"
-						style="background: #fff; cursor: pointer; padding: 7px 10px; margin: 0 2px 0 2px; border: 1px solid #ccc">
-						<i class="glyphicon glyphicon-calendar fa fa-calendar"></i> <span>December
-							30, 2014 - January 28, 2015</span> <b class="caret"></b>
-					</div>
-
-
-					
-				</div>
 				<div class="clearfix"></div>
 			</div>
 
@@ -66,6 +39,9 @@
 								<th>Name</th>
 								<th>Address</th>
 								<th>Phone</th>
+								<th>Mobile</th>
+								<th>Email</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -107,8 +83,18 @@
         		data: "phone",
         		render: function ( data, type, row ) {
                     return '<a href="/locations/'+ row.location_id +'">' + data + '</a>';
-                }
+                },
+                defaultContent: ""
         	},
+        	{ data: "mobile",
+                defaultContent: "" },
+        	{ data: "email",
+                    defaultContent: "" },
+            {
+				render: function(data, type, row) {
+					return `<a href="/stock/suppliers/edit/`+ row.id +`" class="btn btn-primary btn-xs"><span class="fa fa-edit"></span></a>`;
+				}
+            }
     	]
 	); 
 </script>

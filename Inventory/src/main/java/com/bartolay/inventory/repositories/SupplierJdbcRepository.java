@@ -34,26 +34,6 @@ public class SupplierJdbcRepository extends RepositoryComponent implements Datat
 		return array;
 	}
 	
-//	public List<Supplier> retrieveAll() {
-//		String sql = "select * from supplier";
-//		return jdbcTemplate.query(sql, new SupplierRowMapper());
-//	}
-	
-//	new RowMapper<JSONObject>() {
-//
-//		@Override
-//		public JSONObject mapRow(ResultSet rs, int arg1) throws SQLException {
-//			JSONObject obj = new JSONObject();
-//			obj.put("system_number", rs.getString("system_number"));
-//			obj.put("document_number", rs.getString("document_number"));
-//			obj.put("description", rs.getString("description"));
-//			obj.put("location_id", rs.getInt("location_id"));
-//			obj.put("location_name", rs.getString("location_name"));
-//			obj.put("transaction_date", rs.getString("transaction_date"));
-//			
-//			return obj;
-//		}
-//	})
 	class SupplierRowMapper implements RowMapper<JSONObject> {
 
 		@Override

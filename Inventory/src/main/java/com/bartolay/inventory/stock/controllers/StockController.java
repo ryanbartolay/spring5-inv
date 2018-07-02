@@ -10,8 +10,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.bartolay.inventory.form.StockOpeningForm;
 import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.form.StockTransferForm;
+import com.bartolay.inventory.form.SupplierForm;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.services.CompanyService;
+import com.bartolay.inventory.services.SupplierService;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.entity.StockTransfer;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
@@ -33,6 +35,9 @@ public class StockController {
 	
 	@Autowired 
 	private StockReceivedRepository stockReceiveRepository;
+	
+	@Autowired
+	private SupplierService supplierService;
 
 	@Autowired
 	private CompanyService companyService;
@@ -52,6 +57,15 @@ public class StockController {
 		model.addObject("html", "supplier/list");
 		model.addObject("stockOpeningForm", new StockOpeningForm());
 		model.addObject("companies", companyService.findAll());
+		return model;
+	}
+	
+	@RequestMapping(value="/stock/suppliers/edit/{id}")
+	public ModelAndView stockSuppliersEdit(@PathVariable Integer id) {
+		ModelAndView model = new ModelAndView("stock/index");
+		model.addObject("html", "supplier/edit");
+		model.addObject("supplierForm", new SupplierForm());
+		model.addObject("supplier", companyService.findAll());
 		return model;
 	}
 	
@@ -104,6 +118,7 @@ public class StockController {
 		model.addObject("page", "New Stock Received");
 		model.addObject("html", "received/edit");
 		model.addObject("stockReceivedForm", new StockReceivedForm());
+		model.addObject("locations", locationRepository.findAll());
 		
 		return model;
 	}

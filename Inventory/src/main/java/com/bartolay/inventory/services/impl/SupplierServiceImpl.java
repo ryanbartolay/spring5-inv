@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
+import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.repositories.SupplierJdbcRepository;
+import com.bartolay.inventory.repositories.SupplierRepository;
 import com.bartolay.inventory.services.SupplierService;
 
 @Service
@@ -16,6 +18,9 @@ public class SupplierServiceImpl implements SupplierService {
 	@Autowired
 	private SupplierJdbcRepository supplierJdbcRepository;
 
+	@Autowired
+	private SupplierRepository supplierRepository;
+	
 	@Override
 	public JSONObject findAll(Map<String, String> requestMap) {
 		DatatableParameter datatableParameter = new DatatableParameter(requestMap);
@@ -25,5 +30,10 @@ public class SupplierServiceImpl implements SupplierService {
 		object.put("recordsTotal", supplierJdbcRepository.findAllCount(datatableParameter));
 
 		return object;
+	}
+
+	@Override
+	public Supplier findById(Integer id) {
+		return supplierRepository.findById(id).get();
 	}
 }
