@@ -90,18 +90,26 @@
 							</thead>
 							 <tbody th:each="salesInvoiceItem, iter : ${salesInvoiceItems}" th:remove="tag">
 							   		<tr>
-							   			<td th:text="${salesInvoiceItem.id}">
-							   			<td th:text="${salesInvoiceItem.salesInvoice.systemNumber}">
-							   			<td th:text="${salesInvoiceItem.salesInvoice.systemNumber}">
+							   			<td class="primary-data" th:text="${salesInvoiceItem.id}" 
+							   				th:attr="data-id=${salesInvoiceItem.id},
+							   						 data-itemCode=${salesInvoiceItem.item.code},
+							   						 data-itemName=${salesInvoiceItem.item.name},
+							   						 data-quantity=${salesInvoiceItem.quantity},
+							   						 data-table_records=${iter.size},
+							   						 data-unitAbbreviation=${salesInvoiceItem.unit.abbreviation},
+							   						 data-unitDescription=${salesInvoiceItem.unit.name},
+							   						 data-unitPrice=${salesInvoiceItem.unitCost},
+							   						 data-unitPriceTotal=${salesInvoiceItem.unitCostTotal}
+							   						 
+							   			">
+							   			<td th:text="${salesInvoiceItem.item.code}">
+							   			<td th:text="${salesInvoiceItem.item.name}">
 							   			<td th:text="${salesInvoiceItem.quantity}">
 							   			<td th:text="${salesInvoiceItem.unit.name}">
-							   			<td th:text="${salesInvoiceItem.unitCost}">
+							   			<td class="unitPrice" th:text="${salesInvoiceItem.unitCost}">
 							   			<td th:text="${salesInvoiceItem.unitCostTotal}">
 							   			
-							   			<script th:inline="javascript">
-								        	consolle.log("asdas")
-							
-								        </script>
+							   			
 							   			
 							   			<td ><input type="number" data-toggle="tooltip" data-trigger="manual" title="This is my tooltip"  
 							   				th:name="|salesReturnItems[${iter.index}].quantity|" id="quantity" class="form-control" value="0" th:max="${salesInvoiceItem.quantity}" 
@@ -137,8 +145,15 @@
 /*<![CDATA[*/
 
 var systemNumber = /*[[${salesInvoice.systemNumber}]]*/ '0';
-
 var form_items = [];
+
+$(".primary-data").map(function(index){
+	console.log(index, )
+	var data = $(this).data();
+	data.subtotal = 0;
+	form_items.push(data);
+})
+
 
 $( function() {
 	
@@ -254,8 +269,13 @@ function computeValues(element, index) {
 	
 	$.each($(element).closest("tr"), function() {
 		
+		if($(this).find(".unitPrice")){
+			each['unitPrice'] = $(this).find(".unitPrice").text()
+		}
+		
+		
 		$(this).find("input").each(function() {
-			/* each[$(this).attr("id")] = $(this).val(); */
+			each[$(this).attr("id")] = $(this).val();
 			console.log($(this).attr("id"))
 			form_items[index][$(this).attr("id")] = $(this).val();
 			console.log($(this).attr("id") + " = " + $(this).val());
@@ -264,6 +284,9 @@ function computeValues(element, index) {
 	});
 
 	subtotal = each.quantity * each.unitPrice;
+	
+	
+	console.log(subtotal, each);
 	
 	form_items[index]["subtotal"] = subtotal;
 	$(element).closest("tr").find("#subtotal").val(round2DecimalPlaces(subtotal));
