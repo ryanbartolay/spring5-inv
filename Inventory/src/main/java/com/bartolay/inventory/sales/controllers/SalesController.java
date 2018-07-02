@@ -16,6 +16,7 @@ import com.bartolay.inventory.form.SalesReturnForm;
 import com.bartolay.inventory.repositories.ClientRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
+import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.services.LocationService;
 import com.bartolay.inventory.services.UserService;
@@ -108,16 +109,13 @@ public class SalesController {
 	@RequestMapping(value="/return/create")
 	public ModelAndView salesReturnCreate(ModelAndView mav) {
 		
-		SalesInvoice salesInvoice = salesInvoiceRepository.findOneLimit1();
-		
 		mav.setViewName("sales/index");
 		mav.addObject("html", "return/view");
 		mav.addObject("method", "POST");
 		
 		mav.addObject("salesInvoiceForm", new SalesInvoiceForm());
-		mav.addObject("salesInvoiceItems", salesInvoice.getSalesInvoiceItems());
-		
-		mav.addObject("salesInvoice", salesInvoice);
+		mav.addObject("salesInvoiceItems", new ArrayList<SalesInvoiceItem>());
+		mav.addObject("salesInvoice", new SalesInvoice());
 		
 		return mav;
 	}
