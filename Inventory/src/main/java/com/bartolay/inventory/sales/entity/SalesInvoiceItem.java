@@ -67,6 +67,15 @@ public class SalesInvoiceItem {
 	
 	@Column(name="status", nullable=false, updatable=true, length=3)
 	private Status status;
+	
+	public SalesInvoiceItem() {
+		super();
+	}
+
+	public SalesInvoiceItem(int id) {
+		super();
+		this.id = id;
+	}
 
 	public int getId() {
 		return id;

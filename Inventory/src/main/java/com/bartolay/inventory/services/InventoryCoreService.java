@@ -16,15 +16,20 @@ import com.bartolay.inventory.enums.SalesInvoiceStatus;
 import com.bartolay.inventory.enums.Status;
 import com.bartolay.inventory.enums.TransactionType;
 import com.bartolay.inventory.exceptions.SalesInvoiceException;
+import com.bartolay.inventory.exceptions.SalesReturnException;
 import com.bartolay.inventory.exceptions.StockTransferException;
 import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.InventoryTransactionRepository;
 import com.bartolay.inventory.sales.entity.CreditCardDetails;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
+import com.bartolay.inventory.sales.entity.SalesReturn;
+import com.bartolay.inventory.sales.entity.SalesReturnItem;
 import com.bartolay.inventory.sales.repositories.CreditCardDetailsRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
+import com.bartolay.inventory.sales.repositories.SalesReturnItemRepository;
+import com.bartolay.inventory.sales.repositories.SalesReturnRepository;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.entity.StockOpeningItem;
 import com.bartolay.inventory.stock.entity.StockReceived;
@@ -74,6 +79,10 @@ public class InventoryCoreService {
 	private StockReceivedItemRepository stockReceiveItemRepository;
 	@Autowired
 	private StockReceivedExpenseRepository stockReceiveExpenseRepository;
+	@Autowired
+	private SalesReturnRepository salesReturnRepository;
+	@Autowired
+	private SalesReturnItemRepository salesReturnItemRepository;
 	@Autowired
 	private StockTransferRepository stockTransferRepository;
 	@Autowired
@@ -515,5 +524,39 @@ public class InventoryCoreService {
 		inventoryTransactionRepository.saveAll(inventoryTransactionsForSave);
 		stockReceiveItemRepository.saveAll(stockReceive.getStockReceiveItems());
 		return stockReceiveRepository.save(stockReceive);
+	}
+	
+	public void createSalesReturn(SalesReturn salesReturn) throws SalesReturnException {
+		
+		final SalesInvoice updatedSalesInvoice = salesInvoiceRepository.findById(salesReturn.getSalesInvoice().getSystemNumber()).get();
+		
+		List<SalesInvoiceItem> items = updatedSalesInvoice.getSalesInvoiceItems();
+		
+		
+		List<SalesInvoiceItem> salesInvoiceItemsForSave = new ArrayList<>();
+		List<Inventory> inventoriesForSave = new ArrayList<>();
+		
+		for(SalesReturnItem salesReturnItem : salesReturn.getSalesReturnItems()) {
+			
+			if(items.contains(salesReturnItem.getSalesInvoiceItem())) {
+				SalesInvoiceItem salesInvoiceItem = items.get(items.indexOf(salesReturnItem.getSalesInvoiceItem()));
+				
+				BigDecimal quantity = salesInvoiceItem.getQuantity().subtract(salesReturnItem.getQuantity());
+				
+				if(quantity.compareTo(BigDecimal.ZERO) < 0) {
+					throw new SalesReturnException("You cannot return ("+ salesReturnItem.getQuantity() +") more than the current stock quantity ("+ salesInvoiceItem.getQuantity() +").");
+				}
+				
+				salesInvoiceItem.setQuantity(quantity);
+				
+				salesInvoiceItemsForSave.add(salesInvoiceItem);
+			} else {
+				throw new SalesReturnException("Item is not found");
+			}
+		}
+		
+		salesReturnRepository.save(salesReturn);
+		salesReturnItemRepository.saveAll(salesReturn.getSalesReturnItems());
+		salesInvoiceItemRepository.saveAll(salesInvoiceItemsForSave);
 	}
 }
