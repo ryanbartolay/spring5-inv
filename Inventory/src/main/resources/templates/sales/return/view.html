@@ -40,7 +40,8 @@
 					</div>
 
 					<div class="col-md-3">
-						<label>Customer:</label> <input type="text" class="form-control" disabled="disabled" th:value="${salesInvoice.customer.firstName +' '+ salesInvoice.customer.lastName}">
+						<label>Customer:</label> <input type="text" class="form-control" disabled="disabled" 
+							th:value="${salesInvoice?.customer == null ? '':salesInvoice?.customer?.firstName +' '+ salesInvoice?.customer?.lastName}">
 						<label>Payment Method :</label> 
 						<input type="text"	class="form-control" disabled="disabled" th:field="${salesInvoice.paymentMethod}">
 					</div>
@@ -56,7 +57,7 @@
 
 					<div class="col-md-3">
 						<label>Location:</label> <input type="text" class="form-control"
-							disabled="disabled" th:value="${salesInvoice.location.name}">
+							disabled="disabled" th:value="${salesInvoice?.location?.name}">
 					</div>
 
 					<div class="col-md-12 clearfix">
@@ -87,17 +88,37 @@
 									<th class="text-right">Sales Return</th>
 								</tr>
 							</thead>
-							 <tbody th:each="salesInvoiceItem : ${salesInvoiceItems}" th:remove="tag">
+							 <tbody th:each="salesInvoiceItem, iter : ${salesInvoiceItems}" th:remove="tag">
 							   		<tr>
-							   			<td th:text="${salesInvoiceItem.id}">
-							   			<td th:text="${salesInvoiceItem.salesInvoice.systemNumber}">
-							   			<td th:text="${salesInvoiceItem.salesInvoice.systemNumber}">
+							   			<td class="primary-data" th:text="${salesInvoiceItem.id}" 
+							   				th:attr="data-id=${salesInvoiceItem.id},
+							   						 data-itemCode=${salesInvoiceItem.item.code},
+							   						 data-itemName=${salesInvoiceItem.item.name},
+							   						 data-quantity=${salesInvoiceItem.quantity},
+							   						 data-table_records=${iter.size},
+							   						 data-unitAbbreviation=${salesInvoiceItem.unit.abbreviation},
+							   						 data-unitDescription=${salesInvoiceItem.unit.name},
+							   						 data-unitPrice=${salesInvoiceItem.unitCost},
+							   						 data-unitPriceTotal=${salesInvoiceItem.unitCostTotal}
+							   						 
+							   			">
+							   			<td th:text="${salesInvoiceItem.item.code}">
+							   			<td th:text="${salesInvoiceItem.item.name}">
 							   			<td th:text="${salesInvoiceItem.quantity}">
 							   			<td th:text="${salesInvoiceItem.unit.name}">
-							   			<td th:text="${salesInvoiceItem.unitCost}">
+							   			<td class="unitPrice" th:text="${salesInvoiceItem.unitCost}">
 							   			<td th:text="${salesInvoiceItem.unitCostTotal}">
-							   			<td ><input class="form-control" text="" th:value="${salesInvoiceItem.quantity}"></td>
-							   			<td th:text="${salesInvoiceItem.unitCostTotal}">
+							   			
+							   			
+							   			
+							   			<td ><input type="number" data-toggle="tooltip" data-trigger="manual" title="This is my tooltip"  
+							   				th:name="|salesReturnItems[${iter.index}].quantity|" id="quantity" class="form-control" value="0" th:max="${salesInvoiceItem.quantity}" 
+							   				th:onkeyup="|computeValues(this, ${iter.index});|" 
+							   				th:onkeydown="|computeValues(this, ${iter.index});|" 
+							   				th:onblur="|computeValues(this, ${iter.index});|" 
+							   				th:onchange="|computeValues(this, ${iter.index});|" ></td>
+							   			<td id="lblItemName" class="text-right"><span id="html_subtotal">0.00</span></td>
+							   			<td><button class="btn btn-danger fa fa-times" th:onclick="|remove(this, ${iter.index});|"></button></td>
 							   		</tr>
 							</tbody>
 							<tfoot>
@@ -124,23 +145,36 @@
 /*<![CDATA[*/
 
 var systemNumber = /*[[${salesInvoice.systemNumber}]]*/ '0';
-
 var form_items = [];
 
+$(".primary-data").map(function(index){
+	console.log(index, )
+	var data = $(this).data();
+	data.subtotal = 0;
+	form_items.push(data);
+})
+
+
 $( function() {
-	var current_year = (new Date()).getFullYear();
 	
-	$( "#transactionDate" ).datepicker();
-	
-    $('.yearselect').yearselect({
-    	order: 'desc',	
- 		start: current_year - 5,
- 		end: current_year + 5
-    });
-    
-    $('[name=year]').val( current_year );
-    
-    var systemNumberHtml = $("select[name='salesInvoice.systemNumber']");
+	if(systemNumber){
+		var current_year = (new Date()).getFullYear();
+		
+		$( "#transactionDate" ).datepicker();
+		
+	    $('.yearselect').yearselect({
+	    	order: 'desc',	
+	 		start: current_year - 5,
+	 		end: current_year + 5
+	    });
+	    
+	    $('[name=year]').val( current_year );
+	    
+	    
+	}else{
+		$("#btnAddItem").attr("disabled", true);
+	}
+	var systemNumberHtml = $("select[name='salesInvoice.systemNumber']");
     var html = "";
     GET('/api/sales/invoices/all', function(data){
     	if(data != null){
@@ -159,6 +193,8 @@ $( function() {
     
     systemNumberHtml.select2()
     
+    computeGrandTotal();
+    
 });
 
 $("#btnAddItem").on("click", function() {
@@ -167,7 +203,7 @@ $("#btnAddItem").on("click", function() {
   		for(var i = 0; i < data.length; i++) {
   			form_items.push(data[i]);
   		}
-				
+		
 		var html = ``;
 		
   		for(var i = 0; i < form_items.length; i++) {
@@ -207,6 +243,7 @@ $("#btnAddItem").on("click", function() {
 });
 
 function remove(e, item_index) {
+	if(typeof item_index)
 	form_items.splice(item_index, 1); // remove this element from the item array
 	$(e).parentsUntil("tbody").remove();
 	computeGrandTotal();
@@ -232,8 +269,14 @@ function computeValues(element, index) {
 	
 	$.each($(element).closest("tr"), function() {
 		
+		if($(this).find(".unitPrice")){
+			each['unitPrice'] = $(this).find(".unitPrice").text()
+		}
+		
+		
 		$(this).find("input").each(function() {
 			each[$(this).attr("id")] = $(this).val();
+			console.log($(this).attr("id"))
 			form_items[index][$(this).attr("id")] = $(this).val();
 			console.log($(this).attr("id") + " = " + $(this).val());
 		});
@@ -241,6 +284,9 @@ function computeValues(element, index) {
 	});
 
 	subtotal = each.quantity * each.unitPrice;
+	
+	
+	console.log(subtotal, each);
 	
 	form_items[index]["subtotal"] = subtotal;
 	$(element).closest("tr").find("#subtotal").val(round2DecimalPlaces(subtotal));
