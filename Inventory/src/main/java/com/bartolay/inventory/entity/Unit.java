@@ -125,7 +125,8 @@ public class Unit {
 	}
 	@Override
 	public String toString() {
-		return "Unit [id=" + id + ", name=" + name + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
+		return "Unit [id=" + id + ", name=" + name 
+//				+ ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
 				+ ", createdDate=" + createdDate + ", updatedDated=" + updatedDated + "]";
 	}
 }

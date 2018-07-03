@@ -68,6 +68,8 @@ public class _4SaleBootstrap implements ApplicationListener<ContextRefreshedEven
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
 		
 		user = userRepository.findById(2).get();
+		System.err.println("ussserrrr");
+		System.err.println(user);
 		
 		ccDetails = new CreditCardDetails();
 		ccDetails.setCardNumber("12315-51882-0932");

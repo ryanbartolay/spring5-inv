@@ -236,10 +236,18 @@ public class SalesInvoice implements GeneratedSystemNumber {
 	@Override
 	public String toString() {
 		return "SalesInvoice [systemNumber=" + systemNumber + ", year=" + year + ", transactionDate=" + transactionDate
-				+ ", documentNumber=" + documentNumber + ", description=" + description + ", location=" + location
+				+ ", documentNumber=" + documentNumber 
+				+ ", description=" + description 
+//				+ ", location=" + location
 				+ ", paymentMethod=" + paymentMethod + ", status=" + salesInvoiceStatus + ", creditCardDetails="
-				+ creditCardDetails + ", customer="+ customer +", salesPerson=" + salesPerson + ", createdDate=" + createdDate + ", createdBy="
-				+ createdBy + ", updatedDated=" + updatedDated + ", updatedBy=" + updatedBy + "]";
+				+ creditCardDetails 
+//				+ ", customer="+ customer 
+//				+ ", salesPerson=" + salesPerson 
+				+ ", createdDate=" + createdDate 
+//				+ ", createdBy=" + createdBy 
+				+ ", updatedDated=" + updatedDated 
+//				+ ", updatedBy=" + updatedBy 
+				+ "]";
 	}
 	@Override
 	public int hashCode() {

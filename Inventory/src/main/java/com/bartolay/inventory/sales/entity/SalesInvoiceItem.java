@@ -197,9 +197,11 @@ public class SalesInvoiceItem {
 
 	@Override
 	public String toString() {
-		return "SalesInvoiceItem [id=" + id + ", salesInvoice=" + salesInvoice + ", item=" + item + ", quantity="
+		return "SalesInvoiceItem [id=" + id + ", item=" + item + ", quantity="
 				+ quantity + ", unit=" + unit + ", unitCost=" + unitCost + ", createdDate=" + createdDate
-				+ ", createdBy=" + createdBy + ", updatedDated=" + updatedDated + ", updatedBy=" + updatedBy
+//				+ ", createdBy=" + createdBy 
+				+ ", updatedDated=" + updatedDated 
+//				+ ", updatedBy=" + updatedBy
 				+ ", status=" + status + "]";
 	}
 	

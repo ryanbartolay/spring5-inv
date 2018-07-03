@@ -532,6 +532,8 @@ public class InventoryCoreService {
 
 		final SalesInvoice salesInvoice = salesInvoiceRepository.findById(salesReturn.getSalesInvoice().getSystemNumber()).get();
 
+		salesReturn = salesReturnRepository.save(salesReturn);
+		
 		if(salesInvoice == null) {
 			throw new SalesReturnException("Sales Invoice not found");
 		}
@@ -547,6 +549,9 @@ public class InventoryCoreService {
 		for(SalesReturnItem salesReturnItem : salesReturn.getSalesReturnItems()) {
 
 			if(items.contains(salesReturnItem.getSalesInvoiceItem())) {
+				
+				salesReturnItem.setSalesReturn(salesReturn);
+				
 				SalesInvoiceItem salesInvoiceItem = items.get(items.indexOf(salesReturnItem.getSalesInvoiceItem()));
 
 				SalesInvoiceItem tx_SalesInvoiceItem = inventoryUtility.subtractQuantitySalesInvoiceItem(salesInvoiceItem, salesReturnItem.getQuantity());
@@ -579,7 +584,7 @@ public class InventoryCoreService {
 			}
 		}
 
-		salesReturnRepository.save(salesReturn);
+		
 		salesReturnItemRepository.saveAll(salesReturn.getSalesReturnItems());
 		salesInvoiceItemRepository.saveAll(salesInvoiceItemsForSave);
 		inventoryTransactionRepository.saveAll(inventoryTransactionsForSave);
