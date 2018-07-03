@@ -10,7 +10,6 @@ import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.Unit;
 import com.bartolay.inventory.exceptions.SalesInvoiceException;
-import com.bartolay.inventory.exceptions.SalesReturnException;
 import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
 
 @Component
@@ -34,7 +33,7 @@ public class InventoryUtility {
 		
 	}
 	
-	public SalesInvoiceItem subtractQuantity(SalesInvoiceItem salesInvoiceItem, BigDecimal transaction_quantity) throws SalesInvoiceException {
+	public SalesInvoiceItem subtractQuantitySalesInvoiceItem(SalesInvoiceItem salesInvoiceItem, BigDecimal transaction_quantity) throws SalesInvoiceException {
 		
 		BigDecimal pricePerItem = salesInvoiceItem.getUnitCost().divide(salesInvoiceItem.getQuantity());
 		
@@ -47,6 +46,17 @@ public class InventoryUtility {
 		salesInvoiceItem.setQuantity(quantity);
 		salesInvoiceItem.setUnitCostTotal(pricePerItem.multiply(quantity));
 		
+		return salesInvoiceItem;
+	}
+	
+	public SalesInvoiceItem addQuantitySalesInvoiceItem(SalesInvoiceItem salesInvoiceItem, BigDecimal transaction_quantity) throws SalesInvoiceException {
+		
+		BigDecimal pricePerItem = salesInvoiceItem.getUnitCost().divide(salesInvoiceItem.getQuantity());
+		
+		BigDecimal quantity = salesInvoiceItem.getQuantity().add(transaction_quantity);
+		
+		salesInvoiceItem.setQuantity(quantity);
+		salesInvoiceItem.setUnitCostTotal(pricePerItem.multiply(quantity));
 		
 		return salesInvoiceItem;
 	}

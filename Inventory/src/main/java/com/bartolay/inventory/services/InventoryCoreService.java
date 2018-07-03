@@ -96,9 +96,9 @@ public class InventoryCoreService {
 	 */
 	@Transactional
 	public StockOpening createStockOpening(StockOpening stockOpening) {
-		
+
 		System.err.println(stockOpening.getItems());
-		
+
 		// Lets save the stock opening first so we can generate a system number
 		stockOpening.setStatus(Status.SUCCESS);
 		stockOpening.setCreatedBy(userCredentials.getLoggedInUser());
@@ -111,7 +111,7 @@ public class InventoryCoreService {
 
 		// iterate through items and check if default unit
 		for(StockOpeningItem stockOpeningItem : stockOpening.getItems()) {
-			
+
 			System.err.println("xxxxxxxxxxxxxxxxxxx");
 			System.err.println(stockOpeningItem);
 
@@ -168,12 +168,12 @@ public class InventoryCoreService {
 		}
 
 		stockOpeningItemRepository.saveAll(stockOpening.getItems());
-		
+
 		inventoryRepository.saveAll(inventoriesForSave);
 		inventoryTransactionRepository.saveAll(invTransactions);
-		
+
 		stockOpening = stockOpeningRepository.save(stockOpening);
-		
+
 		return stockOpening;
 	}
 
@@ -270,7 +270,7 @@ public class InventoryCoreService {
 
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
 		inventoryRepository.saveAll(inventoriesForSave);
-		
+
 		return salesInvoiceRepository.save(salesInvoice);
 	}
 
@@ -330,7 +330,7 @@ public class InventoryCoreService {
 			}
 
 		});
-		
+
 		updatedSalesInvoice.setSalesInvoiceStatus(SalesInvoiceStatus.CANCELLED);
 
 		salesInvoiceRepository.save(updatedSalesInvoice);
@@ -340,9 +340,9 @@ public class InventoryCoreService {
 
 	}
 
-	@Transactional
+	@Transactional(rollbackFor=Exception.class)
 	public StockTransfer createStockTransfer(StockTransfer stockTransfer) throws StockTransferException {
-		
+
 		// lets save the stock transfer first to generate system number
 		stockTransfer.setCreatedBy(userCredentials.getLoggedInUser());
 		stockTransferRepository.save(stockTransfer);
@@ -442,10 +442,11 @@ public class InventoryCoreService {
 		stockTransferItemRepository.saveAll(stockTransfer.getStockTransferItems());
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
 		inventoryRepository.saveAll(inventoriesForSave);
-		
+
 		return stockTransfer;
 	}
 
+	@Transactional(rollbackFor=Exception.class)
 	public StockReceived createStockReceive(StockReceived stockReceive) {
 
 		// lets generate systemNumber by saving the stockreceive
@@ -525,38 +526,63 @@ public class InventoryCoreService {
 		stockReceiveItemRepository.saveAll(stockReceive.getStockReceiveItems());
 		return stockReceiveRepository.save(stockReceive);
 	}
-	
-	public void createSalesReturn(SalesReturn salesReturn) throws SalesReturnException {
-		
-		final SalesInvoice updatedSalesInvoice = salesInvoiceRepository.findById(salesReturn.getSalesInvoice().getSystemNumber()).get();
-		
-		List<SalesInvoiceItem> items = updatedSalesInvoice.getSalesInvoiceItems();
-		
-		
+
+	@Transactional(rollbackFor=Exception.class)
+	public void createSalesReturn(SalesReturn salesReturn) throws SalesReturnException, SalesInvoiceException {
+
+		final SalesInvoice salesInvoice = salesInvoiceRepository.findById(salesReturn.getSalesInvoice().getSystemNumber()).get();
+
+		if(salesInvoice == null) {
+			throw new SalesReturnException("Sales Invoice not found");
+		}
+
+		List<SalesInvoiceItem> items = salesInvoice.getSalesInvoiceItems();
+
+		List<Inventory> inventories = inventoryRepository.findByLocation(salesInvoice.getLocation());
+
 		List<SalesInvoiceItem> salesInvoiceItemsForSave = new ArrayList<>();
 		List<Inventory> inventoriesForSave = new ArrayList<>();
-		
+		List<InventoryTransaction> inventoryTransactionsForSave = new ArrayList<>();
+
 		for(SalesReturnItem salesReturnItem : salesReturn.getSalesReturnItems()) {
-			
+
 			if(items.contains(salesReturnItem.getSalesInvoiceItem())) {
 				SalesInvoiceItem salesInvoiceItem = items.get(items.indexOf(salesReturnItem.getSalesInvoiceItem()));
+
+				SalesInvoiceItem tx_SalesInvoiceItem = inventoryUtility.subtractQuantitySalesInvoiceItem(salesInvoiceItem, salesReturnItem.getQuantity());
 				
-				BigDecimal quantity = salesInvoiceItem.getQuantity().subtract(salesReturnItem.getQuantity());
+				Inventory inventory = inventoryUtility.findInventoryFromList(inventories, salesInvoice.getLocation(), salesInvoiceItem.getItem(), salesInvoiceItem.getUnit());
 				
-				if(quantity.compareTo(BigDecimal.ZERO) < 0) {
-					throw new SalesReturnException("You cannot return ("+ salesReturnItem.getQuantity() +") more than the current stock quantity ("+ salesInvoiceItem.getQuantity() +").");
-				}
-				
-				salesInvoiceItem.setQuantity(quantity);
-				
-				salesInvoiceItemsForSave.add(salesInvoiceItem);
+				// inventory transaction
+				InventoryTransaction inventoryTransaction = new InventoryTransaction();
+				inventoryTransaction.setItem(salesInvoiceItem.getItem());
+				inventoryTransaction.setLocation(salesInvoice.getLocation());
+				inventoryTransaction.setUnit(salesInvoiceItem.getUnit());
+				inventoryTransaction.setTransactionType(TransactionType.SALES_RETURN);
+				inventoryTransaction.setRawQuantity(salesReturnItem.getQuantity());
+				inventoryTransaction.setTransactionSystemNumber(salesInvoice.getSystemNumber());
+				inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
+				inventoryTransaction.setRateQuantity(salesInvoiceItem.getQuantity());
+				inventoryTransaction.setInventory(inventory);
+
+				inventoryTransaction.setQuantityBefore(inventory.getQuantity());
+				// increment quantity
+				inventory.setQuantity(inventory.getQuantity().add(salesReturnItem.getQuantity()));
+
+				inventoryTransaction.setQuantityAfter(inventory.getQuantity());
+
+				salesInvoiceItemsForSave.add(tx_SalesInvoiceItem);
+				inventoryTransactionsForSave.add(inventoryTransaction);
+				inventoriesForSave.add(inventory);
 			} else {
 				throw new SalesReturnException("Item is not found");
 			}
 		}
-		
+
 		salesReturnRepository.save(salesReturn);
 		salesReturnItemRepository.saveAll(salesReturn.getSalesReturnItems());
 		salesInvoiceItemRepository.saveAll(salesInvoiceItemsForSave);
+		inventoryTransactionRepository.saveAll(inventoryTransactionsForSave);
+		inventoryRepository.saveAll(inventoriesForSave);
 	}
 }
