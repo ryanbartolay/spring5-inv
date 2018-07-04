@@ -1,5 +1,6 @@
 package com.bartolay.inventory.services.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -11,6 +12,7 @@ import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.repositories.SupplierJdbcRepository;
 import com.bartolay.inventory.repositories.SupplierRepository;
 import com.bartolay.inventory.services.SupplierService;
+import com.bartolay.inventory.utils.ServiceUtility;
 
 @Service
 public class SupplierServiceImpl implements SupplierService {
@@ -35,5 +37,10 @@ public class SupplierServiceImpl implements SupplierService {
 	@Override
 	public Supplier findById(Integer id) {
 		return supplierRepository.findById(id).get();
+	}
+
+	@Override
+	public List<Supplier> findAll() {
+		return ServiceUtility.toList(supplierRepository.findAll());
 	}
 }

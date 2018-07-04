@@ -1,6 +1,5 @@
 <div class="row">
 	<div class="col-lg-12">
-
 		<form th:object="${stockReceivedForm}" id="stockReceivedForm"
 			th:action="@{/api/stock/received}" method="POST">
 
@@ -10,13 +9,10 @@
 						<div class="col-md-8">
 							<h4>New Stock Received</h4>
 						</div>
-						<div class=" col-md-4">
+						<div class="col-md-4">
 							<div class="btn-group pull-right" role="group">
-
-								<button type="submit" id="submitStockOpeningBtn"
-									class="btn btn-success btn-sm">Save Stock Received</button>
+								<button type="submit" id="submitStockOpeningBtn" class="btn btn-success btn-sm">Save Stock Received</button>
 								<a th:href="@{/stock/received}" class="btn btn-default btn-sm">Cancel</a>
-
 							</div>
 						</div>
 					</div>
@@ -47,6 +43,12 @@
 							class="form-control" th:field="*{location}">
 							<option th:each="location : ${locations}" th:value="${location.id}" th:text="${location.name}"></option>
 						</select>
+						
+						<label>Supplier </label> 
+						<select
+							class="form-control" th:field="*{supplier}">
+							<option th:each="supplier : ${suppliers}" th:value="${supplier.id}" th:text="${supplier.name}"></option>
+						</select>
 					</div>
 					
 					<div class="col-md-3">
@@ -67,18 +69,21 @@
 						<input type="text" class="form-control payment-method-cc" th:field="*{creditCardDetails.dateExpiry}" placeholder="MM / YY"/>
 					</div>
 					
-
+					<div class="clearfix"></div>
+					<br>
+					<br>
 					<div class="col-md-12">
-						<br>
-						<div class="col-md-6">
-							<p class="lead">Items</p>
-						</div>
-						<div class="col-md-6 text-right">
-							<button class="btn btn-success btn-sm" id="btnAddItem">Add
-								Item</button>
+						<div class="row">
+							<div class="col-md-6">
+								Items
+							</div>
+							<div class="col-md-6 text-right">
+								<button class="btn btn-success btn-sm" id="btnAddItem">Add	Item</button>
+							</div>
 						</div>
 					</div>
-
+					<div class="clearfix"></div>
+					<br>
 					<div class="table-responsive col-md-12">
 
 						<table class="table table-bordered table-striped" id="itemsTable">
@@ -87,9 +92,10 @@
 									<th>SN</th>
 									<th class="col-md-1">Code</th>
 									<th class="col-md-3">Description</th>
-									<th class="col-md-1">Quantity</th>
-									<th class="col-md-2">Unit</th>
-									<th class="col-md-2 text-right">Unit Cost</th>
+									<th>Unit</th>
+									<th>U.Desc</th>
+									<th>Quantity</th>
+									<th class="text-right">Unit Price</th>
 									<th class="col-md-2 text-right">Subtotal</th>
 									<th></th>
 								</tr>
@@ -101,16 +107,19 @@
 						</table>
 
 					</div>
-
+					<div class="clearfix"></div>
+					<br>
+					<br>
 					<div class="col-md-6">
-
-						<div class="col-md-6">
-							<p class="lead">Expenses</p>
-
-						</div>
-						<div class="col-md-6 text-right">
-							<button type="button" class="btn btn-success btn-sm" id="btnAddExpense">Add
-								Expenses</button>
+						<div class="row">
+							<div class="col-md-6">
+								<p class="lead">Expenses</p>
+	
+							</div>
+							<div class="col-md-6 text-right">
+								<button type="button" class="btn btn-success btn-sm" id="btnAddExpense">Add
+									Expenses</button>
+							</div>
 						</div>
 						<table class="table table-bordered table-striped" id="expenseTable">
 							<thead>

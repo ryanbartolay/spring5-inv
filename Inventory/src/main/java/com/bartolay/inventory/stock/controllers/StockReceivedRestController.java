@@ -13,11 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bartolay.inventory.form.StockOpeningForm;
 import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
-import com.bartolay.inventory.stock.entity.StockOpening;
+import com.bartolay.inventory.stock.entity.StockReceived;
 import com.bartolay.inventory.stock.services.StockReceivedService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -38,13 +37,9 @@ public class StockReceivedRestController extends AbstractRestController {
 			return handleRestApiException(bindingResult);
 		}
 		ApiResponse response = null;
-		
 		try {
-			
-			System.err.println(stockReceivedForm);
-//			StockOpening openingStock = openingStockService.create(openingStockForm);
-//
-//			response = new ApiResponse(HttpStatus.OK, "Succesfully created Document " + openingStock.getDocumentNumber());
+			StockReceived stockReceived = stockReceivedService.create(stockReceivedForm);
+			response = new ApiResponse(HttpStatus.OK, "Succesfully created Document " + stockReceived.getDocumentNumber());
 		} catch(Exception e) {
 			e.printStackTrace();
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
