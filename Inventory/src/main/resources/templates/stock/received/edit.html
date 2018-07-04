@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-lg-12">
 
-		<form th:object="${stockReceivedForm}" id="stockOpeningForm"
+		<form th:object="${stockReceivedForm}" id="stockReceivedForm"
 			th:action="@{/api/stock/received}" method="POST">
 
 			<div class="panel panel-default">
@@ -48,6 +48,25 @@
 							<option th:each="location : ${locations}" th:value="${location.id}" th:text="${location.name}"></option>
 						</select>
 					</div>
+					
+					<div class="col-md-3">
+						<label>Payment Method</label> <select class="form-control"
+							th:field="*{paymentMethod}" tabindex="8">
+							<option value="" selected="selected">Choose Payment
+								Method....</option>
+							<option
+								th:each="paymentMethod : ${T(com.bartolay.inventory.enums.PaymentMethod).values()}"
+								th:value="${paymentMethod}" th:text="${paymentMethod}"></option>
+						</select>
+						
+						<label class="payment-method-cc">Card Holder</label>
+						<input type="text" class="form-control payment-method-cc" th:field="*{creditCardDetails.holdersName}" />
+						<label class="payment-method-cc">Card Number</label>
+						<input type="text" class="form-control payment-method-cc" th:field="*{creditCardDetails.cardNumber}" />
+						<label class="payment-method-cc">Expiration Date</label>
+						<input type="text" class="form-control payment-method-cc" th:field="*{creditCardDetails.dateExpiry}" placeholder="MM / YY"/>
+					</div>
+					
 
 					<div class="col-md-12">
 						<br>
@@ -76,19 +95,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<td>SN</td>
-								<td>Code</td>
-								<td>Description
-								</td>
-								<td><input type="number" class="form-control" value="100"/></td>
-								<td><select class="form-control">
-									<option>Pcs</option>
-								</select></td>								
-								<td class="text-right"><input type="number" class="form-control" value="2.45"/></td>
-								<th class="col-md-2 text-right">245.00</td>
 								
-									<td><button class="btn btn-danger fa fa-times"
-										onClick="remove(this)" /></td>
 							</tbody>
 
 						</table>
@@ -102,10 +109,10 @@
 
 						</div>
 						<div class="col-md-6 text-right">
-							<button class="btn btn-success btn-sm" id="btnAddExpense">Add
+							<button type="button" class="btn btn-success btn-sm" id="btnAddExpense">Add
 								Expenses</button>
 						</div>
-						<table class="table table-bordered table-striped" id="itemsTable">
+						<table class="table table-bordered table-striped" id="expenseTable">
 							<thead>
 								<tr>
 									<th class="col-md-2">ID</th>
@@ -128,24 +135,24 @@
 								<tbody>
 									<tr>
 										<th style="width: 50%">Total:</th>
-										<td class="col-md-2 text-right">22,350</td>
+										<td class="col-md-2 text-right" id="total_item_cost"></td>
 									</tr>
 									<tr>
 										<th>Discount Value</th>
-										<td class="text-right"><input type="number" value="15" class="form-control"></td>
+										<td class="text-right"><input type="number" value="" class="form-control" th:field="*{discountValue}"></td>
 									</tr>
 									<tr>
 										<th>Grand Total:</th>
-										<td class="text-right">22,335</td>
+										<td class="text-right" id="total_item_cost_with_dc">22,335</td>
 									</tr>
 
 									<tr>
 										<th>Expenses Total:</th>
-										<td class="text-right">160.1</td>
+										<td class="text-right" id="total_expenses">0</td>
 									</tr>
 									<tr>
 										<th>Net Total:</th>
-										<td class="text-right"><b>22,495.10</b></td>
+										<td class="text-right"><b id="net_total">22,495.10</b></td>
 									</tr>
 								</tbody>
 							</table>
@@ -161,14 +168,14 @@
 </div>
 
 <!-- Item Modal -->
-<div th:include="includes/modals/itemModal"></div>
+<div th:include="includes/modals/itemModal_simple"></div>
 
 <script>
 /*<![CDATA[*/
-var form = $("#stockOpeningForm");
+var form = $("#stockReceivedForm");
 var current_year = (new Date()).getFullYear();
 var grand_total = 0;
-
+var form_items = [];
 var item_count = 0;
 var submitStockOpeningBtn = $("#submitStockOpeningBtn");
 
@@ -183,47 +190,49 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
     });
     
     $('[name=year]').val( current_year );
-
-   
-    $("#grandTotal").html(grand_total);
-    
+	
+    computeGrandTotal()
   });
   
   $("#btnAddItem").on("click", function() {
-  	addItem({type: "stock_opening", label:"Add Stock Opening Item"}, function(data) {
+  	addItem({type: "stock_receive", label:"Add Stock Receive Item"}, function(data) {
   		
-  		console.log(data);
+  		for(var i = 0; i < data.length; i++) {
+  			form_items.push(data[i]);
+  		}
   		
-  		var item = data['item'];
-  		var unit = data['unit'];
+  		var html = ``;
+  		for(var i = 0; i < form_items.length; i++) {
   		
-  		var total = data.quantity * data.unit_cost;
-  		grand_total = grand_total + total;
-  		
-  		var html = `
-  		<tr>
-				<th id="lblItemId">`+ item.id +`</th>
-				<td id="lblItemCode">`+ item.code +`</td>
+  			var item = form_items[i];
+  			
+  			// default values
+  			var unit = (item.unit ? item.unit : "0");
+  			var quantity = (item.quantity ? item.quantity : "0");
+  			var unitCost = (item.unitCost ? item.unitCost : "0.00");
+  			var subtotal = (item.subtotal ? item.subtotal : "0.00");
+  			
+  			var units = JSON.parse(form_items[i].units);
+  			console.log(item)
+  			html += `<tr>
+				<th id="lblItemId">`+ item.id +`<input type="hidden" name="stockReceiveItems[`+i+`].item" value="`+item.id+`" /></th>
+				<td id="lblItemName">`+ item.code +`</td>
 				<td id="lblItemName">`+ item.name +`</td>
-				<td id="lblAbbreviation">`+ unit.abbreviation +`</td>
-				<td id="lblUnitName">`+ unit.name +`</td>
-				<td class="text-right" id="lblQuantity">`+ data.quantity +`</td>
-				<td class="text-right" id="lblUnitCost">`+ data.unit_cost +`</td>
-				<td class="text-right" id="lblTotal">`+ total +`</td>
-				<td class="text-right">
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].item" id="txtItem" value="` + item.id + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unit" id="txtUnit" value="` + unit.id + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].quantity" id="txtQuantity" value="` + data.quantity + `" />
-					<input type="hidden" name="stockOpeningItems[`+ item_count +`].unitCost" id="txtUnitCost" value="` + data.unit_cost + `" />
-					<div class="btn-group" role="group">
-		        		<button class="btn btn-info fa fa-edit" id="btnView" onClick="edit(this)"/>
-		        		<button class="btn btn-danger fa fa-times" onClick="remove(this)" />
-		    		</div>
-				</td>
+				<td id="lblItemName">`+ item.name +`</td>
+				<td id="lblItemName">`+ item.name +`</td>`;
+				
+			html +=	`
+				<td id="lblItemName"><input type="number" name="stockReceiveItems[`+i+`].quantity" id="quantity" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ quantity +`" /></td>
+				<td id="lblItemName"><input type="number" name="stockReceiveItems[`+i+`].unitCost" id="unitCost" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ unitCost +`" /></td>
+				<td id="lblItemName" class="text-right"><input type="hidden" name="subtotal[`+i+`]" id="subtotal" value="`+subtotal+`" /><span id="html_subtotal">`+subtotal+`</span></td>
+				<td id="lblItemName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>
 			</tr>`;
-			item_count++;
-  		$('#itemsTable tbody').append(html);
-  		$("#grandTotal").html(grand_total);
+  		}
+  	
+  		var total = data.quantity * data.unit_cost;
+  		
+  		$('#itemsTable tbody').html(html);
+  		computeGrandTotal();
   	});
   });
   
@@ -233,7 +242,7 @@ submitStockOpeningBtn.click(function() {
  	submitStockOpeningBtn.attr("disabled", "disabled");
  	submitStockOpeningBtn.text("Processing....");
  	
- 	POST("/api/stock/opening", form.serialize(), function(data) {
+ 	POST("/api/stock/received", form.serialize(), function(data) {
  		console.log(data);
  		
  		if(data.status != "OK") {
@@ -284,21 +293,84 @@ function edit(e) {
 	});
 }
 
-function remove(e) {
-	var selected_row = $(e).parentsUntil("tbody");
-	var total = selected_row.find("#txtQuantity").val() * selected_row.find("#txtUnitCost").val();
-	
-	grand_total = grand_total - total;
-	
-	$("#grandTotal").html(grand_total);
+function remove(e, item_index) {
+	form_items.splice(item_index, 1); // remove this element from the item array
 	$(e).parentsUntil("tbody").remove();
+	computeGrandTotal();
 }
 
-function computeGrandTotal(quantity, unit_cost) {
-	var total = quantity * unit_cost;
-	grand_total = grand_total + total;
-	$("#grandTotal").html(grand_total);
+function computeValues(element, index) {
+	
+	var each = [];
+	var subtotal = 0.00;
+	
+	$.each($(element).closest("tr"), function() {
+		
+		$(this).find("select, input").each(function() {
+			each[$(this).attr("id")] = $(this).val();
+			form_items[index][$(this).attr("id")] = $(this).val();
+			console.log($(this).attr("id") + " = " + $(this).val());
+		});
+
+	});
+
+	console.log(form_items);
+	
+	subtotal = each.quantity * each.unitCost;
+	
+	form_items[index]["subtotal"] = subtotal;
+	$(element).closest("tr").find("#subtotal").val(round2DecimalPlaces(subtotal));
+	$(element).closest("tr").find("#html_subtotal").html(round2DecimalPlaces(subtotal));
+	computeGrandTotal();
 }
+
+function computeGrandTotal() {
+	
+	var grand_total = parseFloat(0);
+	var discount = parseFloat(0);
+	var total_expenses = parseFloat(0);
+	
+	$('#itemsTable > tbody  > tr').each(function() {
+		grand_total = (parseFloat(grand_total) + parseFloat($(this).find("#html_subtotal").text())).toFixed(2);
+	});
+	
+	if($("#discountValue").val() !=""){
+		discount = parseFloat($("#discountValue").val());
+	}else{
+		discount = parseFloat(0);
+	}
+	
+	if($("#total_expenses").html() !=""){
+		total_expenses = parseFloat($("#total_expenses").html());
+	}else{
+		total_expenses = parseFloat(0);
+	}
+	
+	$("#total_item_cost").html(round2DecimalPlaces(grand_total));
+	$("#total_item_cost_with_dc").html(round2DecimalPlaces(grand_total-discount));
+	
+	$("#net_total").html(round2DecimalPlaces((grand_total-discount)+total_expenses));
+	
+	
+}
+
+$("#discountValue").keyup(function(e){
+	computeGrandTotal();
+})
+
+function createPaymentMethod(){
+	$(".payment-method-cc").hide();
+	$("#paymentMethod").unbind("change").change(function(e){
+		if($(this).val() == 'CREDITCARD'){
+			$(".payment-method-cc").show();
+		}else{
+			$(".payment-method-cc").hide();
+		}
+	})
+}
+
+createPaymentMethod();
+
 	/*]]>*/
   </script>
 </head>

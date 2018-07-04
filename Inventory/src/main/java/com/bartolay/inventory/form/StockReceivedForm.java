@@ -152,5 +152,15 @@ public class StockReceivedForm {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	@Override
+	public String toString() {
+		return "StockReceivedForm [systemNumber=" + systemNumber + ", transactionDate=" + transactionDate
+				+ ", document_number=" + document_number + ", location=" + location + ", paymentMethod=" + paymentMethod
+				+ ", creditCardDetails=" + creditCardDetails + ", year=" + year + ", expenses=" + expenses
+				+ ", discountValue=" + discountValue + ", supplier=" + supplier + ", stockReceiveItems="
+				+ stockReceiveItems + ", description=" + description + "]";
+	}
+	
 	
 }
