@@ -1,6 +1,7 @@
 package com.bartolay.inventory.utils;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -35,7 +36,7 @@ public class InventoryUtility {
 	
 	public SalesInvoiceItem subtractQuantitySalesInvoiceItem(SalesInvoiceItem salesInvoiceItem, BigDecimal transaction_quantity) throws SalesInvoiceException {
 		
-		BigDecimal pricePerItem = salesInvoiceItem.getUnitCost().divide(salesInvoiceItem.getQuantity());
+		BigDecimal pricePerItem = salesInvoiceItem.getUnitCost().divide(salesInvoiceItem.getQuantity(), 2, RoundingMode.HALF_UP);
 		
 		BigDecimal quantity = salesInvoiceItem.getQuantity().subtract(transaction_quantity);
 		

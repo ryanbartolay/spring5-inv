@@ -108,4 +108,11 @@ public class SalesReturn {
 		this.updatedBy = updatedBy;
 	}
 
+	@Override
+	public String toString() {
+		return "SalesReturn [id=" + id + ", salesInvoice=" + salesInvoice + ", salesReturnItems=" + salesReturnItems
+				+ ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", updatedDated=" + updatedDated
+				+ ", updatedBy=" + updatedBy + "]";
+	}
+	
 }

@@ -11,6 +11,7 @@ import org.springframework.core.PriorityOrdered;
 import org.springframework.stereotype.Component;
 
 import com.bartolay.inventory.exceptions.SalesInvoiceException;
+import com.bartolay.inventory.exceptions.SalesReturnException;
 import com.bartolay.inventory.form.SalesReturnForm;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
@@ -68,8 +69,7 @@ public class _11SalesReturnBootstrap implements ApplicationListener<ContextRefre
 		salesReturnForm.setSalesReturnItems(salesReturnItems);
 		try {
 			salesReturnService.create(salesReturnForm);
-		} catch (SalesInvoiceException e) {
-			// TODO Auto-generated catch block
+		} catch (SalesReturnException e) {
 			e.printStackTrace();
 		}
 	}

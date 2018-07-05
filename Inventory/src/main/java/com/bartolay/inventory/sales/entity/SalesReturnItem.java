@@ -34,7 +34,7 @@ public class SalesReturnItem {
 	@JoinColumn(nullable=false, updatable=false)
 	private SalesReturn salesReturn;
 	
-	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="sales_invoice_item_id", nullable=false, insertable=true, updatable=false)
 	private SalesInvoiceItem salesInvoiceItem;
 	

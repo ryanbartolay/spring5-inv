@@ -538,6 +538,9 @@ public class InventoryCoreService {
 			throw new SalesReturnException("Sales Invoice not found");
 		}
 
+		System.err.println("asdadadada");
+		System.err.println(salesReturn);
+		
 		List<SalesInvoiceItem> items = salesInvoice.getSalesInvoiceItems();
 
 		List<Inventory> inventories = inventoryRepository.findByLocation(salesInvoice.getLocation());
@@ -554,6 +557,10 @@ public class InventoryCoreService {
 				
 				SalesInvoiceItem salesInvoiceItem = items.get(items.indexOf(salesReturnItem.getSalesInvoiceItem()));
 
+				System.err.println("zxcv");
+				System.err.println(salesInvoiceItem);
+				System.err.println(salesReturnItem.getQuantity());
+				
 				SalesInvoiceItem tx_SalesInvoiceItem = inventoryUtility.subtractQuantitySalesInvoiceItem(salesInvoiceItem, salesReturnItem.getQuantity());
 				
 				Inventory inventory = inventoryUtility.findInventoryFromList(inventories, salesInvoice.getLocation(), salesInvoiceItem.getItem(), salesInvoiceItem.getUnit());
@@ -563,6 +570,7 @@ public class InventoryCoreService {
 				inventoryTransaction.setItem(salesInvoiceItem.getItem());
 				inventoryTransaction.setLocation(salesInvoice.getLocation());
 				inventoryTransaction.setUnit(salesInvoiceItem.getUnit());
+//				inventoryTransaction.setUnitCost(salesRet);
 				inventoryTransaction.setTransactionType(TransactionType.SALES_RETURN);
 				inventoryTransaction.setRawQuantity(salesReturnItem.getQuantity());
 				inventoryTransaction.setTransactionSystemNumber(salesInvoice.getSystemNumber());
@@ -576,6 +584,7 @@ public class InventoryCoreService {
 
 				inventoryTransaction.setQuantityAfter(inventory.getQuantity());
 
+				salesReturnItem.setCreatedBy(userCredentials.getLoggedInUser());
 				salesInvoiceItemsForSave.add(tx_SalesInvoiceItem);
 				inventoryTransactionsForSave.add(inventoryTransaction);
 				inventoriesForSave.add(inventory);

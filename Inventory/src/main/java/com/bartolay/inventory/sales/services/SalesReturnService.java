@@ -4,13 +4,13 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import com.bartolay.inventory.exceptions.SalesInvoiceException;
+import com.bartolay.inventory.exceptions.SalesReturnException;
 import com.bartolay.inventory.form.SalesReturnForm;
 import com.bartolay.inventory.sales.entity.SalesReturn;
 
 public interface SalesReturnService {
 
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
-	SalesReturn create(SalesReturnForm returnForm) throws SalesInvoiceException;
+	SalesReturn create(SalesReturnForm returnForm) throws SalesReturnException;
 	
 }
