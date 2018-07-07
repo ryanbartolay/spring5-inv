@@ -46,6 +46,5 @@ public class SalesReturnForm {
 		return "SalesReturnForm [salesInvoice=" + salesInvoice + ", salesReturnItems=" + salesReturnItems + ", remarks="
 				+ remarks + "]";
 	}
-
-	
+		
 }

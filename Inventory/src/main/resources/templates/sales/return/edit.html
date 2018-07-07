@@ -1,7 +1,7 @@
 <div class="row">
 
 	<div class="col-lg-12">
-		<form th:object="${salesInvoiceForm}" id="salesInvoiceForm"
+		<form th:object="${salesReturnForm}" id="salesReturnForm"
 			th:action="@{/api/sales/invoice}" method="POST">
 
 			<div class="panel panel-default">
@@ -12,12 +12,12 @@
 						</div>
 						<div class="col-md-8">
 							<div class="btn-group pull-right" role="group">
-								<button type="submit" id="submitSalesInvoiceBtn"
+								<button type="submit" id="submitSalesReturnBtn"
 									class="btn btn-success btn-sm">Submit Sales Return</button>
-								<a th:href="@{'/sales/invoice/}"
+								<a th:href="@{/sales/invoice/}+${salesInvoice.systemNumber}"
 									class="btn btn-warning btn-sm"> <span class="fa fa-file-o"></span>
-									Show Sales Invoice</a> <a
-									th:href="@{/sales/return}" class="btn btn-default btn-sm"><span
+									Show Sales Invoice
+								</a> <a th:href="@{/sales/return}" class="btn btn-default btn-sm"><span
 									class="fa fa-list"></span> Back to List of Sales Returns</a>
 
 							</div>
@@ -30,16 +30,19 @@
 
 					<div class="col-md-3">
 
-						<label><span class="text-danger">Sales Invoice</span> System Number</label> <input type="text"
-							class="form-control"
-							th:field="${salesInvoice.systemNumber}"> <label>Document
-							Number </label> <input type="text" class="form-control"
-							disabled="disabled" th:field="${salesInvoice.documentNumber}">
+						<label><span class="text-danger">Sales Invoice</span>
+							System Number</label> <select class="form-control"
+							name="salesInvoice.systemNumber" id="salesInvoice.systemNumber">
+
+						</select> <label>Document Number </label> <input type="text"
+							class="form-control" disabled="disabled"
+							th:field="${salesInvoice.documentNumber}">
 					</div>
 
 					<div class="col-md-3">
 						<label>Customer:</label> <input type="text" class="form-control"
-							disabled="disabled" th:field="${salesInvoice.customer}">
+							disabled="disabled"
+							th:value="${salesInvoice?.customer == null ? '':salesInvoice?.customer?.firstName +' '+ salesInvoice?.customer?.lastName}">
 						<label>Payment Method :</label> <input type="text"
 							class="form-control" disabled="disabled"
 							th:field="${salesInvoice.paymentMethod}">
@@ -56,7 +59,7 @@
 
 					<div class="col-md-3">
 						<label>Location:</label> <input type="text" class="form-control"
-							disabled="disabled" th:field="${salesInvoice.location}">
+							disabled="disabled" th:value="${salesInvoice?.location?.name}">
 					</div>
 
 					<div class="col-md-12 clearfix">
@@ -64,6 +67,8 @@
 							class="form-control" disabled="disabled"
 							th:field="${salesInvoice.description}">
 					</div>
+
+					<div class="col-md-12 clearfix">&nbsp;</div>
 
 					<div class="table-responsive col-md-12">
 
@@ -77,22 +82,58 @@
 									<th>U.Desc</th>
 									<th class="text-right">Unit Price</th>
 									<th class="text-right">Sales Price</th>
-									<th class="text-right">Return Quantity</th>
+									<th class="text-right" width="150px">Return Quantity</th>
 									<th class="text-right">Sales Return</th>
-									<th></th>
 								</tr>
 							</thead>
 							<tbody>
+								<tr th:each="salesInvoiceItem, iter : ${salesInvoiceItems}"
+									th:remove="tag">
+									<td class="primary-data" th:text="${salesInvoiceItem.id}"
+										th:attr="data-id=${salesInvoiceItem.id},
+							   						 data-itemCode=${salesInvoiceItem.item.code},
+							   						 data-itemName=${salesInvoiceItem.item.name},
+							   						 data-quantity=${salesInvoiceItem.quantity},
+							   						 data-table_records=${iter.size},
+							   						 data-unitAbbreviation=${salesInvoiceItem.unit.abbreviation},
+							   						 data-unitDescription=${salesInvoiceItem.unit.name},
+							   						 data-unitPrice=${salesInvoiceItem.unitCost},
+							   						 data-unitPriceTotal=${salesInvoiceItem.unitCostTotal}
+							   						 
+							   			">
+									<td th:text="${salesInvoiceItem.item.code}">
+									<td th:text="${salesInvoiceItem.item.name}">
+									<td th:text="${salesInvoiceItem.quantity}">
+									<td th:text="${salesInvoiceItem.unit.name}">
+									<td class="unitPrice" th:text="${salesInvoiceItem.unitCost}">
+									<td th:text="${salesInvoiceItem.unitCostTotal}">
+									<td>
+										<input type="hidden" th:name="|salesReturnItems[${iter.index}].salesInvoiceItem|" th:value="${salesInvoiceItem.id}" >
+									<input type="number" data-toggle="tooltip"
+										data-trigger="manual" title="This is my tooltip"
+										th:name="|salesReturnItems[${iter.index}].quantity|"
+										id="quantity" class="form-control" value="0"
+										th:max="${salesInvoiceItem.quantity}"
+										th:onkeyup="|computeValues(this, ${iter.index});|"
+										th:onkeydown="|computeValues(this, ${iter.index});|"
+										th:onblur="|computeValues(this, ${iter.index});|"
+										th:onchange="|computeValues(this, ${iter.index});|"></td>
+									<td id="lblItemName" class="text-right"><span
+										id="html_subtotal">0.00</span></td>
+								</tr>
 							</tbody>
+
 							<tfoot>
 								<tr>
 									<th colspan="7"></th>
 									<th><h3>Total</h3></th>
 									<th><h3 class="text-right" id="grandTotal"></h3></th>
-									<th></th>
 								</tr>
 							</tfoot>
 						</table>
+						<div class="col-md-12">
+							<label>Remarks :</label> <input type="text" class="form-control" th:field="*{{remarks}}">
+						</div>
 					</div>
 				</div>
 			</div>
@@ -101,80 +142,61 @@
 	<!-- /.col-lg-12 -->
 </div>
 
-<!-- Item Modal -->
-<div th:include="includes/modals/itemModal_salesReturnItems"></div>
-
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
 
 var systemNumber = /*[[${salesInvoice.systemNumber}]]*/ '0';
-
 var form_items = [];
 
+$(".primary-data").map(function(index){
+	console.log(index, )
+	var data = $(this).data();
+	data.subtotal = 0;
+	form_items.push(data);
+})
+
+
 $( function() {
-	var current_year = (new Date()).getFullYear();
 	
-	$( "#transactionDate" ).datepicker();
-	
-    $('.yearselect').yearselect({
-    	order: 'desc',	
- 		start: current_year - 5,
- 		end: current_year + 5
-    });
+	if(systemNumber){
+		var current_year = (new Date()).getFullYear();
+		
+		$( "#transactionDate" ).datepicker();
+		
+	    $('.yearselect').yearselect({
+	    	order: 'desc',	
+	 		start: current_year - 5,
+	 		end: current_year + 5
+	    });
+	    
+	    $('[name=year]').val( current_year );
+	    
+	    
+	}else{
+		$("#btnAddItem").attr("disabled", true);
+	}
+	var systemNumberHtml = $("select[name='salesInvoice.systemNumber']");
+    var html = "";
+    GET('/api/sales/invoices/all', function(data){
+    	if(data != null){
+    		for (var i = 0; i < data.length; i++) {
+    			html += '<option value="'+data[i].systemNumber+'">'+data[i].systemNumber+'</option>'
+			}
+    		console.log(systemNumberHtml)
+    		systemNumberHtml.html(html);
+    		systemNumberHtml.val(systemNumber);
+    	}
+    })
     
-    $('[name=year]').val( current_year );
+    systemNumberHtml.change(function(){
+    	location.href='/sales/return/create/'+$(this).val();
+    })
+    
+    systemNumberHtml.select2()
+    
+    computeGrandTotal();
+    
 });
-
-$("#btnAddItem").on("click", function() {
-	addItem({type: "sales_return", systemNumber: systemNumber, label:"Invoice # : " + systemNumber }, function(data) {
-		
-  		for(var i = 0; i < data.length; i++) {
-  			form_items.push(data[i]);
-  		}
-				
-		var html = ``;
-		
-  		for(var i = 0; i < form_items.length; i++) {
-  		
-  			var item = form_items[i];
-  			var subtotal = (item.subtotal ? item.subtotal : "0.00");
-  			
-  			html += `<tr>
-				<th id="lblItemId">`+ item.id +`
-					<input type="hidden" name="salesReturn[`+i+`].item" value="`+item["id"]+`" />
-					<input type="hidden" name="salesReturn[`+i+`].subtotal" id="subtotal" value="`+subtotal+`" />
-					<input type="hidden" name="salesReturn[`+i+`].unitPrice" id="unitPrice" value="`+item["unitPrice"]+`" />
-					<input type="hidden" name="salesReturn[`+i+`].salesQuantity" id="salesQuantity" value="`+item["quantity"]+`" />
-				</th>
-				<td id="lblItemName">`+ item["itemCode"] +`</td>
-				<td id="lblItemName">`+ item["itemName"] +`</td>
-				<td id="lblItemName" class="text-right">`+ item["quantity"] +`</td>
-				<td id="lblItemName">`+ item["unitDescription"] +`</td>
-				<td id="lblItemName" class="text-right">`+ item["unitPrice"] +`</td>
-				<td id="lblItemName" class="text-right">`+ item["unitPriceTotal"] +`</td>
-				<td id="lblItemName">
-					<input type="number" data-toggle="tooltip" data-trigger="manual" title="This is my tooltip" name="salesReturn[`+i+`].quantity" id="quantity" class="form-control" value="0" max="`+item["quantity"]+`"
-					onKeyup="computeValues(this,`+i+`)"
-					onKeydown="computeValues(this,`+i+`)"
-					onBlur="computeValues(this,`+i+`)"
-					onChange="computeValues(this,`+i+`)" />
-					<span id="quantity_error"></span>
-				</td>
-				<td id="lblItemName" class="text-right"><span id="html_subtotal">`+ subtotal +`</span></td>
-				<td id="lblItemName"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>`;
-  		}
-  		
-  		$('#itemsTable tbody').html(html);
-  		
-  		computeGrandTotal();
-	});
-});
-
-function remove(e, item_index) {
-	form_items.splice(item_index, 1); // remove this element from the item array
-	$(e).parentsUntil("tbody").remove();
-	computeGrandTotal();
-}
 
 function computeValues(element, index) {
 	
@@ -196,8 +218,14 @@ function computeValues(element, index) {
 	
 	$.each($(element).closest("tr"), function() {
 		
+		if($(this).find(".unitPrice")){
+			each['unitPrice'] = $(this).find(".unitPrice").text()
+		}
+		
+		
 		$(this).find("input").each(function() {
 			each[$(this).attr("id")] = $(this).val();
+			console.log($(this).attr("id"))
 			form_items[index][$(this).attr("id")] = $(this).val();
 			console.log($(this).attr("id") + " = " + $(this).val());
 		});
@@ -205,6 +233,9 @@ function computeValues(element, index) {
 	});
 
 	subtotal = each.quantity * each.unitPrice;
+	
+	
+	console.log(subtotal, each);
 	
 	form_items[index]["subtotal"] = subtotal;
 	$(element).closest("tr").find("#subtotal").val(round2DecimalPlaces(subtotal));
@@ -231,5 +262,30 @@ function computeGrandTotal() {
 	
 	$("#grandTotal").html(grand_total);
 }
+
+
+var submitSalesReturnBtn = $("#submitSalesReturnBtn");
+var salesReturnForm = $("#salesReturnForm");
+submitSalesReturnBtn.click(function() {
+	  
+ 	var original_text = submitSalesReturnBtn.text();
+ 	submitSalesReturnBtn.attr("disabled", "disabled");
+ 	submitSalesReturnBtn.text("Processing....");
+ 	
+ 	console.log(salesReturnForm.serialize())
+ 	
+ 	POST("/api/sales/return", salesReturnForm.serialize(), function(data) {
+ 		
+ 		console.log('data : ',data)
+ 		if(data.status != "OK") {
+ 			displayErrors(data, $("#errors"));
+ 			submitSalesReturnBtn.removeAttr("disabled");
+ 			submitSalesReturnBtn.text(original_text);
+ 		} else {
+ 			window.location.replace('/sales/return')
+ 		}
+ 	});
+});
+
 /*]]>*/
 </script>

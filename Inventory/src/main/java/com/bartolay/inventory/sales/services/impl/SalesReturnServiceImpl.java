@@ -1,7 +1,9 @@
 package com.bartolay.inventory.sales.services.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -17,8 +19,11 @@ import com.bartolay.inventory.exceptions.SalesInvoiceException;
 import com.bartolay.inventory.exceptions.SalesReturnException;
 import com.bartolay.inventory.form.SalesReturnForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
+import com.bartolay.inventory.sales.entity.SalesInvoice;
+import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
 import com.bartolay.inventory.sales.entity.SalesReturn;
 import com.bartolay.inventory.sales.entity.SalesReturnItem;
+import com.bartolay.inventory.sales.repositories.SalesInvoiceItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesReturnRepository;
 import com.bartolay.inventory.sales.services.SalesReturnService;
 import com.bartolay.inventory.services.InventoryCoreService;
@@ -37,6 +42,9 @@ public class SalesReturnServiceImpl implements SalesReturnService{
 	private SalesReturnRepository salesReturnRepository;
 	@Autowired
 	private InventoryCoreService inventoryCoreService;
+	
+	@Autowired
+	private SalesInvoiceItemRepository salesInvoiceItemRepository;
 	
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
@@ -57,16 +65,39 @@ public class SalesReturnServiceImpl implements SalesReturnService{
 
 	@Override
 	public SalesReturn create(SalesReturnForm returnForm) throws SalesReturnException {
+		
+		
 		if(returnForm.getSalesInvoice() == null) {
 			throw new SalesReturnException("Sales invoice is invalid!");
 		}
 		if(returnForm.getSalesReturnItems().isEmpty()) {
 			throw new SalesReturnException("Must select at least 1 sales return item.!");
 		}
+		
+		List<SalesReturnItem> discardedItems = new ArrayList<>();
+		
 		for (SalesReturnItem salesReturnItem : returnForm.getSalesReturnItems()) {
-			if(salesReturnItem.getQuantity().equals(new BigDecimal("0"))) {
-				throw new SalesReturnException("Return quantity cannot be 0.");
+			
+			System.err.println("SalesReturn");
+			System.err.println(salesReturnItem);
+			System.err.println(salesReturnItem.getSalesInvoiceItem());
+			if(salesReturnItem.getQuantity().doubleValue() < 0) {
+				throw new SalesReturnException("Invalid value " + salesReturnItem.getQuantity());
 			}
+			
+			if(salesReturnItem.getQuantity().compareTo(salesReturnItem.getSalesInvoiceItem().getQuantity()) > 0) {
+				throw new SalesReturnException("Quantity must not be bigger than the Invoice Item Quantity (" + salesReturnItem.getQuantity() + ").");
+			}
+			
+			if(salesReturnItem.getQuantity().equals(new BigDecimal("0"))) {
+				discardedItems.add(salesReturnItem);
+			}
+		}
+		
+		returnForm.getSalesReturnItems().removeAll(discardedItems);
+		
+		if(returnForm.getSalesReturnItems().size() <= 0) {
+			throw new SalesReturnException("You need to add atleast 1 item.");
 		}
 		
 		SalesReturn salesReturn = new SalesReturn();

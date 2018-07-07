@@ -106,14 +106,30 @@ public class SalesController {
 		return model;
 	}
 	
-	@RequestMapping(value="/return/create")
-	public ModelAndView salesReturnCreate(ModelAndView mav) {
+	@RequestMapping(value="/return/{system_number}")
+	public ModelAndView salesReturnView(ModelAndView mav, @PathVariable String system_number) {
+		SalesInvoice salesInvoice = salesInvoiceRepository.findSalesInvoiceById(system_number);
+		
+		System.err.println("xxxxxxxx");
+		System.out.println(salesInvoice.getCustomer());
 		
 		mav.setViewName("sales/index");
 		mav.addObject("html", "return/view");
 		mav.addObject("method", "POST");
 		
-		mav.addObject("salesInvoiceForm", new SalesInvoiceForm());
+		mav.addObject("salesInvoiceItems", salesInvoice.getSalesInvoiceItems());
+		mav.addObject("salesInvoice", salesInvoice);
+		return mav;
+	}
+	
+	@RequestMapping(value="/return/create")
+	public ModelAndView salesReturnCreate(ModelAndView mav) {
+		
+		mav.setViewName("sales/index");
+		mav.addObject("html", "return/edit");
+		mav.addObject("method", "POST");
+		
+		mav.addObject("salesReturnForm", new SalesReturnForm());
 		mav.addObject("salesInvoiceItems", new ArrayList<SalesInvoiceItem>());
 		mav.addObject("salesInvoice", new SalesInvoice());
 		
@@ -121,22 +137,19 @@ public class SalesController {
 	}
 
 	
-	@RequestMapping(value="/return/{system_number}")
+	@RequestMapping(value="/return/create/{system_number}")
 	public ModelAndView salesReturnEdit(ModelAndView mav, @PathVariable String system_number) {
 		SalesInvoice salesInvoice = salesInvoiceRepository.findById(system_number).get();
 		
 		mav.setViewName("sales/index");
-		mav.addObject("html", "return/view");
+		mav.addObject("html", "return/edit");
 		mav.addObject("method", "POST");
 		
-		mav.addObject("salesInvoiceForm", new SalesInvoiceForm());
+		mav.addObject("salesReturnForm", new SalesReturnForm());
 		mav.addObject("salesInvoiceItems", salesInvoice.getSalesInvoiceItems());
-		
-		
 		mav.addObject("salesInvoice", salesInvoice);
 		return mav;
 	}
-	
 	
 
 }
