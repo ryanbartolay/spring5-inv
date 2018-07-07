@@ -10,7 +10,7 @@
 					</button>
 				<div class="col-md-2">
 					
-					<h4 class="modal-title" id="myModalLabel">Item List</h4>
+					<h4 class="modal-title" id="myModalLabel">Expenses List</h4>
 				</div>
 					<div class="col-md-5">
 						<label id="itemLocationModal"></label>
@@ -119,7 +119,7 @@ expensesModalAddItem_btn.click(function() {
 	});
 	
 	if(selected_expenses.length <= 0) {
-		$("#expensesSelectedStatus").html("<span style='color:red'>Select atleast 1 Item</span>");
+		$("#expensesSelectedStatus").html("<span style='color:red'>Select atleast 1 Expenses</span>");
 	} else {
 		expensesModalSimple_callback(selected_expenses);
 		expensesModalSimple_modal.modal("hide");
