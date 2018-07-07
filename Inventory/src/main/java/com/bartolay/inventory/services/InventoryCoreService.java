@@ -460,9 +460,12 @@ public class InventoryCoreService {
 		// expenses
 		if(stockReceive.getStockReceiveExpenses() != null) {
 			for(StockReceivedExpense expense : stockReceive.getStockReceiveExpenses()) {
-				expense.setStockReceive(stockReceive);
-				expense.setCreatedBy(userCredentials.getLoggedInUser());
-				stockReceive.setExpensesTotal(stockReceive.getExpensesTotal().add(expense.getAmount()));
+				if(expense != null) {
+					expense.setStockReceive(stockReceive);
+					expense.setCreatedBy(userCredentials.getLoggedInUser());
+					stockReceive.setExpensesTotal(stockReceive.getExpensesTotal().add(expense.getAmount()));
+				}
+				
 			}
 		}
 

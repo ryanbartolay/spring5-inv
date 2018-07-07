@@ -10,5 +10,6 @@ import com.bartolay.inventory.stock.entity.StockReceived;
 
 public interface StockReceivedService {
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
+	public JSONObject retrieveExpensesDatatableList(Map<String, String> requestMap);
 	public StockReceived create(StockReceivedForm openingStockForm) throws StockReceiveException;
 }

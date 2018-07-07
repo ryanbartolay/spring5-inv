@@ -130,9 +130,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<td>1</td>
-								<td>Transportation</td>
-								<td><input type="number" class="form-control" /></td>
+								
 							</tbody>
 						</table>
 					</div>
@@ -178,6 +176,7 @@
 
 <!-- Item Modal -->
 <div th:include="includes/modals/itemModal_simple"></div>
+<div th:include="includes/modals/expenses_modal"></div>
 
 <script>
 /*<![CDATA[*/
@@ -221,21 +220,26 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
   			var unitCost = (item.unitCost ? item.unitCost : "0.00");
   			var subtotal = (item.subtotal ? item.subtotal : "0.00");
   			
-  			var units = JSON.parse(form_items[i].units);
-  			console.log(item)
-  			html += `<tr>
-				<th id="lblItemId">`+ item.id +`<input type="hidden" name="stockReceiveItems[`+i+`].item" value="`+item.id+`" /></th>
-				<td id="lblItemName">`+ item.code +`</td>
-				<td id="lblItemName">`+ item.name +`</td>
-				<td id="lblItemName">`+ item.name +`</td>
-				<td id="lblItemName">`+ item.name +`</td>`;
-				
-			html +=	`
-				<td id="lblItemName"><input type="number" name="stockReceiveItems[`+i+`].quantity" id="quantity" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ quantity +`" /></td>
-				<td id="lblItemName"><input type="number" name="stockReceiveItems[`+i+`].unitCost" id="unitCost" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ unitCost +`" /></td>
-				<td id="lblItemName" class="text-right"><input type="hidden" name="subtotal[`+i+`]" id="subtotal" value="`+subtotal+`" /><span id="html_subtotal">`+subtotal+`</span></td>
-				<td id="lblItemName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>
-			</tr>`;
+  			console.log(form_items[i].units)
+  			try {
+  				var units = JSON.parse(form_items[i].units);
+  	  			console.log("item", item)
+  	  			html += `<tr>
+  					<th id="lblItemId">`+ item.id +`<input type="hidden" name="stockReceiveItems[`+i+`].item" value="`+item.id+`" /></th>
+  					<td id="lblItemName">`+ item.code +`</td>
+  					<td id="lblItemName">`+ item.name +`</td>
+  					<td id="lblItemName">`+ item.name +`</td>
+  					<td id="lblItemName">`+ item.name +`</td>`;
+  					
+  				html +=	`
+  					<td id="lblItemName"><input type="number" name="stockReceiveItems[`+i+`].quantity" id="quantity" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ quantity +`" /></td>
+  					<td id="lblItemName"><input type="number" name="stockReceiveItems[`+i+`].unitCost" id="unitCost" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ unitCost +`" /></td>
+  					<td id="lblItemName" class="text-right"><input type="hidden" name="subtotal[`+i+`]" id="subtotal" value="`+subtotal+`" /><span id="html_subtotal">`+subtotal+`</span></td>
+  					<td id="lblItemName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>
+  				</tr>`;
+			} catch (e) {
+			}
+  			
   		}
   	
   		var total = data.quantity * data.unit_cost;
@@ -358,7 +362,7 @@ function computeGrandTotal() {
 	$("#total_item_cost").html(round2DecimalPlaces(grand_total));
 	$("#total_item_cost_with_dc").html(round2DecimalPlaces(grand_total-discount));
 	
-	$("#net_total").html(round2DecimalPlaces((grand_total-discount)+total_expenses));
+	$("#net_total").html(round2DecimalPlaces((grand_total-discount)-total_expenses));
 	
 	
 }
@@ -379,6 +383,72 @@ function createPaymentMethod(){
 }
 
 createPaymentMethod();
+
+var btnAddExpense = $("#btnAddExpense");
+var form_expenses = [];
+
+btnAddExpense.click(function(){
+	addExpenses({type: "stock_receive", label:"Add Stock Receive Item"}, function(data) {
+  		for(var i = 0; i < data.length; i++) { 
+  			var isExist = true;
+  			for (var j = 0; j < form_expenses.length; j++) {
+  				console.log(form_expenses[j], data[i])
+				if(form_expenses[j] != undefined && form_expenses[j].description == data[i].description){
+					isExist = false;
+				}
+			}
+  			if(isExist){
+  				data[i].amount = 0;
+  				form_expenses.push(data[i]);        
+  		    }  
+  		}
+  		var html = ``;
+  		for(var i = 0; i < form_expenses.length; i++) {
+  			var exp = form_expenses[i];	
+  			
+  			if(exp && exp.description != undefined){
+  				html += `<tr>
+  					<th id="lblExpensesId">`+ exp.id +`<input type="hidden" name="expenses[`+i+`].id" value="`+exp.id+`" /></th>
+  					<td id="lblExpensesName">`+ exp.description +`</td>`
+  					
+  				html +=	`
+  					<td id="lblExpensesName"><input type="number" name="expenses[`+i+`].amount" id="amount" onChange="computeExpensesTotalValues(this, '`+ exp.id+`')" class="form-control" value="`+ exp.amount +`" /></td>
+  					<td id="lblExpensesName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="removeExpense(this, '`+ exp.id+`')" /></td>
+  					</tr>`;
+  			}
+  			
+  		}
+  		
+  		$('#expenseTable tbody').html(html);
+  		computeExpensesTotalValues();
+  	});
+})
+function computeExpensesTotalValues(ele, id){
+	var total_expenses = 0;
+	for (var j = 0; j < form_expenses.length; j++) {
+		if(form_expenses[j] && form_expenses[j].id == id){
+			form_expenses[j].amount = $(ele).val();
+		}
+	}
+	$("#expenseTable").find("input").each(function(e){
+		if($(this).attr("id") == "amount" && $(this).val() != ""){
+			total_expenses += parseFloat($(this).val());
+		}
+		$("#total_expenses").text(total_expenses)
+	})
+	computeGrandTotal();
+}
+
+function removeExpense(ele, id){
+	$(ele).parentsUntil("tbody").remove();
+	for (var j = 0; j < form_expenses.length; j++) {
+		if(form_expenses[j] && form_expenses[j].id == id){
+			delete form_expenses[j]
+		}
+	}
+	computeExpensesTotalValues();
+}
+
 
 	/*]]>*/
   </script>

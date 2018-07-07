@@ -31,6 +31,11 @@ public class StockReceivedRestController extends AbstractRestController {
 		return stockReceivedService.retrieveDatatableList(requestMap).toString();
 	}
 	
+	@RequestMapping(value="/api/datatable/stock/expenses", method=RequestMethod.GET, produces="application/json")
+	public String datatableExpenses(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
+		return stockReceivedService.retrieveExpensesDatatableList(requestMap).toString();
+	}
+	
 	@RequestMapping(value="/api/stock/received", method=RequestMethod.POST)
 	public String create(@Valid StockReceivedForm stockReceivedForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 		if (bindingResult.hasErrors()) {
