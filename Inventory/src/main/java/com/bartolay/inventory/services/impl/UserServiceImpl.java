@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserService<User> {
 	@Autowired
 	private UserJdbcRepository userJdbcRepository;
 	
+	
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
 		DatatableParameter parameter = new DatatableParameter(requestMap);
@@ -106,8 +107,9 @@ public class UserServiceImpl implements UserService<User> {
 	}
 
 	@Override
-	public List<User> findAllSales(AccountType accountType) {
-		return userRepository.findAllByAccountType(accountType);
+	public List<User> findAllSales() {
+		UserGroup group = userGroupRepository.findByName("Sales");
+		return userRepository.findAllByUserGroup(group);
 	}
 
 	@Override
@@ -121,7 +123,8 @@ public class UserServiceImpl implements UserService<User> {
 		if(requestMap.get("filter") != null && !requestMap.get("filter").trim().isEmpty()) {
 			return userRepository.findAllByTypeAndFilter(accountType, requestMap.get("filter"));
 		}
-		return userRepository.findAllByAccountType(accountType);
+		UserGroup group = userGroupRepository.findByName("Sales");
+		return userRepository.findAllByUserGroup(group);
 	}
 
 	@Override

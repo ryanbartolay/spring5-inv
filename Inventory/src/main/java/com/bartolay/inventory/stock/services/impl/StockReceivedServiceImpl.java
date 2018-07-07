@@ -48,6 +48,22 @@ public class StockReceivedServiceImpl implements StockReceivedService {
 	}
 
 	@Override
+	public JSONObject retrieveExpensesDatatableList(Map<String, String> requestMap) {
+		DatatableParameter parameter = new DatatableParameter(requestMap);
+		JSONArray array = stockReceivedDatatableRepository.findAllData(parameter);
+		long recordsTotal = stockReceivedDatatableRepository.findAllCount(parameter);
+		
+		JSONObject object = new JSONObject();
+		object.put("data", array);
+		object.put("recordsTotal", recordsTotal);
+		object.put("recordsFiltered", recordsTotal);
+		object.put("draw", parameter.getDraw());
+		
+		return object;
+	}
+
+	
+	@Override
 	public StockReceived create(StockReceivedForm stockReceiveForm) throws StockReceiveException {
 		
 		if(stockReceiveForm.getStockReceiveItems().size() <= 0) {

@@ -9,6 +9,8 @@ import com.bartolay.inventory.entity.UserGroup;
 
 @Repository
 public interface UserGroupRepository extends CrudRepository<UserGroup, Integer> {
+
+	UserGroup findByName(String string);
 	
 //	@Query(value = "SELECT ug FROM UserGroup ug join fetch ug.users where ug.name = :name")
 //	public UserGroup findByName(@Param("name") String name);
