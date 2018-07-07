@@ -29,6 +29,14 @@
 			</div>
 
 			<div class="x_content">
+			<div
+        id="errors"
+        th:if="${(param.message != null)}">
+            <div class="alert alert-success fade in alert-dismissible">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+    <strong>Success!</strong> <span th:text="${{param.message}}"></span>
+</div>
+    </div>
 
 				<div class="table-responsive">
 					<table class="table table-striped" id="salesReturn-datatable" style="width: 100%">
@@ -73,7 +81,7 @@
 							data : "id",
 							name : "t1.id",
 							render: function ( data, type, row ) {
-								return '<a href="/sales/return/'+ row.sales_invoice_system_number +'">' + data + '</a>';	
+								return '<a href="/sales/return/'+ data +'">' + data + '</a>';	
 		                    }
 						}, 
 						{
@@ -81,7 +89,7 @@
 							name : "t2.system_number",
 							render: function ( data, type, row ) {
 								if(data) {
-									return '<a href="/sales/return/'+ data +'">' + data + '</a>';	
+									return '<a href="/sales/return/'+ row.id +'">' + data + '</a>';	
 								}
 		                        return '';
 		                    }

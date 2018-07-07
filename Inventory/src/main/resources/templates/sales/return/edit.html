@@ -17,8 +17,8 @@
 								<a th:href="@{/sales/invoice/}+${salesInvoice.systemNumber}"
 									class="btn btn-warning btn-sm"> <span class="fa fa-file-o"></span>
 									Show Sales Invoice
-								</a> <a th:href="@{/sales/return}" class="btn btn-default btn-sm"><span
-									class="fa fa-list"></span> Back to List of Sales Returns</a>
+								</a> <a th:href="@{/sales/return}" class="btn btn-danger btn-sm"><span
+									class="fa fa-list"></span> Cancel</a>
 
 							</div>
 						</div>
@@ -282,7 +282,7 @@ submitSalesReturnBtn.click(function() {
  			submitSalesReturnBtn.removeAttr("disabled");
  			submitSalesReturnBtn.text(original_text);
  		} else {
- 			window.location.replace('/sales/return')
+ 			window.location.replace('/sales/return?message=Successfully created Sales Return');
  		}
  	});
 });

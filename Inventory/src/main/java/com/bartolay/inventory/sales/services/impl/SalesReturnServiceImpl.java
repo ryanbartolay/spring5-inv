@@ -66,6 +66,8 @@ public class SalesReturnServiceImpl implements SalesReturnService{
 	@Override
 	public SalesReturn create(SalesReturnForm returnForm) throws SalesReturnException {
 		
+		SalesReturn salesReturn = new SalesReturn();
+		salesReturn.setTotalPrice(new BigDecimal("0"));
 		
 		if(returnForm.getSalesInvoice() == null) {
 			throw new SalesReturnException("Sales invoice is invalid!");
@@ -78,9 +80,6 @@ public class SalesReturnServiceImpl implements SalesReturnService{
 		
 		for (SalesReturnItem salesReturnItem : returnForm.getSalesReturnItems()) {
 			
-			System.err.println("SalesReturn");
-			System.err.println(salesReturnItem);
-			System.err.println(salesReturnItem.getSalesInvoiceItem());
 			if(salesReturnItem.getQuantity().doubleValue() < 0) {
 				throw new SalesReturnException("Invalid value " + salesReturnItem.getQuantity());
 			}
@@ -91,6 +90,11 @@ public class SalesReturnServiceImpl implements SalesReturnService{
 			
 			if(salesReturnItem.getQuantity().equals(new BigDecimal("0"))) {
 				discardedItems.add(salesReturnItem);
+			} else {
+				salesReturnItem.setUnitPrice(salesReturnItem.getSalesInvoiceItem().getUnitCost());
+				salesReturnItem.setUnitPriceTotal(salesReturnItem.getQuantity().multiply(salesReturnItem.getUnitPrice()));
+				
+				salesReturn.setTotalPrice(salesReturn.getTotalPrice().add(salesReturnItem.getUnitPriceTotal()));
 			}
 		}
 		
@@ -100,7 +104,6 @@ public class SalesReturnServiceImpl implements SalesReturnService{
 			throw new SalesReturnException("You need to add atleast 1 item.");
 		}
 		
-		SalesReturn salesReturn = new SalesReturn();
 		salesReturn.setCreatedBy(userCredentials.getLoggedInUser());
 		salesReturn.setUpdatedBy(userCredentials.getLoggedInUser());
 		salesReturn.setCreatedDate(new Date());
@@ -108,10 +111,7 @@ public class SalesReturnServiceImpl implements SalesReturnService{
 		salesReturn.setSalesReturnItems(returnForm.getSalesReturnItems());
 		
 		try {
-			inventoryCoreService.createSalesReturn(salesReturn);
-			
-//			salesReturn = salesReturnRepository.save(salesReturn);
-			
+			inventoryCoreService.createSalesReturn(salesReturn);			
 			return salesReturn;
 		} catch (SalesReturnException e) {
 			e.printStackTrace();

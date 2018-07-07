@@ -104,9 +104,15 @@ $MENU_TOGGLE.on('click', function() {
 		console.log('clicked - menu toggle');
 		
 		if ($BODY.hasClass('nav-md')) {
+			GET("/api/template/collapse/true", function(data) {
+//				console.log(data);
+			});
 			$SIDEBAR_MENU.find('li.active ul').hide();
 			$SIDEBAR_MENU.find('li.active').addClass('active-sm').removeClass('active');
 		} else {
+			GET("/api/template/collapse/false", function(data) {
+//				console.log(data);
+			});
 			$SIDEBAR_MENU.find('li.active-sm ul').show();
 			$SIDEBAR_MENU.find('li.active-sm').addClass('active').removeClass('active-sm');
 		}
@@ -114,6 +120,8 @@ $MENU_TOGGLE.on('click', function() {
 	$BODY.toggleClass('nav-md nav-sm');
 
 	setContentHeight();
+	
+
 
 	$('.dataTable').each ( function () { $(this).dataTable().fnDraw(); });
 });

@@ -5,7 +5,8 @@
 <head th:include="includes/header">
 <!-- jQuery -->
 </head>
-<body class="nav-md">
+
+<body th:class="${session.collapse} ? nav-sm : nav-md">
 	<div class="container body">
 		<div class="main_container">
 

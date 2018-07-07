@@ -1,6 +1,5 @@
 <div class="row">
 	<div class="col-lg-12">
-
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<div class="row ">
@@ -51,26 +50,40 @@
 								<th>SN</th>
 								<th>Code</th>
 								<th class="col-md-3">Description</th>
-								<th class="text-right">Sales Quantity</th>
 								<th>U.Desc</th>
-								<th class="text-right">Unit Price</th>
 								<th class="text-right">Sales Price</th>
-								<th class="text-right">Return Quantity</th>
-								<th class="text-right">Sales Return</th>
-								<th></th>
+								<th class="text-right">Quantity</th>
+								<th class="text-right">Price</th>
+								<th class="text-right">Total</th>
 							</tr>
 						</thead>
 						<tbody>
+						
+							<tr th:each="salesReturnItem : ${salesReturn.salesReturnItems}"
+									th:remove="tag">
+									<td th:text="${salesReturnItem.salesInvoiceItem.id}">
+									<td th:text="${salesReturnItem.salesInvoiceItem.item.code}">
+									<td th:text="${salesReturnItem.salesInvoiceItem.item.name}">
+									<td th:text="${salesReturnItem.salesInvoiceItem.unit.name}">
+									<td class="text-right" th:text="${salesReturnItem.salesInvoiceItem.unitCost}">
+									
+									<td class="text-right" th:text="${salesReturnItem.quantity}">
+									<td class="text-right" th:text="${salesReturnItem.unitPrice}"></td>
+									<td class="text-right" th:text="${salesReturnItem.unitPriceTotal}"></td>
+								</tr>
 						</tbody>
 						<tfoot>
 							<tr>
-								<th colspan="7"></th>
+								<th colspan="6"></th>
 								<th><h3>Total</h3></th>
-								<th><h3 class="text-right" id="grandTotal"></h3></th>
-								<th></th>
+								<th><h3 class="text-right" th:text="${salesReturn.totalPrice}"></h3></th>
 							</tr>
 						</tfoot>
 					</table>
+					
+					<div class="col-md-12">
+							<label>Remarks :</label> <div class="form-control" th:text="${salesReturn.remarks}"></div>
+						</div>
 				</div>
 			</div>
 		</div>

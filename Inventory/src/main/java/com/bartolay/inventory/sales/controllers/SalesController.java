@@ -17,7 +17,10 @@ import com.bartolay.inventory.repositories.ClientRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
+import com.bartolay.inventory.sales.entity.SalesReturn;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
+import com.bartolay.inventory.sales.repositories.SalesReturnItemRepository;
+import com.bartolay.inventory.sales.repositories.SalesReturnRepository;
 import com.bartolay.inventory.services.LocationService;
 import com.bartolay.inventory.services.UserService;
 import com.bartolay.inventory.utils.StringUtils;
@@ -35,7 +38,10 @@ public class SalesController {
 	
 	@Autowired
 	private SalesInvoiceRepository salesInvoiceRepository;
-	
+	@Autowired
+	private SalesReturnRepository salesReturnRepository;
+	@Autowired
+	private SalesReturnItemRepository salesReturnItemRepository;
 	@Autowired
 	private LocationService locationService;
 	@Autowired
@@ -106,12 +112,10 @@ public class SalesController {
 		return model;
 	}
 	
-	@RequestMapping(value="/return/{system_number}")
-	public ModelAndView salesReturnView(ModelAndView mav, @PathVariable String system_number) {
-		SalesInvoice salesInvoice = salesInvoiceRepository.findSalesInvoiceById(system_number);
-		
-		System.err.println("xxxxxxxx");
-		System.out.println(salesInvoice.getCustomer());
+	@RequestMapping(value="/return/{id}")
+	public ModelAndView salesReturnView(ModelAndView mav, @PathVariable Integer id) {
+		SalesReturn salesReturn  = salesReturnRepository.findSalesReturnById(id);
+		SalesInvoice salesInvoice = salesInvoiceRepository.findSalesInvoiceById(salesReturn.getSalesInvoice().getSystemNumber());
 		
 		mav.setViewName("sales/index");
 		mav.addObject("html", "return/view");
@@ -119,6 +123,7 @@ public class SalesController {
 		
 		mav.addObject("salesInvoiceItems", salesInvoice.getSalesInvoiceItems());
 		mav.addObject("salesInvoice", salesInvoice);
+		mav.addObject("salesReturn", salesReturn);
 		return mav;
 	}
 	

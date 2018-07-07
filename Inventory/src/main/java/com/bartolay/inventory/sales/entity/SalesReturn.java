@@ -1,5 +1,6 @@
 package com.bartolay.inventory.sales.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -51,6 +52,11 @@ public class SalesReturn {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "updated_by_id", nullable=true, updatable=true)
 	private User updatedBy;
+	
+	@Column(name="total_price", nullable=false, precision=10, scale=5)
+	private BigDecimal totalPrice;
+	
+	private String remarks;
 
 	public int getId() {
 		return id;
@@ -106,6 +112,22 @@ public class SalesReturn {
 
 	public void setUpdatedBy(User updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+
+	public BigDecimal getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(BigDecimal totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+	
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package com.bartolay.inventory.sales.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,8 +37,18 @@ public class SalesReturnItem {
 	@JoinColumn(name="sales_invoice_item_id", nullable=false, insertable=true, updatable=false)
 	private SalesInvoiceItem salesInvoiceItem;
 	
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="sales_invoice_item_reason_id", nullable=false, insertable=true, updatable=true)
+	private SalesReturnItemReason salesReturnItemReason;
+	
 	@Column(nullable=false)
 	private BigDecimal quantity;
+	
+	@Column(name="unit_price", nullable=false, precision=10, scale=5)
+	private BigDecimal unitPrice;
+	
+	@Column(name="unit_price_total", nullable=false, precision=10, scale=5)
+	private BigDecimal unitPriceTotal;
 	
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
@@ -119,6 +128,30 @@ public class SalesReturnItem {
 
 	public void setUpdatedBy(User updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+	
+	public BigDecimal getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(BigDecimal unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
+	public BigDecimal getUnitPriceTotal() {
+		return unitPriceTotal;
+	}
+
+	public void setUnitPriceTotal(BigDecimal unitPriceTotal) {
+		this.unitPriceTotal = unitPriceTotal;
+	}
+	
+	public SalesReturnItemReason getSalesReturnItemReason() {
+		return salesReturnItemReason;
+	}
+
+	public void setSalesReturnItemReason(SalesReturnItemReason salesReturnItemReason) {
+		this.salesReturnItemReason = salesReturnItemReason;
 	}
 
 	@Override
