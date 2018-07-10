@@ -78,7 +78,7 @@
 									<th>SN</th>
 									<th>Code</th>
 									<th class="col-md-3">Description</th>
-									<th class="text-right">Sales Quantity</th>
+									<th class="text-right">Quantity</th>
 									<th>U.Desc</th>
 									<th class="text-right">Unit Price</th>
 									<th class="text-right">Sales Price</th>
@@ -103,10 +103,10 @@
 							   			">
 									<td th:text="${salesInvoiceItem.item.code}">
 									<td th:text="${salesInvoiceItem.item.name}">
-									<td th:text="${salesInvoiceItem.quantity}">
+									<td class="text-right" th:text="${salesInvoiceItem.quantity}">
 									<td th:text="${salesInvoiceItem.unit.name}">
-									<td class="unitPrice" th:text="${salesInvoiceItem.unitCost}">
-									<td th:text="${salesInvoiceItem.unitCostTotal}">
+									<td class="text-right" th:text="${salesInvoiceItem.unitCost}">
+									<td class="text-right" th:text="${salesInvoiceItem.unitCostTotal}">
 									<td>
 										<input type="hidden" th:name="|salesReturnItems[${iter.index}].salesInvoiceItem|" th:value="${salesInvoiceItem.id}" >
 									<input type="number" data-toggle="tooltip"

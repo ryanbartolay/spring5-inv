@@ -540,9 +540,6 @@ public class InventoryCoreService {
 		if(salesInvoice == null) {
 			throw new SalesReturnException("Sales Invoice not found");
 		}
-
-		System.err.println("asdadadada");
-		System.err.println(salesReturn);
 		
 		List<SalesInvoiceItem> items = salesInvoice.getSalesInvoiceItems();
 
@@ -559,12 +556,11 @@ public class InventoryCoreService {
 				salesReturnItem.setSalesReturn(salesReturn);
 				
 				SalesInvoiceItem salesInvoiceItem = items.get(items.indexOf(salesReturnItem.getSalesInvoiceItem()));
-
-				System.err.println("zxcv");
-				System.err.println(salesInvoiceItem);
-				System.err.println(salesReturnItem.getQuantity());
 				
 				SalesInvoiceItem tx_SalesInvoiceItem = inventoryUtility.subtractQuantitySalesInvoiceItem(salesInvoiceItem, salesReturnItem.getQuantity());
+				
+				System.err.println("tx_SalesInvoiceItem");
+				System.err.println(tx_SalesInvoiceItem);
 				
 				Inventory inventory = inventoryUtility.findInventoryFromList(inventories, salesInvoice.getLocation(), salesInvoiceItem.getItem(), salesInvoiceItem.getUnit());
 				
