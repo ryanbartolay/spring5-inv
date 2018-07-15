@@ -88,8 +88,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="salesInvoiceItem, iter : ${salesInvoiceItems}"
-									th:remove="tag">
+								<tr th:each="salesInvoiceItem, iter : ${salesInvoiceItems}">
 									<td class="primary-data" th:text="${salesInvoiceItem.id}"
 										th:attr="data-id=${salesInvoiceItem.id},
 							   						 data-itemCode=${salesInvoiceItem.item.code},
@@ -98,17 +97,17 @@
 							   						 data-table_records=${iter.size},
 							   						 data-unitAbbreviation=${salesInvoiceItem.unit.abbreviation},
 							   						 data-unitDescription=${salesInvoiceItem.unit.name},
-							   						 data-unitPrice=${salesInvoiceItem.unitCost},
-							   						 data-unitPriceTotal=${salesInvoiceItem.unitCostTotal}
+							   						 data-unitPrice=${salesInvoiceItem.unitPrice},
+							   						 data-unitPriceTotal=${salesInvoiceItem.unitPriceTotal}
 							   						 
 							   			">
 									<td th:text="${salesInvoiceItem.item.code}">
 									<td th:text="${salesInvoiceItem.item.name}">
 									<td class="text-right" th:text="${salesInvoiceItem.quantity}">
 									<td th:text="${salesInvoiceItem.unit.name}">
-									<td class="text-right" th:text="${salesInvoiceItem.unitCost}">
+									<td class="text-right" th:text="${salesInvoiceItem.unitPrice}">
 									<td class="text-right"
-										th:text="${salesInvoiceItem.unitCostTotal}">
+										th:text="${salesInvoiceItem.unitPriceTotal}">
 									<td><input type="hidden"
 										th:name="|salesReturnItems[${iter.index}].salesInvoiceItem|"
 										th:value="${salesInvoiceItem.id}"> <input
