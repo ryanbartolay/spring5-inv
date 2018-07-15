@@ -111,7 +111,13 @@
 										th:text="${salesInvoiceItem.unitCostTotal}">
 									<td><input type="hidden"
 										th:name="|salesReturnItems[${iter.index}].salesInvoiceItem|"
-										th:value="${salesInvoiceItem.id}"> <input
+										th:value="${salesInvoiceItem.id}">
+										<input type="hidden"
+										th:name="|salesReturnItems[${iter.index}].unitPrice|"
+										th:value="${salesInvoiceItem.unitCost}"
+										id="unitPrice">
+										
+										<input
 										type="number" data-toggle="tooltip" data-trigger="manual"
 										title="This is my tooltip"
 										th:name="|salesReturnItems[${iter.index}].quantity|"
@@ -241,23 +247,16 @@ function computeValues(element, index) {
 		if($(this).find(".unitPrice")){
 			each['unitPrice'] = $(this).find(".unitPrice").text()
 		}
-		
-		
 		$(this).find("input").each(function() {
-			each[$(this).attr("id")] = $(this).val();
-			console.log($(this).attr("id"))
-			form_items[index][$(this).attr("id")] = $(this).val();
-			console.log($(this).attr("id") + " = " + $(this).val());
+			if($(this).attr("id")){
+				each[$(this).attr("id")] = $(this).val();
+				form_items[index][$(this).attr("id")] = $(this).val();			
+			}
 		});
-		
 	});
-
-	console.log("each " + each);
 	
 	subtotal = each.quantity * each.unitPrice;
-	
-	console.log("c subtotal " + subtotal);
-	
+		
 	form_items[index]["subtotal"] = subtotal;
 	$(element).closest("tr").find("#subtotal").val(round2DecimalPlaces(subtotal));
 	
