@@ -1,28 +1,36 @@
 package com.bartolay.inventory.stock.entity;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.bartolay.inventory.entity.InventoryTransaction;
+import com.bartolay.inventory.entity.Location;
+import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.repositories.GeneratedSystemNumber;
 
 @Entity
 @Table(name="stock_adjustment")
-public class StockAdjustment {
+public class StockAdjustment implements GeneratedSystemNumber {
 	@Transient
 	public static final String TABLE_NAME = "stock_adjustment";
-	
-	@Transient
-	private Set<InventoryTransaction> inventories;
 
 	@Id
 	@GeneratedValue(generator = "StockAdjustmentSystemNumberGenerator")
@@ -40,5 +48,135 @@ public class StockAdjustment {
 	@Column(name="year", nullable=false, length=4, updatable=false)
 	private String year;
 	
+	@OneToMany(mappedBy = "stockAdjustment", fetch=FetchType.LAZY)
+	private List<StockAdjustmentItem> stockAdjustmentItems;
+	
 	private String description;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="stock_adjustment_reason_id", nullable=false, insertable=true, updatable=true)
+	private StockAdjustmentReason stockAdjustmentReason;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="location_id", nullable=false, updatable=false)
+	private Location location;
+	
+	@Column(name="created_date", nullable=false, updatable=false)
+	@CreationTimestamp
+	private Date createdDate;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", nullable=false, updatable=false)
+	private User createdBy;
+
+	@Column(name="updated_date")
+	@UpdateTimestamp
+	private Date updatedDated;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "updated_by", nullable=true, updatable=true)
+	private User updatedBy;
+
+	public String getSystemNumber() {
+		return systemNumber;
+	}
+
+	public void setSystemNumber(String systemNumber) {
+		this.systemNumber = systemNumber;
+	}
+
+	public String getDocumentNumber() {
+		return documentNumber;
+	}
+
+	public void setDocumentNumber(String documentNumber) {
+		this.documentNumber = documentNumber;
+	}
+
+	public Date getTransactionDate() {
+		return transactionDate;
+	}
+
+	public void setTransactionDate(Date transactionDate) {
+		this.transactionDate = transactionDate;
+	}
+
+	public List<StockAdjustmentItem> getStockAdjustmentItems() {
+		return stockAdjustmentItems;
+	}
+
+	public void setStockAdjustmentItems(List<StockAdjustmentItem> stockAdjustmentItems) {
+		this.stockAdjustmentItems = stockAdjustmentItems;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public StockAdjustmentReason getStockAdjustmentReason() {
+		return stockAdjustmentReason;
+	}
+
+	public void setStockAdjustmentReason(StockAdjustmentReason stockAdjustmentReason) {
+		this.stockAdjustmentReason = stockAdjustmentReason;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public User getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getUpdatedDated() {
+		return updatedDated;
+	}
+
+	public void setUpdatedDated(Date updatedDated) {
+		this.updatedDated = updatedDated;
+	}
+
+	public User getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(User updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	@Override
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	@Override
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
+	@Override
+	public String getTableName() {
+		return TABLE_NAME;
+	}
 }
