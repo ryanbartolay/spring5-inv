@@ -2,7 +2,6 @@ package com.bartolay.inventory.stock.entity;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,9 +20,9 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.bartolay.inventory.entity.InventoryTransaction;
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.enums.StockAdjustmentType;
 import com.bartolay.inventory.repositories.GeneratedSystemNumber;
 
 @Entity
@@ -52,6 +51,9 @@ public class StockAdjustment implements GeneratedSystemNumber {
 	private List<StockAdjustmentItem> stockAdjustmentItems;
 	
 	private String description;
+	
+	@Column(name="stock_adjustment_type", nullable=false)
+	private StockAdjustmentType stockAdjustmentType;
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="stock_adjustment_reason_id", nullable=false, insertable=true, updatable=true)
@@ -179,4 +181,38 @@ public class StockAdjustment implements GeneratedSystemNumber {
 	public String getTableName() {
 		return TABLE_NAME;
 	}
+
+	public StockAdjustmentType getStockAdjustmentType() {
+		return stockAdjustmentType;
+	}
+
+	public void setStockAdjustmentType(StockAdjustmentType stockAdjustmentType) {
+		this.stockAdjustmentType = stockAdjustmentType;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((systemNumber == null) ? 0 : systemNumber.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StockAdjustment other = (StockAdjustment) obj;
+		if (systemNumber == null) {
+			if (other.systemNumber != null)
+				return false;
+		} else if (!systemNumber.equals(other.systemNumber))
+			return false;
+		return true;
+	}
+
 }

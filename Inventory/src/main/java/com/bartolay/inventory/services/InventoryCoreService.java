@@ -112,9 +112,6 @@ public class InventoryCoreService {
 		// iterate through items and check if default unit
 		for(StockOpeningItem stockOpeningItem : stockOpening.getItems()) {
 
-			System.err.println("xxxxxxxxxxxxxxxxxxx");
-			System.err.println(stockOpeningItem);
-
 			stockOpeningItem.setStockOpening(stockOpening);
 
 			Inventory inventory = inventoryUtility.findInventoryFromList(inventories, stockOpening.getLocation(), stockOpeningItem.getItem(), stockOpeningItem.getUnit());
