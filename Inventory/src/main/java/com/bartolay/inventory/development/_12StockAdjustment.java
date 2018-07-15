@@ -56,7 +56,7 @@ public class _12StockAdjustment implements ApplicationListener<ContextRefreshedE
 			entity.setDocumentNumber("SSS-DSSDA1234");
 			entity.setLocation(locationRepository.findById(2).get());
 			entity.setStockAdjustmentReason(stockAdjustmentReasonRepository.findById(2).get());
-			entity.setStockAdjustmentType(StockAdjustmentType.QUANTITY);
+			entity.setStockAdjustmentType(StockAdjustmentType.QUANTITY.name());
 			entity.setTransactionDate(new Date());
 			entity.setYear("2018");
 			entity.setCreatedBy(userCredentials.getLoggedInUser());

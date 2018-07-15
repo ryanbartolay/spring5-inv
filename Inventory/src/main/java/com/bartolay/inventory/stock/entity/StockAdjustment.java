@@ -53,7 +53,7 @@ public class StockAdjustment implements GeneratedSystemNumber {
 	private String description;
 	
 	@Column(name="stock_adjustment_type", nullable=false)
-	private StockAdjustmentType stockAdjustmentType;
+	private String stockAdjustmentType;
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="stock_adjustment_reason_id", nullable=false, insertable=true, updatable=true)
@@ -182,11 +182,11 @@ public class StockAdjustment implements GeneratedSystemNumber {
 		return TABLE_NAME;
 	}
 
-	public StockAdjustmentType getStockAdjustmentType() {
+	public String getStockAdjustmentType() {
 		return stockAdjustmentType;
 	}
 
-	public void setStockAdjustmentType(StockAdjustmentType stockAdjustmentType) {
+	public void setStockAdjustmentType(String stockAdjustmentType) {
 		this.stockAdjustmentType = stockAdjustmentType;
 	}
 
