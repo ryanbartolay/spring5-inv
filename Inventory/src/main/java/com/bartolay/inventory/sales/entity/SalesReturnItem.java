@@ -38,7 +38,7 @@ public class SalesReturnItem {
 	private SalesInvoiceItem salesInvoiceItem;
 	
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="sales_invoice_item_reason_id", nullable=false, insertable=true, updatable=true)
+	@JoinColumn(name="sales_invoice_item_reason_id", nullable=true, insertable=true, updatable=true)
 	private SalesReturnItemReason salesReturnItemReason;
 	
 	@Column(nullable=false)

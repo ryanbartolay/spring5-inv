@@ -19,6 +19,7 @@ import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
 import com.bartolay.inventory.sales.entity.SalesReturn;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
+import com.bartolay.inventory.sales.repositories.SalesReturnItemReasonRepository;
 import com.bartolay.inventory.sales.repositories.SalesReturnItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesReturnRepository;
 import com.bartolay.inventory.services.LocationService;
@@ -42,6 +43,8 @@ public class SalesController {
 	private SalesReturnRepository salesReturnRepository;
 	@Autowired
 	private SalesReturnItemRepository salesReturnItemRepository;
+	@Autowired
+	private SalesReturnItemReasonRepository salesReturnItemReasonRepository;
 	@Autowired
 	private LocationService locationService;
 	@Autowired
@@ -137,6 +140,7 @@ public class SalesController {
 		mav.addObject("salesReturnForm", new SalesReturnForm());
 		mav.addObject("salesInvoiceItems", new ArrayList<SalesInvoiceItem>());
 		mav.addObject("salesInvoice", new SalesInvoice());
+		mav.addObject("salesReturnReasons", salesReturnItemReasonRepository.findAll());
 		
 		return mav;
 	}
@@ -153,6 +157,7 @@ public class SalesController {
 		mav.addObject("salesReturnForm", new SalesReturnForm());
 		mav.addObject("salesInvoiceItems", salesInvoice.getSalesInvoiceItems());
 		mav.addObject("salesInvoice", salesInvoice);
+		mav.addObject("salesReturnReasons", salesReturnItemReasonRepository.findAll());
 		return mav;
 	}
 	
