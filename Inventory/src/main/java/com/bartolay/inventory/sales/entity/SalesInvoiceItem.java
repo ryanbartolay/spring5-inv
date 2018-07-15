@@ -43,11 +43,11 @@ public class SalesInvoiceItem {
 	@JoinColumn(name="unit_id", nullable=false, updatable=true)
 	private Unit unit;
 	
-	@Column(name="unit_cost", nullable=false, precision=10, scale=5)
-	private BigDecimal unitCost;
+	@Column(name="unit_price", nullable=false, precision=10, scale=5)
+	private BigDecimal unitPrice;
 	
-	@Column(name="unit_cost_total", nullable=false, precision=10, scale=5)
-	private BigDecimal unitCostTotal;
+	@Column(name="unit_price_total", nullable=false, precision=10, scale=5)
+	private BigDecimal unitPriceTotal;
 	
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
@@ -117,20 +117,20 @@ public class SalesInvoiceItem {
 		this.unit = unit;
 	}
 
-	public BigDecimal getUnitCost() {
-		return unitCost;
+	public BigDecimal getUnitPrice() {
+		return unitPrice;
 	}
 
-	public void setUnitCost(BigDecimal unitCost) {
-		this.unitCost = unitCost;
+	public void setUnitPrice(BigDecimal unitPrice) {
+		this.unitPrice = unitPrice;
 	}
 
-	public BigDecimal getUnitCostTotal() {
-		return unitCostTotal;
+	public BigDecimal getUnitPriceTotal() {
+		return unitPriceTotal;
 	}
 
-	public void setUnitCostTotal(BigDecimal unitCostTotal) {
-		this.unitCostTotal = unitCostTotal;
+	public void setUnitPriceTotal(BigDecimal unitPriceTotal) {
+		this.unitPriceTotal = unitPriceTotal;
 	}
 
 	public Date getCreatedDate() {
@@ -198,7 +198,7 @@ public class SalesInvoiceItem {
 	@Override
 	public String toString() {
 		return "SalesInvoiceItem [id=" + id + ", item=" + item + ", quantity="
-				+ quantity + ", unit=" + unit + ", unitCost=" + unitCost + ", createdDate=" + createdDate
+				+ quantity + ", unit=" + unit + ", unitCost=" + unitPrice + ", createdDate=" + createdDate
 //				+ ", createdBy=" + createdBy 
 				+ ", updatedDated=" + updatedDated 
 //				+ ", updatedBy=" + updatedBy
