@@ -44,7 +44,6 @@ import com.bartolay.inventory.stock.repositories.StockReceivedItemRepository;
 import com.bartolay.inventory.stock.repositories.StockReceivedRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferItemRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferRepository;
-import com.bartolay.inventory.utils.ActivityUtility;
 import com.bartolay.inventory.utils.InventoryUtility;
 import com.bartolay.inventory.utils.UserCredentials;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,8 +52,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Transactional
 public class InventoryCoreService {
 
-	@Autowired
-	private ActivityUtility activityUtility;
 	@Autowired
 	private CreditCardDetailsRepository creditCardDetailsRepository;
 	@Autowired 
