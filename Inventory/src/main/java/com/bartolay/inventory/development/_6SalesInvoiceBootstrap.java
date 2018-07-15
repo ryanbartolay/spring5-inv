@@ -83,7 +83,14 @@ public class _6SalesInvoiceBootstrap implements ApplicationListener<ContextRefre
 		salesInvoiceItem.setItem(itemRepository.findById(1).get());
 		salesInvoiceItem.setUnit(itemRepository.findById(1).get().getDefaultUnit());
 		salesInvoiceItem.setQuantity(new BigDecimal("2.211"));
-		salesInvoiceItem.setUnitCost(new BigDecimal("30.33"));
+		salesInvoiceItem.setUnitPrice(new BigDecimal("30.33"));
+		salesInvoiceItems.add(salesInvoiceItem);
+		
+		salesInvoiceItem = new SalesInvoiceItem();
+		salesInvoiceItem.setItem(itemRepository.findById(2).get());
+		salesInvoiceItem.setUnit(itemRepository.findById(2).get().getDefaultUnit());
+		salesInvoiceItem.setQuantity(new BigDecimal("10"));
+		salesInvoiceItem.setUnitPrice(new BigDecimal("50"));
 		salesInvoiceItems.add(salesInvoiceItem);
 
 		return salesInvoiceItems;

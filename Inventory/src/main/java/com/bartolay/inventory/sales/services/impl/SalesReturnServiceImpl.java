@@ -91,7 +91,7 @@ public class SalesReturnServiceImpl implements SalesReturnService{
 			if(salesReturnItem.getQuantity().equals(new BigDecimal("0"))) {
 				discardedItems.add(salesReturnItem);
 			} else {
-				salesReturnItem.setUnitPrice(salesReturnItem.getSalesInvoiceItem().getUnitCost());
+				salesReturnItem.setUnitPrice(salesReturnItem.getSalesInvoiceItem().getUnitPrice());
 				salesReturnItem.setUnitPriceTotal(salesReturnItem.getQuantity().multiply(salesReturnItem.getUnitPrice()));
 				
 				salesReturn.setTotalPrice(salesReturn.getTotalPrice().add(salesReturnItem.getUnitPriceTotal()));

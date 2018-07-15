@@ -92,7 +92,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr:block
+										<tr
 											th:each="salesInvoiceItem : ${salesInvoice.salesInvoiceItems}">
 											<th th:text="${salesInvoiceItem.item.id}"></th>
 											<td th:text="${salesInvoiceItem.item.code}"></td>
@@ -103,10 +103,10 @@
 											<td class="text-right"
 												th:text="${T(com.bartolay.inventory.utils.NumericUtility).quantity(salesInvoiceItem.quantity)}"></td>
 											<td class="text-right"
-												th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoiceItem.unitCost)}"></td>
+												th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoiceItem.unitPrice)}"></td>
 											<td class="text-right"
-												th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoiceItem.unitCostTotal)}"></td>
-										</tr:block>
+												th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(salesInvoiceItem.unitPriceTotal)}"></td>
+										</tr>
 									</tbody>
 
 

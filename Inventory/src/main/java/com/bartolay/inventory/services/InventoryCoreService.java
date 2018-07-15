@@ -247,14 +247,14 @@ public class InventoryCoreService {
 			inventoryTransaction.setUnit(salesInvoiceItem.getUnit());
 			inventoryTransaction.setRawQuantity(salesInvoiceItem.getQuantity());
 			inventoryTransaction.setRateQuantity(salesInvoiceItem.getQuantity());
-			inventoryTransaction.setUnitCost(salesInvoiceItem.getUnitCost());
+			inventoryTransaction.setUnitCost(salesInvoiceItem.getUnitPrice());
 			inventoryTransaction.setQuantityBefore(inventory.getQuantity());
 			inventoryTransaction.setQuantityAfter(after_quantity);
 
-			salesInvoiceItem.setUnitCostTotal(salesInvoiceItem.getUnitCost().multiply(salesInvoiceItem.getQuantity()));
+			salesInvoiceItem.setUnitPriceTotal(salesInvoiceItem.getUnitPrice().multiply(salesInvoiceItem.getQuantity()));
 			salesInvoiceItem.setStatus(Status.SUCCESS);
 
-			salesInvoice.setSubtotal(salesInvoice.getSubtotal().add(salesInvoiceItem.getUnitCostTotal()));
+			salesInvoice.setSubtotal(salesInvoice.getSubtotal().add(salesInvoiceItem.getUnitPriceTotal()));
 			salesInvoice.setDiscountTotal(salesInvoice.getSubtotal().multiply(salesInvoice.getDiscountPercentage().divide(new BigDecimal("100"))));
 			salesInvoice.setNetTotal(salesInvoice.getSubtotal().subtract(salesInvoice.getDiscountTotal()));
 
@@ -305,7 +305,7 @@ public class InventoryCoreService {
 				cancelledTransaction.setTransactionSystemNumber(updatedSalesInvoice.getSystemNumber());
 				cancelledTransaction.setTransactionType(TransactionType.SALES_CANCEL_INVOICE);
 				cancelledTransaction.setRawQuantity(salesInvoiceItem.getQuantity());
-				cancelledTransaction.setUnitCost(salesInvoiceItem.getUnitCost());
+				cancelledTransaction.setUnitCost(salesInvoiceItem.getUnitPrice());
 				cancelledTransaction.setCreatedBy(userCredentials.getLoggedInUser());
 				cancelledTransaction.setUnit(salesInvoiceItem.getUnit());
 				cancelledTransaction.setInventory(inventory);

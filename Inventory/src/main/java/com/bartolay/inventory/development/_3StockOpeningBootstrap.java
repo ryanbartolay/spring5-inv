@@ -70,23 +70,29 @@ public class _3StockOpeningBootstrap implements ApplicationListener<ContextRefre
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent arg0) {
-
-		System.err.println("bakit two times");
 		
 		List<StockOpeningItem> soItems = new ArrayList<>();
 
 		Item item1 = itemRepository.findById(1).get();
+		Item item2 = itemRepository.findById(2).get();
 
 		StockOpeningItem soItem = new StockOpeningItem();
 		soItem.setItem(item1);
-		soItem.setUnit(unitRepository.findById(1).get());
+		soItem.setUnit(item1.getDefaultUnit());
 		soItem.setQuantity(new BigDecimal("20.1234"));
 		soItem.setUnitCost(new BigDecimal("1.50"));
 
 		admin = userRepository.findByUsername("admin");
 		
 		soItems.add(soItem);
+		
+		soItem = new StockOpeningItem();
+		soItem.setItem(item2);
+		soItem.setUnit(item2.getDefaultUnit());
+		soItem.setQuantity(new BigDecimal("100"));
+		soItem.setUnitCost(new BigDecimal("45.90"));
 
+		soItems.add(soItem);
 		
 		StockOpeningForm form = new StockOpeningForm();
 		
