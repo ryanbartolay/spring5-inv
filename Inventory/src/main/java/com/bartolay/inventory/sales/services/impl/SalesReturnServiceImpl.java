@@ -109,7 +109,7 @@ public class SalesReturnServiceImpl implements SalesReturnService{
 		salesReturn.setCreatedDate(new Date());
 		salesReturn.setSalesInvoice(returnForm.getSalesInvoice());
 		salesReturn.setSalesReturnItems(returnForm.getSalesReturnItems());
-		
+		salesReturn.setRemarks(returnForm.getRemarks());
 		try {
 			inventoryCoreService.createSalesReturn(salesReturn);			
 			return salesReturn;

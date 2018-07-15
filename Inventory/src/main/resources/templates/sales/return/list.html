@@ -117,11 +117,17 @@
 							name : "u3.firstName",
 						}, {
 							data : "item_count",
-							name : "item_count"
+							name : "item_count",
+							render: function ( data, type, row ) {
+		                        return parseFloat(Math.round((data) * 100) / 100).toFixed(2);
+		                    }
 						}, {
 							data : "net_total",
-							name : "t2.net_total",
-							className: "text-right"
+							name : "net_total",
+							className: "text-right",
+							render: function ( data, type, row ) {
+		                        return parseFloat(Math.round((data) * 100) / 100).toFixed(2);
+		                    }
 						}],
 						);
 

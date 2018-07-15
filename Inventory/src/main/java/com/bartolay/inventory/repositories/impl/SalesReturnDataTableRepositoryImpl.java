@@ -17,6 +17,7 @@ import com.bartolay.inventory.components.RepositoryComponent;
 import com.bartolay.inventory.datatable.model.DatatableColumn;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.repositories.DatatableRepository;
+import com.bartolay.inventory.sales.entity.SalesReturn;
 
 @Repository
 @Qualifier("salesReturnDataTableRepository")
@@ -24,8 +25,8 @@ public class SalesReturnDataTableRepositoryImpl extends RepositoryComponent impl
 	
 	@Override
 	public long findAllCount(DatatableParameter datatableParameter) {
-		String SQL = "SELECT COUNT(b.id) FROM Brand b";
-
+		String SQL = "SELECT COUNT(b.id) FROM SalesReturn b";
+		
 		if(datatableParameter.getSearch() != null) {
 			SQL += " WHERE b.name like :search";
 		}
@@ -47,12 +48,12 @@ public class SalesReturnDataTableRepositoryImpl extends RepositoryComponent impl
 					"	concat_ws(' ', u1.firstName, u1.lastName) as created_by, " + 
 					"	concat_ws(' ', u3.firstName, u3.lastName) as customer, " + 
 					"	t3.name, " + 
-					"	(SELECT COUNT(ID) FROM sales_invoice_item WHERE sales_invoice_system_number=t2.system_number )as item_count," + 
+					"	(SELECT SUM(quantity) FROM sales_return_item WHERE sales_return_id=t1.id )as item_count," + 
 					"	concat_ws(' ', u4.firstName, u4.lastName) as sales_person , " + 
-					"	t2.net_total as return_amount, " + 
+					"	(SELECT SUM(SRI.unit_price_total)  as return_t FROM sales_return_item SRI WHERE SRI.sales_return_id=t1.id ) as return_amount, " + 
 					"	t2.created_date as sales_invoice_created_date " + 
 					"	FROM sales_return t1 " + 
-					"	INNER JOIN users u1 on u1.id=t1.created_by_id " + 
+					"	INNER JOIN users u1 on u1.id=t1.created_by_id " +
 					"	INNER JOIN users u2 on u2.id=t1.updated_by_id " + 
 					"	INNER JOIN sales_invoice t2 on t2.system_number=t1.sales_invoice_system_number " + 
 					"	INNER JOIN location t3 on t3.id = t2.location_id " + 

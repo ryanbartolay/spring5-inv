@@ -65,11 +65,11 @@
 									<td th:text="${salesReturnItem.salesInvoiceItem.item.code}">
 									<td th:text="${salesReturnItem.salesInvoiceItem.item.name}">
 									<td th:text="${salesReturnItem.salesInvoiceItem.unit.name}">
-									<td class="text-right" th:text="${salesReturnItem.salesInvoiceItem.unitPrice}">
+									<td class="text-right" th:text="${#numbers.formatDecimal(salesReturnItem.salesInvoiceItem.unitPrice,1,2)}">
 									
-									<td class="text-right" th:text="${salesReturnItem.quantity}">
-									<td class="text-right" th:text="${salesReturnItem.unitPrice}"></td>
-									<td class="text-right" th:text="${salesReturnItem.unitPriceTotal}"></td>
+									<td class="text-right" th:text="${#numbers.formatDecimal(salesReturnItem.quantity,1,2)}">
+									<td class="text-right" th:text="${#numbers.formatDecimal(salesReturnItem.unitPrice,1,2)}"></td>
+									<td class="text-right" th:text="${#numbers.formatDecimal(salesReturnItem.unitPriceTotal,1,2)}"></td>
 								</tr>
 						</tbody>
 						<tfoot>
