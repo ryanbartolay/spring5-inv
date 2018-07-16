@@ -3,8 +3,11 @@
 	xmlns:sec="http://www.thymeleaf.org">
 
 <head th:include="includes/header">
+
+	
 <!-- jQuery -->
 </head>
+<script th:src="@{/static/js/main.js}" type="text/javascript"></script>
 <body th:class="${session.collapse} ? nav-sm : nav-md">
 	<div class="container body">
 		<div class="main_container">
@@ -30,6 +33,6 @@
 <script
 	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
 	
-	<div th:include="includes/footer"></div>
+	
 </body>
 </html>

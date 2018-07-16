@@ -1,7 +1,9 @@
 package com.bartolay.inventory.services.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -13,10 +15,13 @@ import org.springframework.stereotype.Service;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.entity.Country;
 import com.bartolay.inventory.entity.Expense;
+import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.form.CountryForm;
+import com.bartolay.inventory.form.ExpenseForm;
 import com.bartolay.inventory.repositories.ExpenseRepository;
 import com.bartolay.inventory.services.ExpensesService;
 import com.bartolay.inventory.utils.ServiceUtility;
+import com.bartolay.inventory.utils.UserCredentials;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -28,6 +33,8 @@ public class ExpensesServiceImpl implements ExpensesService {
 	private ExpenseRepository expenseRepository;
 	@Autowired
 	private ObjectMapper objectMapper;
+	@Autowired
+	private UserCredentials userCredentials;
 	
 	@Override
 	public List<Expense> findAll() {
@@ -48,21 +55,29 @@ public class ExpensesServiceImpl implements ExpensesService {
 	}
 
 	@Override
-	public Country create(@Valid CountryForm countryForm) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expense create(@Valid ExpenseForm expenseForm) {
+		Expense expense = new Expense();
+		expense.setCreatedBy(userCredentials.getLoggedInUser());
+		expense.setCreatedDate(new Date());
+		expense.setDescription(expenseForm.getDescription());
+		return expenseRepository.save(expense);
 	}
 
 	@Override
-	public Country update(@Valid CountryForm countryForm) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expense update(@Valid ExpenseForm expenseForm) {
+		Expense expense = expenseRepository.findById(expenseForm.getId()).get();
+		expense.setDescription(expenseForm.getDescription());
+		expense.setUpdatedBy(userCredentials.getLoggedInUser());
+		expense.setUpdatedDated(new Date());
+		expenseRepository.save(expense);
+		return expense;
 	}
 
 	@Override
-	public Country delete(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expense delete(int id) {
+		Optional<Expense> expense = expenseRepository.findById(id);
+		expenseRepository.deleteById(id);
+		return expense.get();
 	}
 
 }

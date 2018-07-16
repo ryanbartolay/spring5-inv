@@ -1,7 +1,6 @@
 package com.bartolay.inventory.controllers;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -11,14 +10,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bartolay.inventory.entity.Country;
+import com.bartolay.inventory.entity.Expense;
 import com.bartolay.inventory.form.CountryForm;
+import com.bartolay.inventory.form.ExpenseForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
-import com.bartolay.inventory.services.CountryService;
 import com.bartolay.inventory.services.ExpensesService;
 import com.bartolay.inventory.stock.controllers.AbstractRestController;
 import com.bartolay.inventory.utils.StringUtils;
@@ -38,26 +37,25 @@ public class ExpensesRestController extends AbstractRestController{
 	}
 	
 	@RequestMapping(value="/api/expenses", method=RequestMethod.POST)
-	public String create(@Valid CountryForm countryForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+	public String create(@Valid ExpenseForm expenseForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 		if (bindingResult.hasErrors()) {
 			return handleRestApiException(bindingResult);
 		}
 		ApiResponse response = null;
 		
 		try {
-			Country country = expensesService.create(countryForm);
+			Expense expense = expensesService.create(expenseForm);
 
-			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + country.getName());
+			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + expense.getDescription());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-//			throw new RestApiException(e);
 		}
 
 		return stringUtils.encode(response);
 	}
 	
 	@RequestMapping(value="/api/expenses", method=RequestMethod.PUT)
-	public String update(@Valid CountryForm countryForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+	public String update(@Valid ExpenseForm expenseForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		ApiResponse response = null;
 		
@@ -66,8 +64,8 @@ public class ExpensesRestController extends AbstractRestController{
 		}
 
 		try {
-			Country country = expensesService.update(countryForm);
-			response = new ApiResponse(HttpStatus.OK, "Succesfully updated " + country.getName());
+			Expense expense = expensesService.update(expenseForm);
+			response = new ApiResponse(HttpStatus.OK, "Succesfully updated " + expense.getDescription());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
@@ -80,9 +78,9 @@ public class ExpensesRestController extends AbstractRestController{
 
 		ApiResponse response = null;
 		try {
-			Country country = expensesService.delete(id);
+			Expense expense = expensesService.delete(id);
 
-			response = new ApiResponse(HttpStatus.ACCEPTED, "Record deleted " + country.getName());
+			response = new ApiResponse(HttpStatus.ACCEPTED, "Record deleted " + expense.getDescription());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 			

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.bartolay.inventory.form.ExpenseForm;
 import com.bartolay.inventory.form.StockOpeningForm;
 import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.form.StockTransferForm;
@@ -164,4 +165,12 @@ public class StockController {
 		return model;
 	}
 	
+	@RequestMapping(value="/stock/expenses")
+	public ModelAndView stockExpenses(ModelAndView model) {
+		model.setViewName("stock/index");
+		model.addObject("expenseForm", new ExpenseForm());
+		model.addObject("page", "Expenses");
+		model.addObject("html", "expenses/list");
+		return model;
+	}
 }
