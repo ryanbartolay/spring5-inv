@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.bartolay.inventory.form.ExpenseForm;
+import com.bartolay.inventory.form.StockAdjustmentForm;
 import com.bartolay.inventory.form.StockOpeningForm;
 import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.form.StockTransferForm;
@@ -162,6 +163,16 @@ public class StockController {
 		model.setViewName("stock/index");
 		model.addObject("page", "Stock Adjustment");
 		model.addObject("html", "adjustment/list");
+		return model;
+	}
+	
+	@RequestMapping(value="/stock/adjustment/create")
+	public ModelAndView createStockAdjustment(ModelAndView model) {
+		model.setViewName("stock/index");
+		model.addObject("page", "Stock Adjustment");
+		model.addObject("html", "adjustment/edit");
+		model.addObject("stockAdjustmentForm", new StockAdjustmentForm());
+		model.addObject("locations", locationRepository.findAll());
 		return model;
 	}
 	

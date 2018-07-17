@@ -49,7 +49,7 @@
 
 			<div class="x_content">
 				<div class="table-responsive">
-					<table class="table table-striped" id="salesReturn-datatable" style="width: 100%">
+					<table class="table table-striped" id="stockAdjustment-datatable" style="width: 100%">
 						<thead>
 							<tr class="headings">
 								<th class="column-title">System #</th>
@@ -80,7 +80,7 @@
 <script
 	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
 <script>
-				var table = $('#salesReturn-datatable');
+				var table = $('#stockAdjustment-datatable');
 				var datatable = customFixedDatatable(
 						table,
 						'/api/datatable/stock/adjustment',

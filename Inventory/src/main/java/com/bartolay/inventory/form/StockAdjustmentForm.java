@@ -29,7 +29,7 @@ public class StockAdjustmentForm {
 	@Digits(fraction = 0, integer = 4, message="Year only accepts digits.")
 	private String year;
 	
-	private Date transaction_date;
+	private Date transactionDate;
 	
 	@NotNull (message="Required adjustment type")
 	private Unit adjustmentType;
@@ -77,12 +77,12 @@ public class StockAdjustmentForm {
 		this.year = year;
 	}
 
-	public Date getTransaction_date() {
-		return transaction_date;
+	public Date getTransactionDate() {
+		return transactionDate;
 	}
 
-	public void setTransaction_date(Date transaction_date) {
-		this.transaction_date = transaction_date;
+	public void setTransactionDate(Date transactionDate) {
+		this.transactionDate = transactionDate;
 	}
 
 	public Unit getAdjustmentType() {

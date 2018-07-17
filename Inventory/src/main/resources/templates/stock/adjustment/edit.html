@@ -1,0 +1,58 @@
+<div class="row">
+	<div class="col-lg-12">
+		<form th:object="${stockAdjustmentForm}" id="stockAdjustmentForm"
+			th:action="@{/api/stock/adjustment}" method="POST">
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="row">
+						<div class="col-md-8">
+							<h4>New Stock Adjustment</h4>
+						</div>
+						<div class="col-md-4">
+							<div class="btn-group pull-right" role="group">
+								<button type="submit" id="submitStockAdjustmentBtn" class="btn btn-success btn-sm">Save Stock Adjustment</button>
+								<a th:href="@{/stock/adjustment}" class="btn btn-default btn-sm">Cancel</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body">
+
+					<div class="form-group" id="errors"></div>
+
+					<div class="col-md-3">
+						<label>System Number :</label> <input type="text"
+							class="form-control" disabled="disabled"> <label>Document
+							Number :</label> <input type="text" class="form-control"
+							th:field="*{document_number}">
+					</div>
+
+					<div class="col-md-3">
+						<label>Transaction Date</label> 
+						<input type="text"
+							th:field="*{transactionDate}" class="form-control"> 
+							<label>Year</label>
+						<input type="text" class="form-control yearselect"
+							th:field="*{year}">
+					</div>
+
+					<div class="col-md-3">
+						<label>Location </label> 
+						<select
+							class="form-control" th:field="*{location}">
+							<option th:each="location : ${locations}" th:value="${location.id}" th:text="${location.name}"></option>
+						</select>
+						
+						
+					</div>
+
+				</div>
+			</div>
+
+		</form>
+	</div>
+	<!-- /.col-lg-12 -->
+</div>
+
+<body>
