@@ -39,6 +39,11 @@ public class Inventory {
 	@JoinColumn(name="unit_id", nullable=false, updatable=false)
 	public Unit unit;
 	
+	@Column(name="unit_cost", nullable=false, precision=10, scale=5)
+	private BigDecimal unitCost;
+	
+//	private BigDecimal itemCost;
+	
 	@Column(name="quantity", updatable=true, precision=10, scale=5)
 	public BigDecimal quantity;
 
@@ -134,6 +139,14 @@ public class Inventory {
 		this.unit = unit;
 	}
 
+	public BigDecimal getUnitCost() {
+		return unitCost;
+	}
+
+	public void setUnitCost(BigDecimal unitCost) {
+		this.unitCost = unitCost;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -173,6 +186,7 @@ public class Inventory {
 
 	@Override
 	public String toString() {
-		return "Inventory [item=" + item.getId() + ", location=" + location.getId() + ", unit="+ unit.getId() +"]";
+		return "Inventory [id=" + id + ", location=" + location + ", item=" + item + ", unit=" + unit + ", unitCost="
+				+ unitCost + ", quantity=" + quantity + "]";
 	}
 }

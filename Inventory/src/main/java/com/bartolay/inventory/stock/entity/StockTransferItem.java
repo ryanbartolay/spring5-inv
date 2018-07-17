@@ -44,6 +44,9 @@ public class StockTransferItem {
 	@Column(name="quantity", nullable=false, precision=10, scale=5, updatable=false)
 	private BigDecimal quantity;
 	
+	@Column(name="unit_cost", nullable=false, precision=10, scale=5, updatable=false)
+	private BigDecimal unitCost;
+	
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
 	private Date createdDate;
@@ -99,6 +102,12 @@ public class StockTransferItem {
 	}
 	public void setCreatedBy(User createdBy) {
 		this.createdBy = createdBy;
+	}
+	public BigDecimal getUnitCost() {
+		return unitCost;
+	}
+	public void setUnitCost(BigDecimal unitCost) {
+		this.unitCost = unitCost;
 	}
 	@Override
 	public String toString() {

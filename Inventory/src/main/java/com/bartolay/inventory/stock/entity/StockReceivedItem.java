@@ -48,6 +48,9 @@ public class StockReceivedItem {
 	@Column(name="unit_cost_total", nullable=false, precision=10, scale=5, updatable=false)
 	private BigDecimal unitCostTotal;
 	
+	@Column(name="item_cost", nullable=true, precision=10, scale=5, updatable=false)
+	private BigDecimal itemCost;
+	
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp
 	private Date createdDate;
@@ -110,6 +113,14 @@ public class StockReceivedItem {
 
 	public void setUnitCostTotal(BigDecimal unitCostTotal) {
 		this.unitCostTotal = unitCostTotal;
+	}
+
+	public BigDecimal getItemCost() {
+		return itemCost;
+	}
+
+	public void setItemCost(BigDecimal itemCost) {
+		this.itemCost = itemCost;
 	}
 
 	public Date getCreatedDate() {

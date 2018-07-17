@@ -45,9 +45,6 @@ public class InventoryTransaction {
 	@JoinColumn(name="unit_id", nullable=false, updatable=false)
 	private Unit unit;
 	
-	@Column(name="unit_cost", precision=10, scale=5, updatable=false)
-	private BigDecimal unitCost;
-	
 	@Column(name="quantity_raw", nullable=false, precision=10, scale=5, updatable=false)
 	private BigDecimal rawQuantity;
 	
@@ -60,6 +57,12 @@ public class InventoryTransaction {
 	
 	@Column(name="quantity_after", precision=10, scale=5, updatable=false)
 	private BigDecimal quantityAfter;
+	
+	@Column(name="unit_cost_before", precision=10, scale=5, updatable=false)
+	private BigDecimal unitCostBefore;
+	
+	@Column(name="unit_cost_after", precision=10, scale=5, updatable=false)
+	private BigDecimal unitCostAfter;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="inventory_id", nullable=false, updatable=true)
@@ -133,14 +136,6 @@ public class InventoryTransaction {
 		this.unit = unit;
 	}
 
-	public BigDecimal getUnitCost() {
-		return unitCost;
-	}
-
-	public void setUnitCost(BigDecimal unitCost) {
-		this.unitCost = unitCost;
-	}
-
 	public BigDecimal getRawQuantity() {
 		return rawQuantity;
 	}
@@ -169,6 +164,31 @@ public class InventoryTransaction {
 	
 	public BigDecimal getQuantityAfter() {
 		return quantityAfter;
+	}
+	
+	public BigDecimal getUnitCostBefore() {
+		return unitCostBefore;
+	}
+
+	public void setUnitCostBefore(BigDecimal unitCostBefore) {
+		this.unitCostBefore = unitCostBefore;
+	}
+
+//	public BigDecimal getUnitCostAfter() {
+//		return unitCostAfter;
+//	}
+//
+//	public void setUnitCostAfter(BigDecimal unitCostAfter) {
+//		this.unitCostAfter = unitCostAfter;
+//	}
+	
+
+	public BigDecimal getUnitCostAfter() {
+		return unitCostAfter;
+	}
+
+	public void setUnitCostAfter(BigDecimal unitCostAfter) {
+		this.unitCostAfter = unitCostAfter;
 	}
 
 	public void setQuantityAfter(BigDecimal quantityAfter) {
@@ -262,7 +282,8 @@ public class InventoryTransaction {
 	public String toString() {
 		return "InventoryTransaction [id=" + id + ", transactionType=" + transactionType + ", transactionSystemNumber="
 				+ transactionSystemNumber + ",  location=" + location
-				+ ", item=" + item + ", unit=" + unit + ", unitCost=" + unitCost + ", rawQuantity=" + rawQuantity
+				+ ", item=" + item + ", unit=" + unit + ", rawQuantity=" + rawQuantity
+				+ ", unitCostBefore=" + unitCostBefore + ", unitCostAfter=" + unitCostAfter
 				+ ", quantityBefore=" + quantityBefore + ", rateQuantity=" + rateQuantity + ", quantityAfter="
 				+ quantityAfter + ", createdDate=" + createdDate + ", transactionBefore=" + transactionBefore
 				+ ", transactionAfter=" + transactionAfter + "]";

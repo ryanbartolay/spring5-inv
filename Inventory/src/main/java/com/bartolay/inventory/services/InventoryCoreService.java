@@ -14,9 +14,12 @@ import com.bartolay.inventory.entity.InventoryTransaction;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.enums.SalesInvoiceStatus;
 import com.bartolay.inventory.enums.Status;
+import com.bartolay.inventory.enums.StockAdjustmentType;
+import com.bartolay.inventory.enums.StockTransaction;
 import com.bartolay.inventory.enums.TransactionType;
 import com.bartolay.inventory.exceptions.SalesInvoiceException;
 import com.bartolay.inventory.exceptions.SalesReturnException;
+import com.bartolay.inventory.exceptions.StockAdjustmentException;
 import com.bartolay.inventory.exceptions.StockTransferException;
 import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.InventoryTransactionRepository;
@@ -30,6 +33,8 @@ import com.bartolay.inventory.sales.repositories.SalesInvoiceItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.sales.repositories.SalesReturnItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesReturnRepository;
+import com.bartolay.inventory.stock.entity.StockAdjustment;
+import com.bartolay.inventory.stock.entity.StockAdjustmentItem;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.entity.StockOpeningItem;
 import com.bartolay.inventory.stock.entity.StockReceived;
@@ -37,6 +42,8 @@ import com.bartolay.inventory.stock.entity.StockReceivedExpense;
 import com.bartolay.inventory.stock.entity.StockReceivedItem;
 import com.bartolay.inventory.stock.entity.StockTransfer;
 import com.bartolay.inventory.stock.entity.StockTransferItem;
+import com.bartolay.inventory.stock.repositories.StockAdjustmentItemRepository;
+import com.bartolay.inventory.stock.repositories.StockAdjustmentRepository;
 import com.bartolay.inventory.stock.repositories.StockOpeningItemRepository;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 import com.bartolay.inventory.stock.repositories.StockReceivedExpenseRepository;
@@ -46,7 +53,6 @@ import com.bartolay.inventory.stock.repositories.StockTransferItemRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferRepository;
 import com.bartolay.inventory.utils.InventoryUtility;
 import com.bartolay.inventory.utils.UserCredentials;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 @Transactional
@@ -67,6 +73,10 @@ public class InventoryCoreService {
 	@Autowired
 	private SalesInvoiceItemRepository salesInvoiceItemRepository; 
 	@Autowired
+	private StockAdjustmentRepository stockAdjustmentRepository;
+	@Autowired
+	private StockAdjustmentItemRepository stockAdjustmentItemRepository;
+	@Autowired
 	private StockOpeningRepository stockOpeningRepository;
 	@Autowired
 	private StockOpeningItemRepository stockOpeningItemRepository;
@@ -85,8 +95,6 @@ public class InventoryCoreService {
 	@Autowired
 	private StockTransferItemRepository stockTransferItemRepository;
 
-	@Autowired
-	private ObjectMapper objectMapper;
 	/**
 	 * Creates the Stock Opening
 	 * @param stockOpening
@@ -138,14 +146,17 @@ public class InventoryCoreService {
 			// Now lets compute for the quantity of the item
 			System.err.println(inventory.getQuantity() + " " + stockOpeningItem.getQuantity());
 			inventory.setQuantity(inventory.getQuantity().add(stockOpeningItem.getQuantity()));
+			inventory.setUnitCost(stockOpeningItem.getUnitCost());
 			inventoryTransaction.setRateQuantity(stockOpeningItem.getQuantity());
 
 			inventoryTransaction.setQuantityAfter(inventory.getQuantity());
 			inventoryTransaction.setItem(stockOpeningItem.getItem());
 			inventoryTransaction.setLocation(stockOpening.getLocation());
 			inventoryTransaction.setTransactionSystemNumber(stockOpening.getSystemNumber());
+			
 			inventoryTransaction.setUnit(stockOpeningItem.getUnit());
-			inventoryTransaction.setUnitCost(stockOpeningItem.getUnitCost());
+			//inventoryTransaction.setUnitCostBefore(new BigDecimal("0"));
+			inventoryTransaction.setUnitCostAfter(stockOpeningItem.getUnitCost());
 			inventoryTransaction.setTransactionType(TransactionType.STOCK_OPENING);
 			inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
 
@@ -241,7 +252,7 @@ public class InventoryCoreService {
 			inventoryTransaction.setUnit(salesInvoiceItem.getUnit());
 			inventoryTransaction.setRawQuantity(salesInvoiceItem.getQuantity());
 			inventoryTransaction.setRateQuantity(salesInvoiceItem.getQuantity());
-			inventoryTransaction.setUnitCost(salesInvoiceItem.getUnitPrice());
+			inventoryTransaction.setUnitCostAfter(salesInvoiceItem.getUnitPrice());
 			inventoryTransaction.setQuantityBefore(inventory.getQuantity());
 			inventoryTransaction.setQuantityAfter(after_quantity);
 
@@ -299,7 +310,7 @@ public class InventoryCoreService {
 				cancelledTransaction.setTransactionSystemNumber(updatedSalesInvoice.getSystemNumber());
 				cancelledTransaction.setTransactionType(TransactionType.SALES_CANCEL_INVOICE);
 				cancelledTransaction.setRawQuantity(salesInvoiceItem.getQuantity());
-				cancelledTransaction.setUnitCost(salesInvoiceItem.getUnitPrice());
+				cancelledTransaction.setUnitCostAfter(salesInvoiceItem.getUnitPrice());
 				cancelledTransaction.setCreatedBy(userCredentials.getLoggedInUser());
 				cancelledTransaction.setUnit(salesInvoiceItem.getUnit());
 				cancelledTransaction.setInventory(inventory);
@@ -335,7 +346,7 @@ public class InventoryCoreService {
 	}
 
 	@Transactional(rollbackFor=Exception.class)
-	public StockTransfer createStockTransfer(StockTransfer stockTransfer) throws StockTransferException {
+	public void createStockTransfer(StockTransfer stockTransfer) throws StockTransferException {
 
 		// lets save the stock transfer first to generate system number
 		stockTransfer.setCreatedBy(userCredentials.getLoggedInUser());
@@ -400,8 +411,11 @@ public class InventoryCoreService {
 				toInventory.setUnit(stockTransferItem.getUnit());
 				toInventory.setQuantity(new BigDecimal("0"));
 				toInventory.setCreatedBy(userCredentials.getLoggedInUser());
+				toInventory.setUnitCost(fromInventory.getUnitCost());
 			}
 
+			stockTransferItem.setUnitCost(toInventory.getUnitCost());
+			
 			// Inventory Transaction
 			// before transaction
 			JSONObject jsonObj = new JSONObject();
@@ -417,6 +431,10 @@ public class InventoryCoreService {
 			if(newFromQuantity.compareTo(BigDecimal.ZERO) < 0) {
 				throw new StockTransferException("You cannot transfer ("+ stockTransferItem.getQuantity() +") more than the current stock quantity "+ fromInventory.getQuantity() +".");
 			}
+			System.err.println("from1");
+			System.err.println(fromInventory);
+			System.err.println("to1");
+			System.err.println(toInventory);
 
 			fromInventory.setQuantity(newFromQuantity);
 			toInventory.setQuantity(toInventory.getQuantity().add(stockTransferItem.getQuantity()));
@@ -428,16 +446,33 @@ public class InventoryCoreService {
 
 			inventoryTransaction.setTransactionAfter(jsonObj.toString());
 
+			System.err.println("from2");
+			System.err.println(fromInventory);
+			System.err.println("to2");
+			System.err.println(toInventory);
+			
 			inventoryTransactions.add(inventoryTransaction);
 			inventoriesForSave.add(fromInventory);
 			inventoriesForSave.add(toInventory);
-		};
+		}
 
+		System.err.println("ssss");
+		
+		for(StockTransferItem i : stockTransfer.getStockTransferItems()) {
+			System.err.println(i);	
+		}
+		
 		stockTransferItemRepository.saveAll(stockTransfer.getStockTransferItems());
+		System.err.println("aaaa");
 		inventoryTransactionRepository.saveAll(inventoryTransactions);
+		System.err.println("bbbb");
+		
+		for(Inventory i : inventoriesForSave) {
+			System.err.println(i);
+		}
 		inventoryRepository.saveAll(inventoriesForSave);
-
-		return stockTransfer;
+		System.err.println("cccc");
+//		return stockTransfer;
 	}
 
 	@Transactional(rollbackFor=Exception.class)
@@ -459,7 +494,6 @@ public class InventoryCoreService {
 					expense.setCreatedBy(userCredentials.getLoggedInUser());
 					stockReceive.setExpensesTotal(stockReceive.getExpensesTotal().add(expense.getAmount()));
 				}
-				
 			}
 		}
 
@@ -481,6 +515,7 @@ public class InventoryCoreService {
 				inventory.setUnit(stockReceiveItem.getUnit());
 				inventory.setQuantity(new BigDecimal("0"));
 				inventory.setCreatedBy(userCredentials.getLoggedInUser());
+				inventory.setUnitCost(stockReceiveItem.getUnitCost());
 			} else {
 				inventory.setUpdatedBy(userCredentials.getLoggedInUser());
 			}
@@ -591,5 +626,75 @@ public class InventoryCoreService {
 		salesInvoiceItemRepository.saveAll(salesInvoiceItemsForSave);
 		inventoryTransactionRepository.saveAll(inventoryTransactionsForSave);
 		inventoryRepository.saveAll(inventoriesForSave);
+	}
+	
+	@Transactional(rollbackFor=Exception.class)
+	public void createStockAdjustment(StockAdjustment stockAdjustment) throws StockAdjustmentException {
+		
+		StockAdjustmentType adjustmentType = null;
+		
+		try {
+			adjustmentType = StockAdjustmentType.valueOf(stockAdjustment.getStockAdjustmentType().toUpperCase());
+			if(adjustmentType == null) {
+				throw new StockAdjustmentException("Wrong value for type " + stockAdjustment.getStockAdjustmentType());
+			}
+		} catch(Exception e) {
+			throw new StockAdjustmentException("Wrong value for type " + stockAdjustment.getStockAdjustmentType());
+		}
+
+		
+		
+		List<Inventory> inventories = inventoryRepository.findByLocation(stockAdjustment.getLocation());
+		List<Inventory> inventoriesForSave = new ArrayList<>();
+		List<InventoryTransaction> inventoryTransactionsForSave = new ArrayList<>();
+		
+		List<StockAdjustmentItem> stockAdjustmentItems = stockAdjustment.getStockAdjustmentItems();
+		
+		stockAdjustment = stockAdjustmentRepository.save(stockAdjustment);
+		
+		for(StockAdjustmentItem stockAdjustmentItem : stockAdjustmentItems) {
+			
+			if(inventories.contains(stockAdjustmentItem.getInventory())) {
+				
+				Inventory inventory = inventories.get(inventories.indexOf(stockAdjustmentItem.getInventory()));
+				
+				
+				// inventory transaction
+				InventoryTransaction inventoryTransaction = new InventoryTransaction();
+				inventoryTransaction.setItem(stockAdjustmentItem.getInventory().getItem());
+				inventoryTransaction.setLocation(stockAdjustment.getLocation());
+				inventoryTransaction.setUnit(stockAdjustmentItem.getInventory().getUnit());
+				inventoryTransaction.setTransactionType(TransactionType.STOCK_ADJUSTMENT);
+				inventoryTransaction.setRawQuantity(stockAdjustmentItem.getAmount());
+				inventoryTransaction.setTransactionSystemNumber(stockAdjustment.getSystemNumber());
+				inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
+				inventoryTransaction.setRateQuantity(stockAdjustmentItem.getAmount());
+				inventoryTransaction.setInventory(inventory);
+				
+				switch(adjustmentType) {
+				case QUANTITY:
+					inventoryTransaction.setQuantityBefore(inventory.getQuantity());
+					inventory.setQuantity(stockAdjustmentItem.getAmount());
+					inventoryTransaction.setQuantityAfter(inventory.getQuantity());
+					break;
+				case VALUE:
+					inventoryTransaction.setUnitCostBefore(inventory.getQuantity());
+					inventory.setUnitCost(stockAdjustmentItem.getAmount());
+					inventoryTransaction.setUnitCostAfter(inventory.getQuantity());
+					break;				
+				}
+				
+				inventoryTransactionsForSave.add(inventoryTransaction);
+				stockAdjustmentItem.setStockAdjustment(stockAdjustment);
+				inventoriesForSave.add(inventory);
+			} else {
+				throw new StockAdjustmentException(stockAdjustmentItem.getInventory().getItem().getName() + " does not exists in " + stockAdjustment.getLocation().getName());
+			}
+		}
+		
+		inventoryTransactionRepository.saveAll(inventoryTransactionsForSave);
+		inventoryRepository.saveAll(inventoriesForSave);
+		stockAdjustmentItemRepository.saveAll(stockAdjustmentItems);
+		stockAdjustmentRepository.save(stockAdjustment);
 	}
 }
