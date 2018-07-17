@@ -24,7 +24,7 @@ public class StockAdjustmentDatatableRepositoryImpl extends RepositoryComponent 
 
 	@Override
 	public long findAllCount(DatatableParameter datatableParameter) {
-		String SQL = "SELECT COUNT(system_number) FROM stock_transfer ";
+		String SQL = "SELECT COUNT(system_number) FROM stock_adjustment ";
 
 		if(datatableParameter.getSearch() != null) {
 			SQL += " WHERE  documentNumber like :documentNumber ";
@@ -41,9 +41,14 @@ public class StockAdjustmentDatatableRepositoryImpl extends RepositoryComponent 
 	public JSONArray findAllData(DatatableParameter datatableParameter) {
 		try{
 			DatatableColumn sortColumn = datatableParameter.getSortColumn();
-			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t2.name as from_location_name, t3.name as to_location_name FROM stock_transfer t1 "
-					+ "inner join location t2 on t1.from_location_id = t2.id "
-					+ "inner join location t3 on t1.to_location_id = t3.id ";
+			String SQL = "SELECT t1.system_number, t1.document_number, t1.transaction_date, t1.stock_adjustment_type, t1.description, "
+					+ "t2.name as location_name, "
+					+ "t3.lastname || ', ' || t3.firstname as created_by, "
+					+ "t4.description as reason "
+					+ "FROM stock_adjustment t1 "
+					+ "inner join location t2 on t1.location_id = t2.id "
+					+ "inner join users as t3 on t1.created_by = t3.id "
+					+ "inner join stock_adjustment_reason as t4 on t1.stock_adjustment_reason_id = t4.id";
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
 			
@@ -70,16 +75,12 @@ public class StockAdjustmentDatatableRepositoryImpl extends RepositoryComponent 
 					JSONObject obj = new JSONObject();
 					obj.put("system_number", rs.getString("system_number"));
 					obj.put("document_number", rs.getString("document_number"));
-					obj.put("description", rs.getString("document_number"));
+					obj.put("description", rs.getString("description"));
 					obj.put("transaction_date", rs.getString("transaction_date"));
-					obj.put("from_location.name", rs.getString("from_location_name"));
-					obj.put("to_location_name", rs.getString("to_location_name"));
-					obj.put("code", rs.getString("to_location_name"));
-					obj.put("unit", rs.getString("to_location_name"));
-					obj.put("amount", rs.getString("to_location_name"));
-					obj.put("quantity", rs.getString("to_location_name"));
-					
-//					dummy data
+					obj.put("stock_adjustment_type", rs.getString("stock_adjustment_type"));
+					obj.put("location_name", rs.getString("location_name"));
+					obj.put("created_by", rs.getString("created_by"));
+					obj.put("reason", rs.getString("reason"));
 					
 					return obj;
 				}
