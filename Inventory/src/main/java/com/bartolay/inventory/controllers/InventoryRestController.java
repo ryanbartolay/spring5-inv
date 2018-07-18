@@ -29,6 +29,11 @@ public class InventoryRestController {
 	
 	@RequestMapping(value="/inventory/location/{location}/limit/{limit}", method=RequestMethod.GET, produces="application/json")
 	public String getAllByLocation(@PathVariable Integer location, @PathVariable Integer limit, @RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {		
-		return inventoryService.retrieveDatatableListByLocationIdWithLimi(requestMap, location, limit).toString();
+		return inventoryService.retrieveDatatableListByLocationIdWithLimit(requestMap, location, limit).toString();
+	}
+	
+	@RequestMapping(value="/inventory/quantity_cost_by_location/{location}", method=RequestMethod.GET, produces="application/json")
+	public String getQuantityCostByLocation(@PathVariable Integer location, @RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {		
+		return inventoryService.retrieveQuantityCostByLocationId(requestMap, location).toString();
 	}
 }

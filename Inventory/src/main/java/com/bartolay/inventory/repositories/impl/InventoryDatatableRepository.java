@@ -88,6 +88,29 @@ public class InventoryDatatableRepository extends RepositoryComponent {
 		
 		return jsonArray;
 	}
+
+	public JSONArray findQuantityCostByLocationId(Integer location_id) {
+		String sql = "select id, item_id, unit_id, quantity, unit_cost from inventory where location_id = ?";
+		
+		List<JSONObject> data = jdbcTemplate.query(sql,new Object[] {location_id}, new RowMapper<JSONObject>() {
+
+			@Override
+			public JSONObject mapRow(ResultSet rs, int arg1) throws SQLException {
+				JSONObject obj = new JSONObject();
+				obj.put("id", rs.getInt("id"));
+				obj.put("item_id", rs.getInt("item_id"));
+				obj.put("unit_id", rs.getInt("unit_id"));
+				obj.put("quantity", rs.getBigDecimal("quantity"));
+				obj.put("unit_cost", rs.getBigDecimal("unit_cost"));
+				return obj;
+			}
+			
+		});
+		JSONArray jsonArray = new JSONArray();
+		
+		data.forEach(d -> jsonArray.put(d));
+		return jsonArray;
+	}
 	
 	
 }

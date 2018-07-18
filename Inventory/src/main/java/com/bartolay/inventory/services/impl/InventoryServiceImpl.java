@@ -38,8 +38,16 @@ public class InventoryServiceImpl implements InventoryService {
 	}
 
 	@Override
-	public JSONObject retrieveDatatableListByLocationIdWithLimi(Map<String, String> requestMap, Integer location_id, Integer limit) {
+	public JSONObject retrieveDatatableListByLocationIdWithLimit(Map<String, String> requestMap, Integer location_id, Integer limit) {
 		JSONArray array = inventoryJdbcRepository.findAllDataByLocationId(location_id, limit);
+		JSONObject object = new JSONObject();
+		object.put("data", array);
+		return object;
+	}
+
+	@Override
+	public JSONObject retrieveQuantityCostByLocationId(Map<String, String> requestMap, Integer location_id) {
+		JSONArray array = inventoryJdbcRepository.findQuantityCostByLocationId(location_id);
 		JSONObject object = new JSONObject();
 		object.put("data", array);
 		return object;
