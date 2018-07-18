@@ -9,8 +9,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.bartolay.inventory.entity.Location;
-import com.bartolay.inventory.entity.Unit;
+import com.bartolay.inventory.enums.StockAdjustmentType;
 import com.bartolay.inventory.stock.entity.StockAdjustment;
+import com.bartolay.inventory.stock.entity.StockAdjustmentReason;
 
 public class StockAdjustmentForm {
 	
@@ -32,10 +33,13 @@ public class StockAdjustmentForm {
 	private Date transactionDate;
 	
 	@NotNull (message="Required adjustment type")
-	private Unit adjustmentType;
+	private StockAdjustmentType adjustmentType;
 	
 	@NotNull(message="Needed atleast 1 item")
 	private Set<StockAdjustment> items = new HashSet<>();
+	
+	@NotNull(message="Reason is required")
+	private StockAdjustmentReason reason;
 
 	public String getSystem_number() {
 		return system_number;
@@ -85,11 +89,11 @@ public class StockAdjustmentForm {
 		this.transactionDate = transactionDate;
 	}
 
-	public Unit getAdjustmentType() {
+	public StockAdjustmentType getAdjustmentType() {
 		return adjustmentType;
 	}
 
-	public void setAdjustmentType(Unit adjustmentType) {
+	public void setAdjustmentType(StockAdjustmentType adjustmentType) {
 		this.adjustmentType = adjustmentType;
 	}
 
@@ -100,4 +104,13 @@ public class StockAdjustmentForm {
 	public void setItems(Set<StockAdjustment> items) {
 		this.items = items;
 	}
+
+	public StockAdjustmentReason getReason() {
+		return reason;
+	}
+
+	public void setReason(StockAdjustmentReason reason) {
+		this.reason = reason;
+	}
+
 }

@@ -18,6 +18,7 @@ import com.bartolay.inventory.services.CompanyService;
 import com.bartolay.inventory.services.SupplierService;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.entity.StockTransfer;
+import com.bartolay.inventory.stock.repositories.StockAdjustmentReasonRepository;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 import com.bartolay.inventory.stock.repositories.StockReceivedRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferRepository;
@@ -28,6 +29,9 @@ public class StockController {
 	
 	@Autowired
 	private LocationRepository locationRepository;
+	
+	@Autowired
+	private StockAdjustmentReasonRepository stockAdjusmentReasonRepository;
 	
 	@Autowired
 	private StockOpeningRepository stockOpeningRepository;
@@ -172,6 +176,7 @@ public class StockController {
 		model.addObject("page", "Stock Adjustment");
 		model.addObject("html", "adjustment/edit");
 		model.addObject("stockAdjustmentForm", new StockAdjustmentForm());
+		model.addObject("reasons", stockAdjusmentReasonRepository.findAll());
 		model.addObject("locations", locationRepository.findAll());
 		return model;
 	}

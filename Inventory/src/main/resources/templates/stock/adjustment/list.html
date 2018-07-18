@@ -8,13 +8,14 @@
 		<div class="title_right">
 			<div class="pull-right">
 				<div class="input-group ">
-					<a th:href="@{/stock/transfer/create}"
-						class="btn btn-success btn-sm pull-right"> New Stock Adjustment</a>
+					<a th:href="@{/stock/adjustment/create}"
+						class="btn btn-success btn-sm pull-right"> New Stock
+						Adjustment</a>
 				</div>
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="col-md-12 col-sm-12 col-xs-12">
 		<div class="x_panel">
 
@@ -22,10 +23,9 @@
 			<div class="x_title">
 				<div class="col-md-6">
 					<div class="btn-group">
-						<a data-toggle="dropdown"
-							class="btn btn-default dropdown-toggle" type="button"
-							aria-expanded="false">
-							All Stock Adjustments <span class="caret"></span>
+						<a data-toggle="dropdown" class="btn btn-default dropdown-toggle"
+							type="button" aria-expanded="false"> All Stock Adjustments <span
+							class="caret"></span>
 						</a>
 						<ul role="menu" class="dropdown-menu">
 							<li><a th:href="@{/stock/adjustment/list}">Active</a></li>
@@ -49,7 +49,8 @@
 
 			<div class="x_content">
 				<div class="table-responsive">
-					<table class="table table-striped" id="stockAdjustment-datatable" style="width: 100%">
+					<table class="table table-striped" id="stockAdjustment-datatable"
+						style="width: 100%">
 						<thead>
 							<tr class="headings">
 								<th class="column-title">System #</th>
@@ -60,75 +61,79 @@
 								<th class="column-title">Location</th>
 								<th class="column-title">Adjusted By</th>
 								<th class="column-title">Date</th>
-								
+
 							</tr>
 						</thead>
 
 						<tbody>
-							
+
 						</tbody>
 					</table>
 				</div>
-				
+
 			</div>
+		</div>
 	</div>
-</div>
-<script
-	th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
-<script
-	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
-<script
-	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
-<script>
-				var table = $('#stockAdjustment-datatable');
-				var datatable = customFixedDatatable(
-						table,
-						'/api/datatable/stock/adjustment',
-						[ 
-						{
-							data : "system_number",
-						}, 
-						{
-							data : "document_number", 
-						},
-						{
-							data : "reason",
-							name : "reason",
-						}, 
-						{
-							data : "description",
-							name : "description",
-							defaultContent: ""
-						}, 
-						 
-						{
-							data : "stock_adjustment_type",
-							name : "stock_adjustment_type",
-						},
-						{
-							data : "location_name",
-							name : "location_name",
-						},
-						{
-							data : "created_by",
-							name : "created_by",
-						},
-						{
-							data : "transaction_date",
-							name : "transaction_date",
-						},]
-						);
 
-				// View button
-				table.find("tbody").on(
-						'click',
-						'#btnView',
-						function(e) {
-							e.preventDefault();
+	<!-- Item Modal -->
+	<div th:include="includes/modals/itemModal_simple"></div>
 
-							var data = datatable.row(
-									$(this).parent('div').parent('td')).data();
-							window.location = "invoice/" + data.system_number;
+	<script
+		th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
+	<script
+		th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
+	<script
+		th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
+	<script>
+		var table = $('#stockAdjustment-datatable');
+		var datatable = customFixedDatatable(
+				table,
+				'/api/datatable/stock/adjustment',
+				[ 
+				{
+					data : "system_number",
+				}, 
+				{
+					data : "document_number", 
+				},
+				{
+					data : "reason",
+					name : "reason",
+				}, 
+				{
+					data : "description",
+					name : "description",
+					defaultContent: ""
+				}, 
+				 
+				{
+					data : "stock_adjustment_type",
+					name : "stock_adjustment_type",
+				},
+				{
+					data : "location_name",
+					name : "location_name",
+				},
+				{
+					data : "created_by",
+					name : "created_by",
+				},
+				{
+					data : "transaction_date",
+					name : "transaction_date",
+				},]
+				);
 
-						});
+		// View button
+		table.find("tbody").on(
+				'click',
+				'#btnView',
+				function(e) {
+					e.preventDefault();
+
+					var data = datatable.row(
+							$(this).parent('div').parent('td')).data();
+					window.location = "invoice/" + data.system_number;
+
+				});
 			</script>
