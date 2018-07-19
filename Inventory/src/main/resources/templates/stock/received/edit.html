@@ -93,7 +93,6 @@
 									<th class="col-md-1">Code</th>
 									<th class="col-md-3">Description</th>
 									<th>Unit</th>
-									<th>U.Desc</th>
 									<th>Quantity</th>
 									<th class="text-right">Unit Price</th>
 									<th class="col-md-2 text-right">Subtotal</th>
@@ -220,16 +219,21 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
   			var unitCost = (item.unitCost ? item.unitCost : "0.00");
   			var subtotal = (item.subtotal ? item.subtotal : "0.00");
   			
-  			console.log(form_items[i].units)
   			try {
   				var units = JSON.parse(form_items[i].units);
-  	  			console.log("item", item)
+  	  			console.log("units", units)
   	  			html += `<tr>
-  					<th id="lblItemId">`+ item.id +`<input type="hidden" name="stockReceiveItems[`+i+`].item" value="`+item.id+`" /></th>
+  					<th id="lblItemId">`+ item.id +`<input type="hidden" name="stockReceiveItems[`+i+`].item.id" value="`+item.id+`" /></th>
   					<td id="lblItemName">`+ item.code +`</td>
   					<td id="lblItemName">`+ item.name +`</td>
-  					<td id="lblItemName">`+ item.name +`</td>
-  					<td id="lblItemName">`+ item.name +`</td>`;
+  					
+  					`;
+ 				var unitHtml = "";
+ 				
+  				for ( var unit in units) {
+  						unitHtml += "<option value='"+unit+"'>"+units[unit]+"</option>"
+				}
+  				html += '<td id="lblItemName"><select class="form-control" name="stockReceiveItems['+i+'].unit">'+unitHtml+'<select></td>';
   					
   				html +=	`
   					<td id="lblItemName"><input type="number" name="stockReceiveItems[`+i+`].quantity" id="quantity" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ quantity +`" /></td>
@@ -256,14 +260,12 @@ submitStockOpeningBtn.click(function() {
  	submitStockOpeningBtn.text("Processing....");
  	
  	POST("/api/stock/received", form.serialize(), function(data) {
- 		console.log(data);
- 		
  		if(data.status != "OK") {
  			displayErrors(data, $("#errors"));
  			submitStockOpeningBtn.removeAttr("disabled");
  			submitStockOpeningBtn.text(original_text);
  		} else {
- 			window.location.replace('/stock/opening')
+ 			window.location.replace('/stock/received')
  		}
  	});
 });
@@ -405,10 +407,10 @@ btnAddExpense.click(function(){
   		var html = ``;
   		for(var i = 0; i < form_expenses.length; i++) {
   			var exp = form_expenses[i];	
-  			
+  			console.log(i, exp)
   			if(exp && exp.description != undefined){
   				html += `<tr>
-  					<th id="lblExpensesId">`+ exp.id +`<input type="hidden" name="expenses[`+i+`].id" value="`+exp.id+`" /></th>
+  					<th id="lblExpensesId">`+ exp.id +`<input type="hidden" name="expenses[`+i+`].expense.id" value="`+exp.id+`" /></th>
   					<td id="lblExpensesName">`+ exp.description +`</td>`
   					
   				html +=	`

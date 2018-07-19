@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.entity.InventoryTransaction;
+import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.enums.SalesInvoiceStatus;
 import com.bartolay.inventory.enums.Status;
@@ -23,6 +24,7 @@ import com.bartolay.inventory.exceptions.StockAdjustmentException;
 import com.bartolay.inventory.exceptions.StockTransferException;
 import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.InventoryTransactionRepository;
+import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.sales.entity.CreditCardDetails;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
@@ -94,7 +96,8 @@ public class InventoryCoreService {
 	private StockTransferRepository stockTransferRepository;
 	@Autowired
 	private StockTransferItemRepository stockTransferItemRepository;
-
+	@Autowired
+	private ItemRepository itemRepository;
 	/**
 	 * Creates the Stock Opening
 	 * @param stockOpening
@@ -485,14 +488,37 @@ public class InventoryCoreService {
 		stockReceive.setGrandTotal(new BigDecimal("0"));
 		stockReceive.setNetTotal(new BigDecimal("0"));
 		stockReceive = stockReceiveRepository.save(stockReceive);
-
+		
+		/**
+		 * @author rhaynel
+		 * @since 2018-07-19
+		 * 
+		*/
+		if(!stockReceive.getPaymentMethod().equals(PaymentMethod.CREDITCARD)) {
+			stockReceive.setCreditCardDetails(null);
+		}else {
+			CreditCardDetails cardDetails = stockReceive.getCreditCardDetails();
+			cardDetails.setCreatedBy(userCredentials.getLoggedInUser());
+			creditCardDetailsRepository.save(cardDetails);
+		}
+		
 		// expenses
 		if(stockReceive.getStockReceiveExpenses() != null) {
 			for(StockReceivedExpense expense : stockReceive.getStockReceiveExpenses()) {
 				if(expense != null) {
 					expense.setStockReceive(stockReceive);
 					expense.setCreatedBy(userCredentials.getLoggedInUser());
-					stockReceive.setExpensesTotal(stockReceive.getExpensesTotal().add(expense.getAmount()));
+					
+					/**
+					 * @author rhaynel
+					 * @since 2018-07-19
+					 * handle request with invalid data from form request 
+					 * examp [Expene[id=null, amount=null], Expene[id=1, amount=10]]
+					 * this occur when user manipulate expenses by adding and removing, sometimes array starts at 1 not in 0
+					*/
+					
+					BigDecimal expAmount =expense.getAmount()==null ? new BigDecimal(0) : expense.getAmount();
+					stockReceive.setExpensesTotal(stockReceive.getExpensesTotal().add(expAmount));
 				}
 			}
 		}
@@ -502,16 +528,19 @@ public class InventoryCoreService {
 		List<InventoryTransaction> inventoryTransactionsForSave = new ArrayList<>();
 
 		for(StockReceivedItem stockReceiveItem : stockReceive.getStockReceiveItems()) {
-
+			
+			
 			stockReceiveItem.setStockReceive(stockReceive);
 			stockReceiveItem.setCreatedBy(userCredentials.getLoggedInUser());
-
-			Inventory inventory = inventoryUtility.findInventoryFromList(inventories, stockReceive.getLocation(), stockReceiveItem.getItem(), stockReceiveItem.getUnit());
+			
+			Item item = itemRepository.findById(stockReceiveItem.getItem().getId()).get();
+			
+			Inventory inventory = inventoryUtility.findInventoryFromList(inventories, stockReceive.getLocation(), item, stockReceiveItem.getUnit());
 
 			if(inventory == null) {
 				inventory = new Inventory();
 				inventory.setLocation(stockReceive.getLocation());
-				inventory.setItem(stockReceiveItem.getItem());
+				inventory.setItem(item);
 				inventory.setUnit(stockReceiveItem.getUnit());
 				inventory.setQuantity(new BigDecimal("0"));
 				inventory.setCreatedBy(userCredentials.getLoggedInUser());
@@ -522,7 +551,7 @@ public class InventoryCoreService {
 
 			// inventory transaction
 			InventoryTransaction inventoryTransaction = new InventoryTransaction();
-			inventoryTransaction.setItem(stockReceiveItem.getItem());
+			inventoryTransaction.setItem(item);
 			inventoryTransaction.setLocation(stockReceive.getLocation());
 			inventoryTransaction.setUnit(stockReceiveItem.getUnit());
 			inventoryTransaction.setTransactionType(TransactionType.STOCK_RECIEVE);
@@ -547,12 +576,24 @@ public class InventoryCoreService {
 		}
 
 		if(stockReceive.getStockReceiveExpenses() != null && stockReceive.getStockReceiveExpenses().size() > 0) {
-			stockReceiveExpenseRepository.saveAll(stockReceive.getStockReceiveExpenses());
+			for (StockReceivedExpense expense : stockReceive.getStockReceiveExpenses()) {
+				/**
+				 * @author rhaynel
+				 * @since 2018-07-19
+				 * handle request with invalid data from form request 
+				 * examp [Expene[id=null, amount=null], Expene[id=1, amount=10]]
+				 * this occur when user manipulate expenses by adding and removing, sometimes array starts at 1 not in 0
+				*/
+				if(expense.getAmount() != null) {
+					stockReceiveExpenseRepository.save(expense);
+				}
+				
+			}
 		}
 
 		stockReceive.setGrandTotal(stockReceive.getTotal().subtract(new BigDecimal(stockReceive.getDiscountValue())));
 		stockReceive.setNetTotal(stockReceive.getGrandTotal().add(stockReceive.getExpensesTotal()));
-
+		
 		inventoryRepository.saveAll(inventoriesForSave);
 		inventoryTransactionRepository.saveAll(inventoryTransactionsForSave);
 		stockReceiveItemRepository.saveAll(stockReceive.getStockReceiveItems());
