@@ -1,5 +1,6 @@
 package com.bartolay.inventory.repositories.impl;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -54,6 +55,7 @@ public class InventoryDatatableRepository extends RepositoryComponent {
 				obj.put("item_name", rs.getString("item_name"));
 				obj.put("unit_id", rs.getInt("unit_id"));
 				obj.put("unit_name", rs.getString("unit_name"));
+				obj.put("unit_cost", rs.getBigDecimal("unit_cost").setScale(2, BigDecimal.ROUND_HALF_UP));
 				obj.put("on_hand", NumericUtility.quantity(rs.getBigDecimal("quantity")));
 				obj.put("on_order", "- -");
 				return obj;

@@ -22,7 +22,7 @@ public class InventoryServiceImpl implements InventoryService {
 	@Override
 	public JSONObject retrieveDatatableListByLocationId(Map<String, String> requestMap, Integer location_id) {
 		DatatableParameter parameter = new DatatableParameter(requestMap);
-		JSONArray array = inventoryJdbcRepository.findAllsByLocationId(parameter, location_id);
+		JSONArray array = inventoryJdbcRepository.findAllByLocationId(parameter, location_id);
 		long recordsTotal = inventoryJdbcRepository.findAllCountByLocationId(parameter, location_id);
 		
 		System.err.println(array);

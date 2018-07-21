@@ -28,9 +28,9 @@
 						</div>
 						<div class="col-md-10">
 							<input type="radio" checked="checked" th:value="${T(com.bartolay.inventory.enums.StockAdjustmentType).QUANTITY}"
-								id="optionsRadios1" name="adjustmentType"> Quantity
+								id="adjustmentType" name="adjustmentType"> Quantity
 							Adjustment<br> </label> <input type="radio" th:value="${T(com.bartolay.inventory.enums.StockAdjustmentType).VALUE}"
-								id="optionsRadios2" name="adjustmentType"> Value
+								id="adjustmentType" name="adjustmentType"> Value
 							Adjustment <br>
 							<br>
 						</div>
@@ -89,7 +89,6 @@
 									<th class="col-md-1">Code</th>
 									<th class="col-md-3">Description</th>
 									<th>Unit</th>
-									<th>U.Desc</th>
 									
 									<th class="col-md-2 text-right hidden" id="quantity_1">Stock On Hand</th>
 									<th class="col-md-2 text-right hidden" id="quantity_2">New Quantity On Hand</th>
@@ -103,23 +102,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>67</td>
-									<td class="col-md-1">BBB-123456</td>
-									<td class="col-md-3">Pen</td>
-									<td>Pcs</td>
-									<td>Pieces</td>
-									
-									<td class="col-md-2 text-right hidden" id="quantity_1">100</td>
-									<td class="col-md-2 text-right hidden" id="quantity_2">200</td>
-									<td class="col-md-2 text-right hidden" id="quantity_3">100</td>
-									
-									
-									<td class="col-md-2 text-right hidden" id="cost_1">20</td>
-									<td class="col-md-2 text-right hidden" id="cost_2">60</td>
-									<td class="col-md-2 text-right hidden" id="cost_3">40</td>
-									<th></th>
-								</tr>
+								
 							</tbody>
 
 						</table>
@@ -177,7 +160,30 @@ function formatAdjustmentType(value) {
 		$( "#quantity_1, #quantity_2, #quantity_3" ).addClass( "hidden" );
     }
 }
-  
+
+function formatItemAdjustment(e) {
+	var row = $(e).parentsUntil("tbody");
+	
+	var newCost = row.find("#newCost").val();
+	var unit_cost = row.find("#unit_cost").val();
+	var newQuantity = row.find("#newQuantity").val();
+	var on_hand = row.find("#on_hand").val();
+	
+	var quantity_adjustment = row.find("#quantity_3");
+	var cost_adjusment = row.find("#cost_3");
+	
+	var quantity = (newQuantity - on_hand);
+	var cost = (newCost - unit_cost);
+	
+	quantity_adjustment.html("<strong>" + quantity + "</strong>");
+	cost_adjusment.html("<strong>" + cost + "</strong>");
+}
+ 
+function remove(e) {
+//	form_items.splice(item_index, 1); // remove this element from the item array
+	$(e).parentsUntil("tbody").remove();
+}
+
 $("#btnAddItem").on("click", function() {
   	addItem({
   			type: "stock_adjusment", 
@@ -190,26 +196,30 @@ $("#btnAddItem").on("click", function() {
   		
   		console.log(data);
   		var html = ``;
-  		for(var item in data) {
+  		for(var i = 0; i < data.length; i++) {
   			html += `
   			<tr>
-  				<td>67</td>
-				<td class="col-md-1">BBB-123456</td>
-				<td class="col-md-3">Pen</td>
-				<td>Pcs</td>
-				<td>Pieces</td>
+  				<td>`+data[i].id+`
+  					<input type="hidden" id="on_hand" value="`+data[i].on_hand+`" />
+  					<input type="hidden" id="unit_cost" value="`+data[i].unit_cost+`" />
+  				</td>
+				<td class="col-md-1">`+data[i].item_code+`</td>
+				<td class="col-md-3">`+data[i].item_name+`</td>
+				<td>`+data[i].unit_name+`</td>
 				
-				<td class="col-md-2 text-right hidden" id="quantity_1">100</td>
-				<td class="col-md-2 text-right hidden" id="quantity_2">200</td>
-				<td class="col-md-2 text-right hidden" id="quantity_3">100</td>
+				<td class="col-md-2 text-right hidden" id="quantity_1">`+data[i].on_hand+`</td>
+				<td class="col-md-2 text-right hidden" id="quantity_2"><input type="number" class="form-control input-sm" id="newQuantity" name="newQuantity[`+i+`]" onChange="formatItemAdjustment(this)" value="0"></td>
+				<td class="col-md-2 text-right hidden" id="quantity_3">0</td>
 				
 				
-				<td class="col-md-2 text-right hidden" id="cost_1">20</td>
-				<td class="col-md-2 text-right hidden" id="cost_2">60</td>
-				<td class="col-md-2 text-right hidden" id="cost_3">40</td>
-				<th></th>
+				<td class="col-md-2 text-right hidden" id="cost_1">`+data[i].unit_cost+`</td>
+				<td class="col-md-2 text-right hidden" id="cost_2"><input type="number" class="form-control input-sm" id="newCost" name="newCost[`+i+`]" onChange="formatItemAdjustment(this)" value="0"></td>
+				<td class="col-md-2 text-right hidden" id="cost_3">0</td>
+				<td id="lblItemName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="remove(this)" /></td>
   			</tr>`;
   		}
+  		
+  		
   		/* for(var i = 0; i < form_items.length; i++) {
   		
   			var item = form_items[i];
@@ -250,6 +260,7 @@ $("#btnAddItem").on("click", function() {
   		/* var total = data.quantity * data.unit_cost; */
   		
   		$('#itemsTable tbody').append(html);
+  		formatAdjustmentType($("#adjustmentType").val());
   	});
   });
 </script>

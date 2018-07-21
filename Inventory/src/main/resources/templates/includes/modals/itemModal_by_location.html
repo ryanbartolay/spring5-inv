@@ -20,8 +20,9 @@
 								<th></th>
 								<th class="column-title" style="display: table-cell;">SN</th>
 								<th class="column-title" style="display: table-cell;">Code</th>
-								<th class="column-title" style="display: table-cell;">Item</th>
+								<th class="column-title" style="display: table-cell;">Description</th>
 								<th class="column-title" style="display: table-cell;">Unit</th>
+								<th class="column-title" style="display: table-cell;">Unit Cost</th>
 								<th class="column-title text-right" style="display: table-cell;">Stock On Hand</th>
 								<th class="column-title text-right" style="display: table-cell;">Stock On Order</th>
 							</tr>
@@ -85,9 +86,12 @@ itemModalSimple_modal.on('shown.bs.modal', function() {
         			return `<div style="position: relative;">
 					<input type="checkbox" name="table_records" id="selected_item" value="`+ data +`" onClick="countCheckedSingle(this)">
 					<input type="hidden" name="id" value="`+data+`">
-					<input type="hidden" name="code" value="`+row.item_code+`">
-					<input type="hidden" name="name" value="`+row.item_name+`">
-					<input type="hidden" name="units" value='`+ row.unit_name +`'>
+					<input type="hidden" name="item_code" value="`+row.item_code+`">
+					<input type="hidden" name="item_name" value="`+row.item_name+`">
+					<input type="hidden" name="unit_name" value='`+ row.unit_name +`'>
+					<input type="hidden" name="on_hand" value='`+ row.on_hand +`'>
+					<input type="hidden" name="unit_cost" value='`+ row.unit_cost +`'>
+					<input type="hidden" name="on_order" value='`+ row.on_order +`'>
 					</div>`;
         		}
 			},
@@ -102,6 +106,10 @@ itemModalSimple_modal.on('shown.bs.modal', function() {
         	},
         	{
         		data: "unit_name"
+        	},
+        	{
+        		data: "unit_cost",
+        		className: "text-right"
         	},
         	{
         		data: "on_hand",
