@@ -16,7 +16,6 @@ import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.enums.SalesInvoiceStatus;
 import com.bartolay.inventory.enums.Status;
 import com.bartolay.inventory.enums.StockAdjustmentType;
-import com.bartolay.inventory.enums.StockTransaction;
 import com.bartolay.inventory.enums.TransactionType;
 import com.bartolay.inventory.exceptions.SalesInvoiceException;
 import com.bartolay.inventory.exceptions.SalesReturnException;
@@ -673,6 +672,7 @@ public class InventoryCoreService {
 	public void createStockAdjustment(StockAdjustment stockAdjustment) throws StockAdjustmentException {
 		
 		StockAdjustmentType adjustmentType = null;
+		stockAdjustment.setCreatedBy(userCredentials.getLoggedInUser());
 		
 		try {
 			adjustmentType = StockAdjustmentType.valueOf(stockAdjustment.getStockAdjustmentType().toUpperCase());

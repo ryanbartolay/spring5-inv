@@ -130,6 +130,8 @@
 
 <script>
 var current_year = (new Date()).getFullYear();
+var submitStockAdjustmentBtn = $("#submitStockAdjustmentBtn");
+var stockAdjustmentForm = $("#stockAdjustmentForm");
 
 $( function() {
 	  
@@ -180,7 +182,6 @@ function formatItemAdjustment(e) {
 }
  
 function remove(e) {
-//	form_items.splice(item_index, 1); // remove this element from the item array
 	$(e).parentsUntil("tbody").remove();
 }
 
@@ -219,48 +220,26 @@ $("#btnAddItem").on("click", function() {
   			</tr>`;
   		}
   		
-  		
-  		/* for(var i = 0; i < form_items.length; i++) {
-  		
-  			var item = form_items[i];
-  			
-  			// default values
-  			var unit = (item.unit ? item.unit : "0");
-  			var quantity = (item.quantity ? item.quantity : "0");
-  			var unitCost = (item.unitCost ? item.unitCost : "1.00");
-  			var subtotal = (item.subtotal ? item.subtotal : "0.00");
-  			
-  			/* var units = JSON.parse(form_items[i].units); 
-  			
-  			html += `<tr>
-				<th id="lblItemId">`+ item.id +`<input type="hidden" name="stockTransferItems[`+i+`].item" value="`+item.id+`" /></th>
-				<td id="lblItemName">`+ item.code +`</td>
-				<td id="lblItemName">`+ item.name +`</td>
-				<td id="lblItemName">`+ item.brand_name +`</td>`;
-				
-			html += `
-			<td id="lblItemName">
-				<select class="form-control" name="stockTransferItems[`+i+`].unit" id="unit" onChange="computeValues(this, `+i+`)">`;	
-			/* for (var key in units) {
-			    if (units.hasOwnProperty(key)) {
-			    	html += `<option value="`+ key +`">`+ units[key] +`</option>`;
-			    }
-			} 
-			html +=	`</select>
-			</td>`; 
-				
-			html +=	`
-				<td id="lblItemName"><input type="number" name="stockTransferItems[`+i+`].quantity" id="quantity" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ quantity +`" /></td>
-				<td id="lblItemName" style="display: none;" ><input type="number" name="stockTransferItems[`+i+`].unitCost" id="unitCost" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ unitCost +`" /></td>
-				<td id="lblItemName" style="display: none;" class="text-right"><input type="hidden" name="subtotal[`+i+`]" id="subtotal" value="`+subtotal+`" /><span id="html_subtotal">`+subtotal+`</span></td>
-				<td id="lblItemName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>
-			</tr>`;
-  		} */
-  	
-  		/* var total = data.quantity * data.unit_cost; */
-  		
   		$('#itemsTable tbody').append(html);
   		formatAdjustmentType($("#adjustmentType").val());
   	});
   });
+  
+submitStockAdjustmentBtn.click(function() {
+	
+ 	var original_text = submitStockAdjustmentBtn.text();
+ 	submitStockAdjustmentBtn.attr("disabled", "disabled");
+ 	submitStockAdjustmentBtn.text("Processing....");
+ 	
+ 	POST("/api/stock/adjustment", stockAdjustmentForm.serialize(), function(data) {
+ 		
+ 		if(data.status != "OK") {
+ 			displayErrors(data, $("#errors"));
+ 			submitStockAdjustmentBtn.removeAttr("disabled");
+ 			submitStockAdjustmentBtn.text(original_text);
+ 		} else {
+ 			window.location.replace('/stock/adjustment');
+ 		}
+ 	});
+});
 </script>

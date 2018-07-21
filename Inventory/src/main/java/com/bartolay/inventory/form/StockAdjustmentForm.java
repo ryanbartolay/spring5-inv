@@ -1,8 +1,8 @@
 package com.bartolay.inventory.form;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.enums.StockAdjustmentType;
-import com.bartolay.inventory.stock.entity.StockAdjustment;
+import com.bartolay.inventory.stock.entity.StockAdjustmentItem;
 import com.bartolay.inventory.stock.entity.StockAdjustmentReason;
 
 public class StockAdjustmentForm {
@@ -30,13 +30,14 @@ public class StockAdjustmentForm {
 	@Digits(fraction = 0, integer = 4, message="Year only accepts digits.")
 	private String year;
 	
+	@NotNull(message="Transaction Date is required")
 	private Date transactionDate;
 	
 	@NotNull (message="Required adjustment type")
 	private StockAdjustmentType adjustmentType;
 	
 	@NotNull(message="Needed atleast 1 item")
-	private Set<StockAdjustment> items = new HashSet<>();
+	private List<StockAdjustmentItem> items = new ArrayList<>();
 	
 	@NotNull(message="Reason is required")
 	private StockAdjustmentReason reason;
@@ -97,11 +98,11 @@ public class StockAdjustmentForm {
 		this.adjustmentType = adjustmentType;
 	}
 
-	public Set<StockAdjustment> getItems() {
+	public List<StockAdjustmentItem> getItems() {
 		return items;
 	}
 
-	public void setItems(Set<StockAdjustment> items) {
+	public void setItems(List<StockAdjustmentItem> items) {
 		this.items = items;
 	}
 
