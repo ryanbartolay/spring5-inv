@@ -1,0 +1,17 @@
+<script>
+$(function(){
+	GET("/fragments/activity/location/1", function(data) {
+		console.log("asdad");
+		console.log(data);
+		$("#recentActivityContent").html(data);
+	});
+});
+</script>
+<div class="x_title">
+	<h2>
+		Recent Activty <small>Transactions</small>
+	</h2>
+
+	<div class="clearfix"></div>
+</div>
+<div class="x_content" id="recentActivityContent"></div>

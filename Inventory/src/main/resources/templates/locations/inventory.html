@@ -1,0 +1,55 @@
+
+<div class="x_title">
+	<h2>Inventory</h2>
+	<a class="btn btn-sm btn-success pull-right" th:href="@{/inventory?location=}+${location_id}">View Full</a>
+	<div class="clearfix"></div>
+</div>
+<div class="x_content">
+
+	<table class="table table-striped" id="locationInventoryTable" width="100%">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Code</th>
+				<th>Item</th>
+				<th>Unit</th>
+				<th class="text-right">On Hand</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+		</tbody>
+	</table>
+
+</div>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+var table = $('#locationInventoryTable');
+var locationId = '[[${location_id}]]';
+var datatable = customFixedDatatableNotServerSide(table, '/api/datatable/inventory/location/' +locationId+'/limit/' + 5, 
+	[
+    	{ 
+    		data: "item_id",
+    		render: function ( data, type, row ) {
+                return '<a href="/stock/opening/'+ data +'">' + data + '</a>';
+            }
+    	},
+    	{ 
+    		data: "item_code",
+    	},
+    	{ 
+    		data: "item_name",
+    		render: function ( data, type, row ) {
+                return '<a href="/stock/opening/'+ row.system_number +'">' + data + '</a>';
+            }
+    	},
+    	{ data: "unit_name" },
+    	{ 
+    		data: "on_hand", 
+    		className: "text-right"
+    	},
+	]
+);
+/*]]>*/
+</script>

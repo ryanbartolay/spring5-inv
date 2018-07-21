@@ -1,0 +1,129 @@
+<form id="itemModelAddItem_form">
+<div class="modal fade bs-example-modal-lg" id="itemModalSimple" tabindex="-1" role="dialog"
+	aria-hidden="true" style="display: none;">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">×</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">Item List</h4>
+			</div>
+			<div class="modal-body">
+
+
+				<div class="table-responsive">
+					<table class="table table-striped bulk_action" id="itemModalSimple-datatable">
+						<thead>
+							<tr class="headings">
+								<th></th>
+								<th class="column-title" style="display: table-cell;">SN</th>
+								<th class="column-title" style="display: table-cell;">Code</th>
+								<th class="column-title" style="display: table-cell;">Description</th>
+								<th class="column-title" style="display: table-cell;">Unit</th>
+								<th class="column-title" style="display: table-cell;">U.Desc</th>
+								<th class="column-title text-right" style="display: table-cell;">Quantity</th>
+								<th class="column-title text-right" style="display: table-cell;">Unit Price</th>
+								<th class="column-title text-right" style="display: table-cell;">Subtotal</th>
+							</tr>
+						</thead>
+
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+
+
+			</div>
+			<div class="modal-footer">
+				<span id="itemSelectedStatus"></span>&nbsp;
+				<button type="button" class="btn btn-success" id="itemModalAddItem_btn">Add Items</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+</form>
+
+<script>
+
+var itemModalSimple_modal = $("#itemModalSimple");
+var itemModalAddItem_btn = $("#itemModalAddItem_btn");
+var itemModelAddItem_form = $("#itemModelAddItem_form");
+var itemModelAddItem_table = $('#itemModalSimple-datatable');
+var itemModalSimple_callback;
+var systemNumber;
+
+function addItem(parameters, callback) {
+	var label = parameters.label;
+
+	itemModalSimple_callback = callback;
+	
+	// lets change the request url if stock_transfer
+	if(parameters.url) {
+		systemNumber = parameters.systemNumber;
+	}
+	$("#myModalLabel").html(label);
+	itemModalSimple_modal.modal('show');
+}
+
+itemModalSimple_modal.on('shown.bs.modal', function() {
+	
+	GET("/api/sales/invoice/" + systemNumber + "/items", function(data) {
+		var html = "";
+		for(var i = 0; i < data.length; i++) {
+			var item = data[i];
+			html += `
+			<tr>
+				<td>
+				<input type="checkbox" name="table_records" id="selected_item" value="`+ item["id"] +`" onClick="countCheckedSingle(this)">
+				<input type="hidden" name="id" value="`+item["id"]+`">
+				<input type="hidden" name="itemCode" value="`+item["item"]["code"]+`">
+				<input type="hidden" name="itemName" value="`+item["item"]["name"]+`">
+				<input type="hidden" name="unitAbbreviation" value='`+ item["unit"]["abbreviation"] +`'>
+				<input type="hidden" name="unitDescription" value="`+item["unit"]["name"]+`">
+				<input type="hidden" name="quantity" value="`+ item["quantity"] +`">
+				<input type="hidden" name="unitPrice" value="`+ item["unitCost"] +`">
+				<input type="hidden" name="unitPriceTotal" value="`+ parseFloat(item["unitCostTotal"]).toFixed(2) +`">
+				</td>
+				<td>`+ item["id"] +`</td>
+				<td>`+ item["item"]["code"] +`</td>
+				<td>`+ item["item"]["name"] +`</td>
+				<td>`+ item["unit"]["abbreviation"] +`</td>
+				<td>`+ item["unit"]["name"] +`</td>
+				<td class="text-right">`+ item["quantity"] +`</td>
+				<td class="text-right">`+ item["unitCost"] +`</td>
+				<td class="text-right">`+ parseFloat(item["unitCostTotal"]).toFixed(2) +`</td>		
+			</tr>
+			`;
+		}
+		
+		$("#itemModalSimple-datatable > tbody").html(html);
+	});
+	
+});
+itemModalAddItem_btn.click(function() {
+	var iter = itemModelAddItem_form.serializeArray();
+	var selected_items = [];
+ 
+	$.each($("input[name='table_records']:checked").closest("tr"), function() {
+
+		var each = []; 
+		$(this).find("input").each(function() {
+			each[$(this).attr("name")] = $(this).val();
+		});
+		
+		selected_items.push(each);
+	});
+	
+	if(selected_items.length <= 0) {
+		$("#itemSelectedStatus").html("<span style='color:red'>Select atleast 1 Item</span>");
+	} else {
+		itemModalSimple_callback(selected_items);
+		itemModalSimple_modal.modal("hide");
+	}
+	
+});
+
+</script>

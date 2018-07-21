@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org">
+
+<head th:include="includes/header">
+	<!-- jQuery -->
+</head>
+
+<body class="nav-md">
+	<div class="container body">
+		<div class="main_container">
+
+			<!-- Navigation -->
+			<div th:include="includes/navigation"></div>
+
+			
+			<div th:include="includes/footer"></div>
+
+			<div class="right_col" role="main">
+
+				<div th:include="@{'/stock_attribute/' + ${html}}" class="row"></div>
+
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

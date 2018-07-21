@@ -1,0 +1,368 @@
+<div class="row">
+	<div class="col-lg-12">
+		<form th:object="${salesInvoiceForm}" id="salesInvoiceForm"
+			th:action="@{/api/sales/invoice}" method="POST">
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="row">
+						<div class="col-md-8">
+							<h4>Create Sales Invoice</h4>
+						</div>
+						<div class="col-md-4">
+							<div class="btn-group pull-right" role="group">
+								<button type="submit" id="submitSalesInvoiceBtn" class="btn btn-success btn-sm">Save Sales Invoice</button>
+								<a th:href="@{/sales/invoice}" class="btn btn-default btn-sm">Cancel</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body">
+
+					<div class="form-group" id="errors"></div>
+
+					<div class="col-md-3">
+						<label>System Number :</label> <input type="text"
+							class="form-control" disabled="disabled"> <label>Document
+							Number :</label> <input type="text" class="form-control"
+							th:field="*{documentNumber}"> <label>Location</label> <select
+							class="form-control" th:field="*{location}">
+							<option th:each="location : ${locations}"
+								th:value="${location.id}" th:text="${location.name}"></option>
+						</select>
+					</div>
+
+					<div class="col-md-3">
+						<label>Customer</label> <select class="form-control"
+							th:field="*{customer}">
+							<option th:each="customer : ${customers}"
+								th:value="${customer.id}" th:text="${customer.name}"></option>
+						</select> <label>Sales Person</label> <select class="form-control"
+							th:field="*{salesPerson}">
+							<option th:each="user : ${users}" th:value="${user.id}"
+								th:text="${user.lastName} + ', ' + ${user.firstName}"></option>
+						</select>
+					</div>
+
+					<div class="col-md-3">
+						<label>Trans. Date</label> <input type="text"
+							th:field="*{transactionDate}" class="form-control"> <label>Year</label>
+						<input type="text" class="form-control yearselect"
+							th:field="*{year}" />
+					</div>
+
+					<div class="col-md-3">
+						<label>Payment Method</label> <select class="form-control"
+							th:field="*{paymentMethod}" tabindex="8">
+							<option value="" selected="selected">Choose Payment
+								Method....</option>
+							<option
+								th:each="paymentMethod : ${T(com.bartolay.inventory.enums.PaymentMethod).values()}"
+								th:value="${paymentMethod}" th:text="${paymentMethod}"></option>
+						</select>
+						
+						<label class="payment-method-cc">Card Holder</label>
+						<input type="text" class="form-control payment-method-cc" th:field="*{creditCardDetails.holdersName}" />
+						<label class="payment-method-cc">Card Number</label>
+						<input type="text" class="form-control payment-method-cc" th:field="*{creditCardDetails.cardNumber}" />
+						<label class="payment-method-cc">Expiration Date</label>
+						<input type="text" class="form-control payment-method-cc" th:field="*{creditCardDetails.dateExpiry}" placeholder="MM / YY"/>
+					</div>
+
+					<div class="col-md-12">
+						<label>Description</label> <input type="text"
+							th:field="*{description}" class="form-control">
+					</div>
+
+					<div class="col-md-12">
+						<br>
+						<button class="btn btn-success btn-sm" id="btnAddItem">Add
+							Item</button>
+					</div>
+
+					<div class="table-responsive col-md-12">
+
+						<table class="table table-bordered table-striped" id="itemsTable">
+							<thead>
+								<tr>
+									<th>SN</th>
+									<th>Code</th>
+									<th class="col-md-3">Description</th>
+									<th>Unit</th>
+									<th>U.Desc</th>
+									<th>Quantity</th>
+									<th class="text-right">Unit Price</th>
+									<th class="col-md-2 text-right">Subtotal</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+
+							</tbody>
+							<tfoot>
+								<tr>
+									<th colspan="6"></th>
+									<th class="text-right">Subtotal
+										</h3>
+									</th>
+									<th><h3 class="text-right" id="subtotal"></h3></th>
+									<th></th>
+								</tr>
+								<tr>
+									<th colspan="6"></th>
+									<th class="text-right">Discount %</th>
+									<th><input type="number" min="0" max="100"
+										th:field="*{discountPercentage}" class="form-control" /></th>
+									<th></th>
+								</tr>
+								<tr>
+									<th colspan="6"></th>
+									<th class="text-right"><h3>Total</h3></th>
+									<th><h3 class="text-right" id="grandTotal"></h3></th>
+									<th></th>
+								</tr>
+							</tfoot>
+						</table>
+
+					</div>
+
+				</div>
+			</div>
+
+			<div class="col-lg-6" style="display: none;">
+				<div class="panel panel-warning">
+					<div class="panel-heading">
+						Payment Method
+
+						<button type="button" class="btn btn-success btn-xs pull-right"
+							id="updatePaymentMethodBtn">Update Payment Method</button>
+					</div>
+					<div class="panel-body">
+						<div id="paymentMethod">
+							<p>There are no payment method selected</p>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- /.col-lg-12 -->
+</div>
+
+
+<div th:include="includes/modals/itemModal"></div>
+
+<script type="text/javascript">
+$( function() {
+	var current_year = (new Date()).getFullYear();
+	
+	$( "#transactionDate" ).datepicker();
+	
+	$("#salesPerson, #location, #customer").select2()
+	
+    $('.yearselect').yearselect({
+    	order: 'desc',	
+ 		start: current_year - 5,
+ 		end: current_year + 5
+    });
+    
+    $('[name=year]').val( current_year );
+});
+</script>
+
+<!-- Item Modal -->
+
+<script>
+/*<![CDATA[*/
+var form = $("#salesInvoiceForm");
+var grand_total = 0;
+var form_items = [];
+var item_count = 0;
+var submitSalesInvoiceBtn = $("#submitSalesInvoiceBtn");
+
+$("#btnAddItem").on("click", function(event) {
+	var filter = {
+		'name' : $("#location :selected").text(),
+		'id' : $("#location").val()
+	}
+	
+addItem({type: "sales_invoice", label:"Add Sales Invoice Item", filter : filter}, function(data) {
+  		
+  		for(var i = 0; i < data.length; i++) {
+  			form_items.push(data[i]);
+  		}
+  		
+  		var html = ``;
+  		for(var i = 0; i < form_items.length; i++) {
+  		
+  			var item = form_items[i];
+  			
+  			// default values
+  			var unit = (item.unit ? item.unit : "0");
+  			var quantity = (item.quantity ? item.quantity : "0");
+  			var unitCost = (item.unitCost ? item.unitCost : "0.00");
+  			var subtotal = (item.subtotal ? item.subtotal : "0.00");
+  			
+  			var units = JSON.parse(form_items[i].units);
+  			console.log(item)
+  			html += `<tr>
+				<th id="lblItemId">`+ item.id +`<input type="hidden" name="salesInvoiceItems[`+i+`].item" value="`+item.id+`" /></th>
+				<td id="lblItemName">`+ item.code +`</td>
+				<td id="lblItemName">`+ item.name +`</td>
+				<td id="lblItemName">`+ item.name +`</td>
+				<td id="lblItemName">`+ item.name +`</td>`;
+				
+			html +=	`
+				<td id="lblItemName"><input type="number" name="salesInvoiceItems[`+i+`].quantity" id="quantity" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ quantity +`" /></td>
+				<td id="lblItemName"><input type="number" name="salesInvoiceItems[`+i+`].unitCost" id="unitCost" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ unitCost +`" /></td>
+				<td id="lblItemName" class="text-right"><input type="hidden" name="subtotal[`+i+`]" id="subtotal" value="`+subtotal+`" /><span id="html_subtotal">`+subtotal+`</span></td>
+				<td id="lblItemName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>
+			</tr>`;
+  		}
+  	
+  		var total = data.quantity * data.unit_cost;
+  		
+  		$('#itemsTable tbody').html(html);
+  		computeGrandTotal();
+  	});
+});
+
+
+submitSalesInvoiceBtn.click(function() {
+  
+ 	var original_text = submitSalesInvoiceBtn.text();
+ 	submitSalesInvoiceBtn.attr("disabled", "disabled");
+ 	submitSalesInvoiceBtn.text("Processing....");
+ 	
+ 	POST("/api/sales/invoice", form.serialize(), function(data) {
+ 		
+ 		if(data.status != "OK") {
+ 			displayErrors(data, $("#errors"));
+ 			submitSalesInvoiceBtn.removeAttr("disabled");
+ 			submitSalesInvoiceBtn.text(original_text);
+ 		} else {
+ 			window.location.replace('/stock/opening')
+ 		}
+ 	});
+});
+
+function computeValues(element, index) {
+	
+	var each = [];
+	var subtotal = 0.00;
+	
+	$.each($(element).closest("tr"), function() {
+		
+		$(this).find("select, input").each(function() {
+			each[$(this).attr("id")] = $(this).val();
+			form_items[index][$(this).attr("id")] = $(this).val();
+			console.log($(this).attr("id") + " = " + $(this).val());
+		});
+
+	});
+
+	console.log(form_items);
+	
+	subtotal = each.quantity * each.unitCost;
+	
+	form_items[index]["subtotal"] = subtotal;
+	$(element).closest("tr").find("#subtotal").val(round2DecimalPlaces(subtotal));
+	$(element).closest("tr").find("#html_subtotal").html(round2DecimalPlaces(subtotal));
+	computeGrandTotal();
+}
+
+function remove(e, item_index) {
+	form_items.splice(item_index, 1); // remove this element from the item array
+	$(e).parentsUntil("tbody").remove();
+	computeGrandTotal();
+}
+
+function computeGrandTotal() {
+	
+	var grand_total = parseFloat(0);
+	
+	$('#itemsTable > tbody  > tr').each(function() {
+		grand_total = (parseFloat(grand_total) + parseFloat($(this).find("#html_subtotal").text())).toFixed(2);
+	});
+	
+	$("#grandTotal").html(round2DecimalPlaces(grand_total));
+}
+
+
+
+function createPaymentMethod(){
+	$(".payment-method-cc").hide();
+	$("#paymentMethod").unbind("change").change(function(e){
+		if($(this).val() == 'CREDITCARD'){
+			$(".payment-method-cc").show();
+		}else{
+			$(".payment-method-cc").hide();
+		}
+	})
+}
+
+createPaymentMethod();
+
+/*]]>*/
+</script>
+
+<!-- Payment Method Modal -->
+<div th:include="includes/modals/paymentMethodModal"></div>
+
+<script>
+var updatePaymentMethodBtn = $("#updatePaymentMethodBtn");
+
+updatePaymentMethodBtn.click(function() {
+	
+	updatePaymentMethod(function(data) { 
+		
+		console.log(data);
+		
+		var html = `
+			<p class="text-center">`+ data.paymentMethod +`</p>
+			<input type="hidden" name="paymentMethod" value="`+ data.paymentMethod +`" />
+		`;
+			
+		if(data.paymentMethod == "CREDITCARD") {
+			html = `
+				<input type="hidden" name="paymentMethod" value="`+ data.paymentMethod +`" />
+				<input type="hidden" name="creditCardDetails.holdersName" value="`+ data.creditCardHoldersName +`" />
+				<input type="hidden" name="creditCardDetails.cardNumber" value="`+ data.creditCardNumber +`" />
+				<input type="hidden" name="creditCardDetails.dateExpiry" value="`+ data.creditCardExpiry +`" />
+				
+			<div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label for="cardExpiry">CARD HOLDERS NAME</label>
+                        <span class="form-control">` + data.creditCardHoldersName + `</span>
+                    </div>
+                </div>
+            </div>
+			<div class="row">
+				<div class="col-xs-12">
+		            <div class="form-group">
+		                <label for="cardNumber">CARD NUMBER</label>
+		                <div class="input-group">
+		                    <span class="form-control">` + data.creditCardNumber + `</span>
+		                    <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
+		                </div>
+		            </div>                            
+		        </div>
+		    </div>
+		    <div class="row">
+		        <div class="col-xs-7 col-md-7">
+		            <div class="form-group">
+		                <label for="cardExpiry"><span class="hidden-xs">EXPIRATION</span><span class="visible-xs-inline">EXP</span> DATE</label>
+		                <span class="form-control">`+ data.creditCardExpiry +`</span>
+		            </div>
+		        </div>
+		    </div>`;
+		}
+		
+		$("#paymentMethod").html(html);
+	});
+	
+	
+});
+</script>

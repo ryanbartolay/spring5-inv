@@ -1,0 +1,475 @@
+<style>
+
+	#itemLocationModal{
+		font-size: 14px;   
+		margin-left: -49px;    
+		margin-top: 3px;
+	}
+	
+</style>
+
+<form id="itemModelAddItem_form">
+<div class="modal fade bs-example-modal-lg" id="itemModalSimple" tabindex="-1" role="dialog"
+	aria-hidden="true" style="display: none;">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">×</span>
+					</button>
+				<div class="col-md-2">
+					
+					<h4 class="modal-title" id="myModalLabel">Item List</h4>
+				</div>
+					<div class="col-md-5">
+						<label id="itemLocationModal"></label>
+						<input type="text" class="hidden" id="itemLocationFilter">
+					</div>
+			</div>
+			<div class="modal-body">
+
+
+				<div class="table-responsive">
+					<table class="table table-striped bulk_action" id="itemModalSimple-datatable">
+						<thead>
+							<tr class="headings">
+								<th></th>
+								<th class="column-title" style="display: table-cell;">SN</th>
+								<th class="column-title" style="display: table-cell;">Code</th>
+								<th class="column-title" style="display: table-cell;">Item</th>
+								<th class="column-title" style="display: table-cell;">Default Unit</th>
+								<th class="column-title" style="display: table-cell;">Units</th>
+								<th class="column-title" style="display: table-cell;">Brand</th>
+								<th class="column-title text-right" style="display: table-cell;">Min S. Price</th>
+								<th class="column-title text-right" style="display: table-cell;">Max S. Price
+								</th>
+							</tr>
+						</thead>
+
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+
+
+			</div>
+			<div class="modal-footer">
+				<span id="itemSelectedStatus"></span>&nbsp;
+				<button type="button" class="btn btn-success" id="itemModalAddItem_btn">Add Items</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+</form>
+
+<script>
+
+var itemModalSimple_modal = $("#itemModalSimple");
+var itemModalAddItem_btn = $("#itemModalAddItem_btn");
+var itemModelAddItem_form = $("#itemModelAddItem_form");
+var itemModelAddItem_table = $('#itemModalSimple-datatable');
+var itemModelAddItem_table_instance;
+var itemModalSimple_callback;
+var itemModalSimple_url = "/api/datatable/items";
+
+function addItem(parameters, callback) {
+	var label = parameters.label;
+
+	itemModalSimple_callback = callback;
+	
+	// lets change the request url if stock_transfer
+	if(parameters.url) {
+		itemModalSimple_url = parameters.url;
+	}
+	if(parameters.filter){
+		$("#itemLocationModal").attr("data-id", parameters.filter.id);
+		$("#itemLocationModal").attr("data-name", parameters.filter.name);
+		$("#itemLocationModal").text(parameters.filter.name);
+		
+		$("#itemLocationFilter").val(parameters.filter.id);
+	}
+	
+	
+	itemModalSimple_modal.modal('show');
+}
+
+itemModalSimple_modal.on('shown.bs.modal', function() {
+	if(itemModelAddItem_table_instance == undefined){
+		itemModelAddItem_table_instance = itemModelAddItem_table.DataTable({
+			responsive : true,
+			ajax: {
+				url: itemModalSimple_url,
+				data : function(d){
+					d.form = JSON.stringify({
+						location : $("#itemLocationFilter").val()
+					})
+					
+				}
+			},
+			processing: true,
+	        serverSide: true,
+			length: 10,
+			start: 0,
+	        columns: [
+	        	{
+	        		data: "id",
+	        		orderable: false,
+	        		render: function(data, type, row) {
+	        			
+	        			var item_units_map = new Object();
+	        			
+	        			var available_units_id = row.available_units_id.replace(/{|}/gi, "");
+	        			
+	        			var available_units_name = row.available_units_name.replace(/{|}/gi,"");
+	        			
+	        			var other_units_id = available_units_id.split(",");
+	        			var other_units_name = available_units_name.split(",");
+	        			
+	        			item_units_map[row.default_unit_id] = row.default_unit_name;// push the default first
+	        			
+	        			
+	        			for(var i = 0; i < other_units_id.length; i++) {
+	        				item_units_map[other_units_id[i]] = other_units_name[i];
+	        			}
+	        			
+	        			var item_units_string = JSON.stringify(item_units_map);
+	        			
+	        			var min_price = row.minimum_item_price ? row.minimum_item_price : "";
+	        			var max_price = row.maximum_item_price ? row.maximum_item_price : "";
+	        			return `<div style="position: relative;">
+								<input type="checkbox" name="table_records" id="selected_item" value="`+ data +`" onClick="countCheckedSingle(this)">
+								<input type="hidden" name="id" value="`+data+`">
+								<input type="hidden" name="code" value="`+row.code+`">
+								<input type="hidden" name="name" value="`+row.name+`">
+								<input type="hidden" name="units" value='`+ item_units_string +`'>
+								<input type="hidden" name="brand_name" value="`+row.brand_name+`">
+								<input type="hidden" name="minimum_item_price" value="`+ min_price +`">
+								<input type="hidden" name="maximum_item_price" value="`+ max_price +`">
+						</div>`;
+	        		}
+	        	},
+	        	{ 
+	        		data: "id",
+	        		render: function ( data, type, row ) {
+	                    return '<a href="/stock/opening/'+ data +'">' + data + '</a>';
+	                }
+	        	},
+	        	{ 
+	        		data: "code",
+	        		render: function ( data, type, row ) {
+	                    return '<a href="/stock/opening/'+ data +'">' + data + '</a>';
+	                }
+	        	},
+	        	{ 
+	        		data: "name",
+	        		render: function ( data, type, row ) {
+	        			
+	                    return '<a href="/stock/opening/">' + data + '</a>';
+	                }
+	        	},{
+	        		data: "default_unit_name"	
+	        	},
+	        	{
+	        		data: "available_units_name"	
+	        	},
+	        	{ 
+	        		data: "brand_name",
+	        		render: function ( data, type, row ) {
+	        			
+	                    return '<a href="/stock/opening/">' + data + '</a>';
+	                }
+	        	},
+	        	{ 
+	        		data: "minimum_item_price",
+	        		render: function(data,type, row) {
+	        			if(data) {
+	        				return data;
+	        			}
+	                    return "";
+	        		},
+	        		className: "text-right"
+	        	},
+	        	{ 
+	        		data: "maximum_item_price",
+	        		render: function ( data, type, row ) {
+	        			if(data) {
+	        				return data;
+	        			}
+	                    return "";
+	                },
+	                className: "text-right"
+	        	},
+	    	]
+		});
+	}else{
+		itemModelAddItem_table_instance.ajax.reload();
+		console.log(itemModelAddItem_table_instance)
+	}
+	
+});
+itemModalAddItem_btn.click(function() {
+	var iter = itemModelAddItem_form.serializeArray();
+	var selected_items = [];
+ 
+	$.each($("input[name='table_records']:checked").closest("tr"), function() {
+
+		var each = []; 
+		$(this).find("input").each(function() {
+			each[$(this).attr("name")] = $(this).val();
+		});
+		
+		selected_items.push(each);
+	});
+	
+	if(selected_items.length <= 0) {
+		$("#itemSelectedStatus").html("<span style='color:red'>Select atleast 1 Item</span>");
+	} else {
+		itemModalSimple_callback(selected_items);
+		itemModalSimple_modal.modal("hide");
+		/* itemModelAddItem_table_instance.destroy(); */
+	}
+	
+});
+
+</script>
+
+
+<script>
+	var itemModal_isLoadedModelItems = false;
+	var itemModal_isLoadedExtraElements = false;	
+	
+	var itemModal_modal = $("#itemModal");
+	var itemModal_label = $("#itemModal_label");
+	var itemModal_item = $("#itemModal_item");
+	var itemModal_unit = $("#itemModal_unit");
+	var table = $("#itemModal_table");
+	
+	var quantity = $("#itemModal_quantity");
+	var addItemForm = $("#itemModal_addItemForm");
+	var addItemBtn = $("#itemModal_addItemBtn");
+	
+	var items = {};
+	var itemUnits = {};
+	
+	var itemModal_callback = null;
+	
+	var itemModal_type;
+	var itemModal_url = "/api/items"; 
+	
+/* 	function addItem(parameters, callback) {
+		var label = parameters.label;
+		itemModal_type = parameters.type;
+		itemModal_callback = callback;
+		
+		// lets change the request url if stock_transfer
+		if(itemModal_type == "stock_transfer") {
+			itemModal_url = "/api/items/location/" + parameters.location;	
+		}
+		
+		appendInputByType(itemModal_type);
+		
+		itemModal_label.text(label);
+		addItemBtn.text("Add Item");
+		itemModal_modal.modal('show');
+		
+	} */
+	
+	function updateItem(parameters, callback) {
+		var label = parameters.label;
+		var values = parameters.values;
+		itemModal_type = parameters.type;
+		itemModal_callback = callback;
+		
+		appendInputByType(type);
+		
+		$("#itemModal_quantity").val(values.quantity);
+		$("#itemModal_unit_price").val(values.unit_price);
+		
+		itemModal_label.text(label);
+		addItemBtn.text("Edit Item");
+		itemModal_modal.modal('show');
+		
+		// select the item
+		itemModal_item.val(values.item);
+		
+		// load units and select the unit for update
+		loadItemUnit(values.item, function(data) {
+			itemModal_unit.val(values.unit);
+		});
+	}
+	
+	function loadItemUnit(item_id, callback = null) {
+		GET("/api/itemUnits/" + items[item_id].id, function(data) {
+			itemModal_unit.html(""); // clear contents
+			
+			var response = JSON.parse(data);
+			
+			$.each(response.data, function(i, obj) {
+				itemUnits[obj['id']] = obj;
+				itemModal_unit.append('<option value="'+ obj['id'] +'">'+ obj['abbreviation'] +' (' + obj['rate'] + ') '+ (obj['default'] ? '*' : '') +'</option>');
+			});
+			if(callback != null) {
+				callback(data);	
+			}
+		});
+	}
+
+	function appendInputByType(type) {
+		if(!itemModal_isLoadedExtraElements) {
+			if(itemModal_type == "stock_opening" || itemModal_type == "sales_invoice") {
+				table.find("tbody").append(
+					`<tr>
+						<td>
+							<div class="input-group">
+								<span class="input-group-addon">Unit Price</span>
+								<input class="form-control" type="number" value="0" id="itemModal_unit_price" name="itemModal_unit_price"/>
+							</div>
+						</td>
+					</tr>`);
+			}
+			itemModal_isLoadedExtraElements = true;
+		}
+	}
+	
+	itemModal_modal.on('shown.bs.modal', function() {
+		itemModal_item.html(""); // clear contents
+		itemModal_item.append('<option value="">------</option>');
+		
+		GET(itemModal_url, function(data) {
+			$.each(data, function(i, obj) {
+				items[obj.id] = obj;
+				itemModal_item.append('<option value="'+ obj.id +'">'+ obj.name +'</option>');
+			});
+		});
+		
+	});
+	
+	itemModal_item.change(function() {
+		
+		var item_id = $(this).val();
+		
+		loadItemUnit(item_id);
+	});
+	
+	
+	addItemBtn.click(function() {
+		//itemModal_modal.modal('hide');
+		
+		console.log("xxxxxxxxxxx");
+		var arr = {};
+		
+		var iter = addItemForm.serializeArray();
+		
+		console.log(iter);
+		
+		$.each(addItemForm.serializeArray(), function(i, obj) {
+			arr[obj.name] = obj.value;
+		});
+		
+		console.log("yyyyyyyyyyyy");
+		
+		//itemModal_items_placeholder
+		arr['item'] = items[arr['itemModal_item']];
+		arr['unit'] = itemUnits[arr['itemModal_unit']];
+		arr['quantity'] = arr['itemModal_quantity'];
+		arr['unit_price'] = arr['itemModal_unit_price'];
+		
+		
+		console.log("yyyyyyyyyyyy2222");
+		var items_ph = addInPlaceholder(arr['itemModal_item'], arr['itemModal_unit'], arr['itemModal_quantity'], arr['itemModal_unit_price']);
+			
+		console.log("zzzzzzzzzzzzzz");
+		
+		itemModal_itemPlaceholder.value = JSON.stringify(items_ph);
+		
+		var callbackItems = [];
+		
+		console.log("11111111111111111111111");
+		
+		for(var i = 0; i < items_ph.length; i++) {
+			
+			for(var n = 0; n < items_ph[i][1].length; n++) {
+				callbackItems.push(
+					[
+						items[items_ph[i][0]], // item
+						itemUnits[items_ph[i][1][0]], // unit
+						//items_ph[i][1][1][0], // quantity
+						//items_ph[i][1][1][1] // amount
+					]
+				);
+			}			
+		}
+		console.log("3333333333333333333333333");
+		
+		console.log(JSON.stringify(items_ph));
+		
+		itemModal_callback(callbackItems);
+		
+		quantity.val(0);
+		itemModal_unit.html(""); 
+	});
+	
+	// Algorithm for reserving items in input
+	var itemModal_items_placeholder = [];
+	
+	function addInPlaceholder(item, unit, quantity, unit_price) {
+		
+		console.log("111111111111");
+		var extractedItem = extractItemPlaceholder(item);
+		console.log("222222222222");
+		console.log("------------------");
+		console.log(extractedItem);
+		console.log("------------------");
+		
+		if(extractedItem == null) {
+			itemModal_items_placeholder.push(
+				[
+					item,
+					[
+						[
+							unit, 
+							[
+								quantity, unit_price 
+							]
+						]
+					]
+				]
+			);
+		} else {
+			var extractedUnit = extractUnit(extractedItem[1], unit);
+			extractedItem[1].push(
+				[
+					unit, 
+					[
+						quantity, unit_price 
+					]
+				]
+			);
+			
+			itemModal_items_placeholder.push(extractedItem);
+		}
+		
+		return itemModal_items_placeholder;
+	}
+	
+	function extractItemPlaceholder(item) {
+		return extractItem(itemModal_items_placeholder, item);
+	}
+	function extractUnit(obj, unit) {
+		return extractItem(obj, unit);
+	}
+	function extractItem(obj, index) {
+		var o = null;
+		for(var i = 0; i < obj.length; i++) {
+			if(obj[i][0] == index) {
+				o = obj[i];
+				obj.splice(i, 1);
+				return o;
+			}
+		}
+		return o;
+	}
+	
+</script>

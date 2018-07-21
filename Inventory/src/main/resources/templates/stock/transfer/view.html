@@ -1,0 +1,79 @@
+<div class="row">
+	<div class="col-lg-12">
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+
+				<div class="row">
+					<h4 class="col-md-10"
+						th:text="'Stock Transfer : ' + ${stockTransfer.systemNumber}"></h4>
+					<a th:href="@{/stock/transfer}" type="button"
+						class="btn btn-outline btn-default">Back to List</a>
+				</div>
+			</div>
+			<div class="panel-body">
+
+				<div class="col-md-3">
+					<label>System Number :</label> <span class="form-control"
+						th:text="${stockTransfer.systemNumber}"></span><label>Document
+						Number :</label> <span class="form-control"
+						th:text="${stockTransfer.documentNumber}"></span>
+
+				</div>
+
+				<div class="col-md-3">
+
+					<label>Transaction Date</label> <span class="form-control"
+						th:text="${stockTransfer.transactionDate}"></span> <label>Year</label>
+					<span class="form-control" th:text="${stockTransfer.year}"></span>
+				</div>
+
+				<div class="col-md-6">
+					<label>From Location</label> <span class="form-control"
+						th:text="${stockTransfer.fromLocation.name}"></span> <label>To
+						Location</label> <span class="form-control"
+						th:text="${stockTransfer.toLocation.name}"></span>
+				</div>
+
+				<div class="col-md-12">
+					<label>Description</label> <span class="form-control"
+						th:text="${stockTransfer.description}">
+				</div>
+
+				<div class="table-responsive col-md-12">
+					<br>
+
+					<table class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th>SN</th>
+								<th>Code</th>
+								<th>Description</th>
+								<th>Unit</th>
+								<th>U.Desc</th>
+								<th>Quantity</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr:block
+								th:each="stockTransferItem : ${stockTransfer.stockTransferItems}">
+								<th th:text="${stockTransferItem.item.id}"></th>
+								<td th:text="${stockTransferItem.item.code}"></td>
+								<td th:text="${stockTransferItem.item.name}"></td>
+								<td th:text="${stockTransferItem.unit.abbreviation}"></td>
+								<td th:text="${stockTransferItem.unit.name}"></td>
+								<td th:text="${stockTransferItem.quantity}"></td>
+							</tr:block>
+						</tbody>
+					</table>
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	<!-- /.col-lg-12 -->
+</div>
+
+<body>

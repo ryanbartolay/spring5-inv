@@ -1,0 +1,252 @@
+<div class="row">
+	<div class="col-lg-12">
+		<form th:object="${stockAdjustmentForm}" id="stockAdjustmentForm"
+			th:action="@{/api/stock/adjustment}" method="POST">
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="row">
+						<div class="col-md-8">
+							<h4>New Stock Adjustment</h4>
+						</div>
+						<div class="col-md-4">
+							<div class="btn-group pull-right" role="group">
+								<button type="submit" id="submitStockAdjustmentBtn"
+									class="btn btn-success btn-sm">Save Stock Adjustment</button>
+								<a th:href="@{/stock/adjustment}" class="btn btn-default btn-sm">Cancel</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body">
+
+					<div class="form-group" id="errors"></div>
+
+					<div class="col-md-12">
+						<div class="col-md-2">
+							<label>Mode of Adjustment :</label>
+						</div>
+						<div class="col-md-10">
+							<input type="radio" checked="checked" th:value="${T(com.bartolay.inventory.enums.StockAdjustmentType).QUANTITY}"
+								id="optionsRadios1" name="adjustmentType"> Quantity
+							Adjustment<br> </label> <input type="radio" th:value="${T(com.bartolay.inventory.enums.StockAdjustmentType).VALUE}"
+								id="optionsRadios2" name="adjustmentType"> Value
+							Adjustment <br>
+							<br>
+						</div>
+
+					</div>
+
+
+					<div class="col-md-3">
+						<label>System Number :</label> <input type="text"
+							class="form-control" disabled="disabled"> <label>Document
+							Number :</label> <input type="text" class="form-control"
+							th:field="*{document_number}">
+					</div>
+
+					<div class="col-md-3">
+						<label>Transaction Date</label> <input type="text"
+							autocomplete="off" th:field="*{transactionDate}"
+							class="form-control"> <label>Year</label> <input
+							type="text" class="form-control yearselect" th:field="*{year}">
+					</div>
+
+					<div class="col-md-3">
+						<label>Reason </label> <select class="form-control"
+							th:field="*{reason}">
+							<option value=""></option>
+							<option th:each="reason : ${reasons}"
+								th:value="${reason.id}" th:text="${reason.description}"></option>
+						</select>
+						<label>Location </label> <select class="form-control"
+							th:field="*{location}">
+							<option th:each="location : ${locations}"
+								th:value="${location.id}" th:text="${location.name}"></option>
+						</select>
+					</div>
+					<div class="col-md-12">
+						<label>Description</label> <input type="text"
+							th:field="*{description}" class="form-control">
+					</div>
+					<div class="col-md-12">
+						<div class="row">
+							<br>
+							<div class="col-md-6">
+								<button class="btn btn-success btn-sm" id="btnAddItem">Add	Item</button>
+							</div>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+					<br>
+					
+					<div class="table-responsive col-md-12">
+
+						<table class="table table-bordered table-striped" id="itemsTable">
+							<thead>
+								<tr>
+									<th>SN</th>
+									<th class="col-md-1">Code</th>
+									<th class="col-md-3">Description</th>
+									<th>Unit</th>
+									<th>U.Desc</th>
+									
+									<th class="col-md-2 text-right hidden" id="quantity_1">Stock On Hand</th>
+									<th class="col-md-2 text-right hidden" id="quantity_2">New Quantity On Hand</th>
+									<th class="col-md-2 text-right hidden" id="quantity_3">Quantity Adjusted</th>
+									
+									
+									<th class="col-md-2 text-right hidden" id="cost_1">Current Cost</th>
+									<th class="col-md-2 text-right hidden" id="cost_2">Changed Cost</th>
+									<th class="col-md-2 text-right hidden" id="cost_3">Adjusted Cost</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>67</td>
+									<td class="col-md-1">BBB-123456</td>
+									<td class="col-md-3">Pen</td>
+									<td>Pcs</td>
+									<td>Pieces</td>
+									
+									<td class="col-md-2 text-right hidden" id="quantity_1">100</td>
+									<td class="col-md-2 text-right hidden" id="quantity_2">200</td>
+									<td class="col-md-2 text-right hidden" id="quantity_3">100</td>
+									
+									
+									<td class="col-md-2 text-right hidden" id="cost_1">20</td>
+									<td class="col-md-2 text-right hidden" id="cost_2">60</td>
+									<td class="col-md-2 text-right hidden" id="cost_3">40</td>
+									<th></th>
+								</tr>
+							</tbody>
+
+						</table>
+
+					</div>
+
+				</div>
+			</div>
+
+		</form>
+	</div>
+	<!-- /.col-lg-12 -->
+</div>
+
+<!-- Item Modal -->
+<div th:include="includes/modals/itemModal_simple"></div>
+
+<!-- DataTables JavaScript -->
+<script
+	th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
+
+<script>
+var current_year = (new Date()).getFullYear();
+
+$( function() {
+	  
+	formatAdjustmentType($('input[type=radio][name=adjustmentType]').val());
+	
+    $( "#transactionDate" ).datepicker();
+    
+    $('.yearselect').yearselect({
+    	order: 'desc',	
+ 		start: current_year - 5,
+ 		end: current_year + 5
+    });
+    
+    $('[name=year]').val( current_year );
+  });
+  
+$('input[type=radio][name=adjustmentType]').change(function() {
+	formatAdjustmentType(this.value);
+});
+
+function formatAdjustmentType(value) {
+	 if (value == 'QUANTITY') {
+		 $( "#cost_1, #cost_2, #cost_3" ).addClass( "hidden" );
+		 $( "#quantity_1, #quantity_2, #quantity_3" ).removeClass( "hidden" );
+    }
+    else if (value == 'VALUE') {
+    	$( "#cost_1, #cost_2, #cost_3" ).removeClass( "hidden" );
+		$( "#quantity_1, #quantity_2, #quantity_3" ).addClass( "hidden" );
+    }
+}
+  
+$("#btnAddItem").on("click", function() {
+  	addItem({type: "stock_adjusment", label:"Add Stock Transfer Item"}, function(data) {
+  		
+  		/* for(var i = 0; i < data.length; i++) {
+  			form_items.push(data[i]);
+  		} */
+  		
+  		console.log(data);
+  		var html = ``;
+  		for(var item in data) {
+  			html += `
+  			<tr>
+  				<td>67</td>
+				<td class="col-md-1">BBB-123456</td>
+				<td class="col-md-3">Pen</td>
+				<td>Pcs</td>
+				<td>Pieces</td>
+				
+				<td class="col-md-2 text-right hidden" id="quantity_1">100</td>
+				<td class="col-md-2 text-right hidden" id="quantity_2">200</td>
+				<td class="col-md-2 text-right hidden" id="quantity_3">100</td>
+				
+				
+				<td class="col-md-2 text-right hidden" id="cost_1">20</td>
+				<td class="col-md-2 text-right hidden" id="cost_2">60</td>
+				<td class="col-md-2 text-right hidden" id="cost_3">40</td>
+				<th></th>
+  			</tr>`;
+  		}
+  		/* for(var i = 0; i < form_items.length; i++) {
+  		
+  			var item = form_items[i];
+  			
+  			// default values
+  			var unit = (item.unit ? item.unit : "0");
+  			var quantity = (item.quantity ? item.quantity : "0");
+  			var unitCost = (item.unitCost ? item.unitCost : "1.00");
+  			var subtotal = (item.subtotal ? item.subtotal : "0.00");
+  			
+  			/* var units = JSON.parse(form_items[i].units); 
+  			
+  			html += `<tr>
+				<th id="lblItemId">`+ item.id +`<input type="hidden" name="stockTransferItems[`+i+`].item" value="`+item.id+`" /></th>
+				<td id="lblItemName">`+ item.code +`</td>
+				<td id="lblItemName">`+ item.name +`</td>
+				<td id="lblItemName">`+ item.brand_name +`</td>`;
+				
+			html += `
+			<td id="lblItemName">
+				<select class="form-control" name="stockTransferItems[`+i+`].unit" id="unit" onChange="computeValues(this, `+i+`)">`;	
+			/* for (var key in units) {
+			    if (units.hasOwnProperty(key)) {
+			    	html += `<option value="`+ key +`">`+ units[key] +`</option>`;
+			    }
+			} 
+			html +=	`</select>
+			</td>`; 
+				
+			html +=	`
+				<td id="lblItemName"><input type="number" name="stockTransferItems[`+i+`].quantity" id="quantity" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ quantity +`" /></td>
+				<td id="lblItemName" style="display: none;" ><input type="number" name="stockTransferItems[`+i+`].unitCost" id="unitCost" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ unitCost +`" /></td>
+				<td id="lblItemName" style="display: none;" class="text-right"><input type="hidden" name="subtotal[`+i+`]" id="subtotal" value="`+subtotal+`" /><span id="html_subtotal">`+subtotal+`</span></td>
+				<td id="lblItemName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>
+			</tr>`;
+  		} */
+  	
+  		/* var total = data.quantity * data.unit_cost; */
+  		
+  		$('#itemsTable tbody').append(html);
+  	});
+  });
+</script>

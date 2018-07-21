@@ -1,0 +1,193 @@
+<div class="">
+	<div class="page-title">
+		<div class="title_left">
+			<h3 th:text="${page}"></h3>
+		</div>
+		<div class="title_right">
+			<div class="pull-right">
+				<div class="input-group ">
+					<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#formModal" id="createButton" data-backdrop="static" data-keyboard="false">Add Model</button>	
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal Edit Brand -->
+	<div class="modal fade" id="formModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form data-async data-target="#rating-modal" id="createModelForm" th:object="${modelForm}"
+					th:action="@{/api/models}" method="POST">
+					<input type="hidden" th:field="*{id}"/>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="modalLabel">Add Model</h4>
+					</div>
+	
+					<div class="panel-body">
+					
+						<div class="form-group" id="errors"></div>
+						
+						<div class="form-group">
+							<label>Name</label> <input class="form-control" th:field="*{name}" maxlength="30">
+						</div>
+						
+					</div>
+	
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button type="submit" id="submit" class="btn btn-success btn-primary">Create</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+	<!-- Delete Modal -->
+	<div class="modal fade" id="confirmDeleteModal" tabindex="-2" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+	        
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+	            </div>
+	        
+	            <div class="modal-body">
+	                <p>You are about to delete <b id="recordName"></b>, this procedure is irreversible.</p>
+	                <p>Do you want to proceed?</p>
+	                <p class="debug-url"></p>
+	            </div>
+	            
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	                <a class="btn btn-danger" id="btnConfirmDelete">Delete</a>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<!-- /Delete Modal -->
+
+
+	<div class="clearfix"></div>
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		<div class="x_panel">
+			<div class="x_title">
+				<h2>List of Models</h2>
+				<div class="clearfix"></div>
+			</div>
+
+			<div class="x_content">
+				<div class="table-responsive">
+					<table width="100%"	class="table table-striped jambo_table"	id="category-datatable">
+						<thead>
+							<tr>
+								<th>Code</th>
+								<th>Name</th>
+								<th width="150px"></th>
+							</tr>
+						</thead>
+				
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /.panel -->
+</div>
+
+<!-- DataTables JavaScript -->
+<script
+	th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
+
+<script>
+/*<![CDATA[*/
+	
+	var DOCS = $(document);
+	var formModal = $("#formModal");
+	var modalLabel = formModal.find("#modalLabel");
+	var submitButtonLabel = $("#formModal #submit");
+	var form = $("#createModelForm");
+	var table = $('#category-datatable');
+	var datatable = customDatatable(table, '/api/datatable/models', 
+			[
+				{ "data": "id", "name" : "Code", "title" : "Code",},
+            	{ "data": "name", "name" : "Name", "title" : "Name",},
+            	
+        	],
+        	[ 
+        		{
+                    "targets": 2,
+                    "data": null,
+                    "defaultContent": '<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#formModal" data-backdrop="static" data-keyboard="false" id="btnEdit">Edit</button>' 
+                    	+ '<button id="btnDelete" class="btn btn-default pull-right" data-toggle="modal" data-target="#confirmDeleteModal" data-backdrop="static" data-keyboard="false">Delete</button>'
+                }
+        	]
+	);
+	
+	$("#createButton").on('click', function (e) {
+		form[0].reset();
+		form.attr("method", "POST"); // change to POST when editing
+		form.find('#id').val("");
+		modalLabel.text("Create new Model");
+		submitButtonLabel.text("Create");
+	});
+	
+	// Edit button
+    table.find("tbody").on('click', '#btnEdit', function (e) {
+        e.preventDefault();
+ 		
+        var data = datatable.row( $(this).parent('td') ).data();
+        
+        console.log(data)
+        
+        form.attr("method", "PUT"); // change to put when editing
+        form.find('#id').val(data['id']);
+        modalLabel.text("Update " + data['name']);
+        submitButtonLabel.text("Update");
+        
+        form.find('#name').val(data.name);
+        form.find('#description').val(data.description);
+        
+    } );
+	
+    var confirmDeleteModal = $("#confirmDeleteModal");
+    var data = null;
+ 	// Delete button
+    table.find("tbody").on('click', '#btnDelete', function (e) {
+        /* e.preventDefault(); */
+ 		
+        data = datatable.row( $(this).parent('td') ).data();
+        
+        confirmDeleteModal.find("#recordName").text(data['name']);
+        
+    });
+ 	
+	// Confirm Delete button
+    DOCS.on('click', '#btnConfirmDelete', function(e) {
+    	$(this).attr("disabled", "disabled");
+    
+    	$(this).removeAttr("disabled");
+    	
+    	DELETE("/api/models/" + data['id'], function(data) {
+    		showToast(data);
+    		
+    		confirmDeleteModal.modal('hide');
+    		datatable.ajax.reload( null, false ); // user paging is not reset on reload
+    	});
+    });
+	
+    formModalAsync($("#formModal"), function() {
+		datatable.ajax.reload( null, false ); // user paging is not reset on reload
+	});
+/*]]>*/
+</script>

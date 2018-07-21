@@ -1,0 +1,448 @@
+
+<div class="page-title">
+	<div class="title_left">
+		<h3>User Group > Manage Permission</h3>
+	</div>
+
+	<div class="title_right">
+	<!-- Create Button -->
+		<button type="button" class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#formModal" id="createButton" data-backdrop="static" data-keyboard="false">Save Changes</button>	
+	<!-- /Create Button -->
+	
+	</div>
+</div>
+
+<div class="col-md-12">
+	<div class="col-md-4">
+		<div class="x_panel">
+			<div class="x_title">
+				<h2>Dashboard</h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="x_content">
+				<div class="col-md-6">
+					<div class="checkbox"><input type="checkbox" name="hobbies[]" value="ski"> View Default</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-4">
+		<div class="x_panel">
+			<div class="x_title">
+				<h2>Inventory</h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="x_content">
+				<div class="col-md-6">
+					<div class="checkbox"><input type="checkbox" name="hobbies[]" value="ski"> Create Inventory</div>
+					<div class="checkbox"><input type="checkbox" name="hobbies[]" value="ski"> Retrieve Inventory</div>
+					<div class="checkbox"><input type="checkbox" name="hobbies[]" value="ski"> Update Inventory</div>
+					<div class="checkbox"><input type="checkbox" name="hobbies[]" value="ski"> Delete Inventory</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="x_panel">
+			<div class="x_title">
+				<h2>Locations</h2>
+				<div class="clearfix"></div>
+			</div>
+			<div class="x_content">
+				<div class="col-md-6">
+					<div class="checkbox"><input type="checkbox" name="hobbies[]" value="ski"> Create Locations</div>
+					<div class="checkbox"><input type="checkbox" name="hobbies[]" value="ski"> Retrieve Locations</div>
+					<div class="checkbox"><input type="checkbox" name="hobbies[]" value="ski"> Update Locations</div>
+					<div class="checkbox"><input type="checkbox" name="hobbies[]" value="ski"> Delete Locations</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<fieldset>
+		<legend>Project</legend>
+		<label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" class="flat"
+			value="add_project"> Create project
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="edit_project">
+			Edit project
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="close_project">
+			Close / reopen the project
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="select_project_modules"> Select project modules
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="manage_members">
+			Manage members
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="manage_versions">
+			Manage versions
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="add_subprojects">
+			Create subprojects
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="view_others_time_loggers"> View other user's time
+			trackers
+		</label> <label class="floating"> <input name="role[permissions][]"
+			type="checkbox" value="delete_others_time_loggers"> Delete
+			other user's time trackers
+		</label>
+	</fieldset>
+	<fieldset>
+		<legend>Agile</legend>
+		<label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="manage_public_agile_queries"> Manage public agile
+			boards
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="manage_agile_verions"> Manage version planning
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="add_agile_queries">
+			Add agile boards
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="view_agile_queries">
+			View agile boards
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="view_agile_charts">
+			View agile charts
+		</label>
+	</fieldset>
+	<fieldset>
+		<legend>Backlogs</legend>
+		<label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="reset_sprint">
+			Reset sprint
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="configure_backlogs">
+			Configure backlogs
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="view_master_backlog"> View master backlog
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="view_releases">
+			View releases
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="view_taskboards">
+			View taskboards
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="modify_releases">
+			Modify releases
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="create_sprints">
+			Create sprints
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="update_sprints">
+			Update sprints
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="create_stories">
+			Create stories
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="update_stories">
+			Update stories
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="create_tasks">
+			Create tasks
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="update_tasks">
+			Update tasks
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="update_remaining_hours"> Update remaining hours
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="create_impediments">
+			Create impediments
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="update_impediments">
+			Update impediments
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="subscribe_to_calendars"> Subscribe to calendars
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="view_scrum_statistics"> View scrum statistics
+		</label>
+	</fieldset>
+	<fieldset>
+		<legend>Forums</legend>
+		<label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="manage_boards">
+			Manage forums
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="add_messages">
+			Post messages
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="edit_messages">
+			Edit messages
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="edit_own_messages">
+			Edit own messages
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="delete_messages">
+			Delete messages
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="delete_own_messages"> Delete own messages
+		</label>
+	</fieldset>
+	<fieldset>
+		<legend>Calendar</legend>
+		<label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="view_calendar">
+			View calendar
+		</label>
+	</fieldset>
+	<fieldset>
+		<legend>Documents</legend>
+		<label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="add_documents">
+			Add documents
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="edit_documents">
+			Edit documents
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="delete_documents">
+			Delete documents
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="view_documents">
+			View documents
+		</label>
+	</fieldset>
+	<fieldset>
+		<legend>Files</legend>
+		<label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="manage_files">
+			Manage files
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="view_files">
+			View files
+		</label>
+	</fieldset>
+	<fieldset>
+		<legend>Gantt</legend>
+		<label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="view_gantt">
+			View gantt chart
+		</label>
+	</fieldset>
+	<fieldset>
+		<legend>Issue tracking</legend>
+		<label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="manage_categories">
+			Manage issue categories
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="view_issues">
+			View Issues
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="add_issues">
+			Add issues
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="edit_issues">
+			Edit issues
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="manage_issue_relations"> Manage issue relations
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="manage_subtasks">
+			Manage subtasks
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="set_issues_private">
+			Set issues public or private
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="set_own_issues_private"> Set own issues public or
+			private
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="add_issue_notes">
+			Add notes
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="edit_issue_notes">
+			Edit notes
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="edit_own_issue_notes"> Edit own notes
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="view_private_notes">
+			View private notes
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="set_notes_private">
+			Set notes as private
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="move_issues">
+			Move issues
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="delete_issues">
+			Delete issues
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="manage_public_queries"> Manage public queries
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="save_queries">
+			Save queries
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="view_issue_watchers"> View watchers list
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="add_issue_watchers">
+			Add watchers
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="delete_issue_watchers"> Delete watchers
+		</label>
+	</fieldset>
+	<fieldset>
+		<legend>Knowledgebase</legend>
+		<label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="view_kb_articles">
+			View articles
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="comment_and_rate_articles"> Comment and rate articles
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="create_articles">
+			Create articles
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="edit_articles">
+			Edit articles
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="manage_articles">
+			Manage articles
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="manage_articles_comments"> Manage articles comments
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="create_article_categories"> Create article categories
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="manage_article_categories"> Manage article categories
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="watch_articles">
+			Watch articles
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="watch_categories">
+			Watch categories
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="view_recent_articles"> View recent articles
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="view_most_popular_articles"> view most popular
+			articles
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="view_top_rated_articles"> view top rated articles
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="view_article_history"> view article history
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="manage_article_history"> manage article history
+		</label>
+	</fieldset>
+	<fieldset>
+		<legend>Monitoring &amp; Controlling by Project</legend>
+		<label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="view_home_monitoring_controlling"> View M&amp;C Tasks
+			Management
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="view_mc_time_mgmt_project"> View M&amp;C Time
+			Management
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="view_mc_human_resource_mgmt_project"> View M&amp;C
+			Human Resource Management
+		</label>
+	</fieldset>
+	<fieldset>
+		<legend>News</legend>
+		<label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="manage_news">
+			Manage news
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="comment_news">
+			Comment news
+		</label>
+	</fieldset>
+	<fieldset>
+		<legend>Repository</legend>
+		<label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="manage_repository">
+			Manage repository
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="browse_repository">
+			Browse repository
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="view_changesets">
+			View changesets
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="commit_access">
+			Commit access
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="manage_related_issues"> Manage related issues
+		</label>
+	</fieldset>
+	<fieldset>
+		<legend>Time tracking</legend>
+		<label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="log_time">
+			Log spent time
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="view_time_entries">
+			View spent time
+		</label> <label class="floating"> <input name="role[permissions][]"
+			type="checkbox" value="edit_time_entries"> Edit time logs
+		</label> <label class="floating"> <input name="role[permissions][]"
+			type="checkbox" value="edit_own_time_entries"> Edit own time
+			logs
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="manage_project_activities"> Manage project activities
+		</label>
+	</fieldset>
+	<fieldset>
+		<legend>Wiki</legend>
+		<label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="manage_wiki">
+			Manage wiki
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="rename_wiki_pages">
+			Rename wiki pages
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="delete_wiki_pages">
+			Delete wiki pages
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="view_wiki_pages">
+			View wiki
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="export_wiki_pages">
+			Export wiki pages
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="view_wiki_edits">
+			View wiki history
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="edit_wiki_pages">
+			Edit wiki pages
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox"
+			value="delete_wiki_pages_attachments"> Delete attachments
+		</label> <label class="floating"> <input checked="checked"
+			name="role[permissions][]" type="checkbox" value="protect_wiki_pages">
+			Protect wiki pages
+		</label>
+	</fieldset>
+	<br> <a href="#"
+		onclick="checkAll('permissions', true); return false;">Check all</a> |
+	<a href="#" onclick="checkAll('permissions', false); return false;">Uncheck
+		all</a> <input id="role_permissions_" name="role[permissions][]"
+		type="hidden" value="">
+</div>
+</div>

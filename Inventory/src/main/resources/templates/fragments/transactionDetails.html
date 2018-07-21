@@ -1,0 +1,72 @@
+<div class="col-sm-4 invoice-col"
+	th:fragment="transaction (systemNumber, documentNumber, transactionDate, year)">
+
+	<b>System #:</b> <span th:text="${systemNumber}"></span><br> 
+	<b>Document ID:</b> <span th:text="${documentNumber}"></span><br> 
+	<b>Transaction Date:</b> <span th:text="${transactionDate}"></span><br>
+	<b>Year:</b> <span th:text="${year}"></span><br> 
+	
+</div>
+
+<div class="col-sm-4 invoice-col" th:fragment="location (location)">
+	Location
+	<address>
+		<strong th:text="${location.name}"></strong>
+		<br>
+
+		<ul class="list-unstyled user_data">
+			<li><i class="fa fa-map-marker user-profile-icon"></i> <span
+				th:text="${location.address} + ', '"></span><span
+				th:if="${location.addressCity != null}"
+				th:text="' ' + ${location.addressCity} + ','"></span> <span
+				th:text="${location.addressCountry.name}"></span></li>
+
+			<li th:if="${location.telephone != null}"><i
+				class="fa fa-phone user-profile-icon"></i> <span
+				th:text="${location.telephone}"></span></li>
+
+			<li th:if="${location.fax != null}"><i
+				class="fa fa-fax user-profile-icon"></i> <span
+				th:text="${location.fax}"></span></li>
+
+			<li th:if="${location.mobile != null}"><i
+				class="fa fa-mobile user-profile-icon"></i> <span
+				th:text="${location.mobile}"></span></li>
+
+			<li class="m-top-xs" th:if="${location.website != null}"><i
+				class="fa fa-external-link user-profile-icon"></i> <a
+				th:href="${location.website}" target="_blank"
+				th:text="${location.website}"></a></li>
+		</ul>
+	</address>
+</div>
+
+<div class="col-sm-4 invoice-col" th:fragment="supplier (supplier)">
+	<!-- <span th:text="${supplier}"></span> -->
+	Supplier
+	<address>
+		<strong th:text="${supplier.name}"></strong> <br>
+
+		<ul class="list-unstyled user_data">
+			<li><i class="fa fa-map-marker user-profile-icon"></i> <span
+				th:text="${supplier.address}"></span></li>
+
+			<li><i class="fa fa-mobile user-profile-icon"></i> <span
+				th:text="${supplier.phone}"></span></li>
+
+			<li th:if="${supplier.fax != null}"><i
+				class="fa fa-fax user-profile-icon"></i> <span
+				th:text="${supplier.fax}"></span></li>
+
+			<li th:if="${supplier.mobile != null}"><i
+				class="fa fa-mobile user-profile-icon"></i> <span
+				th:text="${supplier.mobile}"></span></li>
+
+			<li class="m-top-xs" th:if="${supplier.website != null}"><i
+				class="fa fa-external-link user-profile-icon"></i> <a
+				th:href="${supplier.website}" target="_blank"
+				th:text="${supplier.website}"></a></li>
+		</ul>
+
+	</address>
+</div>

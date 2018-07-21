@@ -1,0 +1,250 @@
+<div class="row">
+	<div class="col-lg-12">
+
+		<form th:object="${stockOpeningForm}" id="stockOpeningForm"
+			th:action="@{/api/stock/opening}" method="POST">
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="row">
+						<div class=" col-md-8">
+							<h4>New Stock Opening</h4>
+						</div>
+						<div class=" col-md-4">
+							<div class="btn-group pull-right" role="group">
+
+								<button type="submit" id="submitStockOpeningBtn"
+									class="btn btn-success btn-sm">Save Opening Stock</button>
+								<a th:href="@{/stock/opening}" class="btn btn-default btn-sm">Cancel</a>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body">
+
+					<div class="form-group" id="errors"></div>
+
+					<div class="col-md-3">
+
+						<label>System Number :</label> <input type="text"
+							class="form-control" disabled="disabled"> <label>Document
+							#</label> <input type="text" th:field="*{document_number}"
+							class="form-control" autocomplete="off">
+					</div>
+
+					<div class="col-md-3">
+						<label>Transaction Date</label> <input type="text"
+							th:field="*{transaction_date}" class="form-control"
+							autocomplete="off"> <label>Year</label> <input
+							type="text" class="form-control yearselect" th:field="*{year}">
+					</div>
+
+					<div class="col-md-6">
+						<label>Location</label> <select class="form-control"
+							th:field="*{location}">
+							<option th:each="location : ${locations}"
+								th:value="${location.id}" th:text="${location.name}"></option>
+						</select>
+					</div>
+
+					<div class="col-md-12">
+						<label>Description</label> <input type="text"
+							th:field="*{description}" class="form-control">
+					</div>
+
+					<div class="col-md-12">
+						<br>
+						<button class="btn btn-success btn-sm" id="btnAddItem">Add
+							Items</button>
+					</div>
+
+					<div class="table-responsive col-md-12">
+
+						<table class="table table-striped" id="itemsTable">
+							<thead>
+								<tr>
+									<th>SN</th>
+									<th>Code</th>
+									<th class="col-md-3">Description</th>
+									<th>Brand</th>
+									<th>Unit</th>
+									<th>Quantity</th>
+									<th>Unit Cost</th>
+									<th class="col-md-2 text-right">Subtotal</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+
+							</tbody>
+							<tfoot>
+								<tr>
+									<th colspan="6"></th>
+									<th><h3>Total</h3></th>
+									<th><h3 class="text-right" id="grandTotal"></h3></th>
+									<th></th>
+								</tr>
+							</tfoot>
+						</table>
+
+					</div>
+
+				</div>
+			</div>
+
+		</form>
+	</div>
+	<!-- /.col-lg-12 -->
+</div>
+
+<!-- Item Modal -->
+<div th:include="includes/modals/itemModal_simple"></div>
+
+<!-- DataTables JavaScript -->
+<script
+	th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
+
+<script>
+/*<![CDATA[*/
+var form = $("#stockOpeningForm");
+var current_year = (new Date()).getFullYear();
+
+var submitStockOpeningBtn = $("#submitStockOpeningBtn");
+
+var form_items = [];
+
+  $( function() {
+	  
+    $( "#transaction_date" ).datepicker();
+    
+    $('.yearselect').yearselect({
+    	order: 'desc',	
+ 		start: current_year - 5,
+ 		end: current_year + 5
+    });
+    
+    $('[name=year]').val( current_year );
+
+   	computeGrandTotal();
+  });
+  
+  $("#btnAddItem").on("click", function() {
+  	addItem({type: "stock_opening", label:"Add Stock Opening Item"}, function(data) {
+  		
+  		for(var i = 0; i < data.length; i++) {
+  			form_items.push(data[i]);
+  		}
+  		
+  		var html = ``;
+  		for(var i = 0; i < form_items.length; i++) {
+  		
+  			var item = form_items[i];
+  			
+  			// default values
+  			var unit = (item.unit ? item.unit : "0");
+  			var quantity = (item.quantity ? item.quantity : "0");
+  			var unitCost = (item.unitCost ? item.unitCost : "0.00");
+  			var subtotal = (item.subtotal ? item.subtotal : "0.00");
+  			
+  			var units = JSON.parse(form_items[i].units);
+  			
+  			html += `<tr>
+				<th id="lblItemId">`+ item.id +`<input type="hidden" name="stockOpeningItems[`+i+`].item" value="`+item.id+`" /></th>
+				<td id="lblItemName">`+ item.code +`</td>
+				<td id="lblItemName">`+ item.name +`</td>
+				<td id="lblItemName">`+ item.brand_name +`</td>`;
+				
+			html += `
+			<td id="lblItemName">
+				<select class="form-control" name="stockOpeningItems[`+i+`].unit" id="unit" onChange="computeValues(this, `+i+`)">`;	
+			for (var key in units) {
+			    if (units.hasOwnProperty(key)) {
+			    	html += `<option value="`+ key +`">`+ units[key] +`</option>`;
+			    }
+			}
+			html +=	`</select>
+			</td>`; 
+				
+			html +=	`
+				<td id="lblItemName"><input type="number" name="stockOpeningItems[`+i+`].quantity" id="quantity" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ quantity +`" /></td>
+				<td id="lblItemName"><input type="number" name="stockOpeningItems[`+i+`].unitCost" id="unitCost" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ unitCost +`" /></td>
+				<td id="lblItemName" class="text-right"><input type="hidden" name="subtotal[`+i+`]" id="subtotal" value="`+subtotal+`" /><span id="html_subtotal">`+subtotal+`</span></td>
+				<td id="lblItemName"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>
+			</tr>`;
+  		}
+  	
+  		var total = data.quantity * data.unit_cost;
+  		
+  		$('#itemsTable tbody').html(html);
+  		computeGrandTotal();
+  	});
+  });
+  
+submitStockOpeningBtn.click(function() {
+  
+ 	var original_text = submitStockOpeningBtn.text();
+ 	submitStockOpeningBtn.attr("disabled", "disabled");
+ 	submitStockOpeningBtn.text("Processing....");
+ 	
+ 	POST("/api/stock/opening", form.serialize(), function(data) {
+ 		
+ 		if(data.status != "OK") {
+ 			displayErrors(data, $("#errors"));
+ 			submitStockOpeningBtn.removeAttr("disabled");
+ 			submitStockOpeningBtn.text(original_text);
+ 		} else {
+ 			window.location.replace('/stock/opening')
+ 		}
+ 	});
+});
+
+function computeValues(element, index) {
+	
+	var each = [];
+	var subtotal = 0.00;
+	
+	$.each($(element).closest("tr"), function() {
+		
+		$(this).find("select, input").each(function() {
+			each[$(this).attr("id")] = $(this).val();
+			form_items[index][$(this).attr("id")] = $(this).val();
+			console.log($(this).attr("id") + " = " + $(this).val());
+		});
+
+	});
+
+	console.log(form_items);
+	
+	subtotal = each.quantity * each.unitCost;
+	
+	form_items[index]["subtotal"] = subtotal;
+	$(element).closest("tr").find("#subtotal").val(round2DecimalPlaces(subtotal));
+	$(element).closest("tr").find("#html_subtotal").html(round2DecimalPlaces(subtotal));
+	computeGrandTotal();
+}
+
+function remove(e, item_index) {
+	form_items.splice(item_index, 1); // remove this element from the item array
+	$(e).parentsUntil("tbody").remove();
+	computeGrandTotal();
+}
+
+function computeGrandTotal() {
+	
+	var grand_total = parseFloat(0);
+	
+	$('#itemsTable > tbody  > tr').each(function() {
+		grand_total = (parseFloat(grand_total) + parseFloat($(this).find("#html_subtotal").text())).toFixed(2);
+	});
+	
+	$("#grandTotal").html(round2DecimalPlaces(grand_total));
+}
+	/*]]>*/
+  </script>
+</head>
+<body>
