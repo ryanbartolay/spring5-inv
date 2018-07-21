@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.bartolay.inventory.form.ExpenseForm;
 import com.bartolay.inventory.form.StockAdjustmentForm;
+import com.bartolay.inventory.form.StockAdjustmentReasonForm;
 import com.bartolay.inventory.form.StockOpeningForm;
 import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.form.StockTransferForm;
@@ -176,6 +177,7 @@ public class StockController {
 		model.addObject("page", "Stock Adjustment");
 		model.addObject("html", "adjustment/edit");
 		model.addObject("stockAdjustmentForm", new StockAdjustmentForm());
+		model.addObject("stockAdjustmentReasonForm", new StockAdjustmentReasonForm());
 		model.addObject("reasons", stockAdjusmentReasonRepository.findAll());
 		model.addObject("locations", locationRepository.findAll());
 		return model;

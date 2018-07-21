@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.exceptions.StockAdjustmentException;
 import com.bartolay.inventory.form.StockAdjustmentForm;
+import com.bartolay.inventory.form.StockAdjustmentReasonForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockAdjustment;
@@ -49,21 +50,19 @@ public class StockAdjusmentServiceImpl implements StockAdjustmentService {
 		return object;
 	}
 	
-	public void createAdjustmentReason(StockAdjustmentReason reason) throws StockAdjustmentException {
+	@Override
+	public Iterable<StockAdjustmentReason> retrieveReasonList() {
+		return stockAdjustmentReasonRepository.apiFindAll();
+	}
+	
+	public StockAdjustmentReason createAdjustmentReason(StockAdjustmentReasonForm stockAdjustmentReasonForm) throws StockAdjustmentException {
 		
-		if(reason.getCode() == null) {
-			throw new StockAdjustmentException("Reason Code is required.");
-		}
-		
-		if(reason.getDescription() == null) {
-			throw new StockAdjustmentException("Dscription is required.");
-		}
-		
-		reason.setDescription(reason.getDescription().trim());
-		reason.setCode(reason.getCode().toUpperCase().trim());
+		StockAdjustmentReason reason = new StockAdjustmentReason();
+		reason.setCode(stockAdjustmentReasonForm.getDescription().trim().replace(" ", "_").toUpperCase());
+		reason.setDescription(stockAdjustmentReasonForm.getDescription());
 		reason.setCreatedBy(userCredentials.getLoggedInUser());
 		
-		stockAdjustmentReasonRepository.save(reason);
+		return stockAdjustmentReasonRepository.save(reason);
 	}
 
 	@Override

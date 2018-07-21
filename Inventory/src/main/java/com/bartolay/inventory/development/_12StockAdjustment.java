@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 
 import com.bartolay.inventory.enums.StockAdjustmentType;
 import com.bartolay.inventory.exceptions.StockAdjustmentException;
+import com.bartolay.inventory.form.StockAdjustmentReasonForm;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.stock.entity.StockAdjustment;
-import com.bartolay.inventory.stock.entity.StockAdjustmentReason;
 import com.bartolay.inventory.stock.repositories.StockAdjustmentReasonRepository;
 import com.bartolay.inventory.stock.repositories.StockAdjustmentRepository;
 import com.bartolay.inventory.stock.services.StockAdjustmentService;
@@ -71,45 +71,39 @@ public class _12StockAdjustment implements ApplicationListener<ContextRefreshedE
 
 	private void createStockAdjustmentReasons() throws StockAdjustmentException {
 		
-		List<StockAdjustmentReason> reasons = new ArrayList<>();
+		List<StockAdjustmentReasonForm> reasons = new ArrayList<>();
 		
-		StockAdjustmentReason reason = new StockAdjustmentReason();
-		reason.setCode("STOCK_ON_FIRE");
+		StockAdjustmentReasonForm reason = new StockAdjustmentReasonForm();
 		reason.setDescription("Stock on Fire");
 		stockAdjusmentService.createAdjustmentReason(reason);
 		
 		reasons.add(reason);
 		
-		reason = new StockAdjustmentReason();
-		reason.setCode("STOLEN_GOODS");
+		reason = new StockAdjustmentReasonForm();
 		reason.setDescription("Stolen goods");
 		stockAdjusmentService.createAdjustmentReason(reason);
 		
 		reasons.add(reason);
 		
-		reason = new StockAdjustmentReason();
-		reason.setCode("DAMAGED_GOODS");
+		reason = new StockAdjustmentReasonForm();
 		reason.setDescription("Damaged goods");
 		stockAdjusmentService.createAdjustmentReason(reason);
 		
 		reasons.add(reason);
 		
-		reason = new StockAdjustmentReason();
-		reason.setCode("STOCK_CANCELED");
+		reason = new StockAdjustmentReasonForm();
 		reason.setDescription("Stock Cancelled");
 		stockAdjusmentService.createAdjustmentReason(reason);
 		
 		reasons.add(reason);
 		
-		reason = new StockAdjustmentReason();
-		reason.setCode("STOCKTAKING_RESULTS");
+		reason = new StockAdjustmentReasonForm();
 		reason.setDescription("Stock Taking Results");
 		stockAdjusmentService.createAdjustmentReason(reason);
 		
 		reasons.add(reason);
 		
-		reason = new StockAdjustmentReason();
-		reason.setCode("INVENTORY_REVALUATION");
+		reason = new StockAdjustmentReasonForm();
 		reason.setDescription("Inventory Revaluation");
 		stockAdjusmentService.createAdjustmentReason(reason);
 		

@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bartolay.inventory.form.StockAdjustmentForm;
+import com.bartolay.inventory.form.StockAdjustmentReasonForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
 import com.bartolay.inventory.stock.entity.StockAdjustment;
+import com.bartolay.inventory.stock.entity.StockAdjustmentReason;
 import com.bartolay.inventory.stock.services.StockAdjustmentService;
+import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
@@ -26,10 +29,36 @@ public class StockAdjustmentRestController extends AbstractRestController {
 
 	@Autowired
 	private StockAdjustmentService stockAdjustmentService;
+	@Autowired
+	private StringUtils stringUtils;
 	
 	@RequestMapping(value="/datatable/stock/adjustment", method=RequestMethod.GET, produces="application/json")
 	public String datatableStockAdjustment(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
 		return stockAdjustmentService.retrieveDatatableList(requestMap).toString();
+	}
+	
+	@RequestMapping(value="/stock/adjustment/reasons", method=RequestMethod.GET, produces="application/json")
+	public String datatableReasons(@RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {
+		return stringUtils.encode(stockAdjustmentService.retrieveReasonList());
+	}
+	
+	@RequestMapping(value="/stock/adjustment/reason", method=RequestMethod.POST)
+	public String createReason(@Valid StockAdjustmentReasonForm stockAdjustmentReasonForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+		if (bindingResult.hasErrors()) {
+			return handleRestApiException(bindingResult);
+		}
+		ApiResponse response = null;
+		
+		try {
+			StockAdjustmentReason stockAdjustment = stockAdjustmentService.createAdjustmentReason(stockAdjustmentReasonForm);
+
+			response = new ApiResponse(HttpStatus.OK, "Succesfully created Document " + stockAdjustment.getDescription());
+		} catch(Exception e) {
+			e.printStackTrace();
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+
+		return stringUtils.encode(response);
 	}
 	
 	@RequestMapping(value="/stock/adjustment", method=RequestMethod.POST)

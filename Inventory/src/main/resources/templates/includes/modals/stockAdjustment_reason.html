@@ -1,0 +1,98 @@
+<!-- manage Reasons-->
+
+<div class="modal fade bs-example-modal-lg"
+	id="stockAdjustmentReasonModal" tabindex="-1" role="dialog"
+	aria-hidden="true" style="display: none;">
+
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">x</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					<span class="fa fa-gears"></span> Manage Stock Adjustment Reasons
+				</h4>
+			</div>
+			<div class="modal-body">
+				<div class="col-md-12">
+					<form th:object="${stockAdjustmentReasonForm}" id="stockAdjustmentReasonForm">
+						<div id="stockAdjustmentReasonErrors"></div>
+						<label>Reason*</label> <input type="text" th:field="*{description}"
+							class="form-control" /> <br>
+						<button class="btn btn-success btn-sm" id="btnAddReason">Create
+							and Select Reason</button>
+					</form>
+				</div>
+				<div class="col-md-12 ln_solid"></div>
+				<table class="table table-striped bulk_action"
+					id="stockAdjustmentReasonTable">
+					<thead>
+						<tr class="headings">
+							<th class="column-title" style="display: table-cell;">Description</th>
+							<th></th>
+
+						</tr>
+					</thead>
+
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+	var stockAdjustmentReasonModal = $("#stockAdjustmentReasonModal");
+	var stockAdjustmentReasonTable = $("#stockAdjustmentReasonTable tbody");
+	var stockAdjustmentReasonForm = $("#stockAdjustmentReasonForm");
+	var btnAddReason = $("#btnAddReason");
+	var callback;
+
+	function manageReasons(parameters, callback) {
+		callback = callback;
+		stockAdjustmentReasonModal.modal("show");
+	}
+	
+	stockAdjustmentReasonModal.on('shown.bs.modal', function() {
+		
+		GET("/api/stock/adjustment/reasons",function (data) {
+            console.log(data);
+            var html = "";
+            for(var i = 0; i < data.length; i++) {
+            	html += `
+            	<tr>
+            		<td>`+ data[i].description +`</td>
+            		<td class="text-right"><span class="fa fa-close" style="color: red"></span></td>
+            	</tr>`;
+            }
+            
+            stockAdjustmentReasonTable.html(html);
+        });
+		
+	});
+	
+	btnAddReason.on("click", function() {
+
+	 	var original_text = btnAddReason.text();
+	 	btnAddReason.attr("disabled", "disabled");
+	 	btnAddReason.text("Processing....");
+		
+	 	var serialized_data = stockAdjustmentReasonForm.serialize();
+	 	
+		POST("/api/stock/adjustment/reason", serialized_data, function(data) {
+	 		
+	 		if(data.status != "OK") {
+	 			displayErrors(data, $("#stockAdjustmentReasonErrors"));
+	 			btnAddReason.removeAttr("disabled");
+	 			btnAddReason.text(original_text);
+	 		} else {
+	 			callback(serialized_data);
+	 			stockAdjustmentReasonModal.modal("close");
+	 		}
+	 	});
+	});
+</script>
