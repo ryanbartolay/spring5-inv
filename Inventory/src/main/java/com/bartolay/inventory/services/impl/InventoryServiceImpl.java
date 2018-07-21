@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
-import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.impl.InventoryDatatableRepository;
 import com.bartolay.inventory.services.InventoryService;
 
@@ -23,7 +22,7 @@ public class InventoryServiceImpl implements InventoryService {
 	@Override
 	public JSONObject retrieveDatatableListByLocationId(Map<String, String> requestMap, Integer location_id) {
 		DatatableParameter parameter = new DatatableParameter(requestMap);
-		JSONArray array = inventoryJdbcRepository.findAllDataByLocationId(parameter, location_id);
+		JSONArray array = inventoryJdbcRepository.findAllsByLocationId(parameter, location_id);
 		long recordsTotal = inventoryJdbcRepository.findAllCountByLocationId(parameter, location_id);
 		
 		System.err.println(array);

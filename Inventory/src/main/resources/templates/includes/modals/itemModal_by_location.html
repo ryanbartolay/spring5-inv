@@ -1,0 +1,263 @@
+<form id="itemModelAddItem_form">
+<div class="modal fade bs-example-modal-lg" id="itemModalSimple" tabindex="-1" role="dialog"
+	aria-hidden="true" style="display: none;">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">×</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">Item List</h4>
+			</div>
+			<div class="modal-body">
+
+
+				<div class="table-responsive">
+					<table class="table table-striped bulk_action" id="itemModalSimple-datatable">
+						<thead>
+							<tr class="headings">
+								<th></th>
+								<th class="column-title" style="display: table-cell;">SN</th>
+								<th class="column-title" style="display: table-cell;">Code</th>
+								<th class="column-title" style="display: table-cell;">Item</th>
+								<th class="column-title" style="display: table-cell;">Unit</th>
+								<th class="column-title text-right" style="display: table-cell;">Stock On Hand</th>
+								<th class="column-title text-right" style="display: table-cell;">Stock On Order</th>
+							</tr>
+						</thead>
+
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+
+
+			</div>
+			<div class="modal-footer">
+				<span id="itemSelectedStatus"></span>&nbsp;
+				<button type="button" class="btn btn-success" id="itemModalAddItem_btn">Add Items</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+</form>
+
+<script>
+
+var itemModalSimple_modal = $("#itemModalSimple");
+var itemModalAddItem_btn = $("#itemModalAddItem_btn");
+var itemModelAddItem_form = $("#itemModelAddItem_form");
+var itemModelAddItem_table = $('#itemModalSimple-datatable');
+var itemModelAddItem_table_instance;
+var itemModalSimple_callback;
+var itemModalSimple_url = "/api/datatable/inventory/location";
+var location_id;
+var itemDatatable;
+
+function addItem(parameters, callback) {
+	location_id = parameters.location_id;
+	itemModalSimple_callback = callback;
+	
+	itemModalSimple_modal.modal('show');
+}
+
+itemModalSimple_modal.on('shown.bs.modal', function() {
+	
+	itemDatatable = itemModelAddItem_table.DataTable({
+		responsive : true,
+		ajax: {
+			url: itemModalSimple_url,
+			data: {
+				location: location_id
+			}
+		},
+		processing: true,
+        serverSide: true,
+		length: 10,
+		start: 0,
+		columns: [
+			{
+				data: "id",
+        		orderable: false,
+        		render: function(data, type, row) {
+        			return `<div style="position: relative;">
+					<input type="checkbox" name="table_records" id="selected_item" value="`+ data +`" onClick="countCheckedSingle(this)">
+					<input type="hidden" name="id" value="`+data+`">
+					<input type="hidden" name="code" value="`+row.item_code+`">
+					<input type="hidden" name="name" value="`+row.item_name+`">
+					<input type="hidden" name="units" value='`+ row.unit_name +`'>
+					</div>`;
+        		}
+			},
+        	{
+        		data: "id",
+        	},
+        	{ 
+        		data: "item_code",
+        	},
+        	{
+        		data: "item_name"
+        	},
+        	{
+        		data: "unit_name"
+        	},
+        	{
+        		data: "on_hand",
+        		className: "text-right"
+        	},
+        	{
+        		data: "on_order",
+        		className: "text-right"
+        	}
+        	
+    	]
+	});
+	
+	/* $.ajax({
+		url: itemModalSimple_url,
+		data: {
+			location: location_id	
+		}
+	}).done(function(data) {
+		console.log(data);
+	}); */
+	
+/* 	if(itemModelAddItem_table_instance == undefined){
+		itemModelAddItem_table_instance = itemModelAddItem_table.DataTable({
+			responsive : true,
+			ajax: {
+				url: itemModalSimple_url
+			},
+			processing: true,
+	        serverSide: true,
+			length: 10,
+			start: 0,
+	        columns: [
+	        	{
+	        		data: "id",
+	        		orderable: false,
+	        		render: function(data, type, row) {
+	        			
+	        			var item_units_map = new Object();
+	        			
+	        			var available_units_id = row.available_units_id.replace(/{|}/gi, "");
+	        			
+	        			var available_units_name = row.available_units_name.replace(/{|}/gi,"");
+	        			
+	        			var other_units_id = available_units_id.split(",");
+	        			var other_units_name = available_units_name.split(",");
+	        			
+	        			item_units_map[row.default_unit_id] = row.default_unit_name;// push the default first
+	        			
+	        			
+	        			for(var i = 0; i < other_units_id.length; i++) {
+	        				item_units_map[other_units_id[i]] = other_units_name[i];
+	        			}
+	        			
+	        			var item_units_string = JSON.stringify(item_units_map);
+	        			
+	        			var min_price = row.minimum_item_price ? row.minimum_item_price : "";
+	        			var max_price = row.maximum_item_price ? row.maximum_item_price : "";
+	        			return `<div style="position: relative;">
+								<input type="checkbox" name="table_records" id="selected_item" value="`+ data +`" onClick="countCheckedSingle(this)">
+								<input type="hidden" name="id" value="`+data+`">
+								<input type="hidden" name="code" value="`+row.code+`">
+								<input type="hidden" name="name" value="`+row.name+`">
+								<input type="hidden" name="units" value='`+ item_units_string +`'>
+								<input type="hidden" name="brand_name" value="`+row.brand_name+`">
+								<input type="hidden" name="minimum_item_price" value="`+ min_price +`">
+								<input type="hidden" name="maximum_item_price" value="`+ max_price +`">
+						</div>`;
+	        		}
+	        	},
+	        	{ 
+	        		data: "id",
+	        		render: function ( data, type, row ) {
+	                    return '<a href="/stock/opening/'+ data +'">' + data + '</a>';
+	                }
+	        	},
+	        	{ 
+	        		data: "code",
+	        		render: function ( data, type, row ) {
+	                    return '<a href="/stock/opening/'+ data +'">' + data + '</a>';
+	                }
+	        	},
+	        	{ 
+	        		data: "name",
+	        		render: function ( data, type, row ) {
+	        			
+	                    return '<a href="/stock/opening/">' + data + '</a>';
+	                }
+	        	},{
+	        		data: "default_unit_name"	
+	        	},
+	        	{
+	        		data: "available_units_name"	
+	        	},
+	        	{ 
+	        		data: "brand_name",
+	        		render: function ( data, type, row ) {
+	        			
+	                    return '<a href="/stock/opening/">' + data + '</a>';
+	                }
+	        	},
+	        	{ 
+	        		data: "minimum_item_price",
+	        		render: function(data,type, row) {
+	        			if(data) {
+	        				return data;
+	        			}
+	                    return "";
+	        		},
+	        		className: "text-right"
+	        	},
+	        	{ 
+	        		data: "maximum_item_price",
+	        		render: function ( data, type, row ) {
+	        			if(data) {
+	        				return data;
+	        			}
+	                    return "";
+	                },
+	                className: "text-right"
+	        	},
+	    	]
+		});
+	}else{
+		itemModelAddItem_table_instance.ajax.reload();
+		console.log(itemModelAddItem_table_instance)
+	}
+ */	
+});
+
+itemModalSimple_modal.on('hidden.bs.modal', function() {
+	itemDatatable.destroy();
+});
+
+itemModalAddItem_btn.click(function() {
+	var iter = itemModelAddItem_form.serializeArray();
+	var selected_items = [];
+ 
+	$.each($("input[name='table_records']:checked").closest("tr"), function() {
+
+		var each = []; 
+		$(this).find("input").each(function() {
+			each[$(this).attr("name")] = $(this).val();
+		});
+		
+		selected_items.push(each);
+	});
+	
+	if(selected_items.length <= 0) {
+		$("#itemSelectedStatus").html("<span style='color:red'>Select atleast 1 Item</span>");
+	} else {
+		itemModalSimple_callback(selected_items);
+		itemModalSimple_modal.modal("hide");
+		/* itemModelAddItem_table_instance.destroy(); */
+	}
+	
+});
+
+</script>

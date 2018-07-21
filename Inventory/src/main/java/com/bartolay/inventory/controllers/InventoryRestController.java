@@ -22,8 +22,13 @@ public class InventoryRestController {
 	private final static String ZERO = "0";
 	
 	@RequestMapping(value="/inventory/location", method=RequestMethod.GET, produces="application/json")
-	public String getAllByLocation(@RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {		
+	public String getAllByLocation(@RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {
+		System.err.println(requestMap);
 		Integer location_id = Integer.parseInt(((requestMap.get("location")!=null && !requestMap.get("location").trim().isEmpty()) ?requestMap.get("location") : ZERO));
+		System.err.println("location_id " + location_id);
+		
+		System.err.println(inventoryService);
+		System.err.println(inventoryService.retrieveDatatableListByLocationId(requestMap, location_id));
 		return inventoryService.retrieveDatatableListByLocationId(requestMap, location_id).toString();
 	}
 	

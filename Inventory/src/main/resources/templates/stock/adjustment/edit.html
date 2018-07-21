@@ -135,7 +135,7 @@
 </div>
 
 <!-- Item Modal -->
-<div th:include="includes/modals/itemModal_simple"></div>
+<div th:include="includes/modals/itemModal_by_location"></div>
 
 <!-- DataTables JavaScript -->
 <script
@@ -179,7 +179,10 @@ function formatAdjustmentType(value) {
 }
   
 $("#btnAddItem").on("click", function() {
-  	addItem({type: "stock_adjusment", label:"Add Stock Transfer Item"}, function(data) {
+  	addItem({
+  			type: "stock_adjusment", 
+  			location_id: $("#location").val()
+  		}, function(data) {
   		
   		/* for(var i = 0; i < data.length; i++) {
   			form_items.push(data[i]);
