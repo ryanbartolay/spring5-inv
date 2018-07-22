@@ -706,21 +706,21 @@ public class InventoryCoreService {
 				inventoryTransaction.setLocation(stockAdjustment.getLocation());
 				inventoryTransaction.setUnit(stockAdjustmentItem.getInventory().getUnit());
 				inventoryTransaction.setTransactionType(TransactionType.STOCK_ADJUSTMENT);
-				inventoryTransaction.setRawQuantity(stockAdjustmentItem.getAmount());
+				inventoryTransaction.setRawQuantity(stockAdjustmentItem.getQuantity());
 				inventoryTransaction.setTransactionSystemNumber(stockAdjustment.getSystemNumber());
 				inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
-				inventoryTransaction.setRateQuantity(stockAdjustmentItem.getAmount());
+				inventoryTransaction.setRateQuantity(stockAdjustmentItem.getQuantity());
 				inventoryTransaction.setInventory(inventory);
 				
 				switch(adjustmentType) {
 				case QUANTITY:
 					inventoryTransaction.setQuantityBefore(inventory.getQuantity());
-					inventory.setQuantity(stockAdjustmentItem.getAmount());
+					inventory.setQuantity(stockAdjustmentItem.getCost());
 					inventoryTransaction.setQuantityAfter(inventory.getQuantity());
 					break;
 				case VALUE:
 					inventoryTransaction.setUnitCostBefore(inventory.getQuantity());
-					inventory.setUnitCost(stockAdjustmentItem.getAmount());
+					inventory.setUnitCost(stockAdjustmentItem.getCost());
 					inventoryTransaction.setUnitCostAfter(inventory.getQuantity());
 					break;				
 				}

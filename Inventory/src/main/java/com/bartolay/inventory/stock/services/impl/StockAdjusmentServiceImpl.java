@@ -1,6 +1,9 @@
 package com.bartolay.inventory.stock.services.impl;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -25,13 +28,14 @@ import com.bartolay.inventory.utils.UserCredentials;
 public class StockAdjusmentServiceImpl implements StockAdjustmentService {
 
 	@Autowired
+	private DateFormat dateFormat;
+	@Autowired
 	@Qualifier("stockAdjustmentDatatableRepository")
 	private DatatableRepository stockAdjustmentDatatableRepository;
 	@Autowired
 	private StockAdjustmentReasonRepository stockAdjustmentReasonRepository;
 	@Autowired 
 	private UserCredentials userCredentials;
-	
 	@Autowired
 	private InventoryCoreService inventoryCoreService;
 	
@@ -55,27 +59,38 @@ public class StockAdjusmentServiceImpl implements StockAdjustmentService {
 		return stockAdjustmentReasonRepository.apiFindAll();
 	}
 	
-	public StockAdjustmentReason createAdjustmentReason(StockAdjustmentReasonForm stockAdjustmentReasonForm) throws StockAdjustmentException {
+	public JSONObject createAdjustmentReason(StockAdjustmentReasonForm stockAdjustmentReasonForm) throws StockAdjustmentException {
 		
 		StockAdjustmentReason reason = new StockAdjustmentReason();
 		reason.setCode(stockAdjustmentReasonForm.getDescription().trim().replace(" ", "_").toUpperCase());
 		reason.setDescription(stockAdjustmentReasonForm.getDescription());
 		reason.setCreatedBy(userCredentials.getLoggedInUser());
 		
-		return stockAdjustmentReasonRepository.save(reason);
+		reason = stockAdjustmentReasonRepository.save(reason);
+		
+		JSONObject obj = new JSONObject();
+		obj.put("status", "OK");
+		obj.put("id", reason.getId());
+		obj.put("code", reason.getCode());
+		obj.put("description", reason.getDescription());
+		
+		return obj;
 	}
 
 	@Override
 	public StockAdjustment create(StockAdjustmentForm stockAdjustmentForm)
 			throws ParseException, StockAdjustmentException {
-		// TODO Auto-generated method stub
+		
+		Date date = dateFormat.parse(stockAdjustmentForm.getTransactionDate());
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
 		
 		StockAdjustment sa = new StockAdjustment();
 		sa.setStockAdjustmentType(stockAdjustmentForm.getAdjustmentType().name());
 		sa.setDocumentNumber(stockAdjustmentForm.getDocument_number());
 		sa.setStockAdjustmentReason(stockAdjustmentForm.getReason());
 		sa.setLocation(stockAdjustmentForm.getLocation());
-		sa.setTransactionDate(stockAdjustmentForm.getTransactionDate());
+		sa.setTransactionDate(cal.getTime());
 		sa.setYear(stockAdjustmentForm.getYear());
 		sa.setDescription(stockAdjustmentForm.getDescription());
 		sa.setStockAdjustmentItems(stockAdjustmentForm.getItems());

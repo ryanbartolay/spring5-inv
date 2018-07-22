@@ -18,6 +18,6 @@ public interface StockAdjustmentService {
 	
 	// Stock Adjustment Reasons
 	public Iterable<StockAdjustmentReason> retrieveReasonList();
-	public StockAdjustmentReason createAdjustmentReason(StockAdjustmentReasonForm reason) throws StockAdjustmentException;
+	public JSONObject createAdjustmentReason(StockAdjustmentReasonForm reason) throws StockAdjustmentException;
 	
 }

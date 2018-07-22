@@ -19,7 +19,7 @@
 				<div class="col-md-12">
 					<form th:object="${stockAdjustmentReasonForm}" id="stockAdjustmentReasonForm">
 						<div id="stockAdjustmentReasonErrors"></div>
-						<label>Reason*</label> <input type="text" th:field="*{description}"
+						<label>Reason*</label> <input type="text" th:field="*{description}" id="addReasonDescription"
 							class="form-control" /> <br>
 						<button class="btn btn-success btn-sm" id="btnAddReason">Create
 							and Select Reason</button>
@@ -50,14 +50,19 @@
 	var stockAdjustmentReasonTable = $("#stockAdjustmentReasonTable tbody");
 	var stockAdjustmentReasonForm = $("#stockAdjustmentReasonForm");
 	var btnAddReason = $("#btnAddReason");
+	var btnAddReasonText = btnAddReason.text();
 	var callback;
 
-	function manageReasons(parameters, callback) {
-		callback = callback;
+	function manageReasons(parameters, cb) {
+		callback = cb;
 		stockAdjustmentReasonModal.modal("show");
 	}
 	
 	stockAdjustmentReasonModal.on('shown.bs.modal', function() {
+		
+		$("#addReasonDescription").val("");
+		btnAddReason.removeAttr("disabled");
+		btnAddReason.text(btnAddReasonText);
 		
 		GET("/api/stock/adjustment/reasons",function (data) {
             console.log(data);
@@ -66,7 +71,7 @@
             	html += `
             	<tr>
             		<td>`+ data[i].description +`</td>
-            		<td class="text-right"><span class="fa fa-close" style="color: red"></span></td>
+            		<td class="text-right"><button class="fa fa-close" style="color: red"></button></td>
             	</tr>`;
             }
             
@@ -77,21 +82,25 @@
 	
 	btnAddReason.on("click", function() {
 
-	 	var original_text = btnAddReason.text();
 	 	btnAddReason.attr("disabled", "disabled");
 	 	btnAddReason.text("Processing....");
 		
 	 	var serialized_data = stockAdjustmentReasonForm.serialize();
 	 	
-		POST("/api/stock/adjustment/reason", serialized_data, function(data) {
-	 		
+		POST("/api/stock/adjustment/reasons", serialized_data, function(data) {
+			
+			console.log("11111111111");
+			console.log(data);
+			//data = $.parseJSON(data);
+			console.log(data);
+
 	 		if(data.status != "OK") {
 	 			displayErrors(data, $("#stockAdjustmentReasonErrors"));
 	 			btnAddReason.removeAttr("disabled");
-	 			btnAddReason.text(original_text);
+	 			btnAddReason.text(btnAddReasonText);
 	 		} else {
-	 			callback(serialized_data);
-	 			stockAdjustmentReasonModal.modal("close");
+	 			callback(data);
+	 			stockAdjustmentReasonModal.modal("hide");
 	 		}
 	 	});
 	});

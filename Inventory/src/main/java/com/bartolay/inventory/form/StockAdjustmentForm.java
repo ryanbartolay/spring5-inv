@@ -1,7 +1,5 @@
 package com.bartolay.inventory.form;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.Digits;
@@ -31,13 +29,14 @@ public class StockAdjustmentForm {
 	private String year;
 	
 	@NotNull(message="Transaction Date is required")
-	private Date transactionDate;
+	@com.bartolay.inventory.validator.model.Date(message="Invalid Transaction Date format.")
+	private String transactionDate;
 	
 	@NotNull (message="Required adjustment type")
 	private StockAdjustmentType adjustmentType;
 	
 	@NotNull(message="Needed atleast 1 item")
-	private List<StockAdjustmentItem> items = new ArrayList<>();
+	private List<StockAdjustmentItem> items;
 	
 	@NotNull(message="Reason is required")
 	private StockAdjustmentReason reason;
@@ -82,11 +81,11 @@ public class StockAdjustmentForm {
 		this.year = year;
 	}
 
-	public Date getTransactionDate() {
+	public String getTransactionDate() {
 		return transactionDate;
 	}
 
-	public void setTransactionDate(Date transactionDate) {
+	public void setTransactionDate(String transactionDate) {
 		this.transactionDate = transactionDate;
 	}
 

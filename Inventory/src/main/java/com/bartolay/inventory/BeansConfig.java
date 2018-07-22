@@ -1,5 +1,8 @@
 package com.bartolay.inventory;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import javax.sql.DataSource;
 
 import org.json.JSONArray;
@@ -33,6 +36,11 @@ public class BeansConfig {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new Hibernate5Module());
 		return objectMapper;
+	}
+	
+	@Bean
+	public DateFormat dateFormat() {
+		return new SimpleDateFormat("yyyy-MM-dd");
 	}
 	
 	@Bean

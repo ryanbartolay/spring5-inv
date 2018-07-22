@@ -22,7 +22,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.User;
-import com.bartolay.inventory.enums.StockAdjustmentType;
 import com.bartolay.inventory.repositories.GeneratedSystemNumber;
 
 @Entity
@@ -52,7 +51,7 @@ public class StockAdjustment implements GeneratedSystemNumber {
 	
 	private String description;
 	
-	@Column(name="stock_adjustment_type", nullable=false)
+	@Column(name="stock_adjustment_type", nullable=false, updatable=false)
 	private String stockAdjustmentType;
 	
 	@OneToOne(fetch = FetchType.LAZY)

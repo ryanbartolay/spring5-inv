@@ -3,9 +3,12 @@ package com.bartolay.inventory.stock.controllers;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +45,7 @@ public class StockAdjustmentRestController extends AbstractRestController {
 		return stringUtils.encode(stockAdjustmentService.retrieveReasonList());
 	}
 	
-	@RequestMapping(value="/stock/adjustment/reason", method=RequestMethod.POST)
+	@RequestMapping(value="/stock/adjustment/reasons", method=RequestMethod.POST)
 	public String createReason(@Valid StockAdjustmentReasonForm stockAdjustmentReasonForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 		if (bindingResult.hasErrors()) {
 			return handleRestApiException(bindingResult);
@@ -50,9 +53,13 @@ public class StockAdjustmentRestController extends AbstractRestController {
 		ApiResponse response = null;
 		
 		try {
-			StockAdjustmentReason stockAdjustment = stockAdjustmentService.createAdjustmentReason(stockAdjustmentReasonForm);
-
-			response = new ApiResponse(HttpStatus.OK, "Succesfully created Document " + stockAdjustment.getDescription());
+			return stockAdjustmentService.createAdjustmentReason(stockAdjustmentReasonForm).toString();
+//			System.err.println(obj.s);
+//			return stringUtils.encode();
+			//response = new ApiResponse(HttpStatus.OK, "Succesfully created Document " + stockAdjustment.getDescription());
+		} catch(DataIntegrityViolationException | ConstraintViolationException e) {
+			e.printStackTrace();
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, stockAdjustmentReasonForm.getDescription() + " already exists.");
 		} catch(Exception e) {
 			e.printStackTrace();
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());

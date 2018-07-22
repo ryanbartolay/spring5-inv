@@ -32,7 +32,6 @@ function POST(url, data, callback){
 		data: data,
 
 		success: function(data, status) {
-			console.log(data);
 			callback(decodeAPIResponse(data));
 		}
 	});
