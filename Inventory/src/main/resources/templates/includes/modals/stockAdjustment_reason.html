@@ -1,4 +1,27 @@
 <!-- manage Reasons-->
+<div class="modal fade" id="confirmDeleteModal" tabindex="1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+		        
+		    <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+		    </div>
+		
+		    <div class="modal-body">
+		        <p>You are about to delete <b id="recordName"></b>, this procedure is irreversible.</p>
+		        <p>Do you want to proceed?</p>
+		        <p class="debug-url"></p>
+		    </div>
+		    
+		    <div class="modal-footer">
+		        <button type="button" class="btn btn-default" onClick="cancelConfirmDelete()">Cancel</button>
+		        <a class="btn btn-danger" id="btnConfirmDelete">Delete</a>
+		    </div>
+		</div>
+	</div>
+</div>
 
 <div class="modal fade bs-example-modal-lg"
 	id="stockAdjustmentReasonModal" tabindex="-1" role="dialog"
@@ -49,6 +72,9 @@
 	var stockAdjustmentReasonModal = $("#stockAdjustmentReasonModal");
 	var stockAdjustmentReasonTable = $("#stockAdjustmentReasonTable tbody");
 	var stockAdjustmentReasonForm = $("#stockAdjustmentReasonForm");
+	
+	var confirmDeleteModal = $("#confirmDeleteModal");
+	
 	var btnAddReason = $("#btnAddReason");
 	var btnAddReasonText = btnAddReason.text();
 	var callback;
@@ -71,7 +97,9 @@
             	html += `
             	<tr>
             		<td>`+ data[i].description +`</td>
-            		<td class="text-right"><button class="fa fa-close" style="color: red"></button></td>
+            		<td class="text-right"><button class="fa fa-close" 
+            		onClick="confirmDelete(this)"
+            		style="color: red"></button></td>
             	</tr>`;
             }
             
@@ -88,12 +116,6 @@
 	 	var serialized_data = stockAdjustmentReasonForm.serialize();
 	 	
 		POST("/api/stock/adjustment/reasons", serialized_data, function(data) {
-			
-			console.log("11111111111");
-			console.log(data);
-			//data = $.parseJSON(data);
-			console.log(data);
-
 	 		if(data.status != "OK") {
 	 			displayErrors(data, $("#stockAdjustmentReasonErrors"));
 	 			btnAddReason.removeAttr("disabled");
@@ -104,4 +126,35 @@
 	 		}
 	 	});
 	});
+	
+	function cancelConfirmDelete() {
+		confirmDeleteModal.modal("hide");
+		stockAdjustmentReasonModal.modal("show");
+	}
+	
+	function confirmDelete(e) {
+		var row = $(e).parentsUntil("tbody");
+		stockAdjustmentReasonModal.modal("hide");
+		confirmDeleteModal.modal("show");
+	}
+	
+	function deleteReason(e) {
+		var row = $(e).parentsUntil("tbody");
+		
+		var newCost = row.find("#newCost").val();
+		var unit_cost = row.find("#unit_cost").val();
+		var newQuantity = row.find("#newQuantity").val();
+		var on_hand = row.find("#on_hand").val();
+		
+		var quantity_adjustment = row.find("#quantity_3");
+		var cost_adjusment = row.find("#cost_3");
+		
+		var quantity = (newQuantity - on_hand);
+		var cost = (newCost - unit_cost);
+		
+		quantity_adjustment.html("<strong>" + quantity + "</strong>");
+		cost_adjusment.html("<strong>" + cost + "</strong>");
+		
+		row.remove();
+	}
 </script>

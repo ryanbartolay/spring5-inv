@@ -98,4 +98,12 @@ public class StockAdjusmentServiceImpl implements StockAdjustmentService {
 		return sa;
 	}
 
+	@Override
+	public JSONObject deleteAdjustmentReason(StockAdjustmentReason reason) throws StockAdjustmentException {
+		stockAdjustmentReasonRepository.delete(reason);
+		
+		JSONObject obj = new JSONObject();
+		obj.put("status", "OK");
+		return obj;
+	}
 }

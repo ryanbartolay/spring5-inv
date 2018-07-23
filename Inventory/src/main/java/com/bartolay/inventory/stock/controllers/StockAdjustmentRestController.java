@@ -6,16 +6,17 @@ import java.util.Map;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bartolay.inventory.exceptions.StockAdjustmentException;
 import com.bartolay.inventory.form.StockAdjustmentForm;
 import com.bartolay.inventory.form.StockAdjustmentReasonForm;
 import com.bartolay.inventory.model.ApiResponse;
@@ -43,6 +44,15 @@ public class StockAdjustmentRestController extends AbstractRestController {
 	@RequestMapping(value="/stock/adjustment/reasons", method=RequestMethod.GET, produces="application/json")
 	public String datatableReasons(@RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {
 		return stringUtils.encode(stockAdjustmentService.retrieveReasonList());
+	}
+	
+	@RequestMapping(value="/stock/adjustment/reasons/{id}", method=RequestMethod.DELETE, produces="application/json")
+	public String deleteReason(@PathVariable("id") Integer id) throws StockAdjustmentException, JsonProcessingException, UnsupportedEncodingException {
+		
+		StockAdjustmentReason reason = new StockAdjustmentReason();
+		reason.setId(id);
+		
+		return stringUtils.encode(stockAdjustmentService.deleteAdjustmentReason(reason));
 	}
 	
 	@RequestMapping(value="/stock/adjustment/reasons", method=RequestMethod.POST)
