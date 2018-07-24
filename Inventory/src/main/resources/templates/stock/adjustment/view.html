@@ -53,27 +53,21 @@
 					<div class="table-responsive col-md-12">
 
 						<table class="table table-bordered table-striped" id="itemsTable">
-							<thead th:switch="${stockAdjustment.stockAdjustmentType}">
-								<tr th:case="QUANTITY">
+							<thead>
+								<tr>
 									<th>SN</th>
 									<th class="col-md-1">Code</th>
 									<th class="col-md-3">Description</th>
 									<th>Unit</th>
 									
-									<th class="col-md-2 text-right" id="quantity_1">Stock On Hand</th>
-									<th class="col-md-2 text-right" id="quantity_2">New Quantity On Hand</th>
-									<th class="col-md-2 text-right" id="quantity_3">Quantity Adjusted</th>
+									<th class="col-md-2 text-right hidden" id="quantity_1">Previous Quantity</th>
+									<th class="col-md-2 text-right hidden" id="quantity_2">Adjusted to Quantity</th>
+									<th class="col-md-2 text-right hidden" id="quantity_3">Quantity Adjusted</th>
 									
-								</tr>
-								<tr th:case="COST">
-									<th>SN</th>
-									<th class="col-md-1">Code</th>
-									<th class="col-md-3">Description</th>
-									<th>Unit</th>
-								
-									<th class="col-md-2 text-right" id="cost_1">Current Cost</th>
-									<th class="col-md-2 text-right" id="cost_2">Changed Cost</th>
-									<th class="col-md-2 text-right" id="cost_3">Adjusted Cost</th>
+									
+									<th class="col-md-2 text-right hidden" id="cost_1">Previous Cost</th>
+									<th class="col-md-2 text-right hidden" id="cost_2">Changed to Cost</th>
+									<th class="col-md-2 text-right hidden" id="cost_3">Cost Adjusted</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -83,11 +77,14 @@
 									<td class="col-md-3" th:text="${item.inventory.item.name}"></td>
 									<td th:text="${item.inventory.unit.abbreviation}"></td>
 									
-									<th class="col-md-2 text-right hidden" id="quantity_1">Stock On Hand</th>
-									<th class="col-md-2 text-right hidden" id="quantity_2">New Quantity On Hand</th>
-									<th class="col-md-2 text-right hidden" id="quantity_3">Quantity Adjusted</th>
+									<td class="col-md-2 text-right hidden" id="quantity_1" th:text="${item.quantityPrevious}"></td>
+									<td class="col-md-2 text-right hidden" id="quantity_2" th:text="${item.quantity}"></td>
+									<td class="col-md-2 text-right hidden" id="quantity_3" th:text="${item.quantityAdjusted}"></td>
 									
 									
+									<td class="col-md-2 text-right hidden" id="cost_1" th:text="${item.costPrevious}"></td>
+									<td class="col-md-2 text-right hidden" id="cost_2" th:text="${item.cost}"></td>
+									<td class="col-md-2 text-right hidden" id="cost_3" th:text="${item.costAdjusted}">Adjusted Cost</td>
 								</tr>
 							</tbody>
 
@@ -101,3 +98,16 @@
 	</div>
 	<!-- /.col-lg-12 -->
 </div>
+
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var adjustmentType = /*[[${stockAdjustment.stockAdjustmentType}]]*/ null;
+	
+	if(adjustmentType == "QUANTITY") {
+		$("#quantity_1, #quantity_2, #quantity_3").removeClass("hidden");
+	} else if(adjustmentType == "COST") {
+		$("#cost_1, #cost_2, #cost_3").removeClass("hidden");
+	}
+	
+	/*]]>*/
+</script> 

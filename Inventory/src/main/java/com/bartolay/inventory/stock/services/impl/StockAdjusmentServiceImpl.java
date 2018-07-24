@@ -21,6 +21,7 @@ import com.bartolay.inventory.form.StockAdjustmentReasonForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockAdjustment;
+import com.bartolay.inventory.stock.entity.StockAdjustmentItem;
 import com.bartolay.inventory.stock.entity.StockAdjustmentReason;
 import com.bartolay.inventory.stock.repositories.StockAdjustmentReasonRepository;
 import com.bartolay.inventory.stock.repositories.StockAdjustmentRepository;
@@ -90,6 +91,11 @@ public class StockAdjusmentServiceImpl implements StockAdjustmentService {
 			throw new StockAdjustmentException("Atleast 1 item is required.");
 		}
 		
+		for(StockAdjustmentItem item : stockAdjustmentForm.getItems()) {
+			item.setCostAdjusted(item.getCost().subtract(item.getCostPrevious()));
+			item.setQuantityAdjusted(item.getQuantity().subtract(item.getQuantityPrevious()));
+		}
+		
 		Date date = dateFormat.parse(stockAdjustmentForm.getTransactionDate());
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -103,6 +109,7 @@ public class StockAdjusmentServiceImpl implements StockAdjustmentService {
 		sa.setYear(stockAdjustmentForm.getYear());
 		sa.setDescription(stockAdjustmentForm.getDescription());
 		sa.setStockAdjustmentItems(stockAdjustmentForm.getItems());
+
 		inventoryCoreService.createStockAdjustment(sa);
 		return sa;
 	}

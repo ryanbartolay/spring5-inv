@@ -32,17 +32,24 @@ public class StockAdjustmentItem {
 	@JoinColumn(nullable=false, updatable=true)
 	private StockAdjustment stockAdjustment;
 	
-	@Column(name="previous_quantity", nullable=false, precision=10, scale=5)
-	private BigDecimal previousQuantity;
+	@Column(name="quantity_previous", nullable=false, precision=10, scale=5)
+	private BigDecimal quantityPrevious;
 	
 	@Column(name="quantity", nullable=false, precision=10, scale=5)
 	private BigDecimal quantity;
 	
-	@Column(name="previous_cost", nullable=false, precision=10, scale=5)
-	private BigDecimal previousCost;
+	@Column(name="quantity_adjusted", nullable=false, precision=10, scale=5)
+	private BigDecimal quantityAdjusted;
+	
+	@Column(name="cost_previous", nullable=false, precision=10, scale=5)
+	private BigDecimal costPrevious;
 	
 	@Column(name="cost", nullable=false, precision=10, scale=5)
 	private BigDecimal cost;
+	
+	@Column(name="cost_adjusted", nullable=false, precision=10, scale=5)
+	private BigDecimal costAdjusted;
+	
 	
 	private String description;
 	
@@ -70,11 +77,11 @@ public class StockAdjustmentItem {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public BigDecimal getPreviousQuantity() {
-		return previousQuantity;
+	public BigDecimal getQuantityPrevious() {
+		return quantityPrevious;
 	}
-	public void setPreviousQuantity(BigDecimal previousQuantity) {
-		this.previousQuantity = previousQuantity;
+	public void setQuantityPrevious(BigDecimal quantityPrevious) {
+		this.quantityPrevious = quantityPrevious;
 	}
 	public BigDecimal getQuantity() {
 		return quantity;
@@ -82,17 +89,29 @@ public class StockAdjustmentItem {
 	public void setQuantity(BigDecimal quantity) {
 		this.quantity = quantity;
 	}
-	public BigDecimal getPreviousCost() {
-		return previousCost;
+	public BigDecimal getCostPrevious() {
+		return costPrevious;
 	}
-	public void setPreviousCost(BigDecimal previousCost) {
-		this.previousCost = previousCost;
+	public void setCostPrevious(BigDecimal costPrevious) {
+		this.costPrevious = costPrevious;
 	}
 	public BigDecimal getCost() {
 		return cost;
 	}
 	public void setCost(BigDecimal cost) {
 		this.cost = cost;
+	}
+	public BigDecimal getQuantityAdjusted() {
+		return quantityAdjusted;
+	}
+	public void setQuantityAdjusted(BigDecimal quantityAdjusted) {
+		this.quantityAdjusted = quantityAdjusted;
+	}
+	public BigDecimal getCostAdjusted() {
+		return costAdjusted;
+	}
+	public void setCostAdjusted(BigDecimal costAdjusted) {
+		this.costAdjusted = costAdjusted;
 	}
 	@Override
 	public int hashCode() {

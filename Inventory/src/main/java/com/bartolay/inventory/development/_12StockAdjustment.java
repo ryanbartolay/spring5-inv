@@ -77,9 +77,9 @@ public class _12StockAdjustment implements ApplicationListener<ContextRefreshedE
 			StockAdjustmentItem item = new StockAdjustmentItem();
 			item.setInventory(inventories.get(0));
 			item.setQuantity(new BigDecimal("200"));
-			item.setPreviousQuantity(inventories.get(0).getQuantity());
+			item.setQuantityPrevious(inventories.get(0).getQuantity());
 			item.setCost(new BigDecimal("0"));
-			item.setPreviousCost(inventories.get(0).getUnitCost());
+			item.setCostPrevious(inventories.get(0).getUnitCost());
 			item.setDescription("description");
 			
 			items.add(item);
@@ -87,9 +87,9 @@ public class _12StockAdjustment implements ApplicationListener<ContextRefreshedE
 			StockAdjustmentItem item2 = new StockAdjustmentItem();
 			item2.setInventory(inventories.get(1));
 			item2.setQuantity(new BigDecimal("450"));
-			item2.setPreviousQuantity(inventories.get(1).getQuantity());
+			item2.setQuantityPrevious(inventories.get(1).getQuantity());
 			item2.setCost(new BigDecimal("0"));
-			item2.setPreviousCost(inventories.get(1).getUnitCost());
+			item2.setCostPrevious(inventories.get(1).getUnitCost());
 			item2.setDescription("description2s");
 			
 			items.add(item2);
