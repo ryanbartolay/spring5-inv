@@ -87,7 +87,7 @@
 	}
 	
 	stockAdjustmentReasonModal.on('shown.bs.modal', function() {
-		
+		$("#confirmDeleteModalErrors").html("");
 		$("#addReasonDescription").val("");
 		btnAddReason.removeAttr("disabled");
 		btnAddReason.text(btnAddReasonText);
@@ -103,6 +103,7 @@
             		onClick="showConfirmDeleteModal(this)"
             		style="color: red"></button>
             		<input type="hidden" id="reason_id" value="`+ data[i].id +`" />
+            		<input type="hidden" id="reason_description" value="`+ data[i].description +`" />
             		</td>
             	</tr>`;
             }
@@ -134,10 +135,7 @@
 	function confirmDelete(e){
 		var reason_id = $(e).parentsUntil("#confirmDeleteModal").find("#stockAdjustmentModalReasonId").val();
 		
-		DELETE("/api/stock/adjustment/reasons/"+reason_id, function(data) {			
-			console.log("asdadadada");
-			console.log(data);
-			console.log(data.status);
+		DELETE("/api/stock/adjustment/reasons/"+reason_id, function(data) {
 			if(data.status != "OK") {
 	 			displayErrors(data, $("#confirmDeleteModalErrors"));
 	 			//btnAddReason.removeAttr("disabled");
@@ -159,10 +157,12 @@
 	function showConfirmDeleteModal(e) {
 		var row = $(e).parentsUntil("tbody");
 		var reason_id = row.find("#reason_id").val();
+		var reason_description = row.find("#reason_description").val();
 		console.log(row);
 		
 		stockAdjustmentReasonModal.modal("hide");
 		confirmDeleteModal.find("#stockAdjustmentModalReasonId").val(reason_id);
+		confirmDeleteModal.find("#recordName").html(reason_description);
 		confirmDeleteModal.modal("show");
 	}
 	
