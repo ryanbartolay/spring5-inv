@@ -2,6 +2,7 @@ package com.bartolay.inventory.stock.services.impl;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -107,16 +108,15 @@ public class StockAdjusmentServiceImpl implements StockAdjustmentService {
 		
 		List<StockAdjustment> stockAdjustments = stockAdjustmentRepository.findAllByStockAdjustmentReason(reason);
 		
-		System.err.println(stockAdjustments);
-		
 		if(stockAdjustments.size() > 0) {
-			String sql = "Unable to delete this reason. You must delete first these Stock Adjustment.\n";
+			String sql = "Unable to delete this reason. You must delete first these Stock Adjustment.";
 			
+			List<String> errors = new ArrayList<>();
 			for(StockAdjustment adjustment : stockAdjustments) {
-				sql += adjustment.getSystemNumber() + " - " + adjustment.getDocumentNumber() + "\n";
+				errors.add(adjustment.getSystemNumber() + " " + adjustment.getDocumentNumber() + "\n");
 			}
 			
-			throw new StockAdjustmentException(sql);
+			throw new StockAdjustmentException(sql,errors);
 		}
 		
 		stockAdjustmentReasonRepository.delete(reason);

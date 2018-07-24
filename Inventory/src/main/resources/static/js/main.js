@@ -3,10 +3,6 @@ $(document).on("submit", "form", function(e){
 });
 
 function GET(url, callback, error_callback = null){
-//	return ajax("GET", url, "", function(data) {
-//	callback(decodeAPIResponse(data));
-//	});
-
 	$.get( {
 		url: url,
 		dataType: "text"
@@ -21,7 +17,6 @@ function GET(url, callback, error_callback = null){
 }
 
 function DELETE(url, callback){
-	console.log("xxxxxxxxxxxxxxx");
 	$.ajax({
 		type: "DELETE",
 		url: url,
@@ -30,13 +25,12 @@ function DELETE(url, callback){
 			callback(decodeAPIResponse(data));
 		},
 		error: function(data, status) {
-			showToast(data);
+			callback(decodeAPIResponse(data));
 		}
 	});
 }
 
 function POST(url, data, callback){
-//	return ajax("POST", url, data, callback)
 	$.ajax({
 		type: "POST",
 		url: url,
@@ -99,6 +93,11 @@ function displayErrors(data, div) {
 	var localized_message = data.localizedMessage;
 	
 	var html = "<div class=\"alert alert-danger\">";
+	
+	if(localized_message != null) {
+		html += localized_message;
+	}
+	
 	if(errors != null) {
 		html += 
 		"<ul>";
@@ -108,10 +107,6 @@ function displayErrors(data, div) {
 		html += "</ul>";
 
 		div.html(html);
-	}
-	
-	if(localized_message != null) {
-		html += localized_message;
 	}
 	
 	html += "</div>";

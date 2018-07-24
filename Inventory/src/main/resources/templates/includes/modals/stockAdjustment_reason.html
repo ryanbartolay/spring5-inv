@@ -3,13 +3,14 @@
 	aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-		       <input type="text" id="stockAdjustmentModalReasonId" />
+		       <input type="hidden" id="stockAdjustmentModalReasonId" />
 		    <div class="modal-header">
 		        <button type="button" class="close" onClick="cancelConfirmDelete()" aria-hidden="true">&times;</button>
 		        <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
 		    </div>
 		
 		    <div class="modal-body">
+		    	<div id="confirmDeleteModalErrors"></div>
 		        <p>You are about to delete <b id="recordName"></b>, this procedure is irreversible.</p>
 		        <p>Do you want to proceed?</p>
 		        <p class="debug-url"></p>
@@ -133,13 +134,14 @@
 	function confirmDelete(e){
 		var reason_id = $(e).parentsUntil("#confirmDeleteModal").find("#stockAdjustmentModalReasonId").val();
 		
-		DELETE("/api/stock/adjustment/reasons/"+reason_id, function(data) {
-			data = JSON.parse(data);
-			
+		DELETE("/api/stock/adjustment/reasons/"+reason_id, function(data) {			
+			console.log("asdadadada");
+			console.log(data);
+			console.log(data.status);
 			if(data.status != "OK") {
-	 			displayErrors(data, $("#stockAdjustmentReasonErrors"));
-	 			btnAddReason.removeAttr("disabled");
-	 			btnAddReason.text(btnAddReasonText);
+	 			displayErrors(data, $("#confirmDeleteModalErrors"));
+	 			//btnAddReason.removeAttr("disabled");
+	 			//btnAddReason.text(btnAddReasonText);
 	 		} else {
 	 			callback(data);
 	 			showToast(data);

@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -48,12 +49,24 @@ public class StockAdjustmentRestController extends AbstractRestController {
 	
 	@RequestMapping(value="/stock/adjustment/reasons/{id}", method=RequestMethod.DELETE, produces="application/json")
 	public String deleteReason(@PathVariable("id") Integer id) throws StockAdjustmentException, JsonProcessingException, UnsupportedEncodingException {
-		System.err.println("reason_id");
-		System.err.println(id);
+
 		StockAdjustmentReason reason = new StockAdjustmentReason();
 		reason.setId(id);
 		
-		return stringUtils.encode(stockAdjustmentService.deleteAdjustmentReason(reason));
+		ApiResponse response = null;
+		
+		try {
+			JSONObject obj = stockAdjustmentService.deleteAdjustmentReason(reason);
+			response = new ApiResponse(HttpStatus.OK, obj.get("localizedMessage").toString()); 
+		} catch(StockAdjustmentException e) {			
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage(), e.getErrors());
+		} catch(Exception e) {
+			e.printStackTrace();
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+
+		return stringUtils.encode(response);
+		
 	}
 	
 	@RequestMapping(value="/stock/adjustment/reasons", method=RequestMethod.POST)
