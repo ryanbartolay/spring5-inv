@@ -3,9 +3,9 @@
 	aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-		        
+		       <input type="text" id="stockAdjustmentModalReasonId" />
 		    <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        <button type="button" class="close" onClick="cancelConfirmDelete()" aria-hidden="true">&times;</button>
 		        <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
 		    </div>
 		
@@ -17,7 +17,7 @@
 		    
 		    <div class="modal-footer">
 		        <button type="button" class="btn btn-default" onClick="cancelConfirmDelete()">Cancel</button>
-		        <a class="btn btn-danger" id="btnConfirmDelete">Delete</a>
+		        <button class="btn btn-danger" onClick="confirmDelete(this)">Delete</button>
 		    </div>
 		</div>
 	</div>
@@ -74,6 +74,7 @@
 	var stockAdjustmentReasonForm = $("#stockAdjustmentReasonForm");
 	
 	var confirmDeleteModal = $("#confirmDeleteModal");
+	var btnConfirmDelete = $("#btnConfirmDelete");
 	
 	var btnAddReason = $("#btnAddReason");
 	var btnAddReasonText = btnAddReason.text();
@@ -98,8 +99,10 @@
             	<tr>
             		<td>`+ data[i].description +`</td>
             		<td class="text-right"><button class="fa fa-close" 
-            		onClick="confirmDelete(this)"
-            		style="color: red"></button></td>
+            		onClick="showConfirmDeleteModal(this)"
+            		style="color: red"></button>
+            		<input type="hidden" id="reason_id" value="`+ data[i].id +`" />
+            		</td>
             	</tr>`;
             }
             
@@ -127,33 +130,42 @@
 	 	});
 	});
 	
+	function confirmDelete(e){
+		var reason_id = $(e).parentsUntil("#confirmDeleteModal").find("#stockAdjustmentModalReasonId").val();
+		
+		DELETE("/api/stock/adjustment/reasons/"+reason_id, function(data) {
+			data = JSON.parse(data);
+			
+			if(data.status != "OK") {
+	 			displayErrors(data, $("#stockAdjustmentReasonErrors"));
+	 			btnAddReason.removeAttr("disabled");
+	 			btnAddReason.text(btnAddReasonText);
+	 		} else {
+	 			callback(data);
+	 			showToast(data);
+	 			confirmDeleteModal.modal("hide");
+	 			stockAdjustmentReasonModal.modal("show");
+	 		}
+		});
+	}
+	
 	function cancelConfirmDelete() {
 		confirmDeleteModal.modal("hide");
 		stockAdjustmentReasonModal.modal("show");
 	}
 	
-	function confirmDelete(e) {
+	function showConfirmDeleteModal(e) {
 		var row = $(e).parentsUntil("tbody");
+		var reason_id = row.find("#reason_id").val();
+		console.log(row);
+		
 		stockAdjustmentReasonModal.modal("hide");
+		confirmDeleteModal.find("#stockAdjustmentModalReasonId").val(reason_id);
 		confirmDeleteModal.modal("show");
 	}
 	
 	function deleteReason(e) {
 		var row = $(e).parentsUntil("tbody");
-		
-		var newCost = row.find("#newCost").val();
-		var unit_cost = row.find("#unit_cost").val();
-		var newQuantity = row.find("#newQuantity").val();
-		var on_hand = row.find("#on_hand").val();
-		
-		var quantity_adjustment = row.find("#quantity_3");
-		var cost_adjusment = row.find("#cost_3");
-		
-		var quantity = (newQuantity - on_hand);
-		var cost = (newCost - unit_cost);
-		
-		quantity_adjustment.html("<strong>" + quantity + "</strong>");
-		cost_adjusment.html("<strong>" + cost + "</strong>");
 		
 		row.remove();
 	}

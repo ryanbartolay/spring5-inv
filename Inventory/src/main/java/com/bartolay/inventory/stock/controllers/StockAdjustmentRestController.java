@@ -48,7 +48,8 @@ public class StockAdjustmentRestController extends AbstractRestController {
 	
 	@RequestMapping(value="/stock/adjustment/reasons/{id}", method=RequestMethod.DELETE, produces="application/json")
 	public String deleteReason(@PathVariable("id") Integer id) throws StockAdjustmentException, JsonProcessingException, UnsupportedEncodingException {
-		
+		System.err.println("reason_id");
+		System.err.println(id);
 		StockAdjustmentReason reason = new StockAdjustmentReason();
 		reason.setId(id);
 		

@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -21,6 +22,7 @@ import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockAdjustment;
 import com.bartolay.inventory.stock.entity.StockAdjustmentReason;
 import com.bartolay.inventory.stock.repositories.StockAdjustmentReasonRepository;
+import com.bartolay.inventory.stock.repositories.StockAdjustmentRepository;
 import com.bartolay.inventory.stock.services.StockAdjustmentService;
 import com.bartolay.inventory.utils.UserCredentials;
 
@@ -32,6 +34,8 @@ public class StockAdjusmentServiceImpl implements StockAdjustmentService {
 	@Autowired
 	@Qualifier("stockAdjustmentDatatableRepository")
 	private DatatableRepository stockAdjustmentDatatableRepository;
+	@Autowired
+	private StockAdjustmentRepository stockAdjustmentRepository;
 	@Autowired
 	private StockAdjustmentReasonRepository stockAdjustmentReasonRepository;
 	@Autowired 
@@ -100,10 +104,25 @@ public class StockAdjusmentServiceImpl implements StockAdjustmentService {
 
 	@Override
 	public JSONObject deleteAdjustmentReason(StockAdjustmentReason reason) throws StockAdjustmentException {
-		stockAdjustmentReasonRepository.delete(reason);
 		
+		List<StockAdjustment> stockAdjustments = stockAdjustmentRepository.findAllByStockAdjustmentReason(reason);
+		
+		System.err.println(stockAdjustments);
+		
+		if(stockAdjustments.size() > 0) {
+			String sql = "Unable to delete this reason. You must delete first these Stock Adjustment.\n";
+			
+			for(StockAdjustment adjustment : stockAdjustments) {
+				sql += adjustment.getSystemNumber() + " - " + adjustment.getDocumentNumber() + "\n";
+			}
+			
+			throw new StockAdjustmentException(sql);
+		}
+		
+		stockAdjustmentReasonRepository.delete(reason);
 		JSONObject obj = new JSONObject();
 		obj.put("status", "OK");
+		obj.put("localizedMessage", "Reason deleted");
 		return obj;
 	}
 }

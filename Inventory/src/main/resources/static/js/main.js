@@ -19,11 +19,22 @@ function GET(url, callback, error_callback = null){
 		}
 	});
 }
+
 function DELETE(url, callback){
-	return ajax("DELETE", url, "", function(data) {
-		callback(decodeAPIResponse(data));
-	})
+	console.log("xxxxxxxxxxxxxxx");
+	$.ajax({
+		type: "DELETE",
+		url: url,
+		dataType: "text",
+		success: function(data, status) {
+			callback(decodeAPIResponse(data));
+		},
+		error: function(data, status) {
+			showToast(data);
+		}
+	});
 }
+
 function POST(url, data, callback){
 //	return ajax("POST", url, data, callback)
 	$.ajax({
