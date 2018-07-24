@@ -92,9 +92,21 @@
 				[ 
 				{
 					data : "system_number",
+					render: function ( data, type, row ) {
+						if(data) {
+							return '<a href="/stock/adjustment/'+ row.system_number +'">' + data + '</a>';	
+						}
+                        return '';
+                    }
 				}, 
 				{
 					data : "document_number", 
+					render: function ( data, type, row ) {
+						if(data) {
+							return '<a href="/stock/adjustment/'+ row.system_number +'">' + data + '</a>';	
+						}
+                        return '';
+                    }
 				},
 				{
 					data : "reason",
