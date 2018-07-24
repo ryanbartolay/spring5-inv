@@ -29,7 +29,7 @@ public class StockAdjustmentForm {
 	private String year;
 	
 	@NotNull(message="Transaction Date is required")
-	@com.bartolay.inventory.validator.model.Date(message="Invalid Transaction Date format.")
+	@com.bartolay.inventory.validator.model.TransactionDate(message="Invalid Transaction Date format.")
 	private String transactionDate;
 	
 	@NotNull (message="Required adjustment type")

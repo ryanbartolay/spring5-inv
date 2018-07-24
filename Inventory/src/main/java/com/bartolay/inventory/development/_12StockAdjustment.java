@@ -1,5 +1,8 @@
 package com.bartolay.inventory.development;
 
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,22 +15,24 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.PriorityOrdered;
 import org.springframework.stereotype.Component;
 
+import com.bartolay.inventory.entity.Inventory;
+import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.enums.StockAdjustmentType;
 import com.bartolay.inventory.exceptions.StockAdjustmentException;
+import com.bartolay.inventory.form.StockAdjustmentForm;
 import com.bartolay.inventory.form.StockAdjustmentReasonForm;
+import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.stock.entity.StockAdjustment;
+import com.bartolay.inventory.stock.entity.StockAdjustmentItem;
+import com.bartolay.inventory.stock.repositories.StockAdjustmentItemRepository;
 import com.bartolay.inventory.stock.repositories.StockAdjustmentReasonRepository;
-import com.bartolay.inventory.stock.repositories.StockAdjustmentRepository;
 import com.bartolay.inventory.stock.services.StockAdjustmentService;
 import com.bartolay.inventory.utils.UserCredentials;
 
 @Component
 @Transactional
 public class _12StockAdjustment implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered{
-
-	@Autowired
-	private StockAdjustmentRepository stockAdjustmentRepository;
 	
 	@Autowired
 	private LocationRepository locationRepository;
@@ -37,9 +42,21 @@ public class _12StockAdjustment implements ApplicationListener<ContextRefreshedE
 	
 	@Autowired
 	private StockAdjustmentReasonRepository stockAdjustmentReasonRepository;
+
+	@Autowired
+	private StockAdjustmentItemRepository stockAdjustmentItemRepository;
+	
+	@Autowired
+	private InventoryRepository inventoryRepository;
+	
+	@Autowired
+	private StockAdjustmentService stockAdjustmentService;
 	
 	@Autowired
 	private UserCredentials userCredentials;
+	
+	@Autowired
+	private DateFormat dateFormat;
 	
 	@Override
 	public int getOrder() {
@@ -52,19 +69,45 @@ public class _12StockAdjustment implements ApplicationListener<ContextRefreshedE
 		try {
 			createStockAdjustmentReasons();
 			
-			StockAdjustment entity = new StockAdjustment();
-			entity.setDocumentNumber("SSS-DSSDA1234");
-			entity.setLocation(locationRepository.findById(2).get());
-			entity.setStockAdjustmentReason(stockAdjustmentReasonRepository.findById(2).get());
-			entity.setStockAdjustmentType(StockAdjustmentType.QUANTITY.name());
-			entity.setTransactionDate(new Date());
-			entity.setYear("2018");
-			entity.setCreatedBy(userCredentials.getLoggedInUser());
+			Location location = locationRepository.findById(2).get();
+			List<Inventory> inventories = inventoryRepository.findByLocation(location);
 			
-			stockAdjustmentRepository.save(entity);
+			List<StockAdjustmentItem> items = new ArrayList<>();
+			
+			StockAdjustmentItem item = new StockAdjustmentItem();
+			item.setInventory(inventories.get(0));
+			item.setQuantity(new BigDecimal("200"));
+			item.setPreviousQuantity(inventories.get(0).getQuantity());
+			item.setCost(new BigDecimal("0"));
+			item.setPreviousCost(inventories.get(0).getUnitCost());
+			item.setDescription("description");
+			
+			items.add(item);
+			
+			StockAdjustmentItem item2 = new StockAdjustmentItem();
+			item2.setInventory(inventories.get(1));
+			item2.setQuantity(new BigDecimal("450"));
+			item2.setPreviousQuantity(inventories.get(0).getQuantity());
+			item2.setCost(new BigDecimal("0"));
+			item2.setPreviousCost(inventories.get(0).getUnitCost());
+			item2.setDescription("description2s");
+			
+			items.add(item2);
+			
+			StockAdjustmentForm form = new StockAdjustmentForm();
+			form.setDocument_number("SSS-DSSDA1234");
+			form.setLocation(location);
+			form.setReason(stockAdjustmentReasonRepository.findById(2).get());
+			form.setAdjustmentType(StockAdjustmentType.QUANTITY);
+			form.setTransactionDate(dateFormat.format(new Date()));
+			form.setYear("2018");
+			form.setItems(items);
+			
+			stockAdjustmentService.create(form);
 			
 		} catch (StockAdjustmentException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}		
 	}

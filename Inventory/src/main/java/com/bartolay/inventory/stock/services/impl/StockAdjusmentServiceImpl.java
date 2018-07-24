@@ -86,6 +86,10 @@ public class StockAdjusmentServiceImpl implements StockAdjustmentService {
 	public StockAdjustment create(StockAdjustmentForm stockAdjustmentForm)
 			throws ParseException, StockAdjustmentException {
 		
+		if(stockAdjustmentForm.getItems().size() <= 0) {
+			throw new StockAdjustmentException("Atleast 1 item is required.");
+		}
+		
 		Date date = dateFormat.parse(stockAdjustmentForm.getTransactionDate());
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);

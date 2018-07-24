@@ -1,6 +1,8 @@
 package com.bartolay.inventory.development;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,6 +59,9 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 	
 	@Autowired
 	private CreditCardDetailsRepository creditCardDetailsRepository;
+	
+	@Autowired
+	private DateFormat dateFormat;
 
 	@Override
 	public int getOrder() {
@@ -69,13 +74,13 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 
 		try {
 			createStockReceives();
-		} catch (StockReceiveException e) {
+		} catch (StockReceiveException | ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	private void createStockReceives() throws StockReceiveException {
+	private void createStockReceives() throws StockReceiveException, ParseException {
 
 		List<StockReceivedExpense> expenses = getExpenses();
 
@@ -88,7 +93,7 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 		form.setPaymentMethod(PaymentMethod.CASH);
 		form.setLocation(locationRepository.findById(1).get());
 		form.setYear("2018");
-		form.setTransactionDate(new Date());
+		form.setTransactionDate(dateFormat.format(new Date()));
 		form.setStockReceiveItems(items);
 		form.setExpenses(expenses);
 		form.setDiscountValue(15);
@@ -101,7 +106,7 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 		form.setLocation(locationRepository.findById(2).get());
 		form.setDescription("Check payment with a balance of 2.20");
 		form.setYear("2018");
-		form.setTransactionDate(new Date());
+		form.setTransactionDate(dateFormat.format(new Date()));
 		form.setStockReceiveItems(item2);
 		form.setExpenses(null);
 		form.setDiscountValue(5);
@@ -114,7 +119,7 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 		form.setLocation(locationRepository.findById(2).get());
 		form.setDocument_number("DT-22123");	
 		form.setYear("2018");
-		form.setTransactionDate(new Date());
+		form.setTransactionDate(dateFormat.format(new Date()));
 		form.setStockReceiveItems(item3);
 		form.setExpenses(null);
 		form.setDiscountValue(5);

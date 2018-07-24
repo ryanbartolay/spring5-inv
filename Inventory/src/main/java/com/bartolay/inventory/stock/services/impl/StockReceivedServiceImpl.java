@@ -1,5 +1,9 @@
 package com.bartolay.inventory.stock.services.impl;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -27,6 +31,9 @@ public class StockReceivedServiceImpl implements StockReceivedService {
 	
 	@Autowired
 	private ActivityUtility activityUtility;
+	
+	@Autowired
+	private DateFormat dateFormat;
 	
 	@Autowired
 	@Qualifier("stockReceivedDatatableRepository")
@@ -64,7 +71,7 @@ public class StockReceivedServiceImpl implements StockReceivedService {
 
 	
 	@Override
-	public StockReceived create(StockReceivedForm stockReceiveForm) throws StockReceiveException {
+	public StockReceived create(StockReceivedForm stockReceiveForm) throws StockReceiveException, ParseException {
 		
 		if(stockReceiveForm.getStockReceiveItems().size() <= 0) {
 			throw new StockReceiveException("Required atleast 1 item.");
@@ -83,6 +90,10 @@ public class StockReceivedServiceImpl implements StockReceivedService {
 			throw new StockReceiveException("Supplier is required");
 		}
 		
+		Date date = dateFormat.parse(stockReceiveForm.getTransactionDate());
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		
 		StockReceived stockReceived = new StockReceived();
 		stockReceived.setLocation(stockReceiveForm.getLocation());
 		stockReceived.setDocumentNumber(stockReceiveForm.getDocument_number());
@@ -91,7 +102,7 @@ public class StockReceivedServiceImpl implements StockReceivedService {
 		stockReceived.setStockReceiveExpenses(stockReceiveForm.getExpenses());
 		stockReceived.setDiscountValue(stockReceiveForm.getDiscountValue());
 		stockReceived.setYear(stockReceiveForm.getYear());
-		stockReceived.setTransactionDate(stockReceiveForm.getTransactionDate());
+		stockReceived.setTransactionDate(cal.getTime());
 		stockReceived.setSupplier(stockReceiveForm.getSupplier());
 		stockReceived.setCreditCardDetails(stockReceiveForm.getCreditCardDetails());
 		stockReceived.setDescription(stockReceiveForm.getDescription());

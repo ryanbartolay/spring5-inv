@@ -5,9 +5,9 @@ import java.text.SimpleDateFormat;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import com.bartolay.inventory.validator.model.Date;
+import com.bartolay.inventory.validator.model.TransactionDate;
 
-public class DateValidator implements ConstraintValidator<Date, String> {
+public class TransactionDateValidator implements ConstraintValidator<TransactionDate, String> {
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {

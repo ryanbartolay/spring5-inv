@@ -9,13 +9,13 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import com.bartolay.inventory.validator.DateValidator;
+import com.bartolay.inventory.validator.TransactionDateValidator;
 
 @Documented
-@Constraint(validatedBy = DateValidator.class)
+@Constraint(validatedBy = TransactionDateValidator.class)
 @Target( { ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Date {
+public @interface TransactionDate {
 
     String message() default "Invalid format Date";
      

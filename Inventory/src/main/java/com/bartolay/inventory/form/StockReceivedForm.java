@@ -1,6 +1,5 @@
 package com.bartolay.inventory.form;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.Digits;
@@ -9,22 +8,21 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.sales.entity.CreditCardDetails;
 import com.bartolay.inventory.stock.entity.StockReceivedExpense;
 import com.bartolay.inventory.stock.entity.StockReceivedItem;
+import com.bartolay.inventory.validator.model.TransactionDate;
 
 public class StockReceivedForm {
 	
 	private String systemNumber;
 	
 	@NotNull(message="Transaction Date is required!")
-	@DateTimeFormat(pattern="MM/dd/YY")
-	private Date transactionDate;
+	@TransactionDate
+	private String transactionDate;
 	
 	@Size(min=4, max=20, message="Document Number is Required. Length between 4-20 characters.")
 	@NotNull(message="Stock Opening document number is required!")
@@ -65,11 +63,11 @@ public class StockReceivedForm {
 		this.systemNumber = systemNumber;
 	}
 
-	public Date getTransactionDate() {
+	public String getTransactionDate() {
 		return transactionDate;
 	}
 
-	public void setTransactionDate(Date transactionDate) {
+	public void setTransactionDate(String transactionDate) {
 		this.transactionDate = transactionDate;
 	}
 
@@ -161,6 +159,4 @@ public class StockReceivedForm {
 				+ ", discountValue=" + discountValue + ", supplier=" + supplier + ", stockReceiveItems="
 				+ stockReceiveItems + ", description=" + description + "]";
 	}
-	
-	
 }
