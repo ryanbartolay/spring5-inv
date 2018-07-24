@@ -20,6 +20,7 @@ import com.bartolay.inventory.services.SupplierService;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.entity.StockTransfer;
 import com.bartolay.inventory.stock.repositories.StockAdjustmentReasonRepository;
+import com.bartolay.inventory.stock.repositories.StockAdjustmentRepository;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
 import com.bartolay.inventory.stock.repositories.StockReceivedRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferRepository;
@@ -42,6 +43,9 @@ public class StockController {
 	
 	@Autowired 
 	private StockReceivedRepository stockReceiveRepository;
+	
+	@Autowired
+	private StockAdjustmentRepository stockAdjustmentRepository;
 	
 	@Autowired
 	private SupplierService supplierService;
@@ -164,10 +168,18 @@ public class StockController {
 	}
 	
 	@RequestMapping(value="/stock/adjustment")
-	public ModelAndView stockAdjustment(ModelAndView model) {
+	public ModelAndView stockAdjustmentList(ModelAndView model) {
 		model.setViewName("stock/index");
 		model.addObject("page", "Stock Adjustment");
 		model.addObject("html", "adjustment/list");
+		return model;
+	}
+	
+	@RequestMapping(value="/stock/adjustment/{system_number}")
+	public ModelAndView stockAdjustmentView(ModelAndView model, @PathVariable String system_number) {
+		model.setViewName("stock/index");
+		model.addObject("stockAdjustment", stockAdjustmentRepository.findById(system_number).get());
+		model.addObject("html", "adjustment/view");
 		return model;
 	}
 	

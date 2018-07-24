@@ -87,9 +87,9 @@ public class _12StockAdjustment implements ApplicationListener<ContextRefreshedE
 			StockAdjustmentItem item2 = new StockAdjustmentItem();
 			item2.setInventory(inventories.get(1));
 			item2.setQuantity(new BigDecimal("450"));
-			item2.setPreviousQuantity(inventories.get(0).getQuantity());
+			item2.setPreviousQuantity(inventories.get(1).getQuantity());
 			item2.setCost(new BigDecimal("0"));
-			item2.setPreviousCost(inventories.get(0).getUnitCost());
+			item2.setPreviousCost(inventories.get(1).getUnitCost());
 			item2.setDescription("description2s");
 			
 			items.add(item2);
@@ -100,6 +100,7 @@ public class _12StockAdjustment implements ApplicationListener<ContextRefreshedE
 			form.setReason(stockAdjustmentReasonRepository.findById(2).get());
 			form.setAdjustmentType(StockAdjustmentType.QUANTITY);
 			form.setTransactionDate(dateFormat.format(new Date()));
+			form.setDescription("Loren Ipsum Dolor");
 			form.setYear("2018");
 			form.setItems(items);
 			

@@ -718,7 +718,7 @@ public class InventoryCoreService {
 					inventory.setQuantity(stockAdjustmentItem.getCost());
 					inventoryTransaction.setQuantityAfter(inventory.getQuantity());
 					break;
-				case VALUE:
+				case COST:
 					inventoryTransaction.setUnitCostBefore(inventory.getQuantity());
 					inventory.setUnitCost(stockAdjustmentItem.getCost());
 					inventoryTransaction.setUnitCostAfter(inventory.getQuantity());

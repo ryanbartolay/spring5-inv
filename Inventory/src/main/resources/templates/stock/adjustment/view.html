@@ -1,0 +1,103 @@
+<div class="row">
+	<div class="col-lg-12">
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="row">
+						<div class="col-md-8">
+							<h4>Adjustment Details</h4>
+						</div>
+						<div class="col-md-4">
+							<div class="btn-group pull-right" role="group">
+								<a th:href="@{/stock/adjustment}" class="btn btn-default btn-sm">Cancel</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body">
+
+					<div class="col-md-3">
+						<label>Adjustment Type : </label>
+						<span class="form-control" th:switch="${stockAdjustment.stockAdjustmentType}"> 
+						  <p th:case="QUANTITY">Quantity</p>
+						  <p th:case="COST">Cost</p>
+						  <p th:case="*"></p> 
+						</span>
+						<label>System Number :</label> <span th:text="${stockAdjustment.systemNumber}"
+							class="form-control"></span>
+					</div>					
+
+					<div class="col-md-3">
+						 <label>Document
+							Number :</label> <span th:text="${stockAdjustment.documentNumber}" class="form-control"></span>
+						<label>Location </label> <span class="form-control" th:text="${stockAdjustment.location.name}">
+						</span>
+					</div>
+
+					<div class="col-md-3">
+						<label>Transaction Date</label> <span th:text="${stockAdjustment.transactionDate}"
+							class="form-control"></span> <label>Year</label> <span
+							th:text="${stockAdjustment.year}" class="form-control"></span>
+					</div>
+
+					<div class="col-md-3">
+						<label>Reason</label>	
+						<span class="form-control" th:text="${stockAdjustment.stockAdjustmentReason.description}"></span>
+					</div>
+					<div class="col-md-12">
+						<label>Description</label> <span th:text="${stockAdjustment.description}" class="form-control"></span>
+					</div>
+					<div class="clearfix"></div>
+					<br>
+					
+					<div class="table-responsive col-md-12">
+
+						<table class="table table-bordered table-striped" id="itemsTable">
+							<thead th:switch="${stockAdjustment.stockAdjustmentType}">
+								<tr th:case="QUANTITY">
+									<th>SN</th>
+									<th class="col-md-1">Code</th>
+									<th class="col-md-3">Description</th>
+									<th>Unit</th>
+									
+									<th class="col-md-2 text-right" id="quantity_1">Stock On Hand</th>
+									<th class="col-md-2 text-right" id="quantity_2">New Quantity On Hand</th>
+									<th class="col-md-2 text-right" id="quantity_3">Quantity Adjusted</th>
+									
+								</tr>
+								<tr th:case="COST">
+									<th>SN</th>
+									<th class="col-md-1">Code</th>
+									<th class="col-md-3">Description</th>
+									<th>Unit</th>
+								
+									<th class="col-md-2 text-right" id="cost_1">Current Cost</th>
+									<th class="col-md-2 text-right" id="cost_2">Changed Cost</th>
+									<th class="col-md-2 text-right" id="cost_3">Adjusted Cost</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item : ${stockAdjustment.stockAdjustmentItems}">
+									<td th:text="${item.id}"></td>
+									<td class="col-md-1" th:text="${item.inventory.item.code}"></td>
+									<td class="col-md-3" th:text="${item.inventory.item.name}"></td>
+									<td th:text="${item.inventory.unit.abbreviation}"></td>
+									
+									<th class="col-md-2 text-right hidden" id="quantity_1">Stock On Hand</th>
+									<th class="col-md-2 text-right hidden" id="quantity_2">New Quantity On Hand</th>
+									<th class="col-md-2 text-right hidden" id="quantity_3">Quantity Adjusted</th>
+									
+									
+								</tr>
+							</tbody>
+
+						</table>
+
+					</div>
+
+				</div>
+			</div>
+
+	</div>
+	<!-- /.col-lg-12 -->
+</div>
