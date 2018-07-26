@@ -201,75 +201,84 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
 //----------------------------------------------------------------------------------------------------------------
 $("#manageReasons").on("click", function() {
 	manageExpenses({}, function(data) {
-		alert("aaaaaa");
-		/* GET("/api/stock/adjustment/reasons", function(reasons){
-			$("#reason option").remove();
+		
+		form_expenses.push(data);
+		
+  		var html = ``;
+  		for(var i = 0; i < form_expenses.length; i++) {
+  			var exp = form_expenses[i];	
+  			console.log(i, exp)
+  			if(exp && exp.description != undefined){
+  				html += `<tr>
+  					<th id="lblExpensesId">`+ exp.id +`<input type="hidden" name="expenses[`+i+`].expense.id" value="`+exp.id+`" /></th>
+  					<td id="lblExpensesName">`+ exp.description +`</td>`
+  					
+  				html +=	`
+  					<td id="lblExpensesName"><input type="number" name="expenses[`+i+`].amount" id="amount" onChange="computeExpensesTotalValues(this, '`+ exp.id+`')" class="form-control" value="`+ exp.amount +`" /></td>
+  					<td id="lblExpensesName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="removeExpense(this, '`+ exp.id+`')" /></td>
+  					</tr>`;
+  			}
+  		}
+  		
+  		$('#expenseTable tbody').html(html);
+  		computeExpensesTotalValues();
+	});
+});
+
+var form_expenses = [];
+
+$("#btnAddItem").on("click", function() {
+	addItem({type: "stock_receive", label:"Add Stock Receive Item"}, function(data) {
+		
+		for(var i = 0; i < data.length; i++) {
+			form_items.push(data[i]);
+		}
+		
+		var html = ``;
+		for(var i = 0; i < form_items.length; i++) {
+		
+			var item = form_items[i];
 			
-			var html = "";
+			// default values
+			var unit = (item.unit ? item.unit : "0");
+			var quantity = (item.quantity ? item.quantity : "0");
+			var unitCost = (item.unitCost ? item.unitCost : "0.00");
+			var subtotal = (item.subtotal ? item.subtotal : "0.00");
 			
-			for(var i = 0; i < reasons.length; i++) {
-				var selected = reasons[i].description == data.description ? "selected" : "";
-				html += `<option value="`+ reasons[i].id +`" `+ selected +`>`+ reasons[i].description +`</option>`;
-			}
+			try {
+				var units = JSON.parse(form_items[i].units);
+	  			console.log("units", units)
+	  			html += `<tr>
+					<th id="lblItemId">`+ item.id +`<input type="hidden" name="stockReceiveItems[`+i+`].item.id" value="`+item.id+`" /></th>
+					<td id="lblItemName">`+ item.code +`</td>
+					<td id="lblItemName">`+ item.name +`</td>
+					
+					`;
+			var unitHtml = "";
 			
-			$("#reason").html(html);
-		}); */
+				for ( var unit in units) {
+						unitHtml += "<option value='"+unit+"'>"+units[unit]+"</option>"
+		}
+				html += '<td id="lblItemName"><select class="form-control" name="stockReceiveItems['+i+'].unit">'+unitHtml+'<select></td>';
+					
+				html +=	`
+					<td id="lblItemName"><input type="number" name="stockReceiveItems[`+i+`].quantity" id="quantity" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ quantity +`" /></td>
+					<td id="lblItemName"><input type="number" name="stockReceiveItems[`+i+`].unitCost" id="unitCost" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ unitCost +`" /></td>
+					<td id="lblItemName" class="text-right"><input type="hidden" name="subtotal[`+i+`]" id="subtotal" value="`+subtotal+`" /><span id="html_subtotal">`+subtotal+`</span></td>
+					<td id="lblItemName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>
+				</tr>`;
+	} catch (e) {
+	}
+			
+		}
+	
+		var total = data.quantity * data.unit_cost;
+		
+		$('#itemsTable tbody').html(html);
+		computeGrandTotal();
 	});
 });
 //----------------------------------------------------------------------------------------------------------------
-  
-  $("#btnAddItem").on("click", function() {
-  	addItem({type: "stock_receive", label:"Add Stock Receive Item"}, function(data) {
-  		
-  		for(var i = 0; i < data.length; i++) {
-  			form_items.push(data[i]);
-  		}
-  		
-  		var html = ``;
-  		for(var i = 0; i < form_items.length; i++) {
-  		
-  			var item = form_items[i];
-  			
-  			// default values
-  			var unit = (item.unit ? item.unit : "0");
-  			var quantity = (item.quantity ? item.quantity : "0");
-  			var unitCost = (item.unitCost ? item.unitCost : "0.00");
-  			var subtotal = (item.subtotal ? item.subtotal : "0.00");
-  			
-  			try {
-  				var units = JSON.parse(form_items[i].units);
-  	  			console.log("units", units)
-  	  			html += `<tr>
-  					<th id="lblItemId">`+ item.id +`<input type="hidden" name="stockReceiveItems[`+i+`].item.id" value="`+item.id+`" /></th>
-  					<td id="lblItemName">`+ item.code +`</td>
-  					<td id="lblItemName">`+ item.name +`</td>
-  					
-  					`;
- 				var unitHtml = "";
- 				
-  				for ( var unit in units) {
-  						unitHtml += "<option value='"+unit+"'>"+units[unit]+"</option>"
-				}
-  				html += '<td id="lblItemName"><select class="form-control" name="stockReceiveItems['+i+'].unit">'+unitHtml+'<select></td>';
-  					
-  				html +=	`
-  					<td id="lblItemName"><input type="number" name="stockReceiveItems[`+i+`].quantity" id="quantity" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ quantity +`" /></td>
-  					<td id="lblItemName"><input type="number" name="stockReceiveItems[`+i+`].unitCost" id="unitCost" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ unitCost +`" /></td>
-  					<td id="lblItemName" class="text-right"><input type="hidden" name="subtotal[`+i+`]" id="subtotal" value="`+subtotal+`" /><span id="html_subtotal">`+subtotal+`</span></td>
-  					<td id="lblItemName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="remove(this, `+i+`)" /></td>
-  				</tr>`;
-			} catch (e) {
-			}
-  			
-  		}
-  	
-  		var total = data.quantity * data.unit_cost;
-  		
-  		$('#itemsTable tbody').html(html);
-  		computeGrandTotal();
-  	});
-  });
-  
 submitStockOpeningBtn.click(function() {
   
  	var original_text = submitStockOpeningBtn.text();
@@ -403,45 +412,6 @@ function createPaymentMethod(){
 
 createPaymentMethod();
 
-var btnAddExpense = $("#btnAddExpense");
-var form_expenses = [];
-
-btnAddExpense.click(function(){
-	addExpenses({type: "stock_receive", label:"Add Stock Receive Item"}, function(data) {
-  		for(var i = 0; i < data.length; i++) { 
-  			var isExist = true;
-  			for (var j = 0; j < form_expenses.length; j++) {
-  				console.log(form_expenses[j], data[i])
-				if(form_expenses[j] != undefined && form_expenses[j].description == data[i].description){
-					isExist = false;
-				}
-			}
-  			if(isExist){
-  				data[i].amount = 0;
-  				form_expenses.push(data[i]);        
-  		    }  
-  		}
-  		var html = ``;
-  		for(var i = 0; i < form_expenses.length; i++) {
-  			var exp = form_expenses[i];	
-  			console.log(i, exp)
-  			if(exp && exp.description != undefined){
-  				html += `<tr>
-  					<th id="lblExpensesId">`+ exp.id +`<input type="hidden" name="expenses[`+i+`].expense.id" value="`+exp.id+`" /></th>
-  					<td id="lblExpensesName">`+ exp.description +`</td>`
-  					
-  				html +=	`
-  					<td id="lblExpensesName"><input type="number" name="expenses[`+i+`].amount" id="amount" onChange="computeExpensesTotalValues(this, '`+ exp.id+`')" class="form-control" value="`+ exp.amount +`" /></td>
-  					<td id="lblExpensesName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="removeExpense(this, '`+ exp.id+`')" /></td>
-  					</tr>`;
-  			}
-  			
-  		}
-  		
-  		$('#expenseTable tbody').html(html);
-  		computeExpensesTotalValues();
-  	});
-})
 function computeExpensesTotalValues(ele, id){
 	var total_expenses = 0;
 	for (var j = 0; j < form_expenses.length; j++) {
