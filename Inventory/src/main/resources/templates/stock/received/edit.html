@@ -171,7 +171,6 @@
 
 <!-- Item Modal -->
 <div th:include="includes/modals/itemModal_simple"></div>
-<div th:include="includes/modals/expenses_modal"></div>
 <div th:include="includes/modals/stockReceived_expenses"></div>
 
 <script>
@@ -202,7 +201,8 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
 //----------------------------------------------------------------------------------------------------------------
 $("#manageReasons").on("click", function() {
 	manageExpenses({}, function(data) {
-		GET("/api/stock/adjustment/reasons", function(reasons){
+		alert("aaaaaa");
+		/* GET("/api/stock/adjustment/reasons", function(reasons){
 			$("#reason option").remove();
 			
 			var html = "";
@@ -213,7 +213,7 @@ $("#manageReasons").on("click", function() {
 			}
 			
 			$("#reason").html(html);
-		});
+		}); */
 	});
 });
 //----------------------------------------------------------------------------------------------------------------

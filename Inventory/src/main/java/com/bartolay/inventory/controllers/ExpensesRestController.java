@@ -34,24 +34,6 @@ public class ExpensesRestController extends AbstractRestController{
 		return expensesService.retrieveDatatableList().toString();
 	}
 	
-	@RequestMapping(value="/api/expenses", method=RequestMethod.POST)
-	public String create(@Valid ExpenseForm expenseForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
-		if (bindingResult.hasErrors()) {
-			return handleRestApiException(bindingResult);
-		}
-		ApiResponse response = null;
-		
-		try {
-//			Expense expense = expensesService.create(expenseForm);
-//
-//			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + expense.getDescription());
-		} catch(Exception e) {
-			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-		}
-
-		return stringUtils.encode(response);
-	}
-	
 	@RequestMapping(value="/api/expenses", method=RequestMethod.PUT)
 	public String update(@Valid ExpenseForm expenseForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bartolay.inventory.form.ExpenseForm;
 import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
@@ -41,11 +43,6 @@ public class StockReceivedRestController extends AbstractRestController {
 		return stockReceivedService.retrieveExpensesDatatableList(requestMap).toString();
 	}
 	
-	@RequestMapping(value="/stock/received/expenses", method=RequestMethod.GET, produces="application/json")
-	public String apiExpensesList(@RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {
-		return stringUtils.encode(expenseService.retrieveList());
-	}
-	
 	@RequestMapping(value="/stock/received", method=RequestMethod.POST)
 	public String create(@Valid StockReceivedForm stockReceivedForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 		if (bindingResult.hasErrors()) {
@@ -59,6 +56,27 @@ public class StockReceivedRestController extends AbstractRestController {
 			e.printStackTrace();
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 //			throw new RestApiException(e);
+		}
+
+		return stringUtils.encode(response);
+	}
+	
+	@RequestMapping(value="/stock/received/expenses", method=RequestMethod.GET, produces="application/json")
+	public String apiExpensesList(@RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {
+		return stringUtils.encode(expenseService.retrieveList());
+	}
+	
+	@RequestMapping(value="/stock/received/expenses", method=RequestMethod.POST)
+	public String createExpense(@Valid ExpenseForm expenseForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+		if (bindingResult.hasErrors()) {
+			return handleRestApiException(bindingResult);
+		}
+		ApiResponse response = null;
+		
+		try {
+			return expenseService.create(expenseForm).toString();
+		} catch(Exception e) {
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
 
 		return stringUtils.encode(response);

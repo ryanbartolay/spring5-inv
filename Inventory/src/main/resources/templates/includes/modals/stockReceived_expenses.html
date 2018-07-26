@@ -120,7 +120,7 @@
 		
 	 	var serialized_data = stockReceivedExpenseForm.serialize();
 	 	
-		POST("/api/stock/adjustment/reasons", serialized_data, function(data) {
+		POST("/api/stock/received/expenses", serialized_data, function(data) {
 	 		if(data.status != "OK") {
 	 			displayErrors(data, $("#stockReceivedExpensesErrors"));
 	 			btnAddExpense.removeAttr("disabled");
