@@ -119,9 +119,9 @@
 						<table class="table table-bordered table-striped" id="expenseTable">
 							<thead>
 								<tr>
-									<th class="col-md-2">ID</th>
-									<th class="col-md-7">Description</th>
-									<th class="col-md-3 text-right">Amount</th>
+									<!-- <th class="col-md-2">ID</th> -->
+									<th class="col-md-8">Description</th>
+									<th class="col-md-4 text-right">Amount</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -210,12 +210,11 @@ $("#manageReasons").on("click", function() {
   			console.log(i, exp)
   			if(exp && exp.description != undefined){
   				html += `<tr>
-  					<th id="lblExpensesId">`+ exp.id +`<input type="hidden" name="expenses[`+i+`].expense.id" value="`+exp.id+`" /></th>
-  					<td id="lblExpensesName">`+ exp.description +`</td>`
+  					<td id="lblExpensesName"><input type="hidden" name="expenses[`+i+`].expense.id" value="`+exp.id+`" />`+ exp.description +`</td>`
   					
   				html +=	`
   					<td id="lblExpensesName"><input type="number" name="expenses[`+i+`].amount" id="amount" onChange="computeExpensesTotalValues(this, '`+ exp.id+`')" class="form-control" value="`+ exp.amount +`" /></td>
-  					<td id="lblExpensesName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="removeExpense(this, '`+ exp.id+`')" /></td>
+  					<td id="lblExpensesName" style="width:20px"><button class="btn btn-default btn-xs fa fa-times" style="color:red" onClick="removeExpense(this, '`+ exp.id+`')" /></td>
   					</tr>`;
   			}
   		}

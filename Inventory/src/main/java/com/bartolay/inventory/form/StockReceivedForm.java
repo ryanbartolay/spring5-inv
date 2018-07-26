@@ -25,7 +25,7 @@ public class StockReceivedForm {
 	private String transactionDate;
 	
 	@Size(min=4, max=20, message="Document Number is Required. Length between 4-20 characters.")
-	@NotNull(message="Stock Opening document number is required!")
+	//@NotNull(message="Stock Opening document number is required!")
 	private String document_number;
 	
 	@NotNull(message="Location is required" )

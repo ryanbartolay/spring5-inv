@@ -93,15 +93,19 @@
 		btnAddExpense.text(btnAddExpenseText);
 		
 		GET("/api/stock/received/expenses",function (data) {
-            console.log(data);
             var html = "";
             for(var i = 0; i < data.length; i++) {
             	html += `
             	<tr>
             		<td>`+ data[i].description +`</td>
-            		<td class="text-right"><button class="fa fa-close" 
+            		<td class="text-right">
+            		<button class="btn btn-success btn-xs" 
+            		data-id="`+ data[i].id +`" 
+            		data-description="`+ data[i].description +`"
+            		id="btnAddExpense" onClick="selectExpense(this)">Select</button>
+            		<button class="btn btn-default btn-xs" 
             		onClick="showConfirmDeleteModal(this)"
-            		style="color: red"></button>
+            		><span class="fa fa-close" style="color: red"></span></button>
             		<input type="hidden" id="expense_id" value="`+ data[i].id +`" />
             		<input type="hidden" id="expense_description" value="`+ data[i].description +`" />
             		</td>
@@ -110,7 +114,6 @@
             
             stockReceivedExpenseTable.html(html);
         });
-		
 	});
 	
 	btnAddExpense.on("click", function() {
@@ -131,6 +134,19 @@
 	 		}
 	 	});
 	});
+	
+	function selectExpense(e) {
+		btnAddExpense.attr("disabled", "disabled");
+	 	btnAddExpense.text("Processing....");
+	 	
+	 	var data = { 
+	 		id: e.dataset.id,
+	 		description: e.dataset.description
+	 	};
+	 	
+	 	callback(data);
+		stockReceivedExpenseModal.modal("hide");
+	}
 	
 	function confirmDelete(e){
 		var reason_id = $(e).parentsUntil("#confirmDeleteModal").find("#stockReceivedModalExpenseId").val();
