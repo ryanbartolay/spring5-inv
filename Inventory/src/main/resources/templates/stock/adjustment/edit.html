@@ -214,18 +214,14 @@ $("#btnAddItem").on("click", function() {
   			location_id: $("#location").val()
   		}, function(data) {
   		
-  		/* for(var i = 0; i < data.length; i++) {
-  			form_items.push(data[i]);
-  		} */
-  		
-  		console.log(data);
   		var html = ``;
   		for(var i = 0; i < data.length; i++) {
   			html += `
   			<tr>
   				<td>`+data[i].id+`
-  					<input type="hidden" id="on_hand" name="items[`+i+`].previousQuantity" value="`+data[i].on_hand+`" />
-  					<input type="hidden" id="unit_cost" name="items[`+i+`].previousCost" value="`+data[i].unit_cost+`" />
+  					<input type="hidden" id="inventory" name="items[`+i+`].inventory" value="`+data[i].id+`" />"`+data[i].id+`"
+  					<input type="hidden" id="on_hand" name="items[`+i+`].quantityPrevious" value="`+data[i].on_hand+`" />
+  					<input type="hidden" id="unit_cost" name="items[`+i+`].costPrevious" value="`+data[i].unit_cost+`" />
   				</td>
 				<td class="col-md-1">`+data[i].item_code+`</td>
 				<td class="col-md-3">`+data[i].item_name+`</td>
@@ -237,7 +233,7 @@ $("#btnAddItem").on("click", function() {
 				
 				
 				<td class="col-md-2 text-right hidden" id="cost_1">`+data[i].unit_cost+`</td>
-				<td class="col-md-2 text-right hidden" id="cost_2"><input type="number" class="form-control input-sm" id="newCost" name="newCost[`+i+`].cost" onChange="formatItemAdjustment(this)" value="0"></td>
+				<td class="col-md-2 text-right hidden" id="cost_2"><input type="number" class="form-control input-sm" id="newCost" name="items[`+i+`].cost" onChange="formatItemAdjustment(this)" value="0"></td>
 				<td class="col-md-2 text-right hidden" id="cost_3">0</td>
 				<td id="lblItemName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="remove(this)" /></td>
   			</tr>`;

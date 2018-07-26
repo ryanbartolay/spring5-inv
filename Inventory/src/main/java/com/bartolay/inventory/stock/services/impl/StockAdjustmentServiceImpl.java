@@ -29,7 +29,7 @@ import com.bartolay.inventory.stock.services.StockAdjustmentService;
 import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
-public class StockAdjusmentServiceImpl implements StockAdjustmentService {
+public class StockAdjustmentServiceImpl implements StockAdjustmentService {
 
 	@Autowired
 	private DateFormat dateFormat;
@@ -92,6 +92,13 @@ public class StockAdjusmentServiceImpl implements StockAdjustmentService {
 		}
 		
 		for(StockAdjustmentItem item : stockAdjustmentForm.getItems()) {
+			
+			System.err.println("xxxxxxxxxxxxxxxxxxxxxx1");
+			System.err.println(item);
+			System.err.println(item.getCost());
+			System.err.println(item.getCostPrevious());
+			System.err.println("xxxxxxxxxxxxxxxxxxxxxx2");
+			
 			item.setCostAdjusted(item.getCost().subtract(item.getCostPrevious()));
 			item.setQuantityAdjusted(item.getQuantity().subtract(item.getQuantityPrevious()));
 		}

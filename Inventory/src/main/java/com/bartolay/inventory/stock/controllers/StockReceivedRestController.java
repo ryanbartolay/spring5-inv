@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bartolay.inventory.entity.Expense;
 import com.bartolay.inventory.exceptions.StockAdjustmentException;
+import com.bartolay.inventory.exceptions.StockReceivedException;
 import com.bartolay.inventory.form.ExpenseForm;
 import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
 import com.bartolay.inventory.services.ExpenseService;
-import com.bartolay.inventory.stock.entity.StockAdjustmentReason;
 import com.bartolay.inventory.stock.entity.StockReceived;
-import com.bartolay.inventory.stock.entity.StockReceivedExpense;
 import com.bartolay.inventory.stock.services.StockReceivedService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -86,26 +86,25 @@ public class StockReceivedRestController extends AbstractRestController {
 		return stringUtils.encode(response);
 	}
 	
-	@RequestMapping(value="/stock/adjustment/expenses/{id}", method=RequestMethod.DELETE, produces="application/json")
+	@RequestMapping(value="/stock/received/expenses/{id}", method=RequestMethod.DELETE, produces="application/json")
 	public String deleteExpense(@PathVariable("id") Integer id) throws StockAdjustmentException, JsonProcessingException, UnsupportedEncodingException {
 
-//		StockReceivedExpense expense = new StockReceivedExpense();
-//		expense.setId(id);
-//		
-//		ApiResponse response = null;
-//		
-//		try {
-//			JSONObject obj = stockAdjustmentService.deleteAdjustmentReason(expense);
-//			response = new ApiResponse(HttpStatus.OK, obj.get("localizedMessage").toString()); 
-//		} catch(StockAdjustmentException e) {			
-//			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage(), e.getErrors());
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-//		}
-//
-//		return stringUtils.encode(response);
-		return null;
+		Expense expense = new Expense();
+		expense.setId(id);
+		
+		ApiResponse response = null;
+		
+		try {
+			JSONObject obj = expenseService.delete(id);
+			response = new ApiResponse(HttpStatus.OK, obj.get("localizedMessage").toString()); 
+		} catch(StockReceivedException e) {			
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage(), e.getErrors());
+		} catch(Exception e) {
+			e.printStackTrace();
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+
+		return stringUtils.encode(response);
 		
 	}
 }

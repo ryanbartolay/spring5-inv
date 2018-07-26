@@ -19,6 +19,7 @@ import com.bartolay.inventory.entity.ItemUnit;
 import com.bartolay.inventory.entity.Model;
 import com.bartolay.inventory.entity.Size;
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.exceptions.StockReceivedException;
 import com.bartolay.inventory.form.ExpenseForm;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CategoryRepository;
@@ -86,10 +87,15 @@ public class _2StockAttributesBootstrap implements ApplicationListener<ContextRe
 
 		createItems();
 		
-		createExpenses();
+		try {
+			createExpenses();
+		} catch (StockReceivedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-	private void createExpenses() {
+	private void createExpenses() throws StockReceivedException {
 
 		
 		ExpenseForm expenseForm = new ExpenseForm();

@@ -1,8 +1,8 @@
 package com.bartolay.inventory.services.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -11,9 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.entity.Expense;
+import com.bartolay.inventory.exceptions.StockReceivedException;
 import com.bartolay.inventory.form.ExpenseForm;
 import com.bartolay.inventory.repositories.ExpenseRepository;
 import com.bartolay.inventory.services.ExpenseService;
+import com.bartolay.inventory.stock.entity.StockReceived;
+import com.bartolay.inventory.stock.repositories.StockReceivedRepository;
 import com.bartolay.inventory.utils.ServiceUtility;
 import com.bartolay.inventory.utils.UserCredentials;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,7 +32,8 @@ public class ExpensesServiceImpl implements ExpenseService {
 	private ObjectMapper objectMapper;
 	@Autowired
 	private UserCredentials userCredentials;
-
+	@Autowired
+	private StockReceivedRepository stockReceivedRepository;
 
 	@Override
 	public Iterable<Expense> retrieveList() {
@@ -77,10 +81,26 @@ public class ExpensesServiceImpl implements ExpenseService {
 	}
 
 	@Override
-	public Expense delete(int id) {
-		Optional<Expense> expense = expenseRepository.findById(id);
-		expenseRepository.deleteById(id);
-		return expense.get();
+	public JSONObject delete(Integer id) throws StockReceivedException {
+		Expense expense = new Expense(id);
+		List<StockReceived> stockReceives = stockReceivedRepository.findAllByExpense(expense);
+		
+		if(stockReceives.size() > 0) {
+			String sql = "Unable to delete this reason. You must delete first these Stock Received";
+			
+			List<String> errors = new ArrayList<>();
+			for(StockReceived received : stockReceives) {
+				errors.add(received.getSystemNumber() + " " + (received.getDocumentNumber() == null ? "" : received.getDocumentNumber()));
+			}
+			
+			throw new StockReceivedException(sql,errors);
+		}
+		
+		expenseRepository.delete(expense);
+		JSONObject obj = new JSONObject();
+		obj.put("status", "OK");
+		obj.put("localizedMessage", "Expense deleted");
+		return obj;
 	}
 
 }

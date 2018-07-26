@@ -40,7 +40,7 @@ public class BeansConfig {
 	
 	@Bean
 	public DateFormat dateFormat() {
-		return new SimpleDateFormat("yyyy-MM-dd");
+		return new SimpleDateFormat("MM/dd/yyyy");
 	}
 	
 	@Bean

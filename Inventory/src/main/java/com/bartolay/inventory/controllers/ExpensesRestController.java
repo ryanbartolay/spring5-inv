@@ -25,13 +25,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class ExpensesRestController extends AbstractRestController{
 
 	@Autowired
-	private ExpenseService expensesService;
+	private ExpenseService expenseService;
 	@Autowired
 	private StringUtils stringUtils;
 	
 	@RequestMapping(value="/api/datatable/expenses", method=RequestMethod.GET, produces="application/json")
 	public String datatable() throws JsonProcessingException {
-		return expensesService.retrieveDatatableList().toString();
+		return expenseService.retrieveDatatableList().toString();
 	}
 	
 	@RequestMapping(value="/api/expenses", method=RequestMethod.PUT)
@@ -44,7 +44,7 @@ public class ExpensesRestController extends AbstractRestController{
 		}
 
 		try {
-			Expense expense = expensesService.update(expenseForm);
+			Expense expense = expenseService.update(expenseForm);
 			response = new ApiResponse(HttpStatus.OK, "Succesfully updated " + expense.getDescription());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -58,9 +58,7 @@ public class ExpensesRestController extends AbstractRestController{
 
 		ApiResponse response = null;
 		try {
-			Expense expense = expensesService.delete(id);
-
-			response = new ApiResponse(HttpStatus.ACCEPTED, "Record deleted " + expense.getDescription());
+			return expenseService.delete(id).toString();
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 			

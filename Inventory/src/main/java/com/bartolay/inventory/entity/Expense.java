@@ -46,6 +46,13 @@ public class Expense {
 	@JoinColumn(name = "updated_by", nullable=true, updatable=true)
 	private User updatedBy;
 
+	public Expense() {
+		
+	}
+	public Expense(int id) {
+		this.id = id;
+	}
+
 	public int getId() {
 		return id;
 	}

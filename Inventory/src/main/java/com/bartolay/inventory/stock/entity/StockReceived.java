@@ -63,7 +63,7 @@ public class StockReceived implements GeneratedSystemNumber {
 	private Date transactionDate;
 	
 	@OneToMany(mappedBy = "stockReceive", fetch=FetchType.LAZY)
-	private List<StockReceivedExpense> stockReceiveExpenses;
+	private List<StockReceivedExpense> stockReceivedExpenses;
 	
 	@Column(name="expense_total", nullable=false, precision=10, scale=5)
 	private BigDecimal expensesTotal;
@@ -262,18 +262,18 @@ public class StockReceived implements GeneratedSystemNumber {
 	}
 
 	public List<StockReceivedExpense> getStockReceiveExpenses() {
-		return stockReceiveExpenses;
+		return stockReceivedExpenses;
 	}
 
 	public void setStockReceiveExpenses(List<StockReceivedExpense> stockReceiveExpenses) {
-		this.stockReceiveExpenses = stockReceiveExpenses;
+		this.stockReceivedExpenses = stockReceiveExpenses;
 	}
 
 	@Override
 	public String toString() {
 		return "StockReceive [systemNumber=" + systemNumber + ", supplier=" + supplier + ", paymentMethod="
 				+ paymentMethod + ", documentNumber=" + documentNumber + ", location=" + location + ", expenses="
-				+ stockReceiveExpenses + ", discountValue=" + discountValue + ", year=" + year + ", total=" + total 
+				+ stockReceivedExpenses + ", discountValue=" + discountValue + ", year=" + year + ", total=" + total 
 				+ ",createdDate=" + createdDate + ", updatedDated="
 				+ updatedDated + "]";
 	}

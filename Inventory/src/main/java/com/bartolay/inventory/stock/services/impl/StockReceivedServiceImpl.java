@@ -15,15 +15,13 @@ import org.springframework.stereotype.Service;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.enums.ActivityType;
 import com.bartolay.inventory.enums.PaymentMethod;
-import com.bartolay.inventory.exceptions.StockReceiveException;
+import com.bartolay.inventory.exceptions.StockReceivedException;
 import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockReceived;
-import com.bartolay.inventory.stock.repositories.StockReceivedRepository;
 import com.bartolay.inventory.stock.services.StockReceivedService;
 import com.bartolay.inventory.utils.ActivityUtility;
-import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
 public class StockReceivedServiceImpl implements StockReceivedService {
@@ -40,12 +38,6 @@ public class StockReceivedServiceImpl implements StockReceivedService {
 	@Autowired
 	@Qualifier("stockReceivedDatatableRepository")
 	private DatatableRepository stockReceivedDatatableRepository;
-	
-	@Autowired
-	private StockReceivedRepository stockReceivedRepository;
-	
-	@Autowired
-	private UserCredentials userCredentials;
 	
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
@@ -80,23 +72,23 @@ public class StockReceivedServiceImpl implements StockReceivedService {
 
 	
 	@Override
-	public StockReceived create(StockReceivedForm stockReceiveForm) throws StockReceiveException, ParseException {
+	public StockReceived create(StockReceivedForm stockReceiveForm) throws StockReceivedException, ParseException {
 		
 		if(stockReceiveForm.getStockReceiveItems().size() <= 0) {
-			throw new StockReceiveException("Required atleast 1 item.");
+			throw new StockReceivedException("Required atleast 1 item.");
 		}
 		
 		if(stockReceiveForm.getPaymentMethod() == null) {
-			throw new StockReceiveException("Payment method is required");
+			throw new StockReceivedException("Payment method is required");
 		}
 		
 		if(stockReceiveForm.getPaymentMethod() != null && stockReceiveForm.getPaymentMethod().equals(PaymentMethod.CREDITCARD) 
 				&& stockReceiveForm.getCreditCardDetails() == null) {
-			throw new StockReceiveException("Credit Card Details must be specified");
+			throw new StockReceivedException("Credit Card Details must be specified");
 		}
 		
 		if(stockReceiveForm.getSupplier() == null) {
-			throw new StockReceiveException("Supplier is required");
+			throw new StockReceivedException("Supplier is required");
 		}
 		
 		Date date = dateFormat.parse(stockReceiveForm.getTransactionDate());

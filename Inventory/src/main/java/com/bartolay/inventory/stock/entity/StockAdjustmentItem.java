@@ -136,4 +136,10 @@ public class StockAdjustmentItem {
 			return false;
 		return true;
 	}
+	@Override
+	public String toString() {
+		return "StockAdjustmentItem [id=" + id + ", quantityPrevious=" + quantityPrevious
+				+ ", quantity=" + quantity + ", quantityAdjusted=" + quantityAdjusted + ", costPrevious=" + costPrevious
+				+ ", cost=" + cost + ", costAdjusted=" + costAdjusted + ", description=" + description + "]";
+	}
 }

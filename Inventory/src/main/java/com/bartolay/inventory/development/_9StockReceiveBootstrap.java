@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
-import com.bartolay.inventory.exceptions.StockReceiveException;
+import com.bartolay.inventory.exceptions.StockReceivedException;
 import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.repositories.ExpenseRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
@@ -78,13 +78,13 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 
 		try {
 			createStockReceives();
-		} catch (StockReceiveException | ParseException e) {
+		} catch (StockReceivedException | ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	private void createStockReceives() throws StockReceiveException, ParseException {
+	private void createStockReceives() throws StockReceivedException, ParseException {
 
 		List<StockReceivedExpense> expenses = getExpenses();
 
