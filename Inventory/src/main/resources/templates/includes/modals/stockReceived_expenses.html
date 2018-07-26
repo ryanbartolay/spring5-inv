@@ -135,7 +135,7 @@
 	function confirmDelete(e){
 		var reason_id = $(e).parentsUntil("#confirmDeleteModal").find("#stockReceivedModalExpenseId").val();
 		
-		DELETE("/api/stock/adjustment/reasons/"+reason_id, function(data) {
+		DELETE("/api/stock/received/expenses/"+reason_id, function(data) {
 			if(data.status != "OK") {
 	 			displayErrors(data, $("#confirmDeleteModalErrors"));
 	 		} else {
