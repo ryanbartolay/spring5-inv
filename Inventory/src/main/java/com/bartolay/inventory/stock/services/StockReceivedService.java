@@ -8,9 +8,11 @@ import org.json.JSONObject;
 import com.bartolay.inventory.exceptions.StockReceiveException;
 import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.stock.entity.StockReceived;
+import com.bartolay.inventory.stock.entity.StockReceivedExpense;
 
 public interface StockReceivedService {
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
+	@Deprecated
 	public JSONObject retrieveExpensesDatatableList(Map<String, String> requestMap);
 	public StockReceived create(StockReceivedForm openingStockForm) throws StockReceiveException, ParseException;
 }

@@ -24,6 +24,9 @@ public class Expense {
 	@Column(name = "id", updatable = false, nullable = false)
 	private int id;
 	
+	@Column(name="code", unique=true, nullable=false, updatable=true, length=25)
+	private String code;
+	
 	@Column(unique=true, nullable=false, length=50)
 	private String description;
 	
@@ -49,6 +52,14 @@ public class Expense {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public String getDescription() {

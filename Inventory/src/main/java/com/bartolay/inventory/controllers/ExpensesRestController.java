@@ -16,7 +16,7 @@ import com.bartolay.inventory.entity.Expense;
 import com.bartolay.inventory.form.ExpenseForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
-import com.bartolay.inventory.services.ExpensesService;
+import com.bartolay.inventory.services.ExpenseService;
 import com.bartolay.inventory.stock.controllers.AbstractRestController;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,7 +25,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class ExpensesRestController extends AbstractRestController{
 
 	@Autowired
-	private ExpensesService expensesService;
+	private ExpenseService expensesService;
 	@Autowired
 	private StringUtils stringUtils;
 	
@@ -42,9 +42,9 @@ public class ExpensesRestController extends AbstractRestController{
 		ApiResponse response = null;
 		
 		try {
-			Expense expense = expensesService.create(expenseForm);
-
-			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + expense.getDescription());
+//			Expense expense = expensesService.create(expenseForm);
+//
+//			response = new ApiResponse(HttpStatus.OK, "Succesfully created " + expense.getDescription());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 		}

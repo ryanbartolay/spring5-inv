@@ -16,27 +16,37 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
+import com.bartolay.inventory.services.ExpenseService;
 import com.bartolay.inventory.stock.entity.StockReceived;
 import com.bartolay.inventory.stock.services.StockReceivedService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
+@RequestMapping(value="/api")
 public class StockReceivedRestController extends AbstractRestController {
 	
 	@Autowired
 	private StockReceivedService stockReceivedService;
 
-	@RequestMapping(value="/api/datatable/stockreceived", method=RequestMethod.GET, produces="application/json")
+	@Autowired
+	private ExpenseService expenseService;
+	
+	@RequestMapping(value="/datatable/stockreceived", method=RequestMethod.GET, produces="application/json")
 	public String datatableColor(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
 		return stockReceivedService.retrieveDatatableList(requestMap).toString();
 	}
 	
-	@RequestMapping(value="/api/datatable/stock/expenses", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value="/datatable/stock/expenses", method=RequestMethod.GET, produces="application/json")
 	public String datatableExpenses(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
 		return stockReceivedService.retrieveExpensesDatatableList(requestMap).toString();
 	}
 	
-	@RequestMapping(value="/api/stock/received", method=RequestMethod.POST)
+	@RequestMapping(value="/stock/received/expenses", method=RequestMethod.GET, produces="application/json")
+	public String apiExpensesList(@RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {
+		return stringUtils.encode(expenseService.retrieveList());
+	}
+	
+	@RequestMapping(value="/stock/received", method=RequestMethod.POST)
 	public String create(@Valid StockReceivedForm stockReceivedForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 		if (bindingResult.hasErrors()) {
 			return handleRestApiException(bindingResult);

@@ -20,8 +20,10 @@ import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockReceived;
+import com.bartolay.inventory.stock.repositories.StockReceivedRepository;
 import com.bartolay.inventory.stock.services.StockReceivedService;
 import com.bartolay.inventory.utils.ActivityUtility;
+import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
 public class StockReceivedServiceImpl implements StockReceivedService {
@@ -39,6 +41,12 @@ public class StockReceivedServiceImpl implements StockReceivedService {
 	@Qualifier("stockReceivedDatatableRepository")
 	private DatatableRepository stockReceivedDatatableRepository;
 	
+	@Autowired
+	private StockReceivedRepository stockReceivedRepository;
+	
+	@Autowired
+	private UserCredentials userCredentials;
+	
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
 		DatatableParameter parameter = new DatatableParameter(requestMap);
@@ -55,6 +63,7 @@ public class StockReceivedServiceImpl implements StockReceivedService {
 	}
 
 	@Override
+	@Deprecated
 	public JSONObject retrieveExpensesDatatableList(Map<String, String> requestMap) {
 		DatatableParameter parameter = new DatatableParameter(requestMap);
 		JSONArray array = stockReceivedDatatableRepository.findAllData(parameter);

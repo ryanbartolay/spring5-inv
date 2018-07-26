@@ -26,6 +26,7 @@ import com.bartolay.inventory.repositories.SupplierRepository;
 import com.bartolay.inventory.repositories.UnitRepository;
 import com.bartolay.inventory.repositories.UserRepository;
 import com.bartolay.inventory.sales.repositories.CreditCardDetailsRepository;
+import com.bartolay.inventory.services.ExpenseService;
 import com.bartolay.inventory.stock.entity.StockReceivedExpense;
 import com.bartolay.inventory.stock.entity.StockReceivedItem;
 import com.bartolay.inventory.stock.services.StockReceivedService;
@@ -37,6 +38,9 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private ExpenseService expenseService;
+	
 	@Autowired
 	private ExpenseRepository expenseRepository;
 

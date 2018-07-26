@@ -1,0 +1,171 @@
+<!-- manage Expenses-->
+<div class="modal fade" id="confirmDeleteModal" tabindex="1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+		       <input type="hidden" id="stockReceivedModalExpenseId" />
+		    <div class="modal-header">
+		        <button type="button" class="close" onClick="cancelConfirmDelete()" aria-hidden="true">&times;</button>
+		        <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+		    </div>
+		
+		    <div class="modal-body">
+		    	<div id="confirmDeleteModalErrors"></div>
+		        <p>You are about to delete <b id="recordName"></b>, this procedure is irreversible.</p>
+		        <p>Do you want to proceed?</p>
+		        <p class="debug-url"></p>
+		    </div>
+		    
+		    <div class="modal-footer">
+		        <button type="button" class="btn btn-default" onClick="cancelConfirmDelete()">Cancel</button>
+		        <button class="btn btn-danger" onClick="confirmDelete(this)">Delete</button>
+		    </div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade bs-example-modal-lg"
+	id="stockReceivedExpenseModal" tabindex="-1" role="dialog"
+	aria-hidden="true" style="display: none;">
+
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">x</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					<span class="fa fa-gears"></span> Manage Stock Received Expenses
+				</h4>
+			</div>
+			<div class="modal-body">
+				<div class="col-md-12">
+					<form th:object="${stockReceivedExpensesForm}" id="stockReceivedExpensesForm">
+						<div id="stockReceivedExpensesErrors"></div>
+						<label>Expense*</label> <input type="text" th:field="*{description}" id="addExpenseDescription"
+							class="form-control" /> <br>
+						<button class="btn btn-success btn-sm" id="btnAddExpense">Create
+							and Select Expense</button>
+					</form>
+				</div>
+				<div class="col-md-12 ln_solid"></div>
+				<table class="table table-striped bulk_action"
+					id="stockReceivedExpenseTable">
+					<thead>
+						<tr class="headings">
+							<th class="column-title" style="display: table-cell;">Description</th>
+							<th></th>
+
+						</tr>
+					</thead>
+
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+	var stockReceivedExpenseModal = $("#stockReceivedExpenseModal");
+	var stockReceivedExpenseTable = $("#stockReceivedExpenseTable tbody");
+	var stockReceivedExpenseForm = $("#stockReceivedExpensesForm");
+	
+	var confirmDeleteModal = $("#confirmDeleteModal");
+	var btnConfirmDelete = $("#btnConfirmDelete");
+	
+	var btnAddExpense = $("#btnAddExpense");
+	var btnAddExpenseText = btnAddExpense.text();
+	var callback;
+
+	function manageExpenses(parameters, cb) {
+		callback = cb;
+		stockReceivedExpenseModal.modal("show");
+	}
+	
+	stockReceivedExpenseModal.on('shown.bs.modal', function() {
+		$("#confirmDeleteModalErrors").html("");
+		$("#addExpenseDescription").val("");
+		btnAddExpense.removeAttr("disabled");
+		btnAddExpense.text(btnAddExpenseText);
+		
+		GET("/api/stock/received/expenses",function (data) {
+            console.log(data);
+            var html = "";
+            for(var i = 0; i < data.length; i++) {
+            	html += `
+            	<tr>
+            		<td>`+ data[i].description +`</td>
+            		<td class="text-right"><button class="fa fa-close" 
+            		onClick="showConfirmDeleteModal(this)"
+            		style="color: red"></button>
+            		<input type="hidden" id="expense_id" value="`+ data[i].id +`" />
+            		<input type="hidden" id="expense_description" value="`+ data[i].description +`" />
+            		</td>
+            	</tr>`;
+            }
+            
+            stockReceivedExpenseTable.html(html);
+        });
+		
+	});
+	
+	btnAddExpense.on("click", function() {
+
+	 	btnAddExpense.attr("disabled", "disabled");
+	 	btnAddExpense.text("Processing....");
+		
+	 	var serialized_data = stockReceivedExpenseForm.serialize();
+	 	
+		POST("/api/stock/adjustment/reasons", serialized_data, function(data) {
+	 		if(data.status != "OK") {
+	 			displayErrors(data, $("#stockReceivedExpensesErrors"));
+	 			btnAddExpense.removeAttr("disabled");
+	 			btnAddExpense.text(btnAddExpenseText);
+	 		} else {
+	 			callback(data);
+	 			stockReceivedExpenseModal.modal("hide");
+	 		}
+	 	});
+	});
+	
+	function confirmDelete(e){
+		var reason_id = $(e).parentsUntil("#confirmDeleteModal").find("#stockReceivedModalExpenseId").val();
+		
+		DELETE("/api/stock/adjustment/reasons/"+reason_id, function(data) {
+			if(data.status != "OK") {
+	 			displayErrors(data, $("#confirmDeleteModalErrors"));
+	 		} else {
+	 			callback(data);
+	 			showToast(data);
+	 			confirmDeleteModal.modal("hide");
+	 			stockReceivedExpenseModal.modal("show");
+	 		}
+		});
+	}
+	
+	function cancelConfirmDelete() {
+		confirmDeleteModal.modal("hide");
+		stockReceivedExpenseModal.modal("show");
+	}
+	
+	function showConfirmDeleteModal(e) {
+		var row = $(e).parentsUntil("tbody");
+		var expense_id = row.find("#expense_id").val();
+		var expense_description = row.find("#expense_description").val();		
+		
+		stockReceivedExpenseModal.modal("hide");
+		confirmDeleteModal.find("#stockReceivedModalExpenseId").val(expense_id);
+		confirmDeleteModal.find("#recordName").html(expense_description);
+		confirmDeleteModal.modal("show");
+	}
+	
+	function deleteExpense(e) {
+		var row = $(e).parentsUntil("tbody");
+		
+		row.remove();
+	}
+</script>

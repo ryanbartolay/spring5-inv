@@ -11,6 +11,7 @@ import com.bartolay.inventory.form.ExpenseForm;
 import com.bartolay.inventory.form.StockAdjustmentForm;
 import com.bartolay.inventory.form.StockAdjustmentReasonForm;
 import com.bartolay.inventory.form.StockOpeningForm;
+import com.bartolay.inventory.form.StockReceivedExpenseForm;
 import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.form.StockTransferForm;
 import com.bartolay.inventory.form.SupplierForm;
@@ -129,6 +130,7 @@ public class StockController {
 		model.addObject("page", "New Stock Received");
 		model.addObject("html", "received/edit");
 		model.addObject("stockReceivedForm", new StockReceivedForm());
+		model.addObject("stockReceivedExpensesForm", new StockReceivedExpenseForm());
 		model.addObject("suppliers", supplierService.findAll());
 		model.addObject("locations", locationRepository.findAll());
 		

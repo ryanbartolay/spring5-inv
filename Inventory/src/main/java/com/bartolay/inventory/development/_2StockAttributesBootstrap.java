@@ -19,6 +19,7 @@ import com.bartolay.inventory.entity.ItemUnit;
 import com.bartolay.inventory.entity.Model;
 import com.bartolay.inventory.entity.Size;
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.form.ExpenseForm;
 import com.bartolay.inventory.repositories.BrandRepository;
 import com.bartolay.inventory.repositories.CategoryRepository;
 import com.bartolay.inventory.repositories.ColorRepository;
@@ -29,6 +30,7 @@ import com.bartolay.inventory.repositories.ModelRepository;
 import com.bartolay.inventory.repositories.SizeRepository;
 import com.bartolay.inventory.repositories.UnitRepository;
 import com.bartolay.inventory.repositories.UserRepository;
+import com.bartolay.inventory.services.ExpenseService;
 
 @Component
 public class _2StockAttributesBootstrap implements ApplicationListener<ContextRefreshedEvent>, PriorityOrdered {
@@ -55,6 +57,9 @@ public class _2StockAttributesBootstrap implements ApplicationListener<ContextRe
 	@Autowired
 	private ExpenseRepository expenseRepository;
 
+	@Autowired
+	private ExpenseService expenseService;
+	
 	private User admin;
 
 	@Override
@@ -86,30 +91,22 @@ public class _2StockAttributesBootstrap implements ApplicationListener<ContextRe
 	
 	private void createExpenses() {
 
-		Expense e1 = new Expense();
-		e1.setDescription("Transportation");
-		e1.setCreatedBy(admin);
-		expenseRepository.save(e1);
 		
-		Expense e2 = new Expense();
-		e2.setDescription("Other");
-		e2.setCreatedBy(admin);
-		expenseRepository.save(e2);
+		ExpenseForm expenseForm = new ExpenseForm();
+		expenseForm.setDescription("Transportation");
+		expenseService.create(expenseForm);
 		
-		Expense e3 = new Expense();
-		e3.setDescription("Food");
-		e3.setCreatedBy(admin);
-		expenseRepository.save(e3);
+		expenseForm.setDescription("Other");
+		expenseService.create(expenseForm);
 		
-		Expense e4 = new Expense();
-		e4.setDescription("Medical");
-		e4.setCreatedBy(admin);
-		expenseRepository.save(e4);
+		expenseForm.setDescription("Food");
+		expenseService.create(expenseForm);
 		
-		Expense e5 = new Expense();
-		e5.setDescription("Rebate Cancelled");
-		e5.setCreatedBy(admin);
-		expenseRepository.save(e5);
+		expenseForm.setDescription("Medical");
+		expenseService.create(expenseForm);
+		
+		expenseForm.setDescription("Rebate Cancelled");
+		expenseService.create(expenseForm);
 	}
 
 	private void createSizes() {
