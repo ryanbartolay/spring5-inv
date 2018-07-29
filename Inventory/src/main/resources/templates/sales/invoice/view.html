@@ -94,12 +94,12 @@
 									<tbody>
 										<tr
 											th:each="salesInvoiceItem : ${salesInvoice.salesInvoiceItems}">
-											<th th:text="${salesInvoiceItem.item.id}"></th>
-											<td th:text="${salesInvoiceItem.item.code}"></td>
+											<th th:text="${salesInvoiceItem.inventory.item.id}"></th>
+											<td th:text="${salesInvoiceItem.inventory.item.code}"></td>
 											<td
-												th:text="${salesInvoiceItem.item.name} + '( '+ ${salesInvoiceItem.item.defaultUnit.abbreviation} +' )'"></td>
-											<td th:text="${salesInvoiceItem.unit.abbreviation}"></td>
-											<td th:text="${salesInvoiceItem.unit.name}"></td>
+												th:text="${salesInvoiceItem.inventory.item.name} + '( '+ ${salesInvoiceItem.inventory.item.defaultUnit.abbreviation} +' )'"></td>
+											<td th:text="${salesInvoiceItem.inventory.unit.abbreviation}"></td>
+											<td th:text="${salesInvoiceItem.inventory.unit.name}"></td>
 											<td class="text-right"
 												th:text="${T(com.bartolay.inventory.utils.NumericUtility).quantity(salesInvoiceItem.quantity)}"></td>
 											<td class="text-right"

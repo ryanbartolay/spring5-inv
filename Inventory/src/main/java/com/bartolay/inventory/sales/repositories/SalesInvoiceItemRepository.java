@@ -13,6 +13,6 @@ import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
 @Repository
 public interface SalesInvoiceItemRepository extends CrudRepository<SalesInvoiceItem, Integer> {
 
-	@Query(value= "select i from SalesInvoiceItem i join fetch i.item join fetch i.unit where i.salesInvoice = :salesInvoice")
+	@Query(value= "select i from SalesInvoiceItem i join fetch i.inventory where i.salesInvoice = :salesInvoice")
 	public List<SalesInvoiceItem> findBySalesInvoice(@Param("salesInvoice") SalesInvoice salesInvoice);
 }
