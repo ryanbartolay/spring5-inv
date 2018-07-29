@@ -78,9 +78,9 @@ public class SalesInvoiceRestController extends AbstractRestController {
 		ApiResponse response = null;
 		
 		try {
-			SalesInvoice salesInvoice = salesInvoiceService.cancel(systemNumber);
+			//SalesInvoice salesInvoice = salesInvoiceService.cancel(systemNumber);
 
-			response = new ApiResponse(HttpStatus.OK, "Succesfully cancelled " + salesInvoice.getSystemNumber());
+			//response = new ApiResponse(HttpStatus.OK, "Succesfully cancelled " + salesInvoice.getSystemNumber());
 		} catch(Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 		}

@@ -11,9 +11,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.AccountType;
+import com.bartolay.inventory.form.SalesInvoiceCancelForm;
 import com.bartolay.inventory.form.SalesInvoiceForm;
 import com.bartolay.inventory.form.SalesReturnForm;
+import com.bartolay.inventory.form.StockAdjustmentForm;
+import com.bartolay.inventory.form.StockAdjustmentReasonForm;
 import com.bartolay.inventory.repositories.ClientRepository;
+import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
@@ -24,6 +28,7 @@ import com.bartolay.inventory.sales.repositories.SalesReturnItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesReturnRepository;
 import com.bartolay.inventory.services.LocationService;
 import com.bartolay.inventory.services.UserService;
+import com.bartolay.inventory.stock.repositories.StockAdjustmentReasonRepository;
 import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -49,7 +54,10 @@ public class SalesController {
 	private LocationService locationService;
 	@Autowired
 	private UserService<User> userService;
-
+	@Autowired
+	private InventoryRepository inventoryRepository;
+	@Autowired
+	private StockAdjustmentReasonRepository stockAdjustmentReasonRepository;
 	@Autowired
 	private StringUtils stringUtils;
 	
@@ -106,6 +114,36 @@ public class SalesController {
 		model.addObject("salesInvoice", salesInvoice);
 		
 		return model;
+	}
+	
+	@RequestMapping(value="/invoice/cancel/{system_number}")
+	public ModelAndView invoiceCancel(ModelAndView model, @PathVariable String system_number) {
+		model.setViewName("sales/index");
+		model.addObject("page", "Invoice");
+		model.addObject("html", "invoice/cancel");
+		model.addObject("salesInvoiceCancelForm", new SalesInvoiceCancelForm());
+		
+		model.addObject("stockAdjustmentForm", new StockAdjustmentForm());
+		model.addObject("cancelled_reason", stockAdjustmentReasonRepository.findByCode("STOCK_CANCELLED"));
+		model.addObject("locations", locationRepository.findAll());
+		
+		model.addObject("StringUtils", stringUtils);
+		SalesInvoice salesInvoice = salesInvoiceRepository.findById(system_number).get();
+		
+		
+		
+		model.addObject("salesInvoice", salesInvoice);
+		
+		return model;
+		
+//		model.setViewName("stock/index");
+//		model.addObject("page", "Stock Adjustment");
+//		model.addObject("html", "adjustment/edit");
+//		model.addObject("stockAdjustmentForm", new StockAdjustmentForm());
+//		model.addObject("stockAdjustmentReasonForm", new StockAdjustmentReasonForm());
+//		model.addObject("reasons", stockAdjusmentReasonRepository.findAll());
+//		model.addObject("locations", locationRepository.findAll());
+//		return model;
 	}
 	
 	@RequestMapping(value="/return")

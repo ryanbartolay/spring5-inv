@@ -28,7 +28,7 @@ public class _7SalesCancelInvoiceBootstrap implements ApplicationListener<Contex
 		SalesInvoice salesInvoice = new SalesInvoice();
 		salesInvoice.setSystemNumber("20181-1");
 		
-		inventoryService.cancelSalesInvoice(salesInvoice);
+		//inventoryService.cancelSalesInvoice(salesInvoice);
 	}
 	
 }

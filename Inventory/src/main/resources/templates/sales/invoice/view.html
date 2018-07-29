@@ -207,9 +207,9 @@
 								</button>
 								
 
-								<button class="btn btn-danger pull-right">
+								<a th:href="@{'/sales/invoice/cancel/' + ${salesInvoice.systemNumber}}" class="btn btn-danger pull-right">
 									<i class="fa fa-remove"></i> Cancel Invoice
-								</button>
+								</a>
 							</div>
 						</div>
 					</section>

@@ -16,8 +16,7 @@ import javax.persistence.SequenceGenerator;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.bartolay.inventory.entity.Item;
-import com.bartolay.inventory.entity.Unit;
+import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.Status;
 
@@ -33,15 +32,19 @@ public class SalesInvoiceItem {
 	private SalesInvoice salesInvoice;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="item_id", nullable=false, updatable=false)
-	private Item item;
+	@JoinColumn(name="inventory_id", nullable=false, updatable=false)
+	private Inventory inventory;
+	
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name="item_id", nullable=false, updatable=false)
+//	private Item item;
+	
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name="unit_id", nullable=false, updatable=true)
+//	private Unit unit;
 	
 	@Column(name="quantity", updatable=true)
 	private BigDecimal quantity;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="unit_id", nullable=false, updatable=true)
-	private Unit unit;
 	
 	@Column(name="unit_price", nullable=false, precision=10, scale=5)
 	private BigDecimal unitPrice;
@@ -92,29 +95,13 @@ public class SalesInvoiceItem {
 	public void setSalesInvoice(SalesInvoice salesInvoice) {
 		this.salesInvoice = salesInvoice;
 	}
-
-	public Item getItem() {
-		return item;
-	}
-
-	public void setItem(Item item) {
-		this.item = item;
-	}
-
+	
 	public BigDecimal getQuantity() {
 		return quantity;
 	}
 
 	public void setQuantity(BigDecimal quantity) {
 		this.quantity = quantity;
-	}
-
-	public Unit getUnit() {
-		return unit;
-	}
-
-	public void setUnit(Unit unit) {
-		this.unit = unit;
 	}
 
 	public BigDecimal getUnitPrice() {
@@ -173,6 +160,14 @@ public class SalesInvoiceItem {
 		this.status = status;
 	}
 
+	public Inventory getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -197,8 +192,8 @@ public class SalesInvoiceItem {
 
 	@Override
 	public String toString() {
-		return "SalesInvoiceItem [id=" + id + ", item=" + item + ", quantity="
-				+ quantity + ", unit=" + unit + ", unitCost=" + unitPrice + ", createdDate=" + createdDate
+		return "SalesInvoiceItem [id=" + id + ", quantity="
+				+ quantity + ", unitCost=" + unitPrice + ", createdDate=" + createdDate
 //				+ ", createdBy=" + createdBy 
 				+ ", updatedDated=" + updatedDated 
 //				+ ", updatedBy=" + updatedBy

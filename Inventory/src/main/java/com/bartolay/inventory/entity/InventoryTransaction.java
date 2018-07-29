@@ -38,11 +38,13 @@ public class InventoryTransaction {
 	private Location location;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="item_id", nullable=false, updatable=false)
+	@JoinColumn(name="item_id", nullable=true, updatable=false)
+	@Deprecated
 	public Item item;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="unit_id", nullable=false, updatable=false)
+	@JoinColumn(name="unit_id", nullable=true, updatable=false)
+	@Deprecated
 	private Unit unit;
 	
 	@Column(name="quantity_raw", nullable=false, precision=10, scale=5, updatable=false)
@@ -120,18 +122,22 @@ public class InventoryTransaction {
 		this.location = location;
 	}
 
+	@Deprecated
 	public Item getItem() {
 		return item;
 	}
 
+	@Deprecated
 	public void setItem(Item item) {
 		this.item = item;
 	}
 
+	@Deprecated
 	public Unit getUnit() {
 		return unit;
 	}
 
+	@Deprecated
 	public void setUnit(Unit unit) {
 		this.unit = unit;
 	}

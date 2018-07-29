@@ -122,21 +122,21 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 		return ServiceUtility.toList(salesInvoiceRepository.findAll());
 	}
 
-	@Override
-	public SalesInvoice cancel(String systemNumber) {
-		Optional<SalesInvoice> salesInvoice = salesInvoiceRepository.findById(systemNumber);
-		System.err.println("salesInvoice : " + salesInvoice);
-		if(!salesInvoice.isPresent()) {
-			throw new RuntimeException("Please specify Credit Card Details");
-		}
-		SalesInvoice sInvoice = salesInvoice.get();
-		try {
-			inventoryCoreService.cancelSalesInvoice(sInvoice);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return sInvoice;
-	}
+//	@Override
+//	public SalesInvoice cancel(String systemNumber) {
+//		Optional<SalesInvoice> salesInvoice = salesInvoiceRepository.findById(systemNumber);
+//		System.err.println("salesInvoice : " + salesInvoice);
+//		if(!salesInvoice.isPresent()) {
+//			throw new RuntimeException("Please specify Credit Card Details");
+//		}
+//		SalesInvoice sInvoice = salesInvoice.get();
+//		try {
+//			//inventoryCoreService.cancelSalesInvoice(sInvoice);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return sInvoice;
+//	}
 
 }

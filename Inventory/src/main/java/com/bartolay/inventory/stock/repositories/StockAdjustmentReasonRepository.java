@@ -10,4 +10,6 @@ import com.bartolay.inventory.stock.entity.StockAdjustmentReason;
 public interface StockAdjustmentReasonRepository extends CrudRepository<StockAdjustmentReason, Integer> {
 	@Query(value = "SELECT p FROM StockAdjustmentReason p left join fetch p.createdBy")
     Iterable<StockAdjustmentReason> apiFindAll();
+	
+	public StockAdjustmentReason findByCode(String code);
 }

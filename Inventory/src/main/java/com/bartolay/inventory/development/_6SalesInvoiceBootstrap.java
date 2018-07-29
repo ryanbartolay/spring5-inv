@@ -13,10 +13,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.PriorityOrdered;
 import org.springframework.stereotype.Component;
 
+import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.exceptions.SalesInvoiceException;
 import com.bartolay.inventory.form.SalesInvoiceForm;
 import com.bartolay.inventory.repositories.ClientRepository;
+import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.repositories.UserRepository;
@@ -37,6 +39,9 @@ public class _6SalesInvoiceBootstrap implements ApplicationListener<ContextRefre
 	
 	@Autowired
 	private InventoryCoreService inventoryService;
+	
+	@Autowired
+	private InventoryRepository inventoryRepository;
 	
 	@Autowired
 	private ClientRepository clientRepository;
@@ -77,18 +82,22 @@ public class _6SalesInvoiceBootstrap implements ApplicationListener<ContextRefre
 	}
  
 	private List<SalesInvoiceItem> getSalesInvoiceItems() {
+		List<Inventory> inventories = inventoryRepository.findByLocation(locationRepository.findById(1).get());
+		
 		List<SalesInvoiceItem> salesInvoiceItems = new ArrayList<>();
 		
 		SalesInvoiceItem salesInvoiceItem = new SalesInvoiceItem();
-		salesInvoiceItem.setItem(itemRepository.findById(1).get());
-		salesInvoiceItem.setUnit(itemRepository.findById(1).get().getDefaultUnit());
+		salesInvoiceItem.setInventory(inventories.get(0));
+//		salesInvoiceItem.setItem(itemRepository.findById(1).get());
+//		salesInvoiceItem.setUnit(itemRepository.findById(1).get().getDefaultUnit());
 		salesInvoiceItem.setQuantity(new BigDecimal("2.211"));
 		salesInvoiceItem.setUnitPrice(new BigDecimal("30.33"));
 		salesInvoiceItems.add(salesInvoiceItem);
 		
 		salesInvoiceItem = new SalesInvoiceItem();
-		salesInvoiceItem.setItem(itemRepository.findById(2).get());
-		salesInvoiceItem.setUnit(itemRepository.findById(2).get().getDefaultUnit());
+		salesInvoiceItem.setInventory(inventories.get(1));
+//		salesInvoiceItem.setItem(itemRepository.findById(2).get());
+//		salesInvoiceItem.setUnit(itemRepository.findById(2).get().getDefaultUnit());
 		salesInvoiceItem.setQuantity(new BigDecimal("10"));
 		salesInvoiceItem.setUnitPrice(new BigDecimal("50"));
 		salesInvoiceItems.add(salesInvoiceItem);

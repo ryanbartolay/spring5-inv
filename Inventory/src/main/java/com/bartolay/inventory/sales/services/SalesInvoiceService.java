@@ -15,7 +15,7 @@ public interface SalesInvoiceService {
 
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
 	public List<SalesInvoice> findAll();
-	public SalesInvoice cancel(String systemNumber);
+//	public SalesInvoice cancel(String systemNumber);
 
 	public List<SalesInvoiceItem> retrieveItemsList(String systemNumber);
 }

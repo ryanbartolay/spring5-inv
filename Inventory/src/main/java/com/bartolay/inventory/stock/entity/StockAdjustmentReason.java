@@ -27,7 +27,7 @@ public class StockAdjustmentReason {
 	@SequenceGenerator(name="stock_adjustment_reason_generator", sequenceName = "STOCK_ADJUSTMENT_REASON_SER_SEQ")
 	private int id;
 	
-	@Column(name="code", unique=true, nullable=false, updatable=true, length=25)
+	@Column(name="code", unique=true, nullable=false, updatable=false, length=25)
 	private String code;
 	
 	private String description;
