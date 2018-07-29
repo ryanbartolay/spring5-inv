@@ -1,0 +1,160 @@
+<form id="itemModelAddItem_form">
+<div class="modal fade bs-example-modal-lg" id="itemModalSimple" tabindex="-1" role="dialog"
+	aria-hidden="true" style="display: none;">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">×</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel"><span id="location_description"></span> Inventory List </h4>
+			</div>
+			<div class="modal-body">
+
+
+				<div class="table-responsive">
+					<table class="table table-striped bulk_action" id="itemModalSimple-datatable" width="100%">
+						<thead>
+							<tr class="headings">
+								<th></th>
+								<th class="column-title" style="display: table-cell;">SN</th>
+								<th class="column-title" style="display: table-cell;">Code</th>
+								<th class="column-title" style="display: table-cell;">Description</th>
+								<th class="column-title" style="display: table-cell;">Unit</th>
+								<th class="column-title" style="display: table-cell;">Unit Cost</th>
+								<th class="column-title text-right" style="display: table-cell;">Stock On Hand</th>
+								<th class="column-title text-right" style="display: table-cell;">Stock On Order</th>
+							</tr>
+						</thead>
+
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+
+
+			</div>
+			<div class="modal-footer">
+				<span id="itemSelectedStatus"></span>&nbsp;
+				<button type="button" class="btn btn-success" id="itemModalAddItem_btn">Add Items</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+</form>
+
+<script>
+
+var itemModalSimple_modal = $("#itemModalSimple");
+var itemModalAddItem_btn = $("#itemModalAddItem_btn");
+var itemModelAddItem_form = $("#itemModelAddItem_form");
+var itemModelAddItem_table = $('#itemModalSimple-datatable');
+var itemModelAddItem_table_instance;
+var itemModalSimple_callback;
+var itemModalSimple_url = "/api/datatable/inventory/location";
+var location_id;
+var itemDatatable;
+
+function addInventory(parameters, callback) {
+	console.log(parameters);
+	location_id = parameters.location_id;
+	itemModalSimple_callback = callback;
+	if(parameters.location_description) {
+		$("#location_description").html(parameters.location_description);	
+	}
+	
+	
+	itemModalSimple_modal.modal('show');
+}
+
+itemModalSimple_modal.on('shown.bs.modal', function() {
+	
+	itemDatatable = itemModelAddItem_table.DataTable({
+		responsive : true,
+		ajax: {
+			url: itemModalSimple_url,
+			data: {
+				location: location_id
+			}
+		},
+		processing: true,
+        serverSide: true,
+		length: 10,
+		start: 0,
+		columns: [
+			{
+				data: "id",
+        		orderable: false,
+        		render: function(data, type, row) {
+        			return `<div style="position: relative;">
+					<input type="checkbox" name="table_records" id="selected_item" value="`+ data +`" onClick="countCheckedSingle(this)">
+					<input type="hidden" name="id" value="`+data+`">
+					<input type="hidden" name="item_code" value="`+row.item_code+`">
+					<input type="hidden" name="item_name" value="`+row.item_name+`">
+					<input type="hidden" name="unit_name" value='`+ row.unit_name +`'>
+					<input type="hidden" name="on_hand" value='`+ row.on_hand +`'>
+					<input type="hidden" name="unit_cost" value='`+ row.unit_cost +`'>
+					<input type="hidden" name="on_order" value='`+ row.on_order +`'>
+					</div>`;
+        		}
+			},
+        	{
+        		data: "id",
+        	},
+        	{ 
+        		data: "item_code",
+        	},
+        	{
+        		data: "item_name"
+        	},
+        	{
+        		data: "unit_name"
+        	},
+        	{
+        		data: "unit_cost",
+        		className: "text-right"
+        	},
+        	{
+        		data: "on_hand",
+        		className: "text-right"
+        	},
+        	{
+        		data: "on_order",
+        		className: "text-right"
+        	}
+        	
+    	]
+	});
+});
+
+itemModalSimple_modal.on('hidden.bs.modal', function() {
+	itemDatatable.destroy();
+});
+
+itemModalAddItem_btn.click(function() {
+	var iter = itemModelAddItem_form.serializeArray();
+	var selected_items = [];
+ 
+	$.each($("input[name='table_records']:checked").closest("tr"), function() {
+
+		var each = []; 
+		$(this).find("input").each(function() {
+			each[$(this).attr("name")] = $(this).val();
+		});
+		
+		selected_items.push(each);
+	});
+	
+	if(selected_items.length <= 0) {
+		$("#itemSelectedStatus").html("<span style='color:red'>Select atleast 1 Item</span>");
+	} else {
+		itemModalSimple_callback(selected_items);
+		itemModalSimple_modal.modal("hide");
+		/* itemModelAddItem_table_instance.destroy(); */
+	}
+	
+});
+
+</script>

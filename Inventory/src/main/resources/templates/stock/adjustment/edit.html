@@ -119,7 +119,7 @@
 </div>
 
 <!-- Item Modal -->
-<div th:include="includes/modals/itemModal_by_location"></div>
+<div th:include="includes/modals/inventoryModal_by_location"></div>
 
 <!-- Reasons Modal -->
 <div th:include="includes/modals/stockAdjustment_reason"></div>
@@ -209,7 +209,7 @@ $("#manageReasons").on("click", function() {
 });
 
 $("#btnAddItem").on("click", function() {
-  	addItem({
+  	addInventory({
   			type: "stock_adjusment", 
   			location_id: $("#location").val()
   		}, function(data) {

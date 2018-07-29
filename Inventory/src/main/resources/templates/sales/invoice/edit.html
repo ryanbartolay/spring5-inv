@@ -27,7 +27,7 @@
 							Number :</label> <input type="text" class="form-control"
 							th:field="*{documentNumber}"> <label>Location</label> <select
 							class="form-control" th:field="*{location}">
-							<option th:each="location : ${locations}"
+							<option th:each="location : ${locations}" th:attr="data-description=${location.name}" 
 								th:value="${location.id}" th:text="${location.name}"></option>
 						</select>
 					</div>
@@ -87,11 +87,11 @@
 								<tr>
 									<th>SN</th>
 									<th>Code</th>
-									<th class="col-md-3">Description</th>
-									<th>Unit</th>
-									<th>U.Desc</th>
-									<th>Quantity</th>
-									<th class="text-right">Unit Price</th>
+									<th class="col-md-3">Description</th>									
+									<th class="col-md-1">U.Desc</th>
+									<th class="col-md-1">On Hand</th>
+									<th class="col-md-2">Quantity</th>
+									<th class="text-right col-md-2">Unit Price</th>
 									<th class="col-md-2 text-right">Subtotal</th>
 									<th></th>
 								</tr>
@@ -151,7 +151,7 @@
 </div>
 
 
-<div th:include="includes/modals/itemModal"></div>
+<div th:include="includes/modals/inventoryModal_by_location"></div>
 
 <script type="text/javascript">
 $( function() {
@@ -187,8 +187,15 @@ $("#btnAddItem").on("click", function(event) {
 		'id' : $("#location").val()
 	}
 	
-addItem({type: "sales_invoice", label:"Add Sales Invoice Item", filter : filter}, function(data) {
+	addInventory({
+			type: "stock_adjusment", 
+			location_id: $("#location").val(),
+			location_description: $("#location :selected").text()
+		}, 
+		function(data) {
   		
+			console.log(data);
+			
   		for(var i = 0; i < data.length; i++) {
   			form_items.push(data[i]);
   		}
@@ -204,14 +211,12 @@ addItem({type: "sales_invoice", label:"Add Sales Invoice Item", filter : filter}
   			var unitCost = (item.unitCost ? item.unitCost : "0.00");
   			var subtotal = (item.subtotal ? item.subtotal : "0.00");
   			
-  			var units = JSON.parse(form_items[i].units);
-  			console.log(item)
   			html += `<tr>
 				<th id="lblItemId">`+ item.id +`<input type="hidden" name="salesInvoiceItems[`+i+`].item" value="`+item.id+`" /></th>
-				<td id="lblItemName">`+ item.code +`</td>
-				<td id="lblItemName">`+ item.name +`</td>
-				<td id="lblItemName">`+ item.name +`</td>
-				<td id="lblItemName">`+ item.name +`</td>`;
+				<td id="lblItemName">`+ item.item_code +`</td>
+				<td id="lblItemName">`+ item.item_name +`</td>
+				<td id="lblItemName">`+ item.unit_name +`</td>
+				<td id="lblItemName">`+ item.on_hand +`</td>`;
 				
 			html +=	`
 				<td id="lblItemName"><input type="number" name="salesInvoiceItems[`+i+`].quantity" id="quantity" onChange="computeValues(this, `+i+`)" class="form-control" value="`+ quantity +`" /></td>
