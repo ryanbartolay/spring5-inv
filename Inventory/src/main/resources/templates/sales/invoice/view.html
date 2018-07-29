@@ -207,9 +207,9 @@
 								</button>
 								
 
-								<a th:href="@{'/sales/invoice/cancel/' + ${salesInvoice.systemNumber}}" class="btn btn-danger pull-right">
+								<button id="cancelInvoiceBtn" class="btn btn-danger pull-right">
 									<i class="fa fa-remove"></i> Cancel Invoice
-								</a>
+								</button>
 							</div>
 						</div>
 					</section>
@@ -218,3 +218,10 @@
 		</div>
 	</div>
 </div>
+<div th:include="includes/modals/salesInvoice_cancel"></div>
+<script>
+	console.log("compiled");
+	$("#cancelInvoiceBtn").click(function(e) {
+		cancelInvoiceModal();
+	});
+</script>

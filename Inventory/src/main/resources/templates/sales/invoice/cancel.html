@@ -21,8 +21,8 @@
 				<div class="panel-body">
 
 					<div class="form-group" id="errors"></div>
-					<div th:text="${salesInvoice}"></div>
-					<div th:text="${salesInvoice.salesInvoiceItems}"></div>
+					<!-- <div th:text="${salesInvoice}"></div>
+					<div th:text="${salesInvoice.salesInvoiceItems}"></div> -->
 					
 					<div class="col-md-12">
 						<div class="col-md-2">
@@ -82,15 +82,17 @@
 									<th class="col-md-2 text-right hidden" id="cost_1">Current Cost</th>
 									<th class="col-md-2 text-right hidden" id="cost_2">Changed Cost</th>
 									<th class="col-md-2 text-right hidden" id="cost_3">Adjusted Cost</th>
-									<th></th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr th:each="salesInvoiceItem : ${salesInvoice.salesInvoiceItems}">
 									<td th:text="${salesInvoiceItem.id}"></td>
-									<td th:text="${salesInvoiceItem.item.code}"></td>
-									<td th:text="${salesInvoiceItem.item.name}"></td>
-									<td th:text="${salesInvoiceItem.unit.name}"></td>
+									<td th:text="${salesInvoiceItem.inventory.item.code}"></td>
+									<td th:text="${salesInvoiceItem.inventory.item.name}"></td>
+									<td th:text="${salesInvoiceItem.inventory.unit.name}"></td>
+									<td class="text-right" th:text="${salesInvoiceItem.inventory.quantity}"></td>
+									<td class="text-right" th:text="${salesInvoiceItem.inventory.quantity.add(salesInvoiceItem.quantity)}"></td>
+									<td class="text-right" th:text="${salesInvoiceItem.quantity}"></td>
 								</tr>							
 							</tbody>
 
@@ -105,87 +107,3 @@
 	</div>
 	<!-- /.col-lg-12 -->
 </div>
-
-<!-- DataTables JavaScript -->
-<script
-	th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
-<script
-	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
-<script
-	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
-
-<script>
-var current_year = (new Date()).getFullYear();
-var submitStockAdjustmentBtn = $("#submitStockAdjustmentBtn");
-var stockAdjustmentForm = $("#stockAdjustmentForm");
-
-$( function() {
-	  
-	formatAdjustmentType($('input[type=radio][name=adjustmentType]').val());
-	
-    $( "#transactionDate" ).datepicker();
-    
-    $('.yearselect').yearselect({
-    	order: 'desc',	
- 		start: current_year - 5,
- 		end: current_year + 5
-    });
-    
-    $('[name=year]').val( current_year );
-  });
-  
-$('input[type=radio][name=adjustmentType]').change(function() {
-	formatAdjustmentType(this.value);
-});
-
-function formatAdjustmentType(value) {
-	 if (value == 'QUANTITY') {
-		 $( "#cost_1, #cost_2, #cost_3" ).addClass( "hidden" );
-		 $( "#quantity_1, #quantity_2, #quantity_3" ).removeClass( "hidden" );
-    }
-    else if (value == 'VALUE') {
-    	$( "#cost_1, #cost_2, #cost_3" ).removeClass( "hidden" );
-		$( "#quantity_1, #quantity_2, #quantity_3" ).addClass( "hidden" );
-    }
-}
-
-function formatItemAdjustment(e) {
-	var row = $(e).parentsUntil("tbody");
-	
-	var newCost = row.find("#newCost").val();
-	var unit_cost = row.find("#unit_cost").val();
-	var newQuantity = row.find("#newQuantity").val();
-	var on_hand = row.find("#on_hand").val();
-	
-	var quantity_adjustment = row.find("#quantity_3");
-	var cost_adjusment = row.find("#cost_3");
-	
-	var quantity = (newQuantity - on_hand);
-	var cost = (newCost - unit_cost);
-	
-	quantity_adjustment.html("<strong>" + quantity + "</strong>");
-	cost_adjusment.html("<strong>" + cost + "</strong>");
-}
- 
-function remove(e) {
-	$(e).parentsUntil("tbody").remove();
-}
-  
-submitStockAdjustmentBtn.click(function() {
-	
- 	var original_text = submitStockAdjustmentBtn.text();
- 	submitStockAdjustmentBtn.attr("disabled", "disabled");
- 	submitStockAdjustmentBtn.text("Processing....");
- 	
- 	POST("/api/stock/adjustment", stockAdjustmentForm.serialize(), function(data) {
- 		
- 		if(data.status != "OK") {
- 			displayErrors(data, $("#errors"));
- 			submitStockAdjustmentBtn.removeAttr("disabled");
- 			submitStockAdjustmentBtn.text(original_text);
- 		} else {
- 			window.location.replace('/stock/adjustment');
- 		}
- 	});
-});
-</script>

@@ -142,6 +142,12 @@ public class _12StockAdjustment implements ApplicationListener<ContextRefreshedE
 		reasons.add(reason);
 		
 		reason = new StockAdjustmentReasonForm();
+		reason.setDescription("Sales Invoice Cancelled");
+		stockAdjusmentService.createAdjustmentReason(reason);
+		
+		reasons.add(reason);
+		
+		reason = new StockAdjustmentReasonForm();
 		reason.setDescription("Stock Taking Results");
 		stockAdjusmentService.createAdjustmentReason(reason);
 		

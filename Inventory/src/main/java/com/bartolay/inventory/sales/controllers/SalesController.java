@@ -109,6 +109,9 @@ public class SalesController {
 		model.addObject("html", "invoice/view");
 		
 		model.addObject("StringUtils", stringUtils);
+		
+		model.addObject("salesInvoiceCancelForm", new SalesInvoiceCancelForm());
+		model.addObject("cancelled_reason", stockAdjustmentReasonRepository.findByCode("SALES_INVOICE_CANCELLED"));
 		SalesInvoice salesInvoice = salesInvoiceRepository.findById(system_number).get();
 		
 		model.addObject("salesInvoice", salesInvoice);
@@ -124,7 +127,7 @@ public class SalesController {
 		model.addObject("salesInvoiceCancelForm", new SalesInvoiceCancelForm());
 		
 		model.addObject("stockAdjustmentForm", new StockAdjustmentForm());
-		model.addObject("cancelled_reason", stockAdjustmentReasonRepository.findByCode("STOCK_CANCELLED"));
+		model.addObject("cancelled_reason", stockAdjustmentReasonRepository.findByCode("SALES_INVOICE_CANCELLED"));
 		model.addObject("locations", locationRepository.findAll());
 		
 		model.addObject("StringUtils", stringUtils);
