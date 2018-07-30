@@ -25,7 +25,7 @@ public class Inventory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "inventory_generator")
 	@SequenceGenerator(name="inventory_generator", sequenceName = "INVENTORY_SER_SEQ")
-	public int id;
+	private int id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="location_id", nullable=false, updatable=false)
@@ -33,11 +33,11 @@ public class Inventory {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="item_id", nullable=false, updatable=false)
-	public Item item;
+	private Item item;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="unit_id", nullable=false, updatable=false)
-	public Unit unit;
+	private Unit unit;
 	
 	@Column(name="unit_cost", nullable=false, precision=10, scale=5)
 	private BigDecimal unitCost;
@@ -45,7 +45,7 @@ public class Inventory {
 //	private BigDecimal itemCost;
 	
 	@Column(name="quantity", updatable=true, precision=10, scale=5)
-	public BigDecimal quantity;
+	private BigDecimal quantity;
 
 	@Column(name="created_date", nullable=false, updatable=false)
 	@CreationTimestamp

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bartolay.inventory.exceptions.SalesInvoiceException;
+import com.bartolay.inventory.form.SalesInvoiceCancelForm;
 import com.bartolay.inventory.form.SalesInvoiceForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
@@ -72,7 +74,32 @@ public class SalesInvoiceRestController extends AbstractRestController {
 		return stringUtils.encode(response);
 	}
 	
+	@RequestMapping(value="/sales/invoice/cancel", method=RequestMethod.POST)
+	public String cancel(@Valid SalesInvoiceCancelForm salesInvoiceCancelForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+
+		if (bindingResult.hasErrors()) {
+			return handleRestApiException(bindingResult);
+		}
+		
+		ApiResponse response = null;
+		
+		try {	
+			System.err.println(salesInvoiceCancelForm);
+			SalesInvoice salesInvoice = salesInvoiceService.cancel(salesInvoiceCancelForm);
+
+			response = new ApiResponse(HttpStatus.OK, "Succesfully cancelled " + salesInvoice.getSystemNumber());
+		} catch(SalesInvoiceException e) {
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+		} catch(Exception e) {
+			e.printStackTrace();
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+
+		return stringUtils.encode(response);
+	}
+	
 	@RequestMapping(value="/sales/invoices/{systemNumber}", method=RequestMethod.DELETE)
+	@Deprecated
 	public String create(@PathVariable String systemNumber) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		ApiResponse response = null;

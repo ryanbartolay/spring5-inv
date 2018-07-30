@@ -36,6 +36,7 @@ import com.bartolay.inventory.sales.repositories.SalesReturnItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesReturnRepository;
 import com.bartolay.inventory.stock.entity.StockAdjustment;
 import com.bartolay.inventory.stock.entity.StockAdjustmentItem;
+import com.bartolay.inventory.stock.entity.StockAdjustmentReason;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.entity.StockOpeningItem;
 import com.bartolay.inventory.stock.entity.StockReceived;
@@ -44,6 +45,7 @@ import com.bartolay.inventory.stock.entity.StockReceivedItem;
 import com.bartolay.inventory.stock.entity.StockTransfer;
 import com.bartolay.inventory.stock.entity.StockTransferItem;
 import com.bartolay.inventory.stock.repositories.StockAdjustmentItemRepository;
+import com.bartolay.inventory.stock.repositories.StockAdjustmentReasonRepository;
 import com.bartolay.inventory.stock.repositories.StockAdjustmentRepository;
 import com.bartolay.inventory.stock.repositories.StockOpeningItemRepository;
 import com.bartolay.inventory.stock.repositories.StockOpeningRepository;
@@ -52,6 +54,7 @@ import com.bartolay.inventory.stock.repositories.StockReceivedItemRepository;
 import com.bartolay.inventory.stock.repositories.StockReceivedRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferItemRepository;
 import com.bartolay.inventory.stock.repositories.StockTransferRepository;
+import com.bartolay.inventory.stock.services.StockAdjustmentService;
 import com.bartolay.inventory.utils.InventoryUtility;
 import com.bartolay.inventory.utils.UserCredentials;
 
@@ -77,6 +80,10 @@ public class InventoryCoreService {
 	private StockAdjustmentRepository stockAdjustmentRepository;
 	@Autowired
 	private StockAdjustmentItemRepository stockAdjustmentItemRepository;
+	@Autowired
+	private StockAdjustmentReasonRepository stockAdjustmentReasonRepository;
+	@Autowired
+	private StockAdjustmentService stockAdjustmentService;
 	@Autowired
 	private StockOpeningRepository stockOpeningRepository;
 	@Autowired
@@ -202,7 +209,7 @@ public class InventoryCoreService {
 		salesInvoice.setSubtotal(new BigDecimal("0"));
 		salesInvoice.setDiscountTotal(new BigDecimal("0"));
 		salesInvoice.setNetTotal(new BigDecimal("0"));
-		salesInvoice.setSalesInvoiceStatus(SalesInvoiceStatus.DRAFT);
+		salesInvoice.setSalesInvoiceStatus(SalesInvoiceStatus.CONFIRMED);
 
 		if(salesInvoice.getPaymentMethod().equals(PaymentMethod.CREDITCARD)) {
 			salesInvoice.getCreditCardDetails().setCreatedBy(userCredentials.getLoggedInUser());
@@ -277,9 +284,46 @@ public class InventoryCoreService {
 		return salesInvoiceRepository.save(salesInvoice);
 	}
 
-//	@Transactional
-//	public void cancelSalesInvoice(SalesInvoice salesInvoice) {
-//
+	@Transactional(rollbackFor=Exception.class)
+	public void cancelSalesInvoice(SalesInvoice salesInvoice) throws SalesInvoiceException {
+		// TODO
+		// Cancel Sales Invoice as Stock Adjustment
+		
+		StockAdjustmentReason reason = stockAdjustmentReasonRepository.findByCode(SalesInvoice.INVOICE_CANCELLED);
+		
+		List<StockAdjustmentItem> stockAdjustmentItems = new ArrayList<>();
+		
+		for(SalesInvoiceItem item : salesInvoice.getSalesInvoiceItems()) {
+			StockAdjustmentItem saItem = new StockAdjustmentItem();
+			saItem.setInventory(item.getInventory());
+			saItem.setQuantityPrevious(item.getInventory().getQuantity());
+			saItem.setQuantity(item.getInventory().getQuantity().add(item.getQuantity()));
+			
+			stockAdjustmentItems.add(saItem);
+		}
+		
+		StockAdjustment stockAdjustment = new StockAdjustment();
+		stockAdjustment.setSystemNumber(salesInvoice.getSystemNumber());
+		stockAdjustment.setDocumentNumber(salesInvoice.getDocumentNumber());
+		stockAdjustment.setTransactionDate(salesInvoice.getTransactionDate());
+		stockAdjustment.setLocation(salesInvoice.getLocation());
+		stockAdjustment.setYear(salesInvoice.getYear());
+		stockAdjustment.setDescription(salesInvoice.getDescription());
+		stockAdjustment.setStockAdjustmentReason(reason);
+		stockAdjustment.setStockAdjustmentType(StockAdjustmentType.QUANTITY.name());
+		
+		stockAdjustment.setStockAdjustmentItems(stockAdjustmentItems);
+		
+		try {
+			createStockAdjustment(stockAdjustment);
+			salesInvoice.setSalesInvoiceStatus(SalesInvoiceStatus.CANCELLED);
+			salesInvoice.setUpdatedBy(userCredentials.getLoggedInUser());
+			salesInvoiceRepository.save(salesInvoice);
+		} catch (StockAdjustmentException e) {
+			throw new SalesInvoiceException(e.getMessage());
+		}
+		
+//		// Previous Version
 //		final SalesInvoice updatedSalesInvoice = salesInvoiceRepository.findById(salesInvoice.getSystemNumber()).get();
 //
 //		List<SalesInvoiceItem> salesInvoiceItems = salesInvoiceItemRepository.findBySalesInvoice(updatedSalesInvoice);
@@ -333,14 +377,14 @@ public class InventoryCoreService {
 //
 //		});
 //
-//		updatedSalesInvoice.setSalesInvoiceStatus(SalesInvoiceStatus.CANCELLED);
+//		salesInvoice.setSalesInvoiceStatus(SalesInvoiceStatus.CANCELLED);
 //
 //		salesInvoiceRepository.save(updatedSalesInvoice);
 //		salesInvoiceItemRepository.saveAll(salesInvoiceItems);
 //		inventoryRepository.saveAll(inventories);
 //		inventoryTransactionRepository.saveAll(inventoryTransactions);
-//
-//	}
+
+	}
 
 	@Transactional(rollbackFor=Exception.class)
 	public void createStockTransfer(StockTransfer stockTransfer) throws StockTransferException {
@@ -675,8 +719,6 @@ public class InventoryCoreService {
 		} catch(Exception e) {
 			throw new StockAdjustmentException("Wrong value for type " + stockAdjustment.getStockAdjustmentType());
 		}
-
-		
 		
 		List<Inventory> inventories = inventoryRepository.findByLocation(stockAdjustment.getLocation());
 		List<Inventory> inventoriesForSave = new ArrayList<>();
@@ -717,6 +759,9 @@ public class InventoryCoreService {
 					inventoryTransaction.setUnitCostAfter(inventory.getQuantity());
 					break;				
 				}
+				
+				stockAdjustmentItem.setCostAdjusted(stockAdjustmentItem.getCost().subtract(stockAdjustmentItem.getCostPrevious()));
+				stockAdjustmentItem.setQuantityAdjusted(stockAdjustmentItem.getQuantity().subtract(stockAdjustmentItem.getQuantityPrevious()));
 				
 				inventoryTransactionsForSave.add(inventoryTransaction);
 				stockAdjustmentItem.setStockAdjustment(stockAdjustment);

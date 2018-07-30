@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -29,6 +30,8 @@ import com.bartolay.inventory.repositories.GeneratedSystemNumber;
 @Entity
 @Table(name="sales_invoice")
 public class SalesInvoice implements GeneratedSystemNumber {
+	@Transient
+	public static final String INVOICE_CANCELLED = "SALES_INVOICE_CANCELLED";
 
 	@Id
 	@GeneratedValue(generator = "SalesInvoice-UniqueIdGenerator")

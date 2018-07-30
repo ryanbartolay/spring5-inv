@@ -17,32 +17,34 @@ function GET(url, callback, error_callback = null){
 }
 
 function DELETE(url, callback){
-	$.ajax({
-		type: "DELETE",
-		url: url,
-		dataType: "text",
-		success: function(data, status) {
-			callback(decodeAPIResponse(data));
-		},
-		error: function(data, status) {
-			callback(decodeAPIResponse(data));
-		}
-	});
+	requestREST("DELETE", url, null, callback);
 }
-
 function POST(url, data, callback){
-	$.ajax({
-		type: "POST",
-		url: url,
-		data: data,
-
-		success: function(data, status) {
-			callback(decodeAPIResponse(data));
-		}
-	});
+	requestREST("POST", url, data, callback);
 }
 function PUT(url, data, callback){
-	return ajax("PUT", url, data, callback)
+	requestREST("PUT", url, data, callback);
+}
+
+function requestREST(type, url, data, callback) {
+	
+	var request = {
+			type: type,
+			url: url,
+			dataType: "text",
+			success: function(data, status) {
+				callback(decodeAPIResponse(data));
+			},
+			error: function(data, status) {
+				callback(decodeAPIResponse(data));
+			}
+		};
+	
+	if(data) {
+		request.data = data;
+	}
+	
+	$.ajax(request);
 }
 function decodeAPIResponse(data) {
 	try {

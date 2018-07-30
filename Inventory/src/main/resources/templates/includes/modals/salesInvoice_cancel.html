@@ -9,7 +9,7 @@
 				</button>
 				<div class="col-md-2">
 
-					<h4 class="modal-title" id="myModalLabel">Expenses List</h4>
+					<h4 class="modal-title" id="myModalLabel">Cancel Invoice</h4>
 				</div>
 				<div class="col-md-5">
 					<label id="itemLocationModal"></label> <input type="text"
@@ -18,114 +18,105 @@
 			</div>
 			<div class="modal-body">
 
-				<div class="col-lg-12">
-					<form th:object="${salesInvoiceCancelForm}"
-						id="stockAdjustmentForm" th:action="@{/api/stock/adjustment}"
-						method="POST">
+				<form th:object="${salesInvoiceCancelForm}" id="salesInvoiceCancelForm"
+					method="PUT">
+					<div id="confirmSalesInvoiceCancelModalErrors"></div>
+					<input type="hidden" name="systemNumber" th:value="${salesInvoice.systemNumber}" />
+					<div class="form-group text-danger"><b>You are now cancelling this invoice <span th:text="${salesInvoice.systemNumber}"></span></b></div>
 
-						<div class="form-group" id="errors"></div>
-						<!-- <div th:text="${salesInvoice}"></div>
-					<div th:text="${salesInvoice.salesInvoiceItems}"></div> -->
-
-						<div class="col-md-12">
-							<div class="col-md-2">
-								<label>Mode of Adjustment :</label>
-							</div>
-							<div class="col-md-10">
-								<input type="radio" checked="checked"
-									th:value="${T(com.bartolay.inventory.enums.StockAdjustmentType).QUANTITY}"
-									id="adjustmentType" name="adjustmentType"> Quantity
-								Adjustment<br> </label> <br>
-							</div>
-
-						</div>
-
-
+					<div class="col-md-12">
 						<div class="col-md-3">
-							<label>System Number :</label>
-							<div class="form-control" th:text="${salesInvoice.systemNumber}"></div>
-							<label>Document Number :</label>
-							<div type="text" class="form-control"
-								th:text="${salesInvoice.documentNumber}"></div>
+							<label>Mode of Adjustment :</label>
+						</div>
+						<div class="col-md-9">
+							<input type="radio" checked="checked"
+								th:value="${T(com.bartolay.inventory.enums.StockAdjustmentType).QUANTITY}"
+								id="adjustmentType" name="adjustmentType"> Quantity
+							Adjustment<br> </label> <br>
 						</div>
 
-						<div class="col-md-3">
-							<label>Transaction Date</label>
-							<div th:text="${salesInvoice.transactionDate}"
-								class="form-control"></div>
-							<label>Year</label>
-							<div class="form-control" th:text="${salesInvoice.year}"></div>
-						</div>
-
-						<div class="col-md-3">
-							<label>Reason</label> <select class="form-control">
-								<option th:value="${cancelled_reason.code}"
-									th:text="${cancelled_reason.description}"></option>
-							</select> <label>Location </label>
-							<div class="form-control" th:text="${salesInvoice.location.name}"></div>
-						</div>
-						<div class="col-md-12">
-							<label>Description</label>
-							<div th:text="${salesInvoice.description}" class="form-control"></div>
-						</div>
-						<div class="clearfix"></div>
-						<br>
-
-						<div class="table-responsive col-md-12">
-
-							<table class="table table-bordered table-striped" id="itemsTable">
-								<thead>
-									<tr>
-										<th>SN</th>
-										<th class="col-md-1">Code</th>
-										<th class="col-md-3">Description</th>
-										<th>Unit</th>
-
-										<th class="col-md-2 text-right hidden" id="quantity_1">Stock
-											On Hand</th>
-										<th class="col-md-2 text-right hidden" id="quantity_2">New
-											Quantity On Hand</th>
-										<th class="col-md-2 text-right hidden" id="quantity_3">Quantity
-											Adjusted</th>
+					</div>
 
 
-										<th class="col-md-2 text-right hidden" id="cost_1">Current
-											Cost</th>
-										<th class="col-md-2 text-right hidden" id="cost_2">Changed
-											Cost</th>
-										<th class="col-md-2 text-right hidden" id="cost_3">Adjusted
-											Cost</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr
-										th:each="salesInvoiceItem : ${salesInvoice.salesInvoiceItems}">
-										<td th:text="${salesInvoiceItem.id}"></td>
-										<td th:text="${salesInvoiceItem.inventory.item.code}"></td>
-										<td th:text="${salesInvoiceItem.inventory.item.name}"></td>
-										<td th:text="${salesInvoiceItem.inventory.unit.name}"></td>
-										<td class="text-right"
-											th:text="${salesInvoiceItem.inventory.quantity}"></td>
-										<td class="text-right"
-											th:text="${salesInvoiceItem.inventory.quantity.add(salesInvoiceItem.quantity)}"></td>
-										<td class="text-right" th:text="${salesInvoiceItem.quantity}"></td>
-									</tr>
-								</tbody>
+					<div class="col-md-4">
+						<label>System Number :</label>
+						<div class="form-control" th:text="${salesInvoice.systemNumber}"></div>
+						<label>Document Number :</label>
+						<div type="text" class="form-control"
+							th:text="${salesInvoice.documentNumber}"></div>
+					</div>
 
-							</table>
+					<div class="col-md-4">
+						<label>Transaction Date</label>
+						<div th:text="${salesInvoice.transactionDate}"
+							class="form-control"></div>
+						<label>Year</label>
+						<div class="form-control" th:text="${salesInvoice.year}"></div>
+					</div>
 
-						</div>
+					<div class="col-md-4">
+						<label>Reason</label> <select class="form-control">
+							<option th:value="${cancelled_reason.code}"
+								th:text="${cancelled_reason.description}"></option>
+						</select> <label>Location </label>
+						<div class="form-control" th:text="${salesInvoice.location.name}"></div>
+					</div>
+					<div class="col-md-12">
+						<label>Description</label>
+						<div th:text="${salesInvoice.description}" class="form-control"></div>
+					</div>
+					<div class="clearfix"></div>
+					<br>
+
+					<div class="table-responsive col-md-12">
+
+						<table class="table table-bordered table-striped" id="itemsTable">
+							<thead>
+								<tr>
+									<th>SN</th>
+									<th class="col-md-1">Code</th>
+									<th class="col-md-3">Description</th>
+									<th>Unit</th>
+
+									<th class="col-md-2 text-right" id="quantity_1">Stock
+										On Hand</th>
+									<th class="col-md-2 text-right" id="quantity_2">New
+										Quantity On Hand</th>
+									<th class="col-md-2 text-right" id="quantity_3">Quantity
+										Adjusted</th>
+
+								</tr>
+							</thead>
+							<tbody>
+								<tr
+									th:each="salesInvoiceItem : ${salesInvoice.salesInvoiceItems}">
+									<td th:text="${salesInvoiceItem.id}"></td>
+									<td th:text="${salesInvoiceItem.inventory.item.code}"></td>
+									<td th:text="${salesInvoiceItem.inventory.item.name}"></td>
+									<td th:text="${salesInvoiceItem.inventory.unit.name}"></td>
+									<td class="text-right"
+										th:text="${salesInvoiceItem.inventory.quantity}"></td>
+									<td class="text-right"
+										th:text="${salesInvoiceItem.inventory.quantity.add(salesInvoiceItem.quantity)}"></td>
+									<td class="text-right" th:text="${salesInvoiceItem.quantity}"></td>
+								</tr>
+							</tbody>
+
+						</table>
+
+					</div>
 
 
-					</form>
-				</div>
+				</form>
 				<!-- /.col-lg-12 -->
 			</div>
 
 			<div class="modal-footer">
-				<span id="expensesSelectedStatus"></span>&nbsp;
+				<div class="form-group text-danger" id="errors"><b>This process is irreversible. Are you sure you want to Cancel Sales Invoice?</b> 
 				<button type="button" class="btn btn-success"
-					id="expensesModalAddItem_btn">Add Expenses</button>
+					id="confirmSalesInvoiceCancelBtn">Confirm</button>
+				</div>
+				
 			</div>
 
 		</div>
@@ -134,8 +125,20 @@
 
 <script>
 var salesInvoiceCancelModal = $("#salesInvoiceCancelModal");
+var form = $("#salesInvoiceCancelForm");
 
 function cancelInvoiceModal() {
 	salesInvoiceCancelModal.modal('show');	
 }
+
+$("#confirmSalesInvoiceCancelBtn").click(function(e) {
+	var url = "/api/sales/invoice/cancel";
+	console.log( form.serialize());
+	POST(url, form.serialize(), function(data) {
+		
+		if(data.status != "OK") {
+			displayErrors(data, $("#confirmSalesInvoiceCancelModalErrors"));
+		}
+	});
+});
 </script>

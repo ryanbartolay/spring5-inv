@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.enums.PaymentMethod;
+import com.bartolay.inventory.enums.SalesInvoiceStatus;
 import com.bartolay.inventory.exceptions.SalesInvoiceException;
+import com.bartolay.inventory.form.SalesInvoiceCancelForm;
 import com.bartolay.inventory.form.SalesInvoiceForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.repositories.InventoryRepository;
@@ -122,21 +124,40 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 		return ServiceUtility.toList(salesInvoiceRepository.findAll());
 	}
 
-//	@Override
-//	public SalesInvoice cancel(String systemNumber) {
-//		Optional<SalesInvoice> salesInvoice = salesInvoiceRepository.findById(systemNumber);
-//		System.err.println("salesInvoice : " + salesInvoice);
-//		if(!salesInvoice.isPresent()) {
-//			throw new RuntimeException("Please specify Credit Card Details");
-//		}
-//		SalesInvoice sInvoice = salesInvoice.get();
-//		try {
-//			//inventoryCoreService.cancelSalesInvoice(sInvoice);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return sInvoice;
-//	}
+	@Override
+	public SalesInvoice cancel(SalesInvoiceCancelForm salesInvoiceCancelForm) throws SalesInvoiceException {
+		
+		if(salesInvoiceCancelForm.getSystemNumber() == null) {
+			throw new SalesInvoiceException("System Number is required");
+		}
+		
+		Optional<SalesInvoice> si = salesInvoiceRepository.findById(salesInvoiceCancelForm.getSystemNumber());
+		
+		if(!si.isPresent()) {
+			throw new SalesInvoiceException("Sales Invoice Not Found");
+		}
+		
+		SalesInvoice salesInvoice = si.get();
+		
+		if(salesInvoice.getSalesInvoiceStatus().equals(SalesInvoiceStatus.CANCELLED)) {
+			throw new SalesInvoiceException("Sales Invoice already cancelled");
+		} else if(!salesInvoice.getSalesInvoiceStatus().equals(SalesInvoiceStatus.CONFIRMED)) {
+			throw new SalesInvoiceException("Sales Invoice invalid status, you must put the status to confirm.");
+		}
+		
+		
+		System.err.println("salesInvoice : " + si);
+		if(!si.isPresent()) {
+			throw new RuntimeException("Please specify Credit Card Details");
+		}
+		SalesInvoice sInvoice = si.get();
+		try {
+			inventoryCoreService.cancelSalesInvoice(sInvoice);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return sInvoice;
+	}
 
 }
