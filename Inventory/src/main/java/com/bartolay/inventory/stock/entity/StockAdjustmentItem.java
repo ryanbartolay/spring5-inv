@@ -32,24 +32,14 @@ public class StockAdjustmentItem {
 	@JoinColumn(nullable=false, updatable=true)
 	private StockAdjustment stockAdjustment;
 	
-	@Column(name="quantity_previous", nullable=false, precision=10, scale=5)
-	private BigDecimal quantityPrevious;
+	@Column(name="amount_previous", nullable=false, precision=10, scale=5)
+	private BigDecimal amountPrevious;
 	
-	@Column(name="quantity", nullable=false, precision=10, scale=5)
-	private BigDecimal quantity;
-	
-	@Column(name="quantity_adjusted", nullable=false, precision=10, scale=5)
-	private BigDecimal quantityAdjusted;
-	
-	@Column(name="cost_previous", nullable=false, precision=10, scale=5)
-	private BigDecimal costPrevious;
-	
-	@Column(name="cost", nullable=false, precision=10, scale=5)
-	private BigDecimal cost;
+	@Column(name="amount", nullable=false, precision=10, scale=5)
+	private BigDecimal amount;
 	
 	@Column(name="cost_adjusted", nullable=false, precision=10, scale=5)
-	private BigDecimal costAdjusted;
-	
+	private BigDecimal amountAdjusted;
 	
 	private String description;
 	
@@ -77,41 +67,24 @@ public class StockAdjustmentItem {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public BigDecimal getQuantityPrevious() {
-		return quantityPrevious;
+	
+	public BigDecimal getAmountPrevious() {
+		return amountPrevious;
 	}
-	public void setQuantityPrevious(BigDecimal quantityPrevious) {
-		this.quantityPrevious = quantityPrevious;
+	public void setAmountPrevious(BigDecimal amountPrevious) {
+		this.amountPrevious = amountPrevious;
 	}
-	public BigDecimal getQuantity() {
-		return quantity;
+	public BigDecimal getAmount() {
+		return amount;
 	}
-	public void setQuantity(BigDecimal quantity) {
-		this.quantity = quantity;
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
 	}
-	public BigDecimal getCostPrevious() {
-		return costPrevious;
+	public BigDecimal getAmountAdjusted() {
+		return amountAdjusted;
 	}
-	public void setCostPrevious(BigDecimal costPrevious) {
-		this.costPrevious = costPrevious;
-	}
-	public BigDecimal getCost() {
-		return cost;
-	}
-	public void setCost(BigDecimal cost) {
-		this.cost = cost;
-	}
-	public BigDecimal getQuantityAdjusted() {
-		return quantityAdjusted;
-	}
-	public void setQuantityAdjusted(BigDecimal quantityAdjusted) {
-		this.quantityAdjusted = quantityAdjusted;
-	}
-	public BigDecimal getCostAdjusted() {
-		return costAdjusted;
-	}
-	public void setCostAdjusted(BigDecimal costAdjusted) {
-		this.costAdjusted = costAdjusted;
+	public void setAmountAdjusted(BigDecimal amountAdjusted) {
+		this.amountAdjusted = amountAdjusted;
 	}
 	@Override
 	public int hashCode() {
@@ -138,8 +111,7 @@ public class StockAdjustmentItem {
 	}
 	@Override
 	public String toString() {
-		return "StockAdjustmentItem [id=" + id + ", quantityPrevious=" + quantityPrevious
-				+ ", quantity=" + quantity + ", quantityAdjusted=" + quantityAdjusted + ", costPrevious=" + costPrevious
-				+ ", cost=" + cost + ", costAdjusted=" + costAdjusted + ", description=" + description + "]";
+		return "StockAdjustmentItem [id=" + id + ", quantityPrevious=" + amountPrevious
+				+ ", quantity=" + amount + ", quantityAdjusted=" + amountAdjusted + ", description=" + description + "]";
 	}
 }

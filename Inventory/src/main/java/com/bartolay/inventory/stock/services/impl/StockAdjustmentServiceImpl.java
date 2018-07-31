@@ -1,5 +1,6 @@
 package com.bartolay.inventory.stock.services.impl;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -93,6 +94,16 @@ public class StockAdjustmentServiceImpl implements StockAdjustmentService {
 		Date date = dateFormat.parse(stockAdjustmentForm.getTransactionDate());
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
+		
+		stockAdjustmentForm.getItems().forEach(item -> { 
+			if(item.getCostPrevious() == null) {
+				item.setCostPrevious(new BigDecimal("0"));
+			}
+			
+			if(item.getQuantityPrevious() == null) {
+				item.setQuantityPrevious(new BigDecimal("0"));
+			}
+		});
 		
 		StockAdjustment sa = new StockAdjustment();
 		sa.setStockAdjustmentType(stockAdjustmentForm.getAdjustmentType().name());

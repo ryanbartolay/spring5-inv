@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.entity.InventoryTransaction;
 import com.bartolay.inventory.entity.Item;
+import com.bartolay.inventory.entity.Location;
+import com.bartolay.inventory.entity.Unit;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.enums.SalesInvoiceStatus;
 import com.bartolay.inventory.enums.Status;
@@ -21,6 +23,7 @@ import com.bartolay.inventory.exceptions.SalesInvoiceException;
 import com.bartolay.inventory.exceptions.SalesReturnException;
 import com.bartolay.inventory.exceptions.StockAdjustmentException;
 import com.bartolay.inventory.exceptions.StockTransferException;
+import com.bartolay.inventory.repositories.InventoryJDBCRepository;
 import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.InventoryTransactionRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
@@ -70,6 +73,8 @@ public class InventoryCoreService {
 	private InventoryUtility inventoryUtility;
 	@Autowired
 	private InventoryRepository inventoryRepository;
+	@Autowired
+	private InventoryJDBCRepository inventoryJDBCRepository;
 	@Autowired
 	private InventoryTransactionRepository inventoryTransactionRepository;
 	@Autowired
@@ -290,6 +295,12 @@ public class InventoryCoreService {
 		// Cancel Sales Invoice as Stock Adjustment
 		
 		StockAdjustmentReason reason = stockAdjustmentReasonRepository.findByCode(SalesInvoice.INVOICE_CANCELLED);
+		
+		
+		List<Inventory> inventory_ids = new ArrayList<>();
+		
+		
+		List<Inventory> inventories = inventoryRepository.findByIdIn(inventory_ids);
 		
 		List<StockAdjustmentItem> stockAdjustmentItems = new ArrayList<>();
 		
@@ -721,6 +732,7 @@ public class InventoryCoreService {
 		}
 		
 		List<Inventory> inventories = inventoryRepository.findByLocation(stockAdjustment.getLocation());
+//		List<Inventory> inventories = inventoryJDBCRepository.findByLocation(stockAdjustment.getLocation());
 		List<Inventory> inventoriesForSave = new ArrayList<>();
 		List<InventoryTransaction> inventoryTransactionsForSave = new ArrayList<>();
 		
@@ -729,12 +741,11 @@ public class InventoryCoreService {
 		stockAdjustment = stockAdjustmentRepository.save(stockAdjustment);
 		
 		for(StockAdjustmentItem stockAdjustmentItem : stockAdjustmentItems) {
+						
+			Inventory inventory = inventoryUtility.findInventoryFromList(inventories, stockAdjustment.getLocation(), 
+					stockAdjustmentItem.getInventory().getItem(), stockAdjustmentItem.getInventory().getUnit());
 			
-			if(inventories.contains(stockAdjustmentItem.getInventory())) {
-				
-				Inventory inventory = inventories.get(inventories.indexOf(stockAdjustmentItem.getInventory()));
-				
-				
+			if(inventory != null) {
 				// inventory transaction
 				InventoryTransaction inventoryTransaction = new InventoryTransaction();
 				inventoryTransaction.setItem(stockAdjustmentItem.getInventory().getItem());
@@ -749,24 +760,40 @@ public class InventoryCoreService {
 				
 				switch(adjustmentType) {
 				case QUANTITY:
+					stockAdjustmentItem.setQuantityAdjusted(stockAdjustmentItem.getQuantity().subtract(stockAdjustmentItem.getQuantityPrevious()));
+					stockAdjustmentItem.setCostAdjusted(new BigDecimal("0"));
 					inventoryTransaction.setQuantityBefore(inventory.getQuantity());
 					inventory.setQuantity(stockAdjustmentItem.getCost());
 					inventoryTransaction.setQuantityAfter(inventory.getQuantity());
 					break;
 				case COST:
+					stockAdjustmentItem.setQuantityAdjusted(new BigDecimal("0"));
+					stockAdjustmentItem.setQuantity(new BigDecimal("0"));
+					stockAdjustmentItem.setCostAdjusted(stockAdjustmentItem.getCost().subtract(stockAdjustmentItem.getCostPrevious()));
+
 					inventoryTransaction.setUnitCostBefore(inventory.getQuantity());
 					inventory.setUnitCost(stockAdjustmentItem.getCost());
 					inventoryTransaction.setUnitCostAfter(inventory.getQuantity());
 					break;				
 				}
 				
-				stockAdjustmentItem.setCostAdjusted(stockAdjustmentItem.getCost().subtract(stockAdjustmentItem.getCostPrevious()));
-				stockAdjustmentItem.setQuantityAdjusted(stockAdjustmentItem.getQuantity().subtract(stockAdjustmentItem.getQuantityPrevious()));
-				
 				inventoryTransactionsForSave.add(inventoryTransaction);
 				stockAdjustmentItem.setStockAdjustment(stockAdjustment);
 				inventoriesForSave.add(inventory);
 			} else {
+				
+				
+				System.err.println(stockAdjustmentItem.getInventory().getItem().getName());
+				System.err.println(stockAdjustmentItem.getInventory().getLocation().getName());
+				System.err.println(stockAdjustmentItem.getInventory().getUnit());
+				System.err.println("----------------------");
+				for(Inventory i : inventories) {
+					System.err.println(i.getClass());
+					System.err.println(i.getItem().getName());
+					System.err.println(i.getLocation().getName());
+					System.err.println(i.getUnit());
+				}
+				
 				throw new StockAdjustmentException(stockAdjustmentItem.getInventory().getItem().getName() + " does not exists in " + stockAdjustment.getLocation().getName());
 			}
 		}

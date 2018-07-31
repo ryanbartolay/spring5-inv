@@ -21,6 +21,7 @@ import com.bartolay.inventory.enums.StockAdjustmentType;
 import com.bartolay.inventory.exceptions.StockAdjustmentException;
 import com.bartolay.inventory.form.StockAdjustmentForm;
 import com.bartolay.inventory.form.StockAdjustmentReasonForm;
+import com.bartolay.inventory.repositories.InventoryJDBCRepository;
 import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.stock.entity.StockAdjustment;
@@ -50,6 +51,9 @@ public class _12StockAdjustment implements ApplicationListener<ContextRefreshedE
 	private InventoryRepository inventoryRepository;
 	
 	@Autowired
+	private InventoryJDBCRepository inventoryJDBCRepository;
+	
+	@Autowired
 	private StockAdjustmentService stockAdjustmentService;
 	
 	@Autowired
@@ -70,26 +74,23 @@ public class _12StockAdjustment implements ApplicationListener<ContextRefreshedE
 			createStockAdjustmentReasons();
 			
 			Location location = locationRepository.findById(2).get();
+//			List<Inventory> inventories = inventoryJDBCRepository.findByLocation(location);
 			List<Inventory> inventories = inventoryRepository.findByLocation(location);
 			
 			List<StockAdjustmentItem> items = new ArrayList<>();
 			
 			StockAdjustmentItem item = new StockAdjustmentItem();
 			item.setInventory(inventories.get(0));
-			item.setQuantity(new BigDecimal("200"));
-			item.setQuantityPrevious(inventories.get(0).getQuantity());
-			item.setCost(new BigDecimal("0"));
-			item.setCostPrevious(inventories.get(0).getUnitCost());
+			item.setAmount(new BigDecimal("200"));
+			item.setAmountPrevious(inventories.get(0).getQuantity());
 			item.setDescription("description");
 			
 			items.add(item);
 			
 			StockAdjustmentItem item2 = new StockAdjustmentItem();
-			item2.setInventory(inventories.get(1));
-			item2.setQuantity(new BigDecimal("450"));
-			item2.setQuantityPrevious(inventories.get(1).getQuantity());
-			item2.setCost(new BigDecimal("0"));
-			item2.setCostPrevious(inventories.get(1).getUnitCost());
+			item2.setInventory(inventories.get(3));
+			item2.setAmount(new BigDecimal("450"));
+			item2.setAmountPrevious(inventories.get(1).getQuantity());
 			item2.setDescription("description2s");
 			
 			items.add(item2);
@@ -157,7 +158,7 @@ public class _12StockAdjustment implements ApplicationListener<ContextRefreshedE
 		reason.setDescription("Inventory Revaluation");
 		stockAdjusmentService.createAdjustmentReason(reason);
 		
-//		reasons.add(reason);
+		reasons.add(reason);
 		
 		
 	}

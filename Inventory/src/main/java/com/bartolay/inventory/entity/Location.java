@@ -18,6 +18,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 public class Location {
 	
+	public static final String TABLE_NAME = "location";
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "location_generator")
 	@SequenceGenerator(name="location_generator", sequenceName = "LOCATION_SER_SEQ")

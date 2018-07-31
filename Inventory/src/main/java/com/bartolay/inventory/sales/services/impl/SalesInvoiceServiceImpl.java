@@ -145,8 +145,6 @@ public class SalesInvoiceServiceImpl implements SalesInvoiceService {
 			throw new SalesInvoiceException("Sales Invoice invalid status, you must put the status to confirm.");
 		}
 		
-		
-		System.err.println("salesInvoice : " + si);
 		if(!si.isPresent()) {
 			throw new RuntimeException("Please specify Credit Card Details");
 		}
