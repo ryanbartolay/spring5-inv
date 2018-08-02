@@ -79,14 +79,14 @@
 									<td class="col-md-3" th:text="${item.inventory.item.name}"></td>
 									<td th:text="${item.inventory.unit.abbreviation}"></td>
 									
-									<td class="col-md-2 text-right hidden" id="quantity_1" th:text="${item.quantityPrevious}"></td>
-									<td class="col-md-2 text-right hidden" id="quantity_2" th:text="${item.quantity}"></td>
-									<td class="col-md-2 text-right hidden" id="quantity_3" th:text="${item.quantityAdjusted}"></td>
+									<td class="col-md-2 text-right hidden" id="quantity_1" th:text="${item.amountPrevious}"></td>
+									<td class="col-md-2 text-right hidden" id="quantity_2" th:text="${item.amount}"></td>
+									<td class="col-md-2 text-right hidden" id="quantity_3" th:text="${item.amountAdjusted}"></td>
 									
 									
-									<td class="col-md-2 text-right hidden" id="cost_1" th:text="${item.costPrevious}"></td>
-									<td class="col-md-2 text-right hidden" id="cost_2" th:text="${item.cost}"></td>
-									<td class="col-md-2 text-right hidden" id="cost_3" th:text="${item.costAdjusted}">Adjusted Cost</td>
+									<td class="col-md-2 text-right hidden" id="cost_1" th:text="${item.amountPrevious}"></td>
+									<td class="col-md-2 text-right hidden" id="cost_2" th:text="${item.amount}"></td>
+									<td class="col-md-2 text-right hidden" id="cost_3" th:text="${item.amountAdjusted}">Adjusted Cost</td>
 								</tr>
 							</tbody>
 

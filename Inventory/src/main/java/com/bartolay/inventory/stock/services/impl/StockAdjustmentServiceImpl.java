@@ -95,13 +95,9 @@ public class StockAdjustmentServiceImpl implements StockAdjustmentService {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		
-		stockAdjustmentForm.getItems().forEach(item -> { 
-			if(item.getCostPrevious() == null) {
-				item.setCostPrevious(new BigDecimal("0"));
-			}
-			
-			if(item.getQuantityPrevious() == null) {
-				item.setQuantityPrevious(new BigDecimal("0"));
+		stockAdjustmentForm.getItems().forEach(item -> { 			
+			if(item.getAmountPrevious() == null) {
+				item.setAmountPrevious(new BigDecimal("0"));
 			}
 		});
 		

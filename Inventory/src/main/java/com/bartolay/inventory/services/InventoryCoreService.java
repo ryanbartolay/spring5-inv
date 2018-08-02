@@ -307,8 +307,8 @@ public class InventoryCoreService {
 		for(SalesInvoiceItem item : salesInvoice.getSalesInvoiceItems()) {
 			StockAdjustmentItem saItem = new StockAdjustmentItem();
 			saItem.setInventory(item.getInventory());
-			saItem.setQuantityPrevious(item.getInventory().getQuantity());
-			saItem.setQuantity(item.getInventory().getQuantity().add(item.getQuantity()));
+			saItem.setAmountPrevious(item.getInventory().getQuantity());
+			saItem.setAmount(item.getInventory().getQuantity().add(item.getQuantity()));
 			
 			stockAdjustmentItems.add(saItem);
 		}
@@ -752,30 +752,26 @@ public class InventoryCoreService {
 				inventoryTransaction.setLocation(stockAdjustment.getLocation());
 				inventoryTransaction.setUnit(stockAdjustmentItem.getInventory().getUnit());
 				inventoryTransaction.setTransactionType(TransactionType.STOCK_ADJUSTMENT);
-				inventoryTransaction.setRawQuantity(stockAdjustmentItem.getQuantity());
+				inventoryTransaction.setRawQuantity(stockAdjustmentItem.getAmount());
 				inventoryTransaction.setTransactionSystemNumber(stockAdjustment.getSystemNumber());
 				inventoryTransaction.setCreatedBy(userCredentials.getLoggedInUser());
-				inventoryTransaction.setRateQuantity(stockAdjustmentItem.getQuantity());
+				inventoryTransaction.setRateQuantity(stockAdjustmentItem.getAmount());
 				inventoryTransaction.setInventory(inventory);
 				
 				switch(adjustmentType) {
 				case QUANTITY:
-					stockAdjustmentItem.setQuantityAdjusted(stockAdjustmentItem.getQuantity().subtract(stockAdjustmentItem.getQuantityPrevious()));
-					stockAdjustmentItem.setCostAdjusted(new BigDecimal("0"));
 					inventoryTransaction.setQuantityBefore(inventory.getQuantity());
-					inventory.setQuantity(stockAdjustmentItem.getCost());
+					inventory.setQuantity(stockAdjustmentItem.getAmount());
 					inventoryTransaction.setQuantityAfter(inventory.getQuantity());
 					break;
 				case COST:
-					stockAdjustmentItem.setQuantityAdjusted(new BigDecimal("0"));
-					stockAdjustmentItem.setQuantity(new BigDecimal("0"));
-					stockAdjustmentItem.setCostAdjusted(stockAdjustmentItem.getCost().subtract(stockAdjustmentItem.getCostPrevious()));
-
 					inventoryTransaction.setUnitCostBefore(inventory.getQuantity());
-					inventory.setUnitCost(stockAdjustmentItem.getCost());
+					inventory.setUnitCost(stockAdjustmentItem.getAmount());
 					inventoryTransaction.setUnitCostAfter(inventory.getQuantity());
 					break;				
 				}
+				
+				stockAdjustmentItem.setAmountAdjusted(stockAdjustmentItem.getAmount().subtract(stockAdjustmentItem.getAmountPrevious()));
 				
 				inventoryTransactionsForSave.add(inventoryTransaction);
 				stockAdjustmentItem.setStockAdjustment(stockAdjustment);

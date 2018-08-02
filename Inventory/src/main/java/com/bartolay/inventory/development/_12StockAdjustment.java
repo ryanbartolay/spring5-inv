@@ -20,6 +20,7 @@ import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.enums.StockAdjustmentType;
 import com.bartolay.inventory.exceptions.StockAdjustmentException;
 import com.bartolay.inventory.form.StockAdjustmentForm;
+import com.bartolay.inventory.form.StockAdjustmentItemForm;
 import com.bartolay.inventory.form.StockAdjustmentReasonForm;
 import com.bartolay.inventory.repositories.InventoryJDBCRepository;
 import com.bartolay.inventory.repositories.InventoryRepository;
@@ -78,6 +79,10 @@ public class _12StockAdjustment implements ApplicationListener<ContextRefreshedE
 			List<Inventory> inventories = inventoryRepository.findByLocation(location);
 			
 			List<StockAdjustmentItem> items = new ArrayList<>();
+			
+			StockAdjustmentItemForm saiForm = new StockAdjustmentItemForm();
+			saiForm.setInventory(inventories.get(0));
+			saiForm.setAmount(new BigDecimal("200"));
 			
 			StockAdjustmentItem item = new StockAdjustmentItem();
 			item.setInventory(inventories.get(0));

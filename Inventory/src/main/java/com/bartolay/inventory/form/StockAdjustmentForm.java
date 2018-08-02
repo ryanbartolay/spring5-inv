@@ -8,7 +8,6 @@ import javax.validation.constraints.Size;
 
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.enums.StockAdjustmentType;
-import com.bartolay.inventory.stock.entity.StockAdjustmentItem;
 import com.bartolay.inventory.stock.entity.StockAdjustmentReason;
 
 public class StockAdjustmentForm {
@@ -36,7 +35,7 @@ public class StockAdjustmentForm {
 	private StockAdjustmentType adjustmentType;
 	
 	@NotNull(message="Needed atleast 1 item")
-	private List<StockAdjustmentItem> items;
+	private List<StockAdjustmentItemForm> items;
 	
 	@NotNull(message="Reason is required")
 	private StockAdjustmentReason reason;
@@ -97,11 +96,11 @@ public class StockAdjustmentForm {
 		this.adjustmentType = adjustmentType;
 	}
 
-	public List<StockAdjustmentItem> getItems() {
+	public List<StockAdjustmentItemForm> getItems() {
 		return items;
 	}
 
-	public void setItems(List<StockAdjustmentItem> items) {
+	public void setItems(List<StockAdjustmentItemForm> items) {
 		this.items = items;
 	}
 

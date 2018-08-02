@@ -161,7 +161,7 @@ function formatAdjustmentType(value) {
 		 $( "#cost_1, #cost_2, #cost_3" ).addClass( "hidden" );
 		 $( "#quantity_1, #quantity_2, #quantity_3" ).removeClass( "hidden" );
     }
-    else if (value == 'VALUE') {
+    else if (value == 'COST') {
     	$( "#cost_1, #cost_2, #cost_3" ).removeClass( "hidden" );
 		$( "#quantity_1, #quantity_2, #quantity_3" ).addClass( "hidden" );
     }
@@ -220,20 +220,20 @@ $("#btnAddItem").on("click", function() {
   			<tr>
   				<td>`+data[i].id+`
   					<input type="hidden" id="inventory" name="items[`+i+`].inventory" value="`+data[i].id+`" />"`+data[i].id+`"
-  					<input type="hidden" id="on_hand" name="items[`+i+`].quantityPrevious" value="`+data[i].on_hand+`" />
-  					<input type="hidden" id="unit_cost" name="items[`+i+`].costPrevious" value="`+data[i].unit_cost+`" />
+  					<input type="hidden" id="on_hand" name="items[`+i+`].on_hand" value="`+data[i].on_hand+`" />
+  					<input type="hidden" id="unit_cost" name="items[`+i+`].unit_cost" value="`+data[i].unit_cost+`" />
   				</td>
 				<td class="col-md-1">`+data[i].item_code+`</td>
 				<td class="col-md-3">`+data[i].item_name+`</td>
 				<td>`+data[i].unit_name+`</td>
 				
 				<td class="col-md-2 text-right hidden" id="quantity_1">`+data[i].on_hand+`</td>
-				<td class="col-md-2 text-right hidden" id="quantity_2"><input type="number" class="form-control input-sm" id="newQuantity" name="items[`+i+`].quantity" onChange="formatItemAdjustment(this)" value="0"></td>
+				<td class="col-md-2 text-right hidden" id="quantity_2"><input type="number" class="form-control input-sm" id="newQuantity" name="items[`+i+`].amount" onChange="formatItemAdjustment(this)" value="0"></td>
 				<td class="col-md-2 text-right hidden" id="quantity_3">0</td>
 				
 				
 				<td class="col-md-2 text-right hidden" id="cost_1">`+data[i].unit_cost+`</td>
-				<td class="col-md-2 text-right hidden" id="cost_2"><input type="number" class="form-control input-sm" id="newCost" name="items[`+i+`].cost" onChange="formatItemAdjustment(this)" value="0"></td>
+				<td class="col-md-2 text-right hidden" id="cost_2"><input type="number" class="form-control input-sm" id="newCost" name="items[`+i+`].amount" onChange="formatItemAdjustment(this)" value="0"></td>
 				<td class="col-md-2 text-right hidden" id="cost_3">0</td>
 				<td id="lblItemName" style="width:20px"><button class="btn btn-danger fa fa-times" onClick="remove(this)" /></td>
   			</tr>`;
