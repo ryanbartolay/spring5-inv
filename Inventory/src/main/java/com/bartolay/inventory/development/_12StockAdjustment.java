@@ -78,24 +78,22 @@ public class _12StockAdjustment implements ApplicationListener<ContextRefreshedE
 //			List<Inventory> inventories = inventoryJDBCRepository.findByLocation(location);
 			List<Inventory> inventories = inventoryRepository.findByLocation(location);
 			
-			List<StockAdjustmentItem> items = new ArrayList<>();
+			List<StockAdjustmentItemForm> items = new ArrayList<>();
 			
 			StockAdjustmentItemForm saiForm = new StockAdjustmentItemForm();
 			saiForm.setInventory(inventories.get(0));
 			saiForm.setAmount(new BigDecimal("200"));
 			
-			StockAdjustmentItem item = new StockAdjustmentItem();
+			StockAdjustmentItemForm item = new StockAdjustmentItemForm();
 			item.setInventory(inventories.get(0));
 			item.setAmount(new BigDecimal("200"));
-			item.setAmountPrevious(inventories.get(0).getQuantity());
 			item.setDescription("description");
 			
 			items.add(item);
 			
-			StockAdjustmentItem item2 = new StockAdjustmentItem();
+			StockAdjustmentItemForm item2 = new StockAdjustmentItemForm();
 			item2.setInventory(inventories.get(3));
 			item2.setAmount(new BigDecimal("450"));
-			item2.setAmountPrevious(inventories.get(1).getQuantity());
 			item2.setDescription("description2s");
 			
 			items.add(item2);

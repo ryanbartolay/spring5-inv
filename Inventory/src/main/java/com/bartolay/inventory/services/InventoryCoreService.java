@@ -771,8 +771,6 @@ public class InventoryCoreService {
 					break;				
 				}
 				
-				stockAdjustmentItem.setAmountAdjusted(stockAdjustmentItem.getAmount().subtract(stockAdjustmentItem.getAmountPrevious()));
-				
 				inventoryTransactionsForSave.add(inventoryTransaction);
 				stockAdjustmentItem.setStockAdjustment(stockAdjustment);
 				inventoriesForSave.add(inventory);

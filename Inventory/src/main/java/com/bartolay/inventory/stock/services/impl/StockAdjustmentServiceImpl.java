@@ -16,12 +16,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
+import com.bartolay.inventory.enums.StockAdjustmentType;
 import com.bartolay.inventory.exceptions.StockAdjustmentException;
 import com.bartolay.inventory.form.StockAdjustmentForm;
+import com.bartolay.inventory.form.StockAdjustmentItemForm;
 import com.bartolay.inventory.form.StockAdjustmentReasonForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
 import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockAdjustment;
+import com.bartolay.inventory.stock.entity.StockAdjustmentItem;
 import com.bartolay.inventory.stock.entity.StockAdjustmentReason;
 import com.bartolay.inventory.stock.repositories.StockAdjustmentReasonRepository;
 import com.bartolay.inventory.stock.repositories.StockAdjustmentRepository;
@@ -95,11 +98,25 @@ public class StockAdjustmentServiceImpl implements StockAdjustmentService {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		
-		stockAdjustmentForm.getItems().forEach(item -> { 			
-			if(item.getAmountPrevious() == null) {
-				item.setAmountPrevious(new BigDecimal("0"));
+		List<StockAdjustmentItem> items = new ArrayList<>();
+		
+		for(StockAdjustmentItemForm form : stockAdjustmentForm.getItems()) {
+			StockAdjustmentItem item = new StockAdjustmentItem();
+			
+			if(stockAdjustmentForm.getAdjustmentType().equals(StockAdjustmentType.COST)) {
+				item.setAmountPrevious(form.getUnit_cost());
+			} else if(stockAdjustmentForm.getAdjustmentType().equals(StockAdjustmentType.QUANTITY)) {
+				item.setAmountPrevious(form.getOn_hand());
+			} else {
+				throw new StockAdjustmentException("Invalid transaction. Stock Ajdustment Type is required.");
 			}
-		});
+			
+			item.setAmount(form.getAmount());
+			item.setAmountAdjusted(item.getAmount().subtract(item.getAmountPrevious()));
+			
+			item.setDescription(form.getDescription());
+			items.add(item);
+		}
 		
 		StockAdjustment sa = new StockAdjustment();
 		sa.setStockAdjustmentType(stockAdjustmentForm.getAdjustmentType().name());
@@ -109,7 +126,7 @@ public class StockAdjustmentServiceImpl implements StockAdjustmentService {
 		sa.setTransactionDate(cal.getTime());
 		sa.setYear(stockAdjustmentForm.getYear());
 		sa.setDescription(stockAdjustmentForm.getDescription());
-		sa.setStockAdjustmentItems(stockAdjustmentForm.getItems());
+		sa.setStockAdjustmentItems(items);
 
 		inventoryCoreService.createStockAdjustment(sa);
 		return sa;
