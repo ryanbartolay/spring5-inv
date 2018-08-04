@@ -39,7 +39,6 @@
 								<th class="column-title">Invoice Date</th>
 								<th class="column-title">Location</th>
 								<th class="column-title">Sales Person</th>
-								<th class="column-title">Status</th>
 								<th class="column-title">Customer</th>
 								<th class="column-title last text-right">Amount</th>
 								
@@ -88,10 +87,6 @@
 							data : "location_name"
 						}, {
 							data : "sales_person"
-						}, {
-							render: function ( data, type, row ) {
-		                        return 'Paid';
-		                    }
 						}, {
 							data : "customer"
 						}, {

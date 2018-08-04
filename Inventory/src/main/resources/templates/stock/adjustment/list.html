@@ -7,84 +7,95 @@
 
 		<div class="title_right">
 			<div class="pull-right">
-				<div class="input-group ">
-					<a th:href="@{/stock/adjustment/create}"
-						class="btn btn-success btn-sm pull-right"> New Stock
-						Adjustment</a>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="col-md-12 col-sm-12 col-xs-12">
-		<div class="x_panel">
-
-
-			<div class="x_title">
-				<div class="col-md-6">
+				<div class="btn-group">
+					<a th:href="@{/stock/adjustment/create}" class="btn btn-sm btn-success"
+						type="button">New Stock Adjustment</a>
 					<div class="btn-group">
-						<a data-toggle="dropdown" class="btn btn-default dropdown-toggle"
-							type="button" aria-expanded="false"> All Stock Adjustments <span
-							class="caret"></span>
-						</a>
-						<ul role="menu" class="dropdown-menu">
-							<li><a th:href="@{/stock/adjustment/list}">Active</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else here</a></li>
+						<button data-toggle="dropdown"
+							class="btn btn-sm btn-default dropdown-toggle" type="button">
+							 <span class="fa fa-bars"></span>
+						</button>
+						<ul class="dropdown-menu pull-right">
+							<li><a href="#">Import Quantity Adjustment</a></li>
+							<li><a href="#">Import Unit Cost Adjustment</a></li>
 							<li class="divider"></li>
-							<li><a href="#">Separated link</a></li>
+							<li><a href="#">Export Stock Adjustments</a></li>
 						</ul>
 					</div>
 				</div>
-				<div class="col-md-6">
-					<div id="reportrange" class="pull-right"
-						style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
-						<i class="glyphicon glyphicon-calendar fa fa-calendar"></i> <span>December
-							30, 2014 - January 28, 2015</span> <b class="caret"></b>
-					</div>
-				</div>
-				<div class="clearfix"></div>
-			</div>
-
-
-			<div class="x_content">
-				<div class="table-responsive">
-					<table class="table table-striped" id="stockAdjustment-datatable"
-						style="width: 100%">
-						<thead>
-							<tr class="headings">
-								<th class="column-title">System #</th>
-								<th class="column-title">Document #</th>
-								<th class="column-title">Reason</th>
-								<th class="column-title">Description</th>
-								<th class="column-title">Adjustment Type</th>
-								<th class="column-title">Location</th>
-								<th class="column-title">Adjusted By</th>
-								<th class="column-title">Date</th>
-
-							</tr>
-						</thead>
-
-						<tbody>
-
-						</tbody>
-					</table>
-				</div>
 
 			</div>
 		</div>
-	</div>
 
-	<!-- Item Modal -->
-	<div th:include="includes/modals/itemModal_simple"></div>
+		<div class="col-md-12 col-sm-12 col-xs-12">
+			<div class="x_panel">
 
-	<script
-		th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
-	<script
-		th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
-	<script
-		th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
-	<script>
+
+				<div class="x_title">
+					<div class="col-md-6">
+						<div class="btn-group">
+							<a data-toggle="dropdown" class="btn btn-default dropdown-toggle"
+								type="button" aria-expanded="false"> All Stock Adjustments <span
+								class="caret"></span>
+							</a>
+							<ul role="menu" class="dropdown-menu">
+								<li><a th:href="@{/stock/adjustment/list}">Active</a></li>
+								<li><a href="#">Another action</a></li>
+								<li><a href="#">Something else here</a></li>
+								<li class="divider"></li>
+								<li><a href="#">Separated link</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div id="reportrange" class="pull-right"
+							style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+							<i class="glyphicon glyphicon-calendar fa fa-calendar"></i> <span>December
+								30, 2014 - January 28, 2015</span> <b class="caret"></b>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+
+
+				<div class="x_content">
+					<div class="table-responsive">
+						<table class="table table-striped" id="stockAdjustment-datatable"
+							style="width: 100%">
+							<thead>
+								<tr class="headings">
+									<th class="column-title">System #</th>
+									<th class="column-title">Document #</th>
+									<th class="column-title">Reason</th>
+									<th class="column-title">Description</th>
+									<th class="column-title">Adjustment Type</th>
+									<th class="column-title">Location</th>
+									<th class="column-title">Adjusted By</th>
+									<th class="column-title">Date</th>
+
+								</tr>
+							</thead>
+
+							<tbody>
+
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- Item Modal -->
+		<div th:include="includes/modals/itemModal_simple"></div>
+
+		<script
+			th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
+		<script
+			th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
+		<script
+			th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
+		<script>
 		var table = $('#stockAdjustment-datatable');
 		var datatable = customFixedDatatable(
 				table,
