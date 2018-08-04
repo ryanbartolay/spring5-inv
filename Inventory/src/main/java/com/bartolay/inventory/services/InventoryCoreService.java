@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.entity.InventoryTransaction;
 import com.bartolay.inventory.entity.Item;
-import com.bartolay.inventory.entity.Location;
-import com.bartolay.inventory.entity.Unit;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.enums.SalesInvoiceStatus;
 import com.bartolay.inventory.enums.Status;
@@ -115,8 +113,6 @@ public class InventoryCoreService {
 	 */
 	@Transactional
 	public StockOpening createStockOpening(StockOpening stockOpening) {
-
-		System.err.println(stockOpening.getItems());
 
 		// Lets save the stock opening first so we can generate a system number
 		stockOpening.setStatus(Status.SUCCESS);
@@ -743,7 +739,8 @@ public class InventoryCoreService {
 		for(StockAdjustmentItem stockAdjustmentItem : stockAdjustmentItems) {
 						
 			Inventory inventory = inventoryUtility.findInventoryFromList(inventories, stockAdjustment.getLocation(), 
-					stockAdjustmentItem.getInventory().getItem(), stockAdjustmentItem.getInventory().getUnit());
+					stockAdjustmentItem.getInventory().getItem(), 
+					stockAdjustmentItem.getInventory().getUnit());
 			
 			if(inventory != null) {
 				// inventory transaction

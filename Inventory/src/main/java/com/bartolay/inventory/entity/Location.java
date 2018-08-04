@@ -78,6 +78,9 @@ public class Location {
 	
 	@Column(name="enabled", nullable=false)
 	private boolean enabled;
+	
+	@Column(name="opened", nullable=false)
+	private boolean opened;
 
 	public Location() {
 		super();
@@ -222,6 +225,14 @@ public class Location {
 
 	public void setWebsite(String website) {
 		this.website = website;
+	}
+
+	public boolean isOpened() {
+		return opened;
+	}
+
+	public void setOpened(boolean opened) {
+		this.opened = opened;
 	}
 
 	@Override

@@ -61,5 +61,11 @@ public class StockAdjustmentItemForm {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	@Override
+	public String toString() {
+		return "StockAdjustmentItemForm [inventory=" + inventory + ", on_hand=" + on_hand + ", unit_cost=" + unit_cost
+				+ ", amount=" + amount + ", description=" + description + "]";
+	}
 	
 }

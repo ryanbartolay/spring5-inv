@@ -47,77 +47,81 @@ public class StockAdjustmentServiceImpl implements StockAdjustmentService {
 	private UserCredentials userCredentials;
 	@Autowired
 	private InventoryCoreService inventoryCoreService;
-	
+
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
 		DatatableParameter parameter = new DatatableParameter(requestMap);
 		JSONArray array = stockAdjustmentDatatableRepository.findAllData(parameter);
 		long recordsTotal = stockAdjustmentDatatableRepository.findAllCount(parameter);
-		
+
 		JSONObject object = new JSONObject();
 		object.put("data", array);
 		object.put("recordsTotal", recordsTotal);
 		object.put("recordsFiltered", recordsTotal);
 		object.put("draw", parameter.getDraw());
-		
+
 		return object;
 	}
-	
+
 	@Override
 	public Iterable<StockAdjustmentReason> retrieveReasonList() {
 		return stockAdjustmentReasonRepository.apiFindAll();
 	}
-	
+
 	public JSONObject createAdjustmentReason(StockAdjustmentReasonForm stockAdjustmentReasonForm) throws StockAdjustmentException {
-		
+
 		StockAdjustmentReason reason = new StockAdjustmentReason();
 		reason.setCode(stockAdjustmentReasonForm.getDescription().trim().replace(" ", "_").toUpperCase());
 		reason.setDescription(stockAdjustmentReasonForm.getDescription());
 		reason.setCreatedBy(userCredentials.getLoggedInUser());
-		
+
 		reason = stockAdjustmentReasonRepository.save(reason);
-		
+
 		JSONObject obj = new JSONObject();
 		obj.put("status", "OK");
 		obj.put("id", reason.getId());
 		obj.put("code", reason.getCode());
 		obj.put("description", reason.getDescription());
-		
+
 		return obj;
 	}
 
 	@Override
 	public StockAdjustment create(StockAdjustmentForm stockAdjustmentForm)
 			throws ParseException, StockAdjustmentException {
-		
+
 		if(stockAdjustmentForm.getItems().size() <= 0) {
 			throw new StockAdjustmentException("Atleast 1 item is required.");
 		}
-		
+
 		Date date = dateFormat.parse(stockAdjustmentForm.getTransactionDate());
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		
+
 		List<StockAdjustmentItem> items = new ArrayList<>();
-		
+
 		for(StockAdjustmentItemForm form : stockAdjustmentForm.getItems()) {
 			StockAdjustmentItem item = new StockAdjustmentItem();
-			
+
 			if(stockAdjustmentForm.getAdjustmentType().equals(StockAdjustmentType.COST)) {
-				item.setAmountPrevious(form.getUnit_cost());
+				System.err.println("1");
+				System.err.println(form.getInventory().getUnitCost());
+				item.setAmountPrevious(form.getInventory().getUnitCost());
 			} else if(stockAdjustmentForm.getAdjustmentType().equals(StockAdjustmentType.QUANTITY)) {
-				item.setAmountPrevious(form.getOn_hand());
+				System.err.println("2");
+				System.err.println(form.getInventory().getQuantity());
+				item.setAmountPrevious(form.getInventory().getQuantity());
 			} else {
 				throw new StockAdjustmentException("Invalid transaction. Stock Ajdustment Type is required.");
 			}
-			
+
 			item.setAmount(form.getAmount());
 			item.setAmountAdjusted(item.getAmount().subtract(item.getAmountPrevious()));
-			
+			item.setInventory(form.getInventory());
 			item.setDescription(form.getDescription());
 			items.add(item);
 		}
-		
+
 		StockAdjustment sa = new StockAdjustment();
 		sa.setStockAdjustmentType(stockAdjustmentForm.getAdjustmentType().name());
 		sa.setDocumentNumber(stockAdjustmentForm.getDocument_number());
@@ -134,20 +138,20 @@ public class StockAdjustmentServiceImpl implements StockAdjustmentService {
 
 	@Override
 	public JSONObject deleteAdjustmentReason(StockAdjustmentReason reason) throws StockAdjustmentException {
-		
+
 		List<StockAdjustment> stockAdjustments = stockAdjustmentRepository.findAllByStockAdjustmentReason(reason);
-		
+
 		if(stockAdjustments.size() > 0) {
 			String sql = "Unable to delete this reason. You must delete first these Stock Adjustment.";
-			
+
 			List<String> errors = new ArrayList<>();
 			for(StockAdjustment adjustment : stockAdjustments) {
 				errors.add(adjustment.getSystemNumber() + " " + adjustment.getDocumentNumber() + "\n");
 			}
-			
+
 			throw new StockAdjustmentException(sql,errors);
 		}
-		
+
 		stockAdjustmentReasonRepository.delete(reason);
 		JSONObject obj = new JSONObject();
 		obj.put("status", "OK");

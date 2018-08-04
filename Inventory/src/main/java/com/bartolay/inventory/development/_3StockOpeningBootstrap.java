@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.bartolay.inventory.entity.Item;
 import com.bartolay.inventory.entity.User;
+import com.bartolay.inventory.exceptions.StockOpeningException;
 import com.bartolay.inventory.form.StockOpeningForm;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.ItemUnitRepository;
@@ -110,6 +111,9 @@ public class _3StockOpeningBootstrap implements ApplicationListener<ContextRefre
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (StockOpeningException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

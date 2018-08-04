@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -15,9 +16,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
+import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.enums.ActivityType;
+import com.bartolay.inventory.exceptions.StockOpeningException;
 import com.bartolay.inventory.form.StockOpeningForm;
 import com.bartolay.inventory.repositories.DatatableRepository;
+import com.bartolay.inventory.repositories.LocationRepository;
 import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockOpening;
 import com.bartolay.inventory.stock.entity.StockOpeningItem;
@@ -35,6 +39,9 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 	private UserCredentials userCredentials;
 	@Autowired
 	private InventoryCoreService inventoryService;
+	
+	@Autowired
+	private LocationRepository locationRepository;
 	
 	@Autowired
 	private ActivityUtility activityUtility;
@@ -61,13 +68,19 @@ public class StockOpeningServiceImpl implements StockOpeningService {
 	}
 
 	@Override
-	public StockOpening create(StockOpeningForm openingStockForm) throws ParseException {
+	public StockOpening create(StockOpeningForm openingStockForm) throws ParseException, StockOpeningException {
 		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 		
-		for(StockOpeningItem item :openingStockForm.getStockOpeningItems()) {
-			System.err.println(item);
+		Optional<Location> location = locationRepository.findById(openingStockForm.getLocation().getId());
+		
+		if (location.isPresent()) {
+			if (location.get().isOpened()) {
+				throw new StockOpeningException("Unable to create new Stock Opening. Location is already Opened.");
+			}	
+		} else {
+			throw new StockOpeningException("Unable to create new Stock Opening. Location doesnt exists");
 		}
 		
 		StockOpening opening = new StockOpening();
