@@ -44,11 +44,14 @@
 							<option th:each="location : ${locations}" th:value="${location.id}" th:text="${location.name}"></option>
 						</select>
 						
-						<label>Supplier </label> 
+						<label>Supplier </label>
+						 
+						<a href="#" id="newSupplier" class="pull-right"><span class="fa fa-plus" style="color: green;"></span> New Supplier</a>
 						<select
 							class="form-control" th:field="*{supplier}">
 							<option th:each="supplier : ${suppliers}" th:value="${supplier.id}" th:text="${supplier.name}"></option>
 						</select>
+						
 					</div>
 					
 					<div class="col-md-3">
@@ -111,7 +114,7 @@
 								<p class="lead">Expenses</p>
 							</div>
 							<div class="col-md-6 text-right">
-								<a href="#" id="manageReasons" class="pull-right"><span class="fa fa-gear"></span> Manage Expenses</a>
+								<a href="#" id="manageExpenses" class="pull-right"><span class="fa fa-gear"></span> Manage Expenses</a>
 								<!-- <button type="button" class="btn btn-success btn-sm" id="btnAddExpense">Add
 									Expenses</button> -->
 							</div>
@@ -170,6 +173,7 @@
 </div>
 
 <!-- Item Modal -->
+<div th:include="includes/modals/supplier_new"></div>
 <div th:include="includes/modals/itemModal_simple"></div>
 <div th:include="includes/modals/stockReceived_expenses"></div>
 
@@ -198,8 +202,16 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
   });
   
 
+  
 //----------------------------------------------------------------------------------------------------------------
-$("#manageReasons").on("click", function() {
+$("#newSupplier").on("click",function() {
+	newSupplier({}, function(data){
+		console.log(data);
+	});
+});
+
+//----------------------------------------------------------------------------------------------------------------
+$("#manageExpenses").on("click", function() {
 	manageExpenses({}, function(data) {
 		
 		form_expenses.push(data);

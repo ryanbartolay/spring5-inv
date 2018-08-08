@@ -1,0 +1,274 @@
+<!-- manage Expenses-->
+<div class="modal fade" id="confirmDeleteModal" tabindex="1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+		       <input type="hidden" id="stockReceivedModalExpenseId" />
+		    <div class="modal-header">
+		        <button type="button" class="close" onClick="cancelConfirmDelete()" aria-hidden="true">&times;</button>
+		        <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+		    </div>
+		
+		    <div class="modal-body">
+		    	<div id="confirmDeleteModalErrors"></div>
+		        <p>You are about to delete <b id="recordName"></b>, this procedure is irreversible.</p>
+		        <p>Do you want to proceed?</p>
+		        <p class="debug-url"></p>
+		    </div>
+		    
+		    <div class="modal-footer">
+		        <button type="button" class="btn btn-default" onClick="cancelConfirmDelete()">Cancel</button>
+		        <button class="btn btn-danger" onClick="confirmDelete(this)">Delete</button>
+		    </div>
+		</div>
+	</div>
+</div>
+
+                  
+
+<div class="modal fade bs-example-modal-lg in" id="stockReceivedExpenseModal" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">x</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					<span class="fa fa-gears"></span> New Supplier
+				</h4>
+			</div>
+			<div class="modal-body">
+				<div id="stockReceivedExpensesErrors"></div>
+				
+				<form id="stockReceivedExpensesForm">
+					<div class="col-md-4">
+						<label>Company Name</label> <input type="text" id="addExpenseDescription"
+							class="form-control" /> <br>
+						<button class="btn btn-success btn-sm" id="btnAddExpense">Create
+							and Select Expense</button>
+					</div>
+					<div class="col-md-4">
+						<label>Contact Email</label> <input type="text" id="addExpenseDescription"
+							class="form-control" />
+						<label>Contact Phone</label> <input type="text" id="addExpenseDescription"
+							class="form-control" />
+						<label>Contact Mobile</label> <input type="text" id="addExpenseDescription"
+							class="form-control" />
+						<label>Skype Name/Number</label> <input type="text" id="addExpenseDescription"
+							class="form-control" />
+						<label>Website</label> <input type="text" id="addExpenseDescription"
+							class="form-control" />
+					</div>
+				</form>
+				
+
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#tab_content1" id="payment-tab" role="tab" data-toggle="tab" aria-expanded="true">Payment Details</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#tab_content2" role="tab" id="address-tab" data-toggle="tab" aria-expanded="false">Address</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Notes</a>
+                        </li>
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane active fade in" id="tab_content1" aria-labelledby="payment-tab">
+                        
+	                        <div class="col-md-12">
+	                        	<label>Currency</label> <input type="text" id="addExpenseDescription"
+								class="form-control" />
+								<label>Facebook</label> <input type="text" id="addExpenseDescription"
+								class="form-control" />
+								<label>Twitter</label> <input type="text" id="addExpenseDescription"
+								class="form-control" />
+							</div>
+                        
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="address-tab">
+	                        <div class="col-md-12">
+		                        <div class="col-md-6">
+		                        	<h3>Billing Address</h3>	   
+		                        	
+		                         		<label>Address</label> <textarea class="form-control"></textarea>
+		                         		<label>City</label> <input type="text" id="addExpenseDescription"
+										class="form-control" />
+										<label>State</label> <input type="text" id="addExpenseDescription"
+										class="form-control" />
+										<label>Zip Code</label> <input type="text" id="addExpenseDescription"
+								class="form-control" />
+										<label>Country</label> <input type="text" id="addExpenseDescription"
+								class="form-control" />
+								<label>Fax</label> <input type="text" id="addExpenseDescription"
+								class="form-control" />
+								<label>Phone</label> <input type="text" id="addExpenseDescription"
+								class="form-control" />
+		                        </div>
+		                        <div class="col-md-6">
+		                        	<h3>Shipping Address</h3>
+		                        	
+		                         		<label>Address</label> <textarea class="form-control"></textarea>
+		                         		<label>City</label> <input type="text" id="addExpenseDescription"
+										class="form-control" />
+										<label>State</label> <input type="text" id="addExpenseDescription"
+										class="form-control" />
+										<label>Zip Code</label> <input type="text" id="addExpenseDescription"
+								class="form-control" />
+										<label>Country</label> <input type="text" id="addExpenseDescription"
+								class="form-control" />
+								<label>Fax</label> <input type="text" id="addExpenseDescription"
+								class="form-control" />
+								<label>Phone</label> <input type="text" id="addExpenseDescription"
+								class="form-control" />
+		                        </div>
+	                        </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
+                        	<div class="col-md-12">
+	                        	<div class="col-md-8">
+	                         		<label>Notes (for Internal use)</label> <textarea class="form-control"></textarea>
+	                         	</div>
+                         	</div>
+                        </div>
+                      </div>
+                    </div>
+
+				
+				
+				<div class="col-md-12 ln_solid"></div>
+				<table class="table table-striped bulk_action"
+					id="stockReceivedExpenseTable">
+					<thead>
+						<tr class="headings">
+							<th class="column-title" style="display: table-cell;">Description</th>
+							<th></th>
+
+						</tr>
+					</thead>
+
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+	var stockReceivedExpenseModal = $("#stockReceivedExpenseModal");
+	var stockReceivedExpenseTable = $("#stockReceivedExpenseTable tbody");
+	var stockReceivedExpenseForm = $("#stockReceivedExpensesForm");
+	
+	var confirmDeleteModal = $("#confirmDeleteModal");
+	var btnConfirmDelete = $("#btnConfirmDelete");
+	
+	var btnAddExpense = $("#btnAddExpense");
+	var btnAddExpenseText = btnAddExpense.text();
+	var callback;
+
+	function newSupplier(parameters, cb) {
+		callback = cb;
+		stockReceivedExpenseModal.modal("show");
+	}
+	
+	stockReceivedExpenseModal.on('shown.bs.modal', function() {
+		$("#confirmDeleteModalErrors").html("");
+		$("#addExpenseDescription").val("");
+		btnAddExpense.removeAttr("disabled");
+		btnAddExpense.text(btnAddExpenseText);
+		
+		GET("/api/stock/received/expenses",function (data) {
+            var html = "";
+            for(var i = 0; i < data.length; i++) {
+            	html += `
+            	<tr>
+            		<td>`+ data[i].description +`</td>
+            		<td class="text-right">
+            		<button class="btn btn-success btn-xs" 
+            		data-id="`+ data[i].id +`" 
+            		data-description="`+ data[i].description +`"
+            		id="btnAddExpense" onClick="selectExpense(this)">Select</button>
+            		<button class="btn btn-default btn-xs" 
+            		onClick="showConfirmDeleteModal(this)"
+            		><span class="fa fa-close" style="color: red"></span></button>
+            		<input type="hidden" id="expense_id" value="`+ data[i].id +`" />
+            		<input type="hidden" id="expense_description" value="`+ data[i].description +`" />
+            		</td>
+            	</tr>`;
+            }
+            
+            stockReceivedExpenseTable.html(html);
+        });
+	});
+	
+	btnAddExpense.on("click", function() {
+
+	 	btnAddExpense.attr("disabled", "disabled");
+	 	btnAddExpense.text("Processing....");
+		
+	 	var serialized_data = stockReceivedExpenseForm.serialize();
+	 	
+		POST("/api/stock/received/expenses", serialized_data, function(data) {
+	 		if(data.status != "OK") {
+	 			displayErrors(data, $("#stockReceivedExpensesErrors"));
+	 			btnAddExpense.removeAttr("disabled");
+	 			btnAddExpense.text(btnAddExpenseText);
+	 		} else {
+	 			callback(data);
+	 			stockReceivedExpenseModal.modal("hide");
+	 		}
+	 	});
+	});
+	
+	function selectExpense(e) {
+		btnAddExpense.attr("disabled", "disabled");
+	 	btnAddExpense.text("Processing....");
+	 	
+	 	var data = { 
+	 		id: e.dataset.id,
+	 		description: e.dataset.description
+	 	};
+	 	
+	 	callback(data);
+		stockReceivedExpenseModal.modal("hide");
+	}
+	
+	function confirmDelete(e){
+		var reason_id = $(e).parentsUntil("#confirmDeleteModal").find("#stockReceivedModalExpenseId").val();
+		
+		DELETE("/api/stock/received/expenses/"+reason_id, function(data) {
+			if(data.status != "OK") {
+	 			displayErrors(data, $("#confirmDeleteModalErrors"));
+	 		} else {
+	 			callback(data);
+	 			showToast(data);
+	 			confirmDeleteModal.modal("hide");
+	 			stockReceivedExpenseModal.modal("show");
+	 		}
+		});
+	}
+	
+	function cancelConfirmDelete() {
+		confirmDeleteModal.modal("hide");
+		stockReceivedExpenseModal.modal("show");
+	}
+	
+	function showConfirmDeleteModal(e) {
+		var row = $(e).parentsUntil("tbody");
+		var expense_id = row.find("#expense_id").val();
+		var expense_description = row.find("#expense_description").val();		
+		
+		stockReceivedExpenseModal.modal("hide");
+		confirmDeleteModal.find("#stockReceivedModalExpenseId").val(expense_id);
+		confirmDeleteModal.find("#recordName").html(expense_description);
+		confirmDeleteModal.modal("show");
+	}
+	
+	function deleteExpense(e) {
+		var row = $(e).parentsUntil("tbody");
+		
+		row.remove();
+	}
+</script>

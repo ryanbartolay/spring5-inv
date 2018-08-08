@@ -197,6 +197,13 @@ public class StockController {
 		return model;
 	}
 	
+	@RequestMapping(value="/stock/adjustment/import")
+	public ModelAndView importQuantityStockAdjustment(ModelAndView model) {
+		model.setViewName("stock/index");
+		model.addObject("html", "adjustment/import");
+		return model;
+	}
+	
 	@RequestMapping(value="/stock/expenses")
 	public ModelAndView stockExpenses(ModelAndView model) {
 		model.setViewName("stock/index");
