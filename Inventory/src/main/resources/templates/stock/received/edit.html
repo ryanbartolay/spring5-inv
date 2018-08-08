@@ -49,7 +49,7 @@
 						<a href="#" id="newSupplier" class="pull-right"><span class="fa fa-plus" style="color: green;"></span> New Supplier</a>
 						<select
 							class="form-control" th:field="*{supplier}">
-							<option th:each="supplier : ${suppliers}" th:value="${supplier.id}" th:text="${supplier.name}"></option>
+							<option th:each="supplier : ${suppliers}" th:value="${supplier.id}" th:text="${supplier.company_name}"></option>
 						</select>
 						
 					</div>

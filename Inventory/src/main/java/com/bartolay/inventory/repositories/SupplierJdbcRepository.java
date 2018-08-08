@@ -41,14 +41,14 @@ public class SupplierJdbcRepository extends RepositoryComponent implements Datat
 			JSONObject supplier = new JSONObject();
 			
 			supplier.put("id", rs.getInt("id"));
-			supplier.put("address", rs.getString("address"));
-			supplier.put("address_city", rs.getString("address_city"));
-			supplier.put("address_zipcode", rs.getInt("address_zipcode"));
+			supplier.put("billing_address", rs.getString("billing_address"));
+			supplier.put("billing_city", rs.getString("billing_city"));
+			supplier.put("billing_zipcode", rs.getInt("billing_zipcode"));
 			supplier.put("created_date", rs.getDate("created_date"));
-			supplier.put("fax", rs.getString("fax"));
-			supplier.put("mobile", rs.getString("mobile"));
-			supplier.put("name", rs.getString("name"));
-			supplier.put("phone", rs.getString("phone"));
+			supplier.put("billing_fax", rs.getString("billing_fax"));
+			supplier.put("contact_mobile", rs.getString("contact_mobile"));
+			supplier.put("company_name", rs.getString("company_name"));
+			supplier.put("contact_phone", rs.getString("contact_phone"));
 			supplier.put("updated_date", rs.getDate("updated_date"));
 			supplier.put("website", rs.getString("website"));
 		

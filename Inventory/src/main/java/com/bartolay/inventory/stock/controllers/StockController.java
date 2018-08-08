@@ -131,6 +131,7 @@ public class StockController {
 		model.addObject("html", "received/edit");
 		model.addObject("stockReceivedForm", new StockReceivedForm());
 		model.addObject("stockReceivedExpensesForm", new StockReceivedExpenseForm());
+		model.addObject("supplierForm", new SupplierForm());
 		model.addObject("suppliers", supplierService.findAll());
 		model.addObject("locations", locationRepository.findAll());
 		

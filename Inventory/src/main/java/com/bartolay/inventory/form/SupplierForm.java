@@ -1,157 +1,239 @@
 package com.bartolay.inventory.form;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.bartolay.inventory.entity.Country;
 
 public class SupplierForm {
 
-	private String code;
-	
-	@NotNull
-    @Size(min=2, max=50, message="Name length minimum 2 and 50" )
-	private String name;
-	
-	private String city;
-	
-	private Integer zipcode;
-	private String address;
-	
-	private String phone1;
-	private String phone2;
-	
-	private String mobile1;
-	private String mobile2;
-	
-	private String email1;
-	private String email2;
-	
-	private String fax1;
-	private String fax2;
-	
-	private Country country;
-	
+	// Billing Address
+	private String billingAddress;
+
+	private String billingCity;
+
+	private Country billingCountry;
+
+	private String billingFax;
+
+	private String billingPhone;
+
+	private String billingState;
+
+	private String billingZipCode;
+
+	@NotNull(message = "Company name is required")
+	private String company_name;
+
+	private String contact_email;
+	private String contact_mobile;
+	private String contact_phone;
+	private String currency;
+	private String facebook;
+	private String notes;
+	// Shipping Address
+	private String shippingAddress;
+	private String shippingCity;
+
+	private Country shippingCountry;
+	private String shippingFax;
+	private String shippingPhone;
+	private String shippingState;
+	private String shippingZipCode;
+	private String skype_name;
+	private String twitter;
+
 	private String website;
 
-	public String getCode() {
-		return code;
+	public String getBillingAddress() {
+		return billingAddress;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public String getBillingCity() {
+		return billingCity;
 	}
 
-	public String getName() {
-		return name;
+	public Country getBillingCountry() {
+		return billingCountry;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public String getBillingFax() {
+		return billingFax;
 	}
 
-	public String getCity() {
-		return city;
+	public String getBillingPhone() {
+		return billingPhone;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
+	public String getBillingState() {
+		return billingState;
 	}
 
-	public Integer getZipcode() {
-		return zipcode;
+	public String getBillingZipCode() {
+		return billingZipCode;
 	}
 
-	public void setZipcode(Integer zipcode) {
-		this.zipcode = zipcode;
+	public String getCompany_name() {
+		return company_name;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getContact_email() {
+		return contact_email;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public String getContact_mobile() {
+		return contact_mobile;
 	}
 
-	public String getPhone1() {
-		return phone1;
+	public String getContact_phone() {
+		return contact_phone;
 	}
 
-	public void setPhone1(String phone1) {
-		this.phone1 = phone1;
+	public String getCurrency() {
+		return currency;
 	}
 
-	public String getPhone2() {
-		return phone2;
+	public String getFacebook() {
+		return facebook;
 	}
 
-	public void setPhone2(String phone2) {
-		this.phone2 = phone2;
+	public String getNotes() {
+		return notes;
 	}
 
-	public String getMobile1() {
-		return mobile1;
+	public String getShippingAddress() {
+		return shippingAddress;
 	}
 
-	public void setMobile1(String mobile1) {
-		this.mobile1 = mobile1;
+	public String getShippingCity() {
+		return shippingCity;
 	}
 
-	public String getMobile2() {
-		return mobile2;
+	public Country getShippingCountry() {
+		return shippingCountry;
 	}
 
-	public void setMobile2(String mobile2) {
-		this.mobile2 = mobile2;
+	public String getShippingFax() {
+		return shippingFax;
 	}
 
-	public String getEmail1() {
-		return email1;
+	public String getShippingPhone() {
+		return shippingPhone;
 	}
 
-	public void setEmail1(String email1) {
-		this.email1 = email1;
+	public String getShippingState() {
+		return shippingState;
 	}
 
-	public String getEmail2() {
-		return email2;
+	public String getShippingZipCode() {
+		return shippingZipCode;
 	}
 
-	public void setEmail2(String email2) {
-		this.email2 = email2;
+	public String getSkype_name() {
+		return skype_name;
 	}
 
-	public String getFax1() {
-		return fax1;
-	}
-
-	public void setFax1(String fax1) {
-		this.fax1 = fax1;
-	}
-
-	public String getFax2() {
-		return fax2;
-	}
-
-	public void setFax2(String fax2) {
-		this.fax2 = fax2;
-	}
-
-	public Country getCountry() {
-		return country;
-	}
-
-	public void setCountry(Country country) {
-		this.country = country;
+	public String getTwitter() {
+		return twitter;
 	}
 
 	public String getWebsite() {
 		return website;
 	}
 
+	public void setBillingAddress(String billingAddress) {
+		this.billingAddress = billingAddress;
+	}
+
+	public void setBillingCity(String billingCity) {
+		this.billingCity = billingCity;
+	}
+
+	public void setBillingCountry(Country billingCountry) {
+		this.billingCountry = billingCountry;
+	}
+
+	public void setBillingFax(String billingFax) {
+		this.billingFax = billingFax;
+	}
+
+	public void setBillingPhone(String billingPhone) {
+		this.billingPhone = billingPhone;
+	}
+
+	public void setBillingState(String billingState) {
+		this.billingState = billingState;
+	}
+
+	public void setBillingZipCode(String billingZipCode) {
+		this.billingZipCode = billingZipCode;
+	}
+
+	public void setCompany_name(String company_name) {
+		this.company_name = company_name;
+	}
+
+	public void setContact_email(String contact_email) {
+		this.contact_email = contact_email;
+	}
+
+	public void setContact_mobile(String contact_mobile) {
+		this.contact_mobile = contact_mobile;
+	}
+
+	public void setContact_phone(String contact_phone) {
+		this.contact_phone = contact_phone;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
+	public void setFacebook(String facebook) {
+		this.facebook = facebook;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
+	public void setShippingAddress(String shippingAddress) {
+		this.shippingAddress = shippingAddress;
+	}
+
+	public void setShippingCity(String shippingCity) {
+		this.shippingCity = shippingCity;
+	}
+
+	public void setShippingCountry(Country shippingCountry) {
+		this.shippingCountry = shippingCountry;
+	}
+
+	public void setShippingFax(String shippingFax) {
+		this.shippingFax = shippingFax;
+	}
+
+	public void setShippingPhone(String shippingPhone) {
+		this.shippingPhone = shippingPhone;
+	}
+
+	public void setShippingState(String shippingState) {
+		this.shippingState = shippingState;
+	}
+
+	public void setShippingZipCode(String shippingZipCode) {
+		this.shippingZipCode = shippingZipCode;
+	}
+
+	public void setSkype_name(String skype_name) {
+		this.skype_name = skype_name;
+	}
+
+	public void setTwitter(String twitter) {
+		this.twitter = twitter;
+	}
+
 	public void setWebsite(String website) {
 		this.website = website;
 	}
-	
+
 }

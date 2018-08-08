@@ -447,20 +447,20 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 
 	private void createSuppliers() {
 		supplier = new Supplier();
-		supplier.setName("JFC Corporation");
-		supplier.setPhone("91-100");
-		supplier.setAddress("Las Pinas");
+		supplier.setCompany_name("JFC Corporation");
+		supplier.setContact_phone("91-100");
+		supplier.setBillingAddress("Las Pinas");
 		supplier.setCreatedBy(userRepository.findByUsername("admin"));
-		supplier.setAddressCountry(countryRepository.findById(1).get());
+		supplier.setBillingCountry(countryRepository.findById(1).get());
 
 		supplierRepository.save(supplier);
 
 		supplier = new Supplier();
-		supplier.setName("KFC Food, Inc");
-		supplier.setPhone("8012222");
-		supplier.setAddress("Manila");
+		supplier.setCompany_name("KFC Food, Inc");
+		supplier.setContact_phone("8012222");
+		supplier.setBillingAddress("Manila");
 		supplier.setCreatedBy(userRepository.findByUsername("admin"));
-		supplier.setAddressCountry(countryRepository.findById(2).get());
+		supplier.setBillingCountry(countryRepository.findById(2).get());
 
 		supplierRepository.save(supplier);
 	}
