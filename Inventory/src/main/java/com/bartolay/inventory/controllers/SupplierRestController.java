@@ -28,10 +28,15 @@ public class SupplierRestController extends AbstractRestController {
 	@Autowired
 	private SupplierService supplierService;
 
-	@RequestMapping(value = "/api/suppliers", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/api/datatable/suppliers", method = RequestMethod.GET, produces = "application/json")
 	public String datatable(@RequestParam Map<String, String> requestMap)
 			throws JsonProcessingException, UnsupportedEncodingException {
 		return supplierService.findAll(requestMap).toString();
+	}
+	
+	@RequestMapping(value="/api/suppliers", method=RequestMethod.GET, produces="application/json")
+	public String suppliersList(@RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {
+		return stringUtils.encode(supplierService.findAll());
 	}
 
 	@RequestMapping(value = "/api/suppliers", method = RequestMethod.POST)
@@ -43,8 +48,7 @@ public class SupplierRestController extends AbstractRestController {
 		ApiResponse response = null;
 
 		try {
-			Supplier supplier = supplierService.create(supplierForm);
-			response = new ApiResponse(HttpStatus.OK, "Succesfully created Document " + supplier.getCompany_name());
+			return supplierService.create(supplierForm).toString();
 		} catch (SupplierException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

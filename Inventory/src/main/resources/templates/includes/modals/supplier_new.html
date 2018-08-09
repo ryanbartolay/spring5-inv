@@ -144,6 +144,9 @@
 	
 	btnAddNewSupplier.on("click", function() {
 		
+		btnAddNewSupplier.attr("disabled", "disabled");
+		btnAddNewSupplier.text("Processing....");
+		
 		var serialized_data = newSupplierForm.serialize();
 		
 		POST("/api/suppliers", serialized_data, function(data) {
@@ -154,11 +157,9 @@
 	 			btnAddNewSupplier.text(btnAddNewSupplierText);
 	 		} else {
 	 			callback(data);
-	 			stockReceivedExpenseModal.modal("hide");
+	 			newSupplierModal.modal("hide");
 	 		}
 		});
 	});
-	
-	
 	
 </script>

@@ -47,7 +47,7 @@
 						<label>Supplier </label>
 						 
 						<a href="#" id="newSupplier" class="pull-right"><span class="fa fa-plus" style="color: green;"></span> New Supplier</a>
-						<select
+						<select id="suppliers"
 							class="form-control" th:field="*{supplier}">
 							<option th:each="supplier : ${suppliers}" th:value="${supplier.id}" th:text="${supplier.company_name}"></option>
 						</select>
@@ -206,7 +206,19 @@ var submitStockOpeningBtn = $("#submitStockOpeningBtn");
 //----------------------------------------------------------------------------------------------------------------
 $("#newSupplier").on("click",function() {
 	newSupplier({}, function(data){
-		console.log(data);
+		GET("/api/suppliers", function(suppliers){
+			$("#suppliers option").remove();
+			
+			console.log(suppliers);
+			var html = "";
+			
+			for(var i = 0; i < suppliers.length; i++) {
+				var selected = suppliers[i].id == data.id ? "selected" : "";
+				html += `<option value="`+ suppliers[i].id +`" `+ selected +`>`+ suppliers[i].company_name +`</option>`;
+			}
+			
+			$("#suppliers").html(html);
+		});
 	});
 });
 

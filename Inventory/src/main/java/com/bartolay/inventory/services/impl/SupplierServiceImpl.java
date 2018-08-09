@@ -46,12 +46,12 @@ public class SupplierServiceImpl implements SupplierService {
 	}
 
 	@Override
-	public List<Supplier> findAll() {
-		return ServiceUtility.toList(supplierRepository.findAll());
+	public Iterable<Supplier> findAll() {
+		return supplierRepository.findAll();
 	}
 
 	@Override
-	public Supplier create(SupplierForm f) throws SupplierException {
+	public JSONObject create(SupplierForm f) throws SupplierException {
 		if (f.getCompany_name() == null) {
 			throw new SupplierException("Company Name is required");
 		}
@@ -84,8 +84,14 @@ public class SupplierServiceImpl implements SupplierService {
 		s.setShippingZipCode(f.getShippingZipCode());
 		s.setCreatedBy(userCredentials.getLoggedInUser());
 		
-		supplierRepository.save(s);
+		s = supplierRepository.save(s);
 		
-		return s;
+		
+		JSONObject obj = new JSONObject();
+		obj.put("status", "OK");
+		obj.put("id", s.getId());
+		obj.put("name", s.getCompany_name());
+		
+		return obj;
 	}
 }

@@ -12,6 +12,6 @@ import com.bartolay.inventory.form.SupplierForm;
 public interface SupplierService {
 	public JSONObject findAll(Map<String, String> requestMap);
 	public Supplier findById(Integer id);
-	public List<Supplier> findAll();
-	public Supplier create(SupplierForm supplierForm) throws SupplierException;
+	public Iterable<Supplier> findAll();
+	public JSONObject create(SupplierForm supplierForm) throws SupplierException;
 }

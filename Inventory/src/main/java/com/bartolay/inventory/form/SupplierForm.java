@@ -1,6 +1,7 @@
 package com.bartolay.inventory.form;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.bartolay.inventory.entity.Country;
 
@@ -22,6 +23,7 @@ public class SupplierForm {
 	private String billingZipCode;
 
 	@NotNull(message = "Company name is required")
+	@Size(min=2, max=100, message="Company Name is required. Length must be 2 to 100 characters.")
 	private String company_name;
 
 	private String contact_email;
