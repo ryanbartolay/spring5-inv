@@ -43,7 +43,7 @@ public class SupplierJdbcRepository extends RepositoryComponent implements Datat
 			supplier.put("id", rs.getInt("id"));
 			supplier.put("billing_address", rs.getString("billing_address"));
 			supplier.put("billing_city", rs.getString("billing_city"));
-			supplier.put("billing_zipcode", rs.getInt("billing_zipcode"));
+			supplier.put("billing_zipcode", rs.getString("billing_zipcode"));
 			supplier.put("created_date", rs.getDate("created_date"));
 			supplier.put("billing_fax", rs.getString("billing_fax"));
 			supplier.put("contact_mobile", rs.getString("contact_mobile"));

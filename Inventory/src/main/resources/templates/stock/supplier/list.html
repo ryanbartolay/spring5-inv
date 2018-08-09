@@ -49,7 +49,7 @@
 						</tbody>
 
 					</table>
-				</div>
+				</div>`
 			</div>
 		</div>
 	</div>
@@ -64,7 +64,7 @@
 <script>
 	var table = $('#openingStock-datatable');
 	
-	 var datatable = customFixedDatatable(table, '/api/suppliers', 
+	 var datatable = customFixedDatatable(table, '/api/datatable/suppliers', 
 		[
         	{ 
         		data: "id",
@@ -73,12 +73,12 @@
                 }
         	},
         	{ 
-        		data: "name",
+        		data: "company_name",
         		render: function ( data, type, row ) {
                     return '<a href="/stock/opening/'+ row.system_number +'">' + data + '</a>';
                 }
         	},
-        	{ data: "address" },
+        	{ data: "billing_address" },
         	{ 
         		data: "phone",
         		render: function ( data, type, row ) {
@@ -86,9 +86,9 @@
                 },
                 defaultContent: ""
         	},
-        	{ data: "mobile",
+        	{ data: "contact_mobile",
                 defaultContent: "" },
-        	{ data: "email",
+        	{ data: "contact_email",
                     defaultContent: "" },
             {
 				render: function(data, type, row) {
