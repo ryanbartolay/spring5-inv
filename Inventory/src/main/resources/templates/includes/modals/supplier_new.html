@@ -12,10 +12,10 @@
 					<span class="fa fa-gears"></span> New Supplier
 				</h4>
 			</div>
-			<div class="modal-body">				
+			<div class="modal-body">
 
 				<form id="newSupplierForm" th:object="${supplierForm}">
-				<div id="newSupplierErrors"></div>
+					<div id="newSupplierErrors"></div>
 					<div class="col-md-12">
 						<label>Company Name*</label> <input type="text"
 							th:field="*{company_name}" class="form-control" />
@@ -77,26 +77,36 @@
 										th:field="*{billingCity}" /> <label>State</label> <input
 										type="text" class="form-control" th:field="*{billingState}" />
 									<label>Zip Code</label> <input type="text" class="form-control"
-										th:field="*{billingZipCode}" /> <label>Country</label> <input
-										type="text" class="form-control" /> <label>Fax</label> <input
+										th:field="*{billingZipCode}" /> <label>Country</label> <select
+										type="text" class="form-control" th:field="*{billingCountry}"></select> <label>Fax</label> <input
 										type="text" class="form-control" th:field="*{billingFax}" />
 									<label>Phone</label> <input type="text" class="form-control"
 										th:field="*{billingPhone}" />
 								</div>
 								<div class="col-md-6">
-									<h4>Shipping Address</h4>
-
-									<label>Address</label>
-									<textarea class="form-control" th:field="*{shippingAddress}"></textarea>
-									<label>City</label> <input type="text" class="form-control" />
-									<label>State</label> <input type="text" class="form-control"
-										th:field="*{shippingState}" /> <label>Zip Code</label> <input
-										type="text" class="form-control" th:field="*{shippingZipCode}" />
-									<label>Country</label> <input type="text" class="form-control"
-										th:field="*{shippingCountry}" /> <label>Fax</label> <input
-										type="text" class="form-control" th:field="*{shippingFax}" />
-									<label>Phone</label> <input type="text" class="form-control"
-										th:field="*{shippingPhone}" />
+									<div class="col-md-6">
+										<h4>Shipping Address</h4>
+									</div>
+									<div class="col-md-6 align-bottom">
+										<a class=" pull-right" href="javascript:copyBillingAddress()">
+											<span class="fa fa-level-down"></span> Same as
+											Billing Address
+										</a>
+									</div>
+									<div class="col-md-12">
+										<label>Address</label>
+										<textarea class="form-control" th:field="*{shippingAddress}"></textarea>
+										<label>City</label> <input type="text" class="form-control" th:field="*{shippingCity}"  />
+										<label>State</label> <input type="text" class="form-control"
+											th:field="*{shippingState}" /> <label>Zip Code</label> <input
+											type="text" class="form-control"
+											th:field="*{shippingZipCode}" /> <label>Country</label> <select
+											type="text" class="form-control"
+											th:field="*{shippingCountry}" /></select> <label>Fax</label> <input
+											type="text" class="form-control" th:field="*{shippingFax}" />
+										<label>Phone</label> <input type="text" class="form-control"
+											th:field="*{shippingPhone}" />
+									</div>
 								</div>
 
 							</div>
@@ -128,38 +138,63 @@
 	var newSupplierModal = $("#newSupplierModal");
 	var btnAddNewSupplier = $("#btnAddNewSupplier");
 	var btnAddNewSupplierText = btnAddNewSupplier.text();
-	
+
 	var newSupplierForm = $("#newSupplierForm");
-	
+
 	var callback;
 
 	function newSupplier(parameters, cb) {
 		callback = cb;
 		newSupplierModal.modal("show");
 	}
-	
+
 	newSupplierModal.on('shown.bs.modal', function() {
-		
+		GET("/api/countries", function(countries) {
+			
+			$("#billingCountry option").remove();
+			$("#shippingCountry option").remove();
+			
+			var html = "";
+			
+			for(var i = 0; i < countries.length; i++) {
+				// var selected = suppliers[i].id == data.id ? "selected" : "";
+				html += `<option value="`+ countries[i].id +`">`+ countries[i].name +`</option>`;
+			}
+			
+			$("#billingCountry").html(html);
+			
+			$("#shippingCountry").html(html);
+		});
 	});
-	
+
 	btnAddNewSupplier.on("click", function() {
-		
+
 		btnAddNewSupplier.attr("disabled", "disabled");
 		btnAddNewSupplier.text("Processing....");
-		
+
 		var serialized_data = newSupplierForm.serialize();
-		
+
 		POST("/api/suppliers", serialized_data, function(data) {
 
-			if(data.status != "OK") {
-	 			displayErrors(data, $("#newSupplierErrors"));
-	 			btnAddNewSupplier.removeAttr("disabled");
-	 			btnAddNewSupplier.text(btnAddNewSupplierText);
-	 		} else {
-	 			callback(data);
-	 			newSupplierModal.modal("hide");
-	 		}
+			if (data.status != "OK") {
+				displayErrors(data, $("#newSupplierErrors"));
+				btnAddNewSupplier.removeAttr("disabled");
+				btnAddNewSupplier.text(btnAddNewSupplierText);
+			} else {
+				callback(data);
+				newSupplierModal.modal("hide");
+			}
 		});
 	});
 	
+	function copyBillingAddress() {
+		
+		$("#shippingAddress").text($("#billingAddress").val());
+		$("#shippingCity").val($("#billingCity").val());
+		$("#shippingState").val($("#billingState").val());
+		$("#shippingCountry").val($("#billingCountry").val());
+		$("#shippingZipCode").val($("#billingZipCode").val());
+		$("#shippingFax").val($("#billingFax").val());
+		$("#shippingPhone").val($("#billingPhone").val());
+	} 
 </script>

@@ -8,9 +8,9 @@
 		<div class="title_right">
 			<div class="pull-right">
 				<div class="input-group ">
-					<a th:href="@{/stock/opening/create}"
+					<button id="newSupplier"
 						class="btn btn-success btn-sm"><span class="fa fa-plus"></span>
-						New Supplier</a>
+						New Supplier</button>
 				</div>
 			</div>
 		</div>
@@ -54,6 +54,8 @@
 		</div>
 	</div>
 </div>
+
+<div th:include="includes/modals/supplier_new"></div>
 <!-- DataTables JavaScript -->
 <script
 	th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
@@ -97,4 +99,13 @@
             }
     	]
 	); 
+	 
+	//----------------------------------------------------------------------------------------------------------------
+	 $("#newSupplier").on("click",function() {
+	 	newSupplier({}, function(data){
+	 		
+	 		console.log(data);
+	 		datatable.ajax.reload();
+	 	});
+	 });
 </script>

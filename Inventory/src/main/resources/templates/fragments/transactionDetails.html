@@ -45,22 +45,22 @@
 	<!-- <span th:text="${supplier}"></span> -->
 	Supplier
 	<address>
-		<strong th:text="${supplier.name}"></strong> <br>
+		<strong th:text="${supplier.company_name}"></strong> <br>
 
 		<ul class="list-unstyled user_data">
 			<li><i class="fa fa-map-marker user-profile-icon"></i> <span
-				th:text="${supplier.address}"></span></li>
+				th:text="${supplier.billingAddress}"></span></li>
 
 			<li><i class="fa fa-mobile user-profile-icon"></i> <span
-				th:text="${supplier.phone}"></span></li>
+				th:text="${supplier.contact_phone}"></span></li>
 
-			<li th:if="${supplier.fax != null}"><i
+			<li th:if="${supplier.billingFax != null}"><i
 				class="fa fa-fax user-profile-icon"></i> <span
-				th:text="${supplier.fax}"></span></li>
+				th:text="${supplier.billingFax}"></span></li>
 
-			<li th:if="${supplier.mobile != null}"><i
+			<li th:if="${supplier.contact_mobile != null}"><i
 				class="fa fa-mobile user-profile-icon"></i> <span
-				th:text="${supplier.mobile}"></span></li>
+				th:text="${supplier.contact_mobile}"></span></li>
 
 			<li class="m-top-xs" th:if="${supplier.website != null}"><i
 				class="fa fa-external-link user-profile-icon"></i> <a

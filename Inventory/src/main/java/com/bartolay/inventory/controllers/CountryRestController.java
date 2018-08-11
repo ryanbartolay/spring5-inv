@@ -18,6 +18,7 @@ import com.bartolay.inventory.entity.Country;
 import com.bartolay.inventory.form.CountryForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
+import com.bartolay.inventory.repositories.CountryRepository;
 import com.bartolay.inventory.services.CountryService;
 import com.bartolay.inventory.stock.controllers.AbstractRestController;
 import com.bartolay.inventory.utils.StringUtils;
@@ -28,12 +29,20 @@ public class CountryRestController extends AbstractRestController{
 
 	@Autowired
 	private CountryService countryService;
+	
+	@Autowired
+	private CountryRepository countryRepository;
 	@Autowired
 	private StringUtils stringUtils;
 	
 	@RequestMapping(value="/api/datatable/countries", method=RequestMethod.GET, produces="application/json")
 	public String datatable(@RequestParam Map<String, String> requestMap) throws JsonProcessingException {
 		return countryService.retrieveDatatableList(requestMap).toString();
+	}
+	
+	@RequestMapping(value="/api/countries", method=RequestMethod.GET)
+	public String list() throws JsonProcessingException, UnsupportedEncodingException {
+		return stringUtils.encode(countryRepository.findAll());
 	}
 	
 	@RequestMapping(value="/api/countries", method=RequestMethod.POST)

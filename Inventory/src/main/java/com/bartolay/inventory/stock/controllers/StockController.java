@@ -67,7 +67,7 @@ public class StockController {
 	public ModelAndView stockSuppliers() {
 		ModelAndView model = new ModelAndView("stock/index");
 		model.addObject("html", "supplier/list");
-		model.addObject("stockOpeningForm", new StockOpeningForm());
+		model.addObject("supplierForm", new SupplierForm());
 		model.addObject("companies", companyService.findAll());
 		return model;
 	}
