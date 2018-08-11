@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,10 +36,15 @@ public class SupplierRestController extends AbstractRestController {
 	}
 	
 	@RequestMapping(value="/api/suppliers", method=RequestMethod.GET, produces="application/json")
-	public String suppliersList(@RequestParam Map<String, String> requestMap) throws JsonProcessingException, UnsupportedEncodingException {
+	public String suppliersList() throws JsonProcessingException, UnsupportedEncodingException {
 		return stringUtils.encode(supplierService.findAll());
 	}
 
+	@RequestMapping(value="/api/suppliers/{supplierId}", method=RequestMethod.GET, produces="application/json")
+	public String supplierDetail(@PathVariable Integer supplierId) throws JsonProcessingException, UnsupportedEncodingException {
+		return stringUtils.encode(supplierService.findById(supplierId));
+	}
+	
 	@RequestMapping(value = "/api/suppliers", method = RequestMethod.POST)
 	public String create(@Valid SupplierForm supplierForm, BindingResult bindingResult)
 			throws RestApiException, JsonProcessingException, UnsupportedEncodingException {

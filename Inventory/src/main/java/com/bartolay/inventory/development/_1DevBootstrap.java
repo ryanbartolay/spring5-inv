@@ -448,11 +448,34 @@ public class _1DevBootstrap implements ApplicationListener<ContextRefreshedEvent
 	private void createSuppliers() {
 		supplier = new Supplier();
 		supplier.setCompany_name("JFC Corporation");
-		supplier.setContact_phone("91-100");
-		supplier.setBillingAddress("Las Pinas");
-		supplier.setCreatedBy(userRepository.findByUsername("admin"));
+		supplier.setContact_email("bartolay.ryan@gmail.com");
+		supplier.setContact_mobile("09178049704");
+		supplier.setContact_phone("8093074");
+		supplier.setFacebook("rbartolay");
+		
+		supplier.setBillingAddress("Molave st.");
+		supplier.setBillingCity("City of Dreams");
+		supplier.setBillingState("NCR");
 		supplier.setBillingCountry(countryRepository.findById(1).get());
-
+		supplier.setBillingFax("123456789");
+		supplier.setBillingPhone(supplier.getContact_phone());
+		supplier.setBillingZipCode("1741");
+		
+		supplier.setShippingAddress(supplier.getBillingAddress());
+		supplier.setShippingCity(supplier.getBillingCity());
+		supplier.setShippingState(supplier.getBillingState());
+		supplier.setShippingCountry(supplier.getBillingCountry());
+		supplier.setShippingFax(supplier.getBillingFax());
+		supplier.setShippingPhone(supplier.getBillingPhone());
+		supplier.setShippingZipCode(supplier.getBillingZipCode());
+		
+		supplier.setCurrency("PHP");
+		supplier.setNotes("Noted here");
+		supplier.setTwitter("rbartolay");
+		supplier.setSkype_name("ryan.bartolay");
+		supplier.setWebsite("http://www.imbue360.com");
+		supplier.setCreatedBy(userRepository.findByUsername("admin"));
+		
 		supplierRepository.save(supplier);
 
 		supplier = new Supplier();

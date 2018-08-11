@@ -82,7 +82,7 @@
         	},
         	{ data: "billing_address" },
         	{ 
-        		data: "phone",
+        		data: "contact_phone",
         		render: function ( data, type, row ) {
                     return '<a href="/locations/'+ row.location_id +'">' + data + '</a>';
                 },
@@ -94,7 +94,7 @@
                     defaultContent: "" },
             {
 				render: function(data, type, row) {
-					return `<a href="/stock/suppliers/edit/`+ row.id +`" class="btn btn-primary btn-xs"><span class="fa fa-edit"></span></a>`;
+					return `<button class="btn btn-primary btn-xs" onClick="triggerEditSupplier(this)" data-id="`+row.id+`"><span class="fa fa-edit"></span></button>`;
 				}
             }
     	]
@@ -108,4 +108,13 @@
 	 		datatable.ajax.reload();
 	 	});
 	 });
+	
+	function triggerEditSupplier(e) {
+		console.log(e);
+		console.log($(e).data("id"));
+		
+		editSupplier({id: $(e).data("id")}, function(data) {
+			console.log(data);
+		});
+	}
 </script>

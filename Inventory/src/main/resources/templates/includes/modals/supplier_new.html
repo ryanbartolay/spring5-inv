@@ -9,12 +9,13 @@
 					<span aria-hidden="true">x</span>
 				</button>
 				<h4 class="modal-title" id="myModalLabel">
-					<span class="fa fa-gears"></span> New Supplier
+					<span class="fa fa-gears"></span> <span id="suppliersModalTitle"></span>
 				</h4>
 			</div>
 			<div class="modal-body">
 
 				<form id="newSupplierForm" th:object="${supplierForm}">
+					<input type="hidden" th:field="*{supplierId}"/>
 					<div id="newSupplierErrors"></div>
 					<div class="col-md-12">
 						<label>Company Name*</label> <input type="text"
@@ -59,7 +60,7 @@
 								<div class="col-md-12">
 									<label>Currency</label> <input type="text"
 										th:field="*{currency}" class="form-control" /> <label>Facebook</label>
-									<input type="text" class="form-control" /> <label>Twitter</label>
+									<input type="text" class="form-control" th:field="*{facebook}" /> <label>Twitter</label>
 									<input type="text" th:field="*{twitter}" class="form-control" />
 								</div>
 
@@ -133,22 +134,44 @@
 	</div>
 </div>
 
-
 <script>
 	var newSupplierModal = $("#newSupplierModal");
 	var btnAddNewSupplier = $("#btnAddNewSupplier");
-	var btnAddNewSupplierText = btnAddNewSupplier.text();
+	var btnAddNewSupplierText;
 
 	var newSupplierForm = $("#newSupplierForm");
 
 	var callback;
+	var supplierId = null;
 
 	function newSupplier(parameters, cb) {
+		btnAddNewSupplier.attr("disabled", "disabled");
+		btnAddNewSupplier.text("Loading Fields....");
+		
+		newSupplierForm[0].reset();
+		supplierId = null;
 		callback = cb;
+		
+		btnAddNewSupplierText = "Create new Supplier";
+		$("#suppliersModalTitle").html("New Supplier");
+		newSupplierModal.modal("show");
+	}
+	
+	function editSupplier(parameters, cb) {
+		btnAddNewSupplier.attr("disabled", "disabled");
+		btnAddNewSupplier.text("Loading Fields....");
+		
+		
+		callback = cb;
+		
+		btnAddNewSupplierText = "Update Supplier";
+		$("#suppliersModalTitle").html("Update Supplier");
+		supplierId = parameters.id;
 		newSupplierModal.modal("show");
 	}
 
 	newSupplierModal.on('shown.bs.modal', function() {
+		
 		GET("/api/countries", function(countries) {
 			
 			$("#billingCountry option").remove();
@@ -165,6 +188,46 @@
 			
 			$("#shippingCountry").html(html);
 		});
+		
+		if(supplierId) {
+			
+			GET("/api/suppliers/" + supplierId, function(supplier) {
+				console.log(supplier);
+				
+				$("#supplierId").val(supplier.id);
+				$("#company_name").val(supplier.company_name);
+				$("#contact_email").val(supplier.contact_email);
+				$("#contact_mobile").val(supplier.contact_mobile);
+				$("#contact_phone").val(supplier.contact_phone);
+				$("#skype_name").val(supplier.skype_name);
+				$("#currency").val(supplier.currency);
+				$("#facebook").val(supplier.facebook);
+				$("#twitter").val(supplier.twitter);
+				$("#website").val(supplier.website);
+				$("#notes").val(supplier.notes);
+				
+				$("#billingAddress").val(supplier.billingAddress);
+				$("#billingCity").val(supplier.billingCity);
+				$("#billingCountry").val(supplier.billingCountry.id);
+				$("#billingFax").val(supplier.billingFax);
+				$("#billingPhone").val(supplier.billingPhone);
+				$("#billingState").val(supplier.billingState);
+				$("#billingZipCode").val(supplier.billingZipCode);
+				
+				
+				$("#shippingAddress").val(supplier.shippingAddress);
+				$("#shippingCity").val(supplier.shippingCity);
+				$("#shippingCountry").val(supplier.shippingCountry.id);
+				$("#shippingFax").val(supplier.shippingFax);
+				$("#shippingPhone").val(supplier.shippingPhone);
+				$("#shippingState").val(supplier.shippingState);
+				$("#shippingZipCode").val(supplier.shippingZipCode);
+			});
+			
+		}
+		
+		btnAddNewSupplier.removeAttr("disabled");
+		btnAddNewSupplier.text(btnAddNewSupplierText);
 	});
 
 	btnAddNewSupplier.on("click", function() {
@@ -189,7 +252,7 @@
 	
 	function copyBillingAddress() {
 		
-		$("#shippingAddress").text($("#billingAddress").val());
+		$("#shippingAddress").val($("#billingAddress").val());
 		$("#shippingCity").val($("#billingCity").val());
 		$("#shippingState").val($("#billingState").val());
 		$("#shippingCountry").val($("#billingCountry").val());

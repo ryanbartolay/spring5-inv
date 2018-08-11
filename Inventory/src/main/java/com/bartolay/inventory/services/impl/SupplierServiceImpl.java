@@ -57,6 +57,11 @@ public class SupplierServiceImpl implements SupplierService {
 		}
 
 		Supplier s = new Supplier();
+		
+		if(f.getSupplierId() != null) {
+			s.setId(f.getSupplierId());
+		}
+		
 		s.setCompany_name(f.getCompany_name());
 		s.setContact_email(f.getContact_email());
 		s.setContact_mobile(f.getContact_mobile());

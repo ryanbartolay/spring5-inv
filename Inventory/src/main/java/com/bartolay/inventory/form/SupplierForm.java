@@ -7,6 +7,7 @@ import com.bartolay.inventory.entity.Country;
 
 public class SupplierForm {
 
+	private Integer supplierId;
 	// Billing Address
 	private String billingAddress;
 
@@ -23,7 +24,7 @@ public class SupplierForm {
 	private String billingZipCode;
 
 	@NotNull(message = "Company name is required")
-	@Size(min=2, max=100, message="Company Name is required. Length must be 2 to 100 characters.")
+	@Size(min = 2, max = 100, message = "Company Name is required. Length must be 2 to 100 characters.")
 	private String company_name;
 
 	private String contact_email;
@@ -45,6 +46,14 @@ public class SupplierForm {
 	private String twitter;
 
 	private String website;
+
+	public Integer getSupplierId() {
+		return supplierId;
+	}
+
+	public void setSupplierId(Integer supplierId) {
+		this.supplierId = supplierId;
+	}
 
 	public String getBillingAddress() {
 		return billingAddress;
