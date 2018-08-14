@@ -54,6 +54,31 @@
 		</div>
 	</div>
 </div>
+<!-- Delete Modal -->
+	<div class="modal fade" id="confirmDeleteModal" tabindex="-2" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+	        
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+	            </div>
+	        
+	            <div class="modal-body">
+	                <p>You are about to delete <b id="recordName"></b>, this procedure is irreversible.</p>
+	                <p>Do you want to proceed?</p>
+	                <p class="debug-url"></p>
+	            </div>
+	            
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	                <a class="btn btn-danger" id="btnConfirmDelete">Delete</a>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<!-- /Delete Modal -->
 
 <div th:include="includes/modals/supplier_new"></div>
 <!-- DataTables JavaScript -->
@@ -94,8 +119,12 @@
                     defaultContent: "" },
             {
 				render: function(data, type, row) {
-					return `<button class="btn btn-primary btn-xs" onClick="triggerEditSupplier(this)" data-id="`+row.id+`"><span class="fa fa-edit"></span></button>`;
-				}
+					return `
+					<button class="btn btn-primary btn-xs" onClick="triggerEditSupplier(this)" data-id="`+row.id+`"><span class="fa fa-edit"></span></button>
+					<button id="btnDelete" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#confirmDeleteModal" data-backdrop="static" data-keyboard="false"><span class="fa fa-trash"></span></button>
+					`;
+				},
+				className: "text-right"
             }
     	]
 	); 
@@ -103,18 +132,37 @@
 	//----------------------------------------------------------------------------------------------------------------
 	 $("#newSupplier").on("click",function() {
 	 	newSupplier({}, function(data){
-	 		
-	 		console.log(data);
 	 		datatable.ajax.reload();
 	 	});
 	 });
 	
 	function triggerEditSupplier(e) {
-		console.log(e);
-		console.log($(e).data("id"));
-		
 		editSupplier({id: $(e).data("id")}, function(data) {
-			console.log(data);
+			datatable.ajax.reload();
 		});
 	}
+	
+	var confirmDeleteModal = $("#confirmDeleteModal");
+	var data = null;
+	table.find("tbody").on('click', '#btnDelete', function (e) {
+        /* e.preventDefault(); */
+ 		
+        data = datatable.row( $(this).parent('td') ).data();
+        confirmDeleteModal.find("#recordName").text(data['company_name']);
+        
+    });
+	
+	// Confirm Delete button
+    $("#btnConfirmDelete").on('click' , function(e) {
+    	$(this).attr("disabled", "disabled");
+    
+    	$(this).removeAttr("disabled");
+    	
+    	DELETE("/api/suppliers/" + data['id'], function(data) {
+    		showToast(data);
+    		
+    		confirmDeleteModal.modal('hide');
+    		datatable.ajax.reload( null, false ); // user paging is not reset on reload
+    	});
+    });
 </script>

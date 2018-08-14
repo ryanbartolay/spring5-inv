@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bartolay.inventory.entity.Supplier;
+import com.bartolay.inventory.exceptions.StockReceivedException;
 import com.bartolay.inventory.exceptions.SupplierException;
 import com.bartolay.inventory.form.SupplierForm;
 import com.bartolay.inventory.model.ApiResponse;
@@ -34,17 +34,18 @@ public class SupplierRestController extends AbstractRestController {
 			throws JsonProcessingException, UnsupportedEncodingException {
 		return supplierService.findAll(requestMap).toString();
 	}
-	
-	@RequestMapping(value="/api/suppliers", method=RequestMethod.GET, produces="application/json")
+
+	@RequestMapping(value = "/api/suppliers", method = RequestMethod.GET, produces = "application/json")
 	public String suppliersList() throws JsonProcessingException, UnsupportedEncodingException {
 		return stringUtils.encode(supplierService.findAll());
 	}
 
-	@RequestMapping(value="/api/suppliers/{supplierId}", method=RequestMethod.GET, produces="application/json")
-	public String supplierDetail(@PathVariable Integer supplierId) throws JsonProcessingException, UnsupportedEncodingException {
+	@RequestMapping(value = "/api/suppliers/{supplierId}", method = RequestMethod.GET, produces = "application/json")
+	public String supplierDetail(@PathVariable Integer supplierId)
+			throws JsonProcessingException, UnsupportedEncodingException {
 		return stringUtils.encode(supplierService.findById(supplierId));
 	}
-	
+
 	@RequestMapping(value = "/api/suppliers", method = RequestMethod.POST)
 	public String create(@Valid SupplierForm supplierForm, BindingResult bindingResult)
 			throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
@@ -61,6 +62,21 @@ public class SupplierRestController extends AbstractRestController {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
 
+		return stringUtils.encode(response);
+	}
+
+	@RequestMapping(value = "/api/suppliers/{id}", method = RequestMethod.DELETE)
+	public String delete(@PathVariable Integer id)
+			throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+
+		ApiResponse response = null;
+		try {
+			return supplierService.delete(id).toString();
+		} catch (StockReceivedException e) {
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage(), e.getErrors());
+		} catch (Exception e) {
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
 		return stringUtils.encode(response);
 	}
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bartolay.inventory.entity.Expense;
+import com.bartolay.inventory.exceptions.StockReceivedException;
 import com.bartolay.inventory.form.ExpenseForm;
 import com.bartolay.inventory.model.ApiResponse;
 import com.bartolay.inventory.model.RestApiException;
@@ -22,23 +23,24 @@ import com.bartolay.inventory.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-public class ExpensesRestController extends AbstractRestController{
+public class ExpensesRestController extends AbstractRestController {
 
 	@Autowired
 	private ExpenseService expenseService;
 	@Autowired
 	private StringUtils stringUtils;
-	
-	@RequestMapping(value="/api/datatable/expenses", method=RequestMethod.GET, produces="application/json")
+
+	@RequestMapping(value = "/api/datatable/expenses", method = RequestMethod.GET, produces = "application/json")
 	public String datatable() throws JsonProcessingException {
 		return expenseService.retrieveDatatableList().toString();
 	}
-	
-	@RequestMapping(value="/api/expenses", method=RequestMethod.PUT)
-	public String update(@Valid ExpenseForm expenseForm, BindingResult bindingResult) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+
+	@RequestMapping(value = "/api/expenses", method = RequestMethod.PUT)
+	public String update(@Valid ExpenseForm expenseForm, BindingResult bindingResult)
+			throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		ApiResponse response = null;
-		
+
 		if (bindingResult.hasErrors()) {
 			return handleRestApiException(bindingResult);
 		}
@@ -46,24 +48,26 @@ public class ExpensesRestController extends AbstractRestController{
 		try {
 			Expense expense = expenseService.update(expenseForm);
 			response = new ApiResponse(HttpStatus.OK, "Succesfully updated " + expense.getDescription());
-		} catch(Exception e) {
+		} catch (Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
-		
+
 		return stringUtils.encode(response);
 	}
-	
-	@RequestMapping(value="/api/expenses/{id}", method=RequestMethod.DELETE)
-	public String delete(@PathVariable Integer id) throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
+
+	@RequestMapping(value = "/api/expenses/{id}", method = RequestMethod.DELETE)
+	public String delete(@PathVariable Integer id)
+			throws RestApiException, JsonProcessingException, UnsupportedEncodingException {
 
 		ApiResponse response = null;
 		try {
 			return expenseService.delete(id).toString();
-		} catch(Exception e) {
+		} catch (StockReceivedException e) {
+			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage(), e.getErrors());
+		} catch (Exception e) {
 			response = new ApiResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-			
 		}
 		return stringUtils.encode(response);
 	}
-	
+
 }

@@ -98,6 +98,13 @@ public class Supplier {
 	@Column(name = "website", length = 50)
 	private String website;
 
+	public Supplier() {
+		
+	}
+	public Supplier(Integer id) {
+		this.id = id;
+	}
+
 	public String getBillingAddress() {
 		return billingAddress;
 	}

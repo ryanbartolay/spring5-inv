@@ -203,7 +203,20 @@ function showToast(data) {
 	} else if(data.status == 'ACCEPTED') { 
 		toast("info", data.localizedMessage.split("%20").join(" "));
 	} else {
-		toast("error", data.localizedMessage.split("%20").join(" "));
+		
+		var html = data.localizedMessage.split("%20").join(" ");
+
+		if(data.errors != null) {
+			html += 
+			"<ul>";
+			for (var index = 0; index < data.errors.length; ++index) {
+				html += "<li>" +data.errors[index]+ "</li>";
+			}
+			html += "</ul>";
+
+		}
+		
+		toast("error", html);
 	}
 }
 
