@@ -49,6 +49,7 @@ public class SupplierJdbcRepository extends RepositoryComponent implements Datat
 			supplier.put("contact_mobile", rs.getString("contact_mobile"));
 			supplier.put("company_name", rs.getString("company_name"));
 			supplier.put("contact_phone", rs.getString("contact_phone"));
+			supplier.put("contact_email", rs.getString("contact_email"));
 			supplier.put("updated_date", rs.getDate("updated_date"));
 			supplier.put("website", rs.getString("website"));
 		
@@ -59,3 +60,4 @@ public class SupplierJdbcRepository extends RepositoryComponent implements Datat
 
 	
 }
+

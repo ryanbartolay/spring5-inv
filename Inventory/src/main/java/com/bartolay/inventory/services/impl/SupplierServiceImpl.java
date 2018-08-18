@@ -74,6 +74,7 @@ public class SupplierServiceImpl implements SupplierService {
 		s.setContact_email(f.getContact_email());
 		s.setContact_mobile(f.getContact_mobile());
 		s.setContact_phone(f.getContact_phone());
+		s.setSkype_name(f.getSkype_name());
 		s.setCurrency(f.getCurrency());
 		s.setFacebook(f.getFacebook());
 		s.setNotes(f.getNotes());
