@@ -70,6 +70,12 @@
 						<input type="text" class="form-control payment-method-cc" th:field="*{creditCardDetails.cardNumber}" />
 						<label class="payment-method-cc">Expiration Date</label>
 						<input type="text" class="form-control payment-method-cc" th:field="*{creditCardDetails.dateExpiry}" placeholder="MM / YY"/>
+						
+						<label>Currency</label> 
+						<select
+							class="form-control" name="currency" id="currency">
+							<option th:each="currency : ${currencies}" th:attr="data-code=${currency.code}, data-id=${currency.id}, data-rate=${currency.rate}" th:selected="${currency.code.equalsIgnoreCase(baseCurrency.value)}" th:value="${currency.id}" th:text="${currency.code + ' - ' + currency.name}"></option>
+						</select>
 					</div>
 					
 					<div class="clearfix"></div>
@@ -140,7 +146,7 @@
 								<tbody>
 									<tr>
 										<th style="width: 50%">Total:</th>
-										<td class="col-md-2 text-right" id="total_item_cost"></td>
+										<td class="col-md-2 text-right"><span id="currency_total_item_cost"></span> <span id="total_item_cost">0</span></td>
 									</tr>
 									<tr>
 										<th>Discount Value</th>
@@ -148,16 +154,16 @@
 									</tr>
 									<tr>
 										<th>Grand Total:</th>
-										<td class="text-right" id="total_item_cost_with_dc">22,335</td>
+										<td class="text-right"><span id="currency_total_item_cost_with_dc"></span> <span id="total_item_cost_with_dc">0</span></td>
 									</tr>
 
 									<tr>
 										<th>Expenses Total:</th>
-										<td class="text-right" id="total_expenses">0</td>
+										<td class="text-right"><span id="currency_total_expenses"></span> <span id="total_expenses">0</span></td>
 									</tr>
 									<tr>
 										<th>Net Total:</th>
-										<td class="text-right"><b id="net_total">22,495.10</b></td>
+										<td class="text-right"><span id="currency_net_total"></span> <b id="net_total">0</b></td>
 									</tr>
 								</tbody>
 							</table>
@@ -249,6 +255,10 @@ $("#manageExpenses").on("click", function() {
 });
 
 var form_expenses = [];
+
+$("#currency").on("change", function() {
+	computeGrandTotal();
+});
 
 $("#btnAddItem").on("click", function() {
 	addItem({type: "stock_receive", label:"Add Stock Receive Item"}, function(data) {
@@ -377,8 +387,6 @@ function computeValues(element, index) {
 		});
 
 	});
-
-	console.log(form_items);
 	
 	subtotal = each.quantity * each.unitCost;
 	
@@ -386,36 +394,6 @@ function computeValues(element, index) {
 	$(element).closest("tr").find("#subtotal").val(round2DecimalPlaces(subtotal));
 	$(element).closest("tr").find("#html_subtotal").html(round2DecimalPlaces(subtotal));
 	computeGrandTotal();
-}
-
-function computeGrandTotal() {
-	
-	var grand_total = parseFloat(0);
-	var discount = parseFloat(0);
-	var total_expenses = parseFloat(0);
-	
-	$('#itemsTable > tbody  > tr').each(function() {
-		grand_total = (parseFloat(grand_total) + parseFloat($(this).find("#html_subtotal").text())).toFixed(2);
-	});
-	
-	if($("#discountValue").val() !=""){
-		discount = parseFloat($("#discountValue").val());
-	}else{
-		discount = parseFloat(0);
-	}
-	
-	if($("#total_expenses").html() !=""){
-		total_expenses = parseFloat($("#total_expenses").html());
-	}else{
-		total_expenses = parseFloat(0);
-	}
-	
-	$("#total_item_cost").html(round2DecimalPlaces(grand_total));
-	$("#total_item_cost_with_dc").html(round2DecimalPlaces(grand_total-discount));
-	
-	$("#net_total").html(round2DecimalPlaces((grand_total-discount)-total_expenses));
-	
-	
 }
 
 $("#discountValue").keyup(function(e){
@@ -446,8 +424,8 @@ function computeExpensesTotalValues(ele, id){
 		if($(this).attr("id") == "amount" && $(this).val() != ""){
 			total_expenses += parseFloat($(this).val());
 		}
-		$("#total_expenses").text(total_expenses)
-	})
+	});
+	$("#total_expenses").text(total_expenses);
 	computeGrandTotal();
 }
 
@@ -458,9 +436,45 @@ function removeExpense(ele, id){
 			delete form_expenses[j]
 		}
 	}
+	
 	computeExpensesTotalValues();
 }
 
-
+function computeGrandTotal() {
+	
+	var selected_currency = $("#currency").find(":selected");
+	var id = selected_currency.data("id");
+	var code = selected_currency.data("code");
+	var rate = selected_currency.data("rate");
+	
+	var grand_total = parseFloat(0);
+	var discount = parseFloat(0);
+	var total_expenses = parseFloat(0);
+	
+	$('#itemsTable > tbody  > tr').each(function() {
+		grand_total = (parseFloat(grand_total) + parseFloat($(this).find("#html_subtotal").text())).toFixed(2);
+	});
+	
+	if($("#discountValue").val() !=""){
+		discount = parseFloat($("#discountValue").val());
+	}else{
+		discount = parseFloat(0);
+	}
+	
+	if($("#total_expenses").html() !=""){
+		total_expenses = parseFloat($("#total_expenses").html());
+	}else{
+		total_expenses = parseFloat(0);
+	}
+	
+	$("#total_item_cost").html(round2DecimalPlaces(grand_total));
+	$("#total_item_cost_with_dc").html(round2DecimalPlaces(grand_total-discount));
+	
+	$("#net_total").html(round2DecimalPlaces((grand_total-discount)-total_expenses));
+	
+	$("#currency_total_item_cost").html(code);
+	$("#currency_total_item_cost_with_dc").html(code);
+	$("#currency_net_total").html(code);
+}
 /*]]>*/
 </script>

@@ -20,6 +20,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.bartolay.inventory.entity.Currency;
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.entity.User;
@@ -33,74 +34,81 @@ public class StockReceived implements GeneratedSystemNumber {
 	@Id
 	@GeneratedValue(generator = "StockReceived-UniqueIdGenerator")
 	@GenericGenerator(name = "StockReceived-UniqueIdGenerator", strategy = "com.bartolay.inventory.entity.generators.SystemNumberGenerator")
-	@Column(name="system_number", nullable=false, unique=true, insertable=false, updatable=false, length=10)
+	@Column(name = "system_number", nullable = false, unique = true, insertable = false, updatable = false, length = 10)
 	private String systemNumber;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "supplier_id", nullable=false)
+	@JoinColumn(name = "supplier_id", nullable = false)
 	private Supplier supplier;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name="payment_method", nullable=false, length=10, updatable=true)
+	@Column(name = "payment_method", nullable = false, length = 10, updatable = true)
 	private PaymentMethod paymentMethod;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "credit_card_details_id", nullable=true, updatable=true)
+	@JoinColumn(name = "credit_card_details_id", nullable = true, updatable = true)
 	private CreditCardDetails creditCardDetails;
 
-	@Column(name="document_number", unique=true, length=25)
+	@Column(name = "document_number", unique = true, length = 25)
 	private String documentNumber;
-	
+
 	@Lob
 	@Column
 	private String description;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="location_id", nullable=false, updatable=false)
+	@JoinColumn(name = "location_id", nullable = false, updatable = false)
 	private Location location;
-	
-	@Column(name="transaction_date", nullable=false)
+
+	@Column(name = "transaction_date", nullable = false)
 	private Date transactionDate;
-	
-	@OneToMany(mappedBy = "stockReceive", fetch=FetchType.LAZY)
+
+	@OneToMany(mappedBy = "stockReceive", fetch = FetchType.LAZY)
 	private List<StockReceivedExpense> stockReceivedExpenses;
-	
-	@Column(name="expense_total", nullable=false, precision=10, scale=5)
+
+	@Column(name = "expense_total", nullable = false, precision = 10, scale = 5)
 	private BigDecimal expensesTotal;
 
-	@Column(name="discount_value", nullable=false)
+	@Column(name = "discount_value", nullable = false)
 	private Integer discountValue;
 
-	@Column(name="year", nullable=false, length=4, updatable=false)
+	@Column(name = "year", nullable = false, length = 4, updatable = false)
 	private String year;
 
-	@OneToMany(mappedBy = "stockReceive", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy = "stockReceive", fetch = FetchType.LAZY)
 	private List<StockReceivedItem> stockReceiveItems;
-	
-	@Column(name="total", nullable=false, precision=10, scale=5)
+
+	@Column(name = "total", nullable = false, precision = 10, scale = 5)
 	private BigDecimal total;
-	
-	@Column(name="grand_total", nullable=false, precision=10, scale=5)
+
+	@Column(name = "grand_total", nullable = false, precision = 10, scale = 5)
 	private BigDecimal grandTotal;
-	
-	@Column(name="net_total", nullable=false, precision=10, scale=5)
+
+	@Column(name = "net_total", nullable = false, precision = 10, scale = 5)
 	private BigDecimal netTotal;
 
-	@Column(name="created_date", nullable=false, updatable=false)
+	@Column(name = "created_date", nullable = false, updatable = false)
 	@CreationTimestamp
 	private Date createdDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "created_by", nullable=false, updatable=false)
+	@JoinColumn(name = "created_by", nullable = false, updatable = false)
 	private User createdBy;
 
-	@Column(name="updated_date")
+	@Column(name = "updated_date")
 	@UpdateTimestamp
 	private Date updatedDated;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "updated_by", nullable=true, updatable=true)
+	@JoinColumn(name = "updated_by", nullable = true, updatable = true)
 	private User updatedBy;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "currency_id", nullable = false)
+	private Currency currency;
+
+	@Column(name = "currency_rate", updatable = false, nullable=false)
+	private BigDecimal currencyRate;
 
 	public String getSystemNumber() {
 		return systemNumber;
@@ -189,7 +197,7 @@ public class StockReceived implements GeneratedSystemNumber {
 	public void setGrandTotal(BigDecimal grandTotal) {
 		this.grandTotal = grandTotal;
 	}
-	
+
 	public BigDecimal getNetTotal() {
 		return netTotal;
 	}
@@ -269,13 +277,28 @@ public class StockReceived implements GeneratedSystemNumber {
 		this.stockReceivedExpenses = stockReceiveExpenses;
 	}
 
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
+
+	public BigDecimal getCurrencyRate() {
+		return currencyRate;
+	}
+
+	public void setCurrencyRate(BigDecimal currencyRate) {
+		this.currencyRate = currencyRate;
+	}
+
 	@Override
 	public String toString() {
 		return "StockReceive [systemNumber=" + systemNumber + ", supplier=" + supplier + ", paymentMethod="
 				+ paymentMethod + ", documentNumber=" + documentNumber + ", location=" + location + ", expenses="
-				+ stockReceivedExpenses + ", discountValue=" + discountValue + ", year=" + year + ", total=" + total 
-				+ ",createdDate=" + createdDate + ", updatedDated="
-				+ updatedDated + "]";
+				+ stockReceivedExpenses + ", discountValue=" + discountValue + ", year=" + year + ", total=" + total
+				+ ",createdDate=" + createdDate + ", updatedDated=" + updatedDated + "]";
 	}
 
 }

@@ -19,6 +19,7 @@ import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.exceptions.StockReceivedException;
 import com.bartolay.inventory.form.StockReceivedForm;
+import com.bartolay.inventory.repositories.CurrencyRepository;
 import com.bartolay.inventory.repositories.ExpenseRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
@@ -66,6 +67,9 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 	
 	@Autowired
 	private DateFormat dateFormat;
+	
+	@Autowired
+	private CurrencyRepository currencyRepository;
 
 	@Override
 	public int getOrder() {
@@ -112,6 +116,7 @@ public class _9StockReceiveBootstrap implements ApplicationListener<ContextRefre
 		form.setYear("2018");
 		form.setTransactionDate(dateFormat.format(new Date()));
 		form.setStockReceiveItems(item2);
+		form.setCurrency(currencyRepository.findById(2).get());
 		form.setExpenses(null);
 		form.setDiscountValue(5);
 		form.setSupplier(supplierRepository.findById(2).get());

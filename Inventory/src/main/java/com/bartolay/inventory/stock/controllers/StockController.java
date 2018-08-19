@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.bartolay.inventory.enums.SettingsKeys;
 import com.bartolay.inventory.form.ExpenseForm;
 import com.bartolay.inventory.form.StockAdjustmentForm;
 import com.bartolay.inventory.form.StockAdjustmentReasonForm;
@@ -15,7 +16,9 @@ import com.bartolay.inventory.form.StockReceivedExpenseForm;
 import com.bartolay.inventory.form.StockReceivedForm;
 import com.bartolay.inventory.form.StockTransferForm;
 import com.bartolay.inventory.form.SupplierForm;
+import com.bartolay.inventory.repositories.CurrencyRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
+import com.bartolay.inventory.repositories.SettingsRepository;
 import com.bartolay.inventory.services.CompanyService;
 import com.bartolay.inventory.services.SupplierService;
 import com.bartolay.inventory.stock.entity.StockOpening;
@@ -29,6 +32,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
 public class StockController {
+	
+	@Autowired
+	private CurrencyRepository currencyRepository;
+	
+	@Autowired
+	private SettingsRepository settingsRepository;
 	
 	@Autowired
 	private LocationRepository locationRepository;
@@ -134,7 +143,9 @@ public class StockController {
 		model.addObject("supplierForm", new SupplierForm());
 		model.addObject("suppliers", supplierService.findAll());
 		model.addObject("locations", locationRepository.findAll());
-		
+		model.addObject("baseCurrency", settingsRepository.findById(SettingsKeys.BASE_CURRENCY.name()).get());
+		model.addObject("currencies", currencyRepository.findAll());
+
 		return model;
 	}
 	

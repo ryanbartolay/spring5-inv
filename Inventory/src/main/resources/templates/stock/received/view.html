@@ -130,6 +130,11 @@
 							<table class="table">
 								<tbody>
 									<tr>
+										<th style="width: 50%">Currency:</th>
+										<td class="text-right"
+											th:text="${stockReceive.currency.code + ' - ' + stockReceive.currency.name + ' (' + stockReceive.currencyRate + ')'}"></td>
+									</tr>
+									<tr>
 										<th style="width: 50%">Total:</th>
 										<td class="text-right"
 											th:text="${T(com.bartolay.inventory.utils.NumericUtility).amount(stockReceive.total)}"></td>

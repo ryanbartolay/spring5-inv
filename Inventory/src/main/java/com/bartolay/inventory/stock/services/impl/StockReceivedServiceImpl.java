@@ -13,11 +13,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.bartolay.inventory.datatable.model.DatatableParameter;
+import com.bartolay.inventory.entity.Currency;
+import com.bartolay.inventory.entity.Settings;
 import com.bartolay.inventory.enums.ActivityType;
 import com.bartolay.inventory.enums.PaymentMethod;
+import com.bartolay.inventory.enums.SettingsKeys;
 import com.bartolay.inventory.exceptions.StockReceivedException;
 import com.bartolay.inventory.form.StockReceivedForm;
+import com.bartolay.inventory.repositories.CurrencyRepository;
 import com.bartolay.inventory.repositories.DatatableRepository;
+import com.bartolay.inventory.repositories.SettingsRepository;
 import com.bartolay.inventory.services.InventoryCoreService;
 import com.bartolay.inventory.stock.entity.StockReceived;
 import com.bartolay.inventory.stock.services.StockReceivedService;
@@ -38,6 +43,12 @@ public class StockReceivedServiceImpl implements StockReceivedService {
 	@Autowired
 	@Qualifier("stockReceivedDatatableRepository")
 	private DatatableRepository stockReceivedDatatableRepository;
+	
+	@Autowired
+	private CurrencyRepository currencyRepository;
+	
+	@Autowired
+	private SettingsRepository settingsRepository;
 	
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
@@ -107,7 +118,16 @@ public class StockReceivedServiceImpl implements StockReceivedService {
 		stockReceived.setSupplier(stockReceiveForm.getSupplier());
 		stockReceived.setCreditCardDetails(stockReceiveForm.getCreditCardDetails());
 		stockReceived.setDescription(stockReceiveForm.getDescription());
+		stockReceived.setCurrency(stockReceiveForm.getCurrency());
 		
+		// Lets set default currency from base currency
+		if(stockReceived.getCurrency() == null) {
+			Settings baseCurrencySetting = settingsRepository.findById(SettingsKeys.BASE_CURRENCY.name()).get();
+			Currency baseCurrency = currencyRepository.findByCode(baseCurrencySetting.getValue().toUpperCase());
+			stockReceived.setCurrency(baseCurrency);
+		}
+		
+		stockReceived.setCurrencyRate(stockReceived.getCurrency().getRate());
 		stockReceived = inventoryCoreService.createStockReceive(stockReceived);
 		activityUtility.log(ActivityType.STOCK_RECEIVED, stockReceived);
 		

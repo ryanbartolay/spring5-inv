@@ -9,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bartolay.inventory.entity.Currency;
 import com.bartolay.inventory.entity.Inventory;
 import com.bartolay.inventory.entity.InventoryTransaction;
 import com.bartolay.inventory.entity.Item;
+import com.bartolay.inventory.entity.Settings;
 import com.bartolay.inventory.enums.PaymentMethod;
 import com.bartolay.inventory.enums.SalesInvoiceStatus;
+import com.bartolay.inventory.enums.SettingsKeys;
 import com.bartolay.inventory.enums.Status;
 import com.bartolay.inventory.enums.StockAdjustmentType;
 import com.bartolay.inventory.enums.TransactionType;
@@ -21,10 +24,12 @@ import com.bartolay.inventory.exceptions.SalesInvoiceException;
 import com.bartolay.inventory.exceptions.SalesReturnException;
 import com.bartolay.inventory.exceptions.StockAdjustmentException;
 import com.bartolay.inventory.exceptions.StockTransferException;
+import com.bartolay.inventory.repositories.CurrencyRepository;
 import com.bartolay.inventory.repositories.InventoryJDBCRepository;
 import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.InventoryTransactionRepository;
 import com.bartolay.inventory.repositories.ItemRepository;
+import com.bartolay.inventory.repositories.SettingsRepository;
 import com.bartolay.inventory.sales.entity.CreditCardDetails;
 import com.bartolay.inventory.sales.entity.SalesInvoice;
 import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
@@ -107,6 +112,10 @@ public class InventoryCoreService {
 	private StockTransferItemRepository stockTransferItemRepository;
 	@Autowired
 	private ItemRepository itemRepository;
+	@Autowired
+	private CurrencyRepository currencyRepository;
+	@Autowired
+	private SettingsRepository settingsRepository;
 	/**
 	 * Creates the Stock Opening
 	 * @param stockOpening

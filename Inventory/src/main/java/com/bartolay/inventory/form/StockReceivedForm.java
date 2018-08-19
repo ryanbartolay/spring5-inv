@@ -8,6 +8,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.bartolay.inventory.entity.Currency;
 import com.bartolay.inventory.entity.Location;
 import com.bartolay.inventory.entity.Supplier;
 import com.bartolay.inventory.enums.PaymentMethod;
@@ -34,6 +35,9 @@ public class StockReceivedForm {
 	@NotNull(message="Please specify Payment Method")
 	private PaymentMethod paymentMethod;
 	
+	@NotNull(message="Select currency")
+	private Currency currency;
+	
 	private CreditCardDetails creditCardDetails;
 	
 	@NotNull(message="Year is required")
@@ -44,7 +48,7 @@ public class StockReceivedForm {
 	private List<StockReceivedExpense> expenses;
 	
 	@Min(value=0, message="Minimum Discount Value is 0")
-	@Max(value=100, message="Maximum Discount value is 100")
+//	@Max(value=100, message="Maximum Discount value is 100")
 	private int discountValue = 0;
 	
 	@NotNull(message="Supplier is required")
@@ -149,6 +153,14 @@ public class StockReceivedForm {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
 	}
 
 	@Override
