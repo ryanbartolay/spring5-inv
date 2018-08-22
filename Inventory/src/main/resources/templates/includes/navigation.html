@@ -10,12 +10,14 @@
 		<!-- menu profile quick info -->
 		<div class="profile clearfix">
 			<div class="profile_pic">
-				<img th:src="@{/static/images/ryan.jpeg}" alt="..." class="img-circle profile_img">
+				<img th:src="@{/static/images/ryan.jpeg}" alt="..."
+					class="img-circle profile_img">
 			</div>
 			<div class="profile_info">
 				<span>Welcome,</span>
 				<h2>
-					<span th:text ="${#authentication.getPrincipal().getFirstName()} + ' '+ ${#authentication.getPrincipal().getLastName()}"></span>
+					<span
+						th:text="${#authentication.getPrincipal().getFirstName()} + ' '+ ${#authentication.getPrincipal().getLastName()}"></span>
 				</h2>
 			</div>
 		</div>
@@ -23,9 +25,10 @@
 
 		<br />
 
-		<!-- sidebar menu -->
-		<div th:include="includes/menu"></div>
-		<!-- /sidebar menu -->
+		<div th:switch="${settings}">
+			<div th:case="true" th:include="includes/settings_menu"></div>
+			<div th:case="*" th:include="includes/menu"></div>
+		</div>
 
 	</div>
 </div>
@@ -41,9 +44,13 @@
 			<ul class="nav navbar-nav navbar-right">
 				<li class=""><a href="javascript:;"
 					class="user-profile dropdown-toggle" data-toggle="dropdown"
-					aria-expanded="false"> <img src="images/img.jpg" alt=""><span th:text="${#authentication.getPrincipal().getFirstName()} + ' '+ ${#authentication.getPrincipal().getLastName()}"></span>
-					<span th:text ="'( ' + ${#authentication.getPrincipal().getUsername()} + ' )'"></span> <span class=" fa fa-angle-down"></span>
+					aria-expanded="false"> <img src="images/img.jpg" alt=""><span
+						th:text="${#authentication.getPrincipal().getFirstName()} + ' '+ ${#authentication.getPrincipal().getLastName()}"></span>
+						<span
+						th:text="'( ' + ${#authentication.getPrincipal().getUsername()} + ' )'"></span>
+						<span class=" fa fa-angle-down"></span>
 				</a>
+
 					<ul class="dropdown-menu dropdown-usermenu pull-right">
 						<li><a href="javascript:;"> Profile</a></li>
 						<li><a href="javascript:;"> <span
@@ -54,6 +61,15 @@
 								class="fa fa-sign-out pull-right"></i> Log Out</a></li>
 					</ul></li>
 
+				<li><a href="javascript:;" class="user-profile dropdown-toggle"
+					data-toggle="dropdown" aria-expanded="false"><span
+						class="fa fa-gear"></span></a>
+					<ul class="dropdown-menu dropdown-usermenu pull-right">
+						<li><a href="javascript:;"> Organization Profile</a></li>
+						<li><a href="javascript:;"> Users and Roles</a></li>
+						<li><a href="javascript:;"> Locations</a></li>
+						<li><a th:href="@{/settings/currencies}">Currencies</a></li>
+					</ul></li>
 				<li role="presentation" class="dropdown"><a href="javascript:;"
 					class="dropdown-toggle info-number" data-toggle="dropdown"
 					aria-expanded="false"> <i class="fa fa-envelope-o"></i> <span
@@ -92,7 +108,10 @@
 								</a>
 							</div>
 						</li>
+
 					</ul></li>
+
+
 			</ul>
 		</nav>
 	</div>
