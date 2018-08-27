@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 @Entity
 public class Currency {
@@ -19,16 +18,26 @@ public class Currency {
 	private int decimalPlaces;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "currency_generator")
-	@SequenceGenerator(name = "currency_generator", sequenceName = "CURRENCY_SER_SEQ")
-	@Column(name = "id", updatable = false, nullable = false)
-	private int id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer id;
+	
+//	@Id
+//	@GeneratedValue(generator = "currency_id_seq")
+//	@GenericGenerator(name = "currency_id_seq", strategy = "com.bartolay.inventory.entity.generators.AutoIncrementIdGenerator")
+//	@Column(name = "id", updatable = false, nullable = false, columnDefinition="SERIAL")
+//	private Integer id;
 
 	@Column(name = "name", length = 50, nullable = false)
 	private String name;
 
 	@Column(name = "rate", nullable = false)
 	private BigDecimal rate;
+
+	@Column(name = "symbol", length = 5)
+	private String symbol;
+	
+	@Column(name="base_currency")
+	private boolean baseCurrency;
 
 	public String getCode() {
 		return code;
@@ -38,7 +47,7 @@ public class Currency {
 		return decimalPlaces;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
@@ -58,7 +67,7 @@ public class Currency {
 		this.decimalPlaces = decimalPlaces;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -68,5 +77,43 @@ public class Currency {
 
 	public void setRate(BigDecimal rate) {
 		this.rate = rate;
+	}
+
+	public String getSymbol() {
+		return symbol;
+	}
+
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
+	}
+
+	public boolean isBaseCurrency() {
+		return baseCurrency;
+	}
+
+	public void setBaseCurrency(boolean baseCurrency) {
+		this.baseCurrency = baseCurrency;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Currency other = (Currency) obj;
+		if (id != other.id)
+			return false;
+		return true;
 	}
 }

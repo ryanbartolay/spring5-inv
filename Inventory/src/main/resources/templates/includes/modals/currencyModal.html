@@ -1,0 +1,184 @@
+<div class="modal fade bs-example-modal-md in" id="newCurrencyModal"
+	tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">x</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					<span class="fa fa-gears"></span> <span id="CurrencysModalTitle"></span>
+				</h4>
+			</div>
+			<div class="modal-body">
+				<div id="newCurrencyErrors"></div>
+				<form id="newCurrencyForm" th:object="${currencyForm}">
+					<input type="text" th:field="*{currency_id}" />
+					<div class="col-md-12">
+						<label>Currency Name*</label> <input type="text"
+							th:field="*{currency_name}" class="form-control" />
+					</div>
+					<div class="col-md-6">
+						<label>Code*</label> <input type="text"
+							th:field="*{currency_code}" class="form-control" />
+					</div>
+					<div class="col-md-6">
+						<label>Symbol*</label> <input type="text"
+							th:field="*{currency_symbol}" class="form-control" />
+					</div>
+					<div class="col-md-6">
+						<label>Decimal Places*</label> <input type="number"
+							th:field="*{currency_decimalPlaces}" maxlength="1" class="form-control" />
+					</div>
+					<div class="col-md-6">
+						<label>Rate*</label> <input type="number"
+							th:field="*{currency_rate}"  class="form-control" />
+					</div>
+				</form>
+			</div>
+
+			<div class="modal-footer">
+				<button class="btn btn-success btn-sm" id="btnAddNewCurrency">Create
+					Currency</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<!-- manage Reasons-->
+<div class="modal fade" id="confirmDeleteModal" tabindex="1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+		       <input type="hidden" id="currencyModalId" />
+		    <div class="modal-header">
+		        <button type="button" class="close" onClick="cancelConfirmDelete()" aria-hidden="true">&times;</button>
+		        <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+		    </div>
+		
+		    <div class="modal-body">
+		    	<div id="confirmDeleteModalErrors"></div>
+		        <p>You are about to delete Currency <b id="recordName"></b>, this procedure is irreversible.</p>
+		        <p>Do you want to proceed?</p>
+		        <p class="debug-url"></p>
+		    </div>
+		    
+		    <div class="modal-footer">
+		        <button type="button" class="btn btn-default" onClick="cancelConfirmDelete()">Cancel</button>
+		        <button class="btn btn-danger" onClick="confirmDelete(this)">Delete</button>
+		    </div>
+		</div>
+	</div>
+</div>
+
+<script>
+	var newCurrencyModal = $("#newCurrencyModal");
+	var btnAddNewCurrency = $("#btnAddNewCurrency");
+	var btnAddNewCurrencyText;
+
+	var newCurrencyForm = $("#newCurrencyForm");
+	var confirmDeleteModal = $("#confirmDeleteModal");
+	
+	var callback;
+	var CurrencyId = null;
+
+	function newCurrency(parameters, cb) {
+		btnAddNewCurrency.attr("disabled", "disabled");
+		btnAddNewCurrency.text("Loading Fields....");
+		
+		newCurrencyForm[0].reset();
+		CurrencyId = null;
+		callback = cb;
+		
+		btnAddNewCurrencyText = "Create new Currency";
+		$("#CurrencysModalTitle").html("New Currency");
+		newCurrencyModal.modal("show");
+	}
+	
+	function editCurrency(parameters, cb) {
+		btnAddNewCurrency.attr("disabled", "disabled");
+		btnAddNewCurrency.text("Loading Fields....");
+		
+		
+		callback = cb;
+		
+		btnAddNewCurrencyText = "Update Currency";
+		$("#CurrencysModalTitle").html("Update Currency");
+		CurrencyId = parameters.id;
+		newCurrencyModal.modal("show");
+	}
+
+	function showConfirmDeleteModal(e, cb) {
+		callback = cb;
+		var data = $(e).data();
+		
+		$("#recordName").html(data.code + " " + data.name);
+		
+		confirmDeleteModal.find("#currencyModalId").val(data.id);
+		confirmDeleteModal.modal("show");
+	}
+	
+	function confirmDelete(e){
+		var currency_id = $(e).parentsUntil("#confirmDeleteModal").find("#currencyModalId").val();
+		
+		DELETE("/api/currencies/"+currency_id, function(data) {
+			if(data.status != "OK") {
+	 			displayErrors(data, $("#confirmDeleteModalErrors"));
+	 			//btnAddReason.removeAttr("disabled");
+	 			//btnAddReason.text(btnAddReasonText);
+	 		} else {
+	 			callback(data);
+	 			showToast(data);
+	 			confirmDeleteModal.modal("hide");
+	 			stockAdjustmentReasonModal.modal("show");
+	 		}
+		});
+	}
+	
+	
+	newCurrencyModal.on('shown.bs.modal', function() {
+
+		if(CurrencyId) {
+			
+			GET("/api/currencies/" + CurrencyId, function(Currency) {
+				console.log(Currency);
+				
+				$("#currency_id").val(Currency.id);
+				$("#currency_name").val(Currency.name);
+				$("#currency_code").val(Currency.code);
+				$("#currency_symbol").val(decodeURIComponent(Currency.symbol).replace(/\"/g,""));
+				$("#currency_decimalPlaces").val(Currency.decimalPlaces);
+				$("#currency_rate").val(Currency.rate);
+				
+			});
+			
+		} 
+		
+		btnAddNewCurrency.removeAttr("disabled");
+		btnAddNewCurrency.text(btnAddNewCurrencyText);
+	});
+
+	btnAddNewCurrency.on("click", function() {
+
+		btnAddNewCurrency.attr("disabled", "disabled");
+		btnAddNewCurrency.text("Processing....");
+
+		var serialized_data = newCurrencyForm.serialize();
+
+		POST("/api/currencies", serialized_data, function(data) {
+
+			if (data.status != "OK") {
+				displayErrors(data, $("#newCurrencyErrors"));
+				btnAddNewCurrency.removeAttr("disabled");
+				btnAddNewCurrency.text(btnAddNewCurrencyText);
+			} else {
+				callback(data);
+				newCurrencyModal.modal("hide");
+			}
+		});
+	});
+	 
+</script>

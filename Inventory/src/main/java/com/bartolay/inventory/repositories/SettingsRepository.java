@@ -8,4 +8,6 @@ import com.bartolay.inventory.entity.Settings;
 @Repository
 public interface SettingsRepository extends CrudRepository<Settings, String> {
 
+	public Settings findByName(String name);
+
 }

@@ -1,31 +1,14 @@
 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
 	<div class="menu_section">
-		<h3>General</h3>
+		<h3><a href="#">Back</a></h3>
+		<h2>Settings</h2>
 		<ul class="nav side-menu">
 		
-			<li><a th:href="@{/dashboard}"><i class="fa fa-dashboard fa-fw"></i>
-					Dashboard</a></li>
-					
-			<!-- <li><a th:href="@{/companies}"><i class="fa fa-briefcase fa-fw"></i>
-					Companies</a></li>
-			 -->
-			<li><a th:href="@{/inventory}"><i class="fa fa-building fa-fw"></i> Inventory</a></li>
+			<li><a th:href="@{/inventory}"><i class="fa fa-building fa-fw"></i> Organization Profile</a></li>
+			<li><a th:href="@{/locations}"><i class="fa fa-users fa-fw"></i> Users & Roles</a></li>
 			<li><a th:href="@{/locations}"><i class="fa fa-map-marker fa-fw"></i> Locations</a></li>
-			<li><a href="#"><i class="fa fa-tags fa-fw"></i> Sales<span class="fa fa-chevron-down"></span></a>
-				<ul class="nav child_menu">
-					<li><a th:href="@{/sales/customers}">Customers</a></li>
-					<li><a th:href="@{/sales/persons}">Sales Persons</a></li>
-					<li><a th:href="@{/sales/invoice}">Sales Invoice</a></li>
-					<li><a th:href="@{/sales/return}">Sales Returns</a></li>
-				</ul>
-			</li>
-			<li><a href="#"><i class="fa fa-money fa-fw"></i> Purchases<span class="fa fa-chevron-down"></span></a>
-				<ul class="nav child_menu">
-					<li><a th:href="@{/stock/expenses}">Expenses</a></li>
-					<li><a th:href="@{/stock/received}">Stock Recieved</a></li>
-					<li><a th:href="@{/stock/suppliers}">Suppliers</a></li>
-				</ul>
-			</li>
+			<li><a th:href="@{/locations}"><i class="fa fa-gears fa-fw"></i> Preferences</a></li>
+			<li><a th:href="@{/settings/currencies}"><i class="fa fa-usd fa-fw"></i> Currencies</a></li>
 			
 		</ul>
 	</div>

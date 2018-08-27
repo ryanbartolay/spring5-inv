@@ -1,1 +1,143 @@
-listtsss currencies
+<div class="">
+	<!-- Title and action -->
+	<div class="page-title">
+		<div class="title_left">
+			<h3>Currencies</h3>
+		</div>
+
+		<div class="title_right">
+			<div class="pull-right">
+				<div class="input-group ">
+					<button id="createNewCurrencyBtn"
+						class="btn btn-success btn-sm"><span class="fa fa-plus"></span>
+						Create New Currency</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+	<!-- //Title and action -->
+
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		<div class="x_panel">
+
+			<div class="x_content">
+
+				<div class="table-responsive">
+					<table class="table table-striped" id="salesInvoice-datatable"
+						style="width: 100%">
+						<thead>
+							<tr class="headings">
+								<th class="column-title">SN</th>
+								<th class="column-title">Name</th>
+								<th class="column-title">Code</th>
+								<th class="column-title">Symbol</th>
+								<th class="column-title">Decimal Places</th>
+								<th class="column-title last text-right">Rate</th>
+								<th></th>
+							</tr>
+						</thead>
+
+						<tbody>
+
+						</tbody>
+					</table>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+</div>
+<!-- DataTables JavaScript -->
+
+
+<div th:include="includes/modals/currencyModal"></div>
+
+<script
+	th:src="@{/static/vendor/datatables/js/jquery.dataTables.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
+<script
+	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
+<script>
+	var createNewCurrency = $("#createNewCurrencyBtn");
+	
+	var table = $('#salesInvoice-datatable');
+	var datatable = customFixedDatatable(
+			table,
+			'/api/datatable/settings/currencies',
+			[ {
+				data : "id"
+			}, {
+				data : "name",
+				render: function ( data, type, row ) {
+					var remark = "";
+					
+					if(row.baseCurrency) {
+						remark = ` <span class="text-success"><em>(Base Currency)</em></span>`;
+					}
+					
+					return data + remark;
+				}
+			}, {
+				data : "code",
+				className: "text-center"
+			}, {
+				data : "symbol",
+				render: function ( data, type, row ) {
+					if(data) {
+						return decodeURIComponent(data).replace(/\"/g,"");	
+					}
+                       return '';
+                   },
+                   className: "text-center"
+			}, {
+				data: "decimalPlaces",
+				className: "text-center"
+			}, {
+				data: "rate",
+				className: "text-right"
+			},{
+				render: function(data, type, row) {
+					return `
+					<button class="btn btn-primary btn-xs" onClick="triggerEditCurrency(this)" data-id="`+row.id+`"><span class="fa fa-edit"></span></button>
+					<button id="btnDelete" class="btn btn-danger btn-xs" data-id="`+ row.id +`" data-name="`+row.name+`" data-code="`+row.code+`"
+					onClick="deleteRecord(this)"><span class="fa fa-trash"></span></button>
+					`;
+				},
+				className: "text-right"
+            }]);
+
+	// View button
+	table.find("tbody").on(
+			'click',
+			'#btnView',
+			function(e) {
+				e.preventDefault();
+
+				var data = datatable.row(
+						$(this).parent('div').parent('td')).data();
+				window.location = "invoice/" + data.system_number;
+
+			});
+	
+	createNewCurrency.on("click", function(e) {
+		newCurrency("", function(data) {
+			datatable.ajax.reload();
+		});
+	});
+	
+	function deleteRecord(e) {
+		showConfirmDeleteModal(e, function(data) {
+			datatable.ajax.reload();
+		});
+	}
+	
+	function triggerEditCurrency(e) {
+		editCurrency({id: $(e).data("id")}, function(data) {
+			datatable.ajax.reload();
+		});
+	}
+</script>
