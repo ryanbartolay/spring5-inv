@@ -25,9 +25,12 @@
 
 		<br />
 
-		<div th:switch="${settings}">
-			<div th:case="true" th:include="includes/settings_menu"></div>
-			<div th:case="*" th:include="includes/menu"></div>
+
+		<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+			<div th:switch="${settings}">
+				<div th:case="true" th:include="includes/settings_menu"></div>
+				<div th:case="*" th:include="includes/menu"></div>
+			</div>
 		</div>
 
 	</div>

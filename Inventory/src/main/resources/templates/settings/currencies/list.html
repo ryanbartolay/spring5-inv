@@ -77,6 +77,8 @@
 					
 					if(row.baseCurrency) {
 						remark = ` <span class="text-success"><em>(Base Currency)</em></span>`;
+					} else {
+						remark = ` <button class="btn btn-success btn-xs pull-right" >Set as base Currency</button>`;
 					}
 					
 					return data + remark;
