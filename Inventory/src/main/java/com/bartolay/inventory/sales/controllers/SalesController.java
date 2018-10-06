@@ -1,6 +1,7 @@
 package com.bartolay.inventory.sales.controllers;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,6 @@ import com.bartolay.inventory.form.SalesInvoiceCancelForm;
 import com.bartolay.inventory.form.SalesInvoiceForm;
 import com.bartolay.inventory.form.SalesReturnForm;
 import com.bartolay.inventory.form.StockAdjustmentForm;
-import com.bartolay.inventory.form.StockAdjustmentReasonForm;
 import com.bartolay.inventory.repositories.ClientRepository;
 import com.bartolay.inventory.repositories.InventoryRepository;
 import com.bartolay.inventory.repositories.LocationRepository;
@@ -26,6 +26,7 @@ import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.sales.repositories.SalesReturnItemReasonRepository;
 import com.bartolay.inventory.sales.repositories.SalesReturnItemRepository;
 import com.bartolay.inventory.sales.repositories.SalesReturnRepository;
+import com.bartolay.inventory.sales.services.SalesReturnService;
 import com.bartolay.inventory.services.LocationService;
 import com.bartolay.inventory.services.UserService;
 import com.bartolay.inventory.stock.repositories.StockAdjustmentReasonRepository;
@@ -38,29 +39,37 @@ public class SalesController {
 	
 	@Autowired
 	private ClientRepository clientRepository;
-	
+	@Autowired
+	private InventoryRepository inventoryRepository;
 	@Autowired
 	private LocationRepository locationRepository;
-	
-	@Autowired
-	private SalesInvoiceRepository salesInvoiceRepository;
-	@Autowired
-	private SalesReturnRepository salesReturnRepository;
-	@Autowired
-	private SalesReturnItemRepository salesReturnItemRepository;
-	@Autowired
-	private SalesReturnItemReasonRepository salesReturnItemReasonRepository;
 	@Autowired
 	private LocationService locationService;
 	@Autowired
-	private UserService<User> userService;
+	private SalesInvoiceRepository salesInvoiceRepository;
 	@Autowired
-	private InventoryRepository inventoryRepository;
+	private SalesReturnItemReasonRepository salesReturnItemReasonRepository;
+	@Autowired
+	private SalesReturnItemRepository salesReturnItemRepository;
+	@Autowired
+	private SalesReturnRepository salesReturnRepository;
+	@Autowired
+	private SalesReturnService salesReturnService;
 	@Autowired
 	private StockAdjustmentReasonRepository stockAdjustmentReasonRepository;
 	@Autowired
 	private StringUtils stringUtils;
+	@Autowired
+	private UserService<User> userService;
 	
+	@RequestMapping(value="/customers")
+	public ModelAndView customers(ModelAndView model) {
+		model.setViewName("sales/index");
+		model.addObject("html", "customers/list");
+		model.addObject("type", AccountType.USER);
+		return model;
+	}
+
 	@RequestMapping(value="/invoice")
 	public ModelAndView invoice(ModelAndView model) {
 		model.setViewName("sales/index");
@@ -71,50 +80,12 @@ public class SalesController {
 		model.addObject("html", "invoice/list");
 		return model;
 	}
-
-	@RequestMapping(value="/customers")
-	public ModelAndView customers(ModelAndView model) {
-		model.setViewName("sales/index");
-		model.addObject("html", "customers/list");
-		model.addObject("type", AccountType.USER);
-		return model;
-	}
 	
-	@RequestMapping(value="/persons")
-	public ModelAndView persons(ModelAndView model) {
+	@RequestMapping(value="/invoice/returns/{system_number}")
+	public ModelAndView invoiceReturns(ModelAndView model, @PathVariable String system_number) {
 		model.setViewName("sales/index");
-		model.addObject("html", "persons/list");
-		model.addObject("type", AccountType.SALES);
-		return model;
-	}
-	
-	@RequestMapping(value="/invoice/create", method=RequestMethod.GET)
-	public ModelAndView salesInvoiceCreate(ModelAndView mav) throws JsonProcessingException {
-		mav.setViewName("sales/index");
-		mav.addObject("page", "New Sales Invoice");
-		mav.addObject("html", "invoice/edit");
-		mav.addObject("method", "POST");
-		
-		mav.addObject("users", userService.findAllSales());
-		mav.addObject("salesInvoiceForm", new SalesInvoiceForm());
-		mav.addObject("locations", locationRepository.findAll());
-		mav.addObject("customers", clientRepository.findAll());
-		return mav;
-	}
-	
-	@RequestMapping(value="/invoice/{system_number}")
-	public ModelAndView invoiceView(ModelAndView model, @PathVariable String system_number) {
-		model.setViewName("sales/index");
-		model.addObject("page", "Invoice");
-		model.addObject("html", "invoice/view");
-		
-		model.addObject("StringUtils", stringUtils);
-		
-		model.addObject("salesInvoiceCancelForm", new SalesInvoiceCancelForm());
-		model.addObject("cancelled_reason", stockAdjustmentReasonRepository.findByCode(SalesInvoice.INVOICE_CANCELLED));
-		SalesInvoice salesInvoice = salesInvoiceRepository.findById(system_number).get();
-		
-		model.addObject("salesInvoice", salesInvoice);
+		model.addObject("page", "Invoice Returns");
+		model.addObject("html", "invoice/returns");
 		
 		return model;
 	}
@@ -149,26 +120,59 @@ public class SalesController {
 //		return model;
 	}
 	
+	@RequestMapping(value="/invoice/{system_number}")
+	public ModelAndView invoiceView(ModelAndView model, @PathVariable String system_number) {
+		model.setViewName("sales/index");
+		model.addObject("page", "Invoice");
+		model.addObject("html", "invoice/view");
+		
+		model.addObject("StringUtils", stringUtils);
+		
+		model.addObject("salesInvoiceCancelForm", new SalesInvoiceCancelForm());
+		model.addObject("cancelled_reason", stockAdjustmentReasonRepository.findByCode(SalesInvoice.INVOICE_CANCELLED));
+		SalesInvoice salesInvoice = salesInvoiceRepository.findById(system_number).get();
+		
+		model.addObject("salesInvoice", salesInvoice);
+		
+		return model;
+	}
+	
+	@RequestMapping(value="/invoice/{system_number}/returns")
+	public ModelAndView invoiceReturnsView(ModelAndView model, @PathVariable String system_number) {
+		Optional<SalesInvoice> salesInvoice = salesInvoiceRepository.findById(system_number);		
+		model.setViewName("sales/index");
+		model.addObject("salesInvoice", salesInvoice);
+		model.addObject("html", "return/list");
+		return model;
+	}
+	
+	@RequestMapping(value="/persons")
+	public ModelAndView persons(ModelAndView model) {
+		model.setViewName("sales/index");
+		model.addObject("html", "persons/list");
+		model.addObject("type", AccountType.SALES);
+		return model;
+	}
+	
+	@RequestMapping(value="/invoice/create", method=RequestMethod.GET)
+	public ModelAndView salesInvoiceCreate(ModelAndView mav) throws JsonProcessingException {
+		mav.setViewName("sales/index");
+		mav.addObject("page", "New Sales Invoice");
+		mav.addObject("html", "invoice/edit");
+		mav.addObject("method", "POST");
+		
+		mav.addObject("users", userService.findAllSales());
+		mav.addObject("salesInvoiceForm", new SalesInvoiceForm());
+		mav.addObject("locations", locationRepository.findAll());
+		mav.addObject("customers", clientRepository.findAll());
+		return mav;
+	}
+	
 	@RequestMapping(value="/return")
 	public ModelAndView salesReturn(ModelAndView model) {
 		model.setViewName("sales/index");
 		model.addObject("html", "return/list");
 		return model;
-	}
-	
-	@RequestMapping(value="/return/{id}")
-	public ModelAndView salesReturnView(ModelAndView mav, @PathVariable Integer id) {
-		SalesReturn salesReturn  = salesReturnRepository.findSalesReturnById(id);
-		SalesInvoice salesInvoice = salesInvoiceRepository.findSalesInvoiceById(salesReturn.getSalesInvoice().getSystemNumber());
-		
-		mav.setViewName("sales/index");
-		mav.addObject("html", "return/view");
-		mav.addObject("method", "POST");
-		
-		mav.addObject("salesInvoiceItems", salesInvoice.getSalesInvoiceItems());
-		mav.addObject("salesInvoice", salesInvoice);
-		mav.addObject("salesReturn", salesReturn);
-		return mav;
 	}
 	
 	@RequestMapping(value="/return/create")
@@ -185,7 +189,6 @@ public class SalesController {
 		
 		return mav;
 	}
-
 	
 	@RequestMapping(value="/return/create/{system_number}")
 	public ModelAndView salesReturnEdit(ModelAndView mav, @PathVariable String system_number) {
@@ -199,6 +202,24 @@ public class SalesController {
 		mav.addObject("salesInvoiceItems", salesInvoice.getSalesInvoiceItems());
 		mav.addObject("salesInvoice", salesInvoice);
 		mav.addObject("salesReturnReasons", salesReturnItemReasonRepository.findAll());
+		return mav;
+	}
+
+	
+	@RequestMapping(value="/return/{systemNumber}")
+	public ModelAndView salesReturnView(ModelAndView mav, @PathVariable String systemNumber) {
+		
+		
+		SalesReturn salesReturn  = salesReturnRepository.findBySalesInvoiceSystemNumber(systemNumber);
+		SalesInvoice salesInvoice = salesInvoiceRepository.findSalesInvoiceById(salesReturn.getSalesInvoice().getSystemNumber());
+		
+		mav.setViewName("sales/index");
+		mav.addObject("html", "return/view");
+		mav.addObject("method", "POST");
+		
+		mav.addObject("salesInvoiceItems", salesInvoice.getSalesInvoiceItems());
+		mav.addObject("salesInvoice", salesInvoice);
+		mav.addObject("salesReturn", salesReturn);
 		return mav;
 	}
 	

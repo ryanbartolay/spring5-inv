@@ -58,8 +58,8 @@
 							</tr>
 						</thead>
 						<tbody>
-						
-							<tr th:each="salesReturnItem : ${salesReturn.salesReturnItems}"
+							<!-- <div th:text="${salesReturn}"></div> -->
+							<!-- <tr th:each="salesReturnItem : ${salesReturn.salesReturnItems}"
 									th:remove="tag">
 									<td th:text="${salesReturnItem.salesInvoiceItem.id}">
 									<td th:text="${salesReturnItem.salesInvoiceItem.item.code}">
@@ -70,19 +70,19 @@
 									<td class="text-right" th:text="${#numbers.formatDecimal(salesReturnItem.quantity,1,2)}">
 									<td class="text-right" th:text="${#numbers.formatDecimal(salesReturnItem.unitPrice,1,2)}"></td>
 									<td class="text-right" th:text="${#numbers.formatDecimal(salesReturnItem.unitPriceTotal,1,2)}"></td>
-								</tr>
+								</tr> -->
 						</tbody>
 						<tfoot>
 							<tr>
 								<th colspan="6"></th>
 								<th><h3>Total</h3></th>
-								<th><h3 class="text-right" th:text="${salesReturn.totalPrice}"></h3></th>
+								<!-- <th><h3 class="text-right" th:text="${salesReturn.totalPrice}"></h3></th> -->
 							</tr>
 						</tfoot>
 					</table>
 					
 					<div class="col-md-12">
-							<label>Remarks :</label> <div class="form-control" th:text="${salesReturn.remarks}"></div>
+							<!-- <label>Remarks :</label> <div class="form-control" th:text="${salesReturn.remarks}"></div> -->
 						</div>
 				</div>
 			</div>

@@ -3,8 +3,10 @@ package com.bartolay.inventory.sales.services.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -24,6 +26,7 @@ import com.bartolay.inventory.sales.entity.SalesInvoiceItem;
 import com.bartolay.inventory.sales.entity.SalesReturn;
 import com.bartolay.inventory.sales.entity.SalesReturnItem;
 import com.bartolay.inventory.sales.repositories.SalesInvoiceItemRepository;
+import com.bartolay.inventory.sales.repositories.SalesInvoiceRepository;
 import com.bartolay.inventory.sales.repositories.SalesReturnRepository;
 import com.bartolay.inventory.sales.services.SalesReturnService;
 import com.bartolay.inventory.services.InventoryCoreService;
@@ -31,79 +34,65 @@ import com.bartolay.inventory.utils.UserCredentials;
 
 @Service
 @Transactional
-public class SalesReturnServiceImpl implements SalesReturnService{
+public class SalesReturnServiceImpl implements SalesReturnService {
 
-	@Autowired 
-	private UserCredentials userCredentials;
+	@Autowired
+	private InventoryCoreService inventoryCoreService;
+	@Autowired
+	private SalesInvoiceItemRepository salesInvoiceItemRepository;
+	@Autowired
+	private SalesInvoiceRepository salesInvoiceRepository;
 	@Autowired
 	@Qualifier("salesReturnDataTableRepository")
 	private DatatableRepository salesReturnDataTableRepository;
 	@Autowired
 	private SalesReturnRepository salesReturnRepository;
 	@Autowired
-	private InventoryCoreService inventoryCoreService;
-	
-	@Autowired
-	private SalesInvoiceItemRepository salesInvoiceItemRepository;
-	
-	@Override
-	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
-		DatatableParameter parameter = new DatatableParameter(requestMap);
-		JSONArray array = salesReturnDataTableRepository.findAllData(parameter);
-		long recordsTotal = salesReturnDataTableRepository.findAllCount(parameter);
-		
-		System.err.println(array);
-		
-		JSONObject object = new JSONObject();
-		object.put("data", array);
-		object.put("recordsTotal", recordsTotal);
-		object.put("recordsFiltered", recordsTotal);
-		object.put("draw", parameter.getDraw());
-		
-		return object;
-	}
+	private UserCredentials userCredentials;
 
 	@Override
 	public SalesReturn create(SalesReturnForm returnForm) throws SalesReturnException {
-		
+
 		SalesReturn salesReturn = new SalesReturn();
 		salesReturn.setTotalPrice(new BigDecimal("0"));
-		
-		if(returnForm.getSalesInvoice() == null) {
+
+		if (returnForm.getSalesInvoice() == null) {
 			throw new SalesReturnException("Sales invoice is invalid!");
 		}
-		if(returnForm.getSalesReturnItems().isEmpty()) {
+		if (returnForm.getSalesReturnItems().isEmpty()) {
 			throw new SalesReturnException("Must select at least 1 sales return item.!");
 		}
-		
+
 		List<SalesReturnItem> discardedItems = new ArrayList<>();
-		
+
 		for (SalesReturnItem salesReturnItem : returnForm.getSalesReturnItems()) {
-			
-			if(salesReturnItem.getQuantity().doubleValue() < 0) {
+
+			if (salesReturnItem.getQuantity().doubleValue() < 0) {
 				throw new SalesReturnException("Invalid value " + salesReturnItem.getQuantity());
 			}
-			
-			if(salesReturnItem.getQuantity().compareTo(salesReturnItem.getSalesInvoiceItem().getQuantity()) > 0) {
-				throw new SalesReturnException("Quantity must not be bigger than the Invoice Item Quantity (" + salesReturnItem.getQuantity() + ").");
+
+			if (salesReturnItem.getQuantity().compareTo(salesReturnItem.getSalesInvoiceItem().getQuantity()) > 0) {
+				throw new SalesReturnException("Quantity must not be bigger than the Invoice Item Quantity ("
+						+ salesReturnItem.getQuantity() + ").");
 			}
-			
-			if(salesReturnItem.getQuantity().equals(new BigDecimal("0"))) {
+
+			if (salesReturnItem.getQuantity().equals(new BigDecimal("0"))) {
 				discardedItems.add(salesReturnItem);
 			} else {
 				salesReturnItem.setUnitPrice(salesReturnItem.getSalesInvoiceItem().getUnitPrice());
-				salesReturnItem.setUnitPriceTotal(salesReturnItem.getQuantity().multiply(salesReturnItem.getUnitPrice()));
-				
+				salesReturnItem
+						.setUnitPriceTotal(salesReturnItem.getQuantity().multiply(salesReturnItem.getUnitPrice()));
+
 				salesReturn.setTotalPrice(salesReturn.getTotalPrice().add(salesReturnItem.getUnitPriceTotal()));
 			}
 		}
-		
+
 		returnForm.getSalesReturnItems().removeAll(discardedItems);
-		
-		if(returnForm.getSalesReturnItems().size() <= 0) {
+
+		if (returnForm.getSalesReturnItems().size() <= 0) {
 			throw new SalesReturnException("You need to add atleast 1 item.");
 		}
-		
+
 		salesReturn.setCreatedBy(userCredentials.getLoggedInUser());
 		salesReturn.setUpdatedBy(userCredentials.getLoggedInUser());
 		salesReturn.setCreatedDate(new Date());
@@ -111,7 +100,7 @@ public class SalesReturnServiceImpl implements SalesReturnService{
 		salesReturn.setSalesReturnItems(returnForm.getSalesReturnItems());
 		salesReturn.setRemarks(returnForm.getRemarks());
 		try {
-			inventoryCoreService.createSalesReturn(salesReturn);			
+			inventoryCoreService.createSalesReturn(salesReturn);
 			return salesReturn;
 		} catch (SalesReturnException e) {
 			e.printStackTrace();
@@ -119,8 +108,38 @@ public class SalesReturnServiceImpl implements SalesReturnService{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return null;
+	}
+
+	public Map<String, Object> retrieveBySalesInvoiceSystemNumber(String salesInvoiceSystemNumber) {
+		Map<String, Object> returnMap = new HashMap<>();
+		
+		Optional<SalesInvoice> salesInvoice = salesInvoiceRepository.findById(salesInvoiceSystemNumber);
+		
+		if(salesInvoice.isPresent()) {
+			SalesReturn sr = salesReturnRepository.findBySalesInvoice(salesInvoice.get());
+			
+			System.err.println("SALESRETURN");
+			System.err.println(sr.getId());
+		}
+		
+		return returnMap;
+	}
+
+	@Override
+	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
+		DatatableParameter parameter = new DatatableParameter(requestMap);
+		JSONArray array = salesReturnDataTableRepository.findAllData(parameter);
+		long recordsTotal = salesReturnDataTableRepository.findAllCount(parameter);
+
+		JSONObject object = new JSONObject();
+		object.put("data", array);
+		object.put("recordsTotal", recordsTotal);
+		object.put("recordsFiltered", recordsTotal);
+		object.put("draw", parameter.getDraw());
+
+		return object;
 	}
 
 }

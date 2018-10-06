@@ -3,6 +3,4 @@ insert into currency (code, name, decimal_places, rate, symbol, base_currency) v
 insert into currency (code, name, decimal_places, rate, symbol, base_currency) values ('QAR', 'Qatari Rial', 2, 1, '﷼', true);
 insert into currency (code, name, decimal_places, rate, symbol, base_currency) values ('USD', 'US Dollar', 2, 1, '$', false);
 
-SELECT setval('currency_id_seq', (SELECT MAX(id) FROM currency)+1);
-
 insert into settings (key, name, value) values ('BASE_CURRENCY','Base Currency', 'QAR');

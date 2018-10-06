@@ -8,7 +8,7 @@
 			<div class="pull-right btn-group  btn-group-sm">
 				<a th:href="@{/sales/invoice/create}" class="btn btn-success btn-sm"><span
 					class="fa fa-plus"></span> New Invoice</a> <a
-					th:href="@{/sales/return/} + ${salesInvoice.systemNumber}" class="btn btn-warning btn-sm"><span
+					th:href="@{/sales/invoice/{salesInvoiceId}/returns(salesInvoiceId=${salesInvoice.systemNumber})}" class="btn btn-warning btn-sm"><span
 					class="fa fa-reply"></span> Sales Return</a><a
 					th:href="@{/sales/invoice}" class="btn btn-default btn-sm"><span
 					class="fa fa-list"></span> Back to List of Invoice</a>
