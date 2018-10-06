@@ -30,8 +30,8 @@ import com.bartolay.inventory.repositories.GeneratedSystemNumber;
 
 @Entity
 @Table(name = "sales_invoice", indexes = {
-		@Index(columnList="systemNumber", name="sales_invoice_systemNumber"),
-		@Index(columnList="documentNumber", name="sales_invoice_documentNumber"),
+		@Index(columnList="system_number", name="sales_invoice_systemNumber"),
+		@Index(columnList="document_number", name="sales_invoice_documentNumber"),
 })
 public class SalesInvoice implements GeneratedSystemNumber {
 	@Transient

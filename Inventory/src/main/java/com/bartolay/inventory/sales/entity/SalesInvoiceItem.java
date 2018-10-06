@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,8 +23,7 @@ import com.bartolay.inventory.enums.Status;
 
 @Entity
 @Table(name = "sales_invoice_item", indexes = {
-		@Index(columnList="systemNumber", name="sales_invoice_systemNumber"),
-		@Index(columnList="documentNumber", name="sales_invoice_documentNumber"),
+		@Index(columnList="id", name="sales_invoice_item_id"),
 })
 public class SalesInvoiceItem {
 	@Id
