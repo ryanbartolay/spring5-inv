@@ -9,9 +9,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -21,10 +23,13 @@ import com.bartolay.inventory.entity.User;
 import com.bartolay.inventory.enums.Status;
 
 @Entity
+@Table(name = "sales_invoice_item", indexes = {
+		@Index(columnList="systemNumber", name="sales_invoice_systemNumber"),
+		@Index(columnList="documentNumber", name="sales_invoice_documentNumber"),
+})
 public class SalesInvoiceItem {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sales_invoice_item_generator")
-	@SequenceGenerator(name="sales_invoice_item_generator", sequenceName = "SALES_INVOICE_ITEM_SER_SEQ")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
