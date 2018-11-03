@@ -17,7 +17,6 @@ import com.bartolay.inventory.components.RepositoryComponent;
 import com.bartolay.inventory.datatable.model.DatatableColumn;
 import com.bartolay.inventory.datatable.model.DatatableParameter;
 import com.bartolay.inventory.repositories.DatatableRepository;
-import com.bartolay.inventory.sales.entity.SalesReturn;
 
 @Repository
 @Qualifier("salesReturnDataTableRepository")
@@ -25,15 +24,18 @@ public class SalesReturnDataTableRepositoryImpl extends RepositoryComponent impl
 	
 	@Override
 	public long findAllCount(DatatableParameter datatableParameter) {
+
+		String salesInvoiceSystemNumber = datatableParameter.getRequestMap().get("salesInvoiceSystemNumber");
+
 		String SQL = "SELECT COUNT(b.id) FROM SalesReturn b";
 		
-		if(datatableParameter.getSearch() != null) {
-			SQL += " WHERE b.name like :search";
+		if(salesInvoiceSystemNumber != null) {
+			SQL += " WHERE b.salesInvoice.systemNumber = :salesInvoiceSystemNumber";
 		}
 
 		Query query = em.createQuery( SQL);
 		if(datatableParameter.getSearch() != null) {
-			query.setParameter("search", "%" + datatableParameter.getSearch() + "%");
+			query.setParameter("salesInvoiceSystemNumber", salesInvoiceSystemNumber);
 		}
 
 		return (long) query.getSingleResult();
@@ -62,14 +64,12 @@ public class SalesReturnDataTableRepositoryImpl extends RepositoryComponent impl
 					
 			List<Object> SQL_PARAMS = new ArrayList<>();
 			
+			String salesInvoiceSystemNumber = datatableParameter.getRequestMap().get("salesInvoiceSystemNumber");
 			
-			if(datatableParameter.getSearch() != null) {
-				SQL += " WHERE b.name like ?";
-				SQL_PARAMS.add(datatableParameter.getSearch() + "%");
+			if(salesInvoiceSystemNumber != null) {
+				SQL += " WHERE b.sales_invoice_system_number = ?";
+				SQL_PARAMS.add(salesInvoiceSystemNumber);
 			}
-			
-			
-			System.err.println(sortColumn);
 			
 			// sort order by column
 			if(sortColumn != null && datatableParameter.getSortOrder() != null) {
@@ -81,7 +81,6 @@ public class SalesReturnDataTableRepositoryImpl extends RepositoryComponent impl
 			}
 			
 			List<JSONObject> domains = new ArrayList<>();
-
 
 			domains = jdbcTemplate.query(SQL, SQL_PARAMS.toArray(), new RowMapper<JSONObject>() {
 

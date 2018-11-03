@@ -13,5 +13,6 @@ public interface SalesReturnService {
 	public SalesReturn create(SalesReturnForm returnForm) throws SalesReturnException;
 	public Map<String, Object> retrieveBySalesInvoiceSystemNumber(String systemNumber);
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap);
+	public JSONObject retrieveDatatableList(Map<String, String> requestMap, String salesInvoiceSystemNumber);
 	
 }

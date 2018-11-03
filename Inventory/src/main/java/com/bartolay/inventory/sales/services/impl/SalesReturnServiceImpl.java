@@ -129,6 +129,16 @@ public class SalesReturnServiceImpl implements SalesReturnService {
 
 	@Override
 	public JSONObject retrieveDatatableList(Map<String, String> requestMap) {
+		return retrieveDatatableList(requestMap, null);
+	}
+	
+	@Override
+	public JSONObject retrieveDatatableList(Map<String, String> requestMap, String salesInvoiceSystemNumber) {
+		
+		if(salesInvoiceSystemNumber != null) {
+			requestMap.put("salesInvoiceSystemNumber", salesInvoiceSystemNumber);
+		}
+		
 		DatatableParameter parameter = new DatatableParameter(requestMap);
 		JSONArray array = salesReturnDataTableRepository.findAllData(parameter);
 		long recordsTotal = salesReturnDataTableRepository.findAllCount(parameter);

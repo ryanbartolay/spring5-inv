@@ -1,16 +1,26 @@
 <div class="">
 	<!-- Title and action -->
 	<div class="page-title">
-		<div class="title_left">
-			<h3>Sales Return <span th:text="${invoice_id}"></span></h3>
+
+		<div class="title_left" th:if="${salesInvoice} != null">
+			<h3>
+				Sales Invoice <b th:text="${salesInvoice.systemNumber}"></b> <b
+					th:if="${salesInvoice.documentNumber} != null"
+					th:text="${salesInvoice.documentNumber}"></b> <a
+					th:href="@{/sales/invoice/{systemNumber}(systemNumber=${salesInvoice.systemNumber})}"
+					class="btn btn-default btn-xs"><span class="fa fa-reply"></span>
+					Back to Sales Invoice</a>
+			</h3>
+		</div>
+		<div class="title_left" th:if="${salesInvoice} == null">
+			<h3>Sales Return</h3>
 		</div>
 
 		<div class="title_right">
 			<div class="pull-right">
 				<div class="input-group ">
-					<a th:href="@{/sales/return/create}"
-						class="btn btn-success btn-sm"><span class="fa fa-plus"></span>
-						Create Sales Return</a>
+					<a th:href="@{/sales/return/create}" class="btn btn-success btn-sm"><span
+						class="fa fa-plus"></span> Create Sales Return</a>
 				</div>
 			</div>
 		</div>
@@ -22,24 +32,22 @@
 	<div class="col-md-12 col-sm-12 col-xs-12">
 		<div class="x_panel">
 			<div class="x_title">
-				<h2>
-					List of Sales Return 
-				</h2>
+				<h2>List of Sales Return</h2>
 				<div class="clearfix"></div>
 			</div>
 
 			<div class="x_content">
-			<div
-        id="errors"
-        th:if="${(param.message != null)}">
-            <div class="alert alert-success fade in alert-dismissible">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
-    <strong>Success!</strong> <span th:text="${{param.message}}"></span>
-</div>
-    </div>
+				<div id="errors" th:if="${(param.message != null)}">
+					<div class="alert alert-success fade in alert-dismissible">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close"
+							title="close">×</a> <strong>Success!</strong> <span
+							th:text="${{param.message}}"></span>
+					</div>
+				</div>
 
 				<div class="table-responsive">
-					<table class="table table-striped" id="salesReturn-datatable" style="width: 100%">
+					<table class="table table-striped" id="salesReturn-datatable"
+						style="width: 100%">
 						<thead>
 							<tr class="headings">
 								<th class="column-title">SN</th>
@@ -50,12 +58,12 @@
 								<th class="column-title">Customer</th>
 								<th class="column-title">No. of Items</th>
 								<th class="column-title">Returned Amount</th>
-								
+
 							</tr>
 						</thead>
 
 						<tbody>
-							
+
 						</tbody>
 					</table>
 				</div>
@@ -72,11 +80,25 @@
 	th:src="@{/static/vendor/datatables-plugins/dataTables.bootstrap.min.js}"></script>
 <script
 	th:src="@{/static/vendor/datatables-responsive/dataTables.responsive.js}"></script>
-<script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+	var systemNumber = /*[[${systemNumber}]]*/ null;	
+	
+    var url = null;
+    
+    if(systemNumber != null) {
+    	url = '/api/datatable/sales/returns/' + systemNumber;
+    } else {
+    	url = '/api/datatable/sales/returns';
+    }
+
+
+
 				var table = $('#salesReturn-datatable');
 				var datatable = customFixedDatatable(
 						table,
-						'/api/datatable/sales/return',
+						url,
 						[ {
 							data : "id",
 							name : "t1.id",
@@ -143,4 +165,5 @@
 							window.location = "invoice/" + data.system_number;
 
 						});
+				/*]]>*/
 			</script>

@@ -139,7 +139,11 @@ public class SalesController {
 	
 	@RequestMapping(value="/invoice/{system_number}/returns")
 	public ModelAndView invoiceReturnsView(ModelAndView model, @PathVariable String system_number) {
-		Optional<SalesInvoice> salesInvoice = salesInvoiceRepository.findById(system_number);		
+		Optional<SalesInvoice> optionalSalesInvoice = salesInvoiceRepository.findById(system_number);
+		SalesInvoice salesInvoice= null;
+		if(optionalSalesInvoice.isPresent()) {
+			salesInvoice = optionalSalesInvoice.get();
+		}
 		model.setViewName("sales/index");
 		model.addObject("salesInvoice", salesInvoice);
 		model.addObject("html", "return/list");
@@ -172,6 +176,7 @@ public class SalesController {
 	public ModelAndView salesReturn(ModelAndView model) {
 		model.setViewName("sales/index");
 		model.addObject("html", "return/list");
+		model.addObject("systemNumber", null);
 		return model;
 	}
 	
@@ -218,7 +223,7 @@ public class SalesController {
 		mav.addObject("method", "POST");
 		
 		mav.addObject("salesInvoiceItems", salesInvoice.getSalesInvoiceItems());
-		mav.addObject("salesInvoice", salesInvoice);
+		mav.addObject("salesInvoiczfge", salesInvoice);
 		mav.addObject("salesReturn", salesReturn);
 		return mav;
 	}
